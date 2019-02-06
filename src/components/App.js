@@ -6,7 +6,7 @@ class App extends Component{
     console.log("APP!");
     return (
       <div className="container-fluid">
-        APP!
+        HOMEPAGE!
       </div>
     );
   }
