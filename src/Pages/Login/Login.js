@@ -4,7 +4,7 @@ class Login extends Component{
   render(){
     console.log("LOGIN!");
     return(
-      <div className="container-fluid" style={{padding: 0, backgroundColor: "#ffff"}}>
+      <div className="container-fluid login-container">
         <div className="row">
           <div className="col-md-6 col-md-offset-3">
             <div className="login-form">
