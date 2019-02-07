@@ -1,0 +1,17 @@
+{
+  "com.tempedge.msg.label.sign_in"                                    : "Sign In",
+  "com.tempedge.msg.label.login"                                      : "Log In",
+  "com.tempedge.msg.label.password_retrieve"                          : "Forgot Password?",
+  "com.tempedge.msg.label.remember_me"                                : "Remember me",
+  "com.tempedge.msg.label.create_account"                             : "Create an Account",
+  "com.tempedge.msg.label.rights"                                     : "All rights reserved..",
+  "com.tempedge.msg.label.welcome"                                    : "Welcome",
+  "com.tempedge.msg.label.apply_now"                                  : "Apply Now",
+  "com.tempedge.msg.label.firstname"                                  : "First Name",
+  "com.tempedge.msg.label.middlename"                                : "Middle Name",
+  "com.tempedge.msg.label.lastname"                                   : "Last Name",
+  "com.tempedge.msg.label.email"                                      : "Email",
+  "com.tempedge.msg.label.birthday"                                   : "Birthday",
+  "com.tempedge.msg.label.language"                                   : "Language",
+  "com.tempedge.msg.label.save"                                       : "Save"
+}

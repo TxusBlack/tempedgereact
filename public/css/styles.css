@@ -17,20 +17,45 @@ body {
   font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
-.footer{
-  background-color: #df963d;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+/* NavBar */
+.flag{
+  width: 45px;
+  height: 45px;
 }
 
-.footer p{
-  color: #ffff;
-  padding: 8px 100px 2px 10px;
+.flag:hover{
+  cursor: pointer;
 }
 
+.navbar{
+  box-shadow: 0 8px 6px 0 #aaa;
+}
+
+.top-bar-part{
+  background: #1273c7;
+  color: #fff;
+}
+
+.bottom-bar-part{
+  background: #f4f4f4;
+  color: #000;
+}
+
+.top-bar-part div.container, .bottom-bar-part div.container{
+  padding: 0;
+  width: 90%;
+}
+
+.language p{
+  padding: 8px 0 3px 0;
+}
+
+.logo h2{
+  padding: 10px;
+}
+/*************************/
+
+/** Login Page **/
 .login-container{
   padding: 0;
   background-color: #ffff;
@@ -62,6 +87,10 @@ body {
   font-weight: bold;
 }
 
+/***********************/
+
+
+/* Register Page */
 .register-form{
   width: 40%;
   padding: 30px 0;
@@ -71,3 +100,21 @@ body {
   width: 30%;
   margin: 0 auto;
 }
+/************************/
+
+
+/* Footer */
+.footer{
+  background-color: #df963d;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.footer p{
+  color: #ffff;
+  padding: 8px 100px 2px 10px;
+}
+/****************************/

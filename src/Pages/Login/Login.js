@@ -1,6 +1,34 @@
 import React, { Component } from 'react';
+import { withLocalize, Translate } from 'react-localize-redux';
 
 class Login extends Component{
+  constructor(props) {
+    super(props);
+
+    this.addTranslationsForActiveLanguage();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+
+    if (hasActiveLanguageChanged) {
+      this.addTranslationsForActiveLanguage();
+    }
+  }
+
+  addTranslationsForActiveLanguage() {
+    const {activeLanguage} = this.props;
+
+    if (!activeLanguage) {
+      return;
+    }
+
+    import(`../../translations/${activeLanguage.code}.tempedge.json`)
+      .then(translations => {
+        this.props.addTranslationForLanguage(translations, activeLanguage.code)
+      });
+  }
+
   render(){
     console.log("LOGIN!");
     return(
@@ -9,7 +37,7 @@ class Login extends Component{
           <div className="col-md-6 col-md-offset-3">
             <div className="login-form">
               <form method="post">
-                  <h2 className="text-center">Log in</h2>
+                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.login">Log In</Translate></h2>
                   <div className="form-group">
                       <input type="text" className="form-control" placeholder="Username" required="required" />
                   </div>
@@ -17,14 +45,14 @@ class Login extends Component{
                       <input type="password" className="form-control" placeholder="Password" required="required" />
                   </div>
                   <div className="form-group">
-                      <button type="submit" className="btn btn-primary btn-block">Log in</button>
+                      <button type="submit" className="btn btn-primary btn-block"><Translate id="com.tempedge.msg.label.login">Log In</Translate></button>
                   </div>
                   <div className="clearfix">
-                      <label className="pull-left checkbox-inline"><input type="checkbox" /> Remember me</label>
-                      <a href="#" className="pull-right">Forgot Password?</a>
+                      <label className="pull-left checkbox-inline"><input type="checkbox" /> <Translate id="com.tempedge.msg.label.remember_me">Remember me</Translate></label>
+                      <a href="#" className="pull-right"><Translate id="com.tempedge.msg.label.password_retrieve">Forgot Password?</Translate></a>
                   </div>
               </form>
-              <p className="text-center"><a href="#">Create an Account</a></p>
+              <p className="text-center"><a href="#"><Translate id="com.tempedge.msg.label.create_account">Create an Account</Translate></a></p>
             </div>
           </div>
         </div>
@@ -33,4 +61,4 @@ class Login extends Component{
   }
 }
 
-export default Login;
+export default withLocalize(Login);
