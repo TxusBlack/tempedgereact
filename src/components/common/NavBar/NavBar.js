@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import engFlag from "./icons/united-kingdom.png"; // Tell Webpack this JS file uses this image
 import spaFlag from "./icons/spain.png";
 
-              //De-Structuring props
 class NavBar extends React.Component{
   constructor(props){
     super(props);
@@ -18,7 +17,7 @@ class NavBar extends React.Component{
 
   checkMenuItemActive= (activeMenuItem) => {
     if(typeof this.props.activePage !== 'undefined' || this.props.activePage != ""){
-      if(this.props.activePage === 'login'){
+      if(this.props.activePage === 'auth'){
         activeMenuItem[0] = 'active';
         activeMenuItem[1] = '';
       }else if(this.props.activePage === 'register'){
@@ -30,7 +29,7 @@ class NavBar extends React.Component{
 
   render(){
     let { languages, activeLanguage, lang } = this.props;
-    let loginRoute = `/login/${lang}`;
+    let loginRoute = `/auth/${lang}`;
     let registerRoute = `/register/${lang}`;
     let activeMenuItem = ['active', ''];
 

@@ -7,12 +7,7 @@ class ForgotPassword extends React.Component{
   constructor(props) {
     super(props);
 
-    if(typeof this.props.defaultLanguage === 'undefined'){
-      console.log("this.props: ", this.props);
-      this.props.init(this.props.params.lang);
-    }
-
-    //this.addTranslationsForActiveLanguage();
+    this.addTranslationsForActiveLanguage();
   }
 
   componentWillMount(){

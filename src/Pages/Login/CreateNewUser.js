@@ -12,8 +12,6 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
 
-const $ = window.$;
-
 momentLocaliser(moment);
 
 Object.assign(Validators.messages, {
@@ -40,9 +38,8 @@ class CreateNewUser extends Component{
     this.props.setActivePage("register");
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
-    console.log("hasActiveLanguageChanged: ", hasActiveLanguageChanged);
 
     if (hasActiveLanguageChanged) {
       this.props.params.lang = this.props.activeLanguage.code;
@@ -52,7 +49,7 @@ class CreateNewUser extends Component{
     }
   }
 
-  addTranslationsForActiveLanguage() {
+  addTranslationsForActiveLanguage(){
     const {activeLanguage} = this.props;
 
     if (!activeLanguage) {
@@ -175,18 +172,6 @@ let mapStateToProps = (state) => {
   return({
     activePage: state.tempEdge.active_page
   });
-}
-
-let mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    // dispatching plain actions
-    init: (langCode) => {
-      console.log("languages: ", ownProps.languages);
-      let storeOp = dispatch(ownProps.initialize(ownProps.languages, { renderToStaticMarkup: true, defaultLanguage: langCode }));
-      console.log("storeOp", storeOp);
-      console.log("ownProps: ", ownProps);
-    }
-  }
 }
 
 CreateNewUser = reduxForm({

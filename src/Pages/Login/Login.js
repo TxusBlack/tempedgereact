@@ -13,29 +13,22 @@ class Login extends Component{
   constructor(props) {
     super(props);
 
-    if(typeof this.props.defaultLanguage === 'undefined'){
-      console.log("this.props: ", this.props);
-      this.props.init(this.props.params.lang);
-    }
-
-    //this.addTranslationsForActiveLanguage();
+    this.addTranslationsForActiveLanguage();
   }
 
   componentWillMount(){
-    this.props.history.location.pathname = `/login/${this.props.activeLanguage.code}`;
-    this.props.history.push(`/login/${this.props.activeLanguage.code}`);
-    this.props.setActivePage("login");
+    this.props.history.location.pathname = `/auth/${this.props.activeLanguage.code}`;
+    this.props.history.push(`/auth/${this.props.activeLanguage.code}`);
+    this.props.setActivePage("auth");
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("LOGIN UPDATED!");
-    console.log("this.props: ", this.props);
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
       this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/login/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/login/${this.props.activeLanguage.code}`);
+      this.props.history.location.pathname = `/auth/${this.props.activeLanguage.code}`;
+      this.props.history.push(`/auth/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -85,7 +78,6 @@ class Login extends Component{
   }
 
   render(){
-    console.log("LOGIN!");
     let forgotPasswordRoute = `/resetpassword/${this.props.params.lang}`;
     let registerRoute = `/register/${this.props.params.lang}`;
 
@@ -144,18 +136,6 @@ let mapStateToProps = (state) => {
   return({
     activePage: state.tempEdge.active_page
   });
-}
-
-let mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    // dispatching plain actions
-    init: (langCode) => {
-      console.log("languages: ", ownProps.languages);
-      let storeOp = dispatch(ownProps.initialize(ownProps.languages, { renderToStaticMarkup: true, defaultLanguage: langCode }));
-      console.log("storeOp", storeOp);
-      console.log("ownProps: ", ownProps);
-    }
-  }
 }
 
 Login = reduxForm({

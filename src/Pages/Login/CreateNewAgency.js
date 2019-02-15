@@ -10,7 +10,7 @@ import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
 
 class CreateNewAgency extends Component{
-  constructor(props) {
+  constructor(props){
     super(props);
 
     this.addTranslationsForActiveLanguage();
@@ -22,9 +22,8 @@ class CreateNewAgency extends Component{
     this.props.setActivePage("registerAgency");
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
-    console.log("hasActiveLanguageChanged: ", hasActiveLanguageChanged);
 
     if (hasActiveLanguageChanged) {
       this.props.params.lang = this.props.activeLanguage.code;
@@ -34,7 +33,7 @@ class CreateNewAgency extends Component{
     }
   }
 
-  addTranslationsForActiveLanguage() {
+  addTranslationsForActiveLanguage(){
     const {activeLanguage} = this.props;
 
     if (!activeLanguage) {
@@ -138,18 +137,6 @@ let mapStateToProps = (state) => {
   return({
     activePage: state.tempEdge.active_page
   });
-}
-
-let mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    // dispatching plain actions
-    init: (langCode) => {
-      console.log("languages: ", ownProps.languages);
-      let storeOp = dispatch(ownProps.initialize(ownProps.languages, { renderToStaticMarkup: true, defaultLanguage: langCode }));
-      console.log("storeOp", storeOp);
-      console.log("ownProps: ", ownProps);
-    }
-  }
 }
 
 CreateNewAgency = reduxForm({

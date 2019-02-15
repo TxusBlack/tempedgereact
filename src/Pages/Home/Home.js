@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { initialize } from 'react-localize-redux';
 import { addTranslation } from 'react-localize-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 
@@ -11,11 +10,6 @@ class HomePage extends Component{
 
     let { setActiveLanguage } = props;
     let defaultLanguage = this.props.lang;
-
-    this.props.initialize({
-      languages: props.languages,
-      options: props.options
-    });
 
     setActiveLanguage(defaultLanguage);
   }
@@ -42,11 +36,11 @@ class HomePage extends Component{
   }
 
   render() {
-    let loginRoute = `/login/${this.props.lang}`;
+    let loginRoute = `/auth/${this.props.lang}`;
     let registerRoute = `/register/${this.props.lang}`;
     let registerAgencyRoute = `/registerAgency/${this.props.lang}`;
 
-    return (
+    return(
       <div className="container-fluid">
         HOMEPAGE!<br />
         <Link to={loginRoute}>Login</Link><br />
@@ -56,9 +50,5 @@ class HomePage extends Component{
     );
   }
 };
-
-// let mapStatetoProps = (state) => ({
-//
-// });
 
 export default withLocalize(connect(null)(HomePage));
