@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
 import { initialize } from 'react-localize-redux';
 import { addTranslation } from 'react-localize-redux';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { withLocalize, Translate } from 'react-localize-redux';
 
 class HomePage extends Component{
   constructor(props) {
     super(props);
 
+    let { setActiveLanguage } = props;
+    let defaultLanguage = this.props.lang;
+
     this.props.initialize({
-      languages: [
-        { name: 'English', code: 'en' },
-        { name: 'Spanish', code: 'es' }
-      ],
-      options: { renderToStaticMarkup }
+      languages: props.languages,
+      options: props.options
     });
+
+    setActiveLanguage(defaultLanguage);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -40,15 +42,23 @@ class HomePage extends Component{
   }
 
   render() {
-    console.log("APP!");
+    let loginRoute = `/login/${this.props.lang}`;
+    let registerRoute = `/register/${this.props.lang}`;
+    let registerAgencyRoute = `/registerAgency/${this.props.lang}`;
+
     return (
       <div className="container-fluid">
         HOMEPAGE!<br />
-        <Link to="/login">Login</Link><br />
-        <Link to="/register">Create New User</Link>
+        <Link to={loginRoute}>Login</Link><br />
+        <Link to={registerRoute}>Create New User</Link><br />
+        <Link to={registerAgencyRoute}>Create New Agency</Link>
       </div>
     );
   }
 };
 
-export default withLocalize(HomePage);
+// let mapStatetoProps = (state) => ({
+//
+// });
+
+export default withLocalize(connect(null)(HomePage));

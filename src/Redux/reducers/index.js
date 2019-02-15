@@ -1,10 +1,12 @@
 /********* THIS IS THE ROOT REDUCER *********/
 import { combineReducers } from 'redux';
-import someReducer from './someReducer';
+import tempEdgeReducer from './tempEdgeReducer';
+import { reducer as formReducer } from 'redux-form';
 import { localizeReducer } from 'react-localize-redux';
 
 export default combineReducers({
-  rootReducer: someReducer,
-  localize: localizeReducer
+  tempEdge: tempEdgeReducer,
+  localize: localizeReducer,
+  form: formReducer
 });
 /********************************************/
