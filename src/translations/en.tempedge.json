@@ -29,5 +29,12 @@
   "com.tempedge.msg.label.agencyaddress"                              : "Address",
   "com.tempedge.msg.label.agencyappartment"                           : "Apartment",
   "com.tempedge.msg.label.newuser"                                    : "New User",
-  "com.tempedge.msg.label.newagency"                                  : "New Agency"
+  "com.tempedge.msg.label.newagency"                                  : "New Agency",
+  "com.tempedge.msg.label.country"                                    : "Country",
+  "com.tempedge.msg.label.options"                                    : "Options",
+  "com.tempedge.error.agency.agencynamerequired"                      : "Agency name is required.",
+  "com.tempedge.error.agency.agencyaddressrequired"                   : "Agency address is required.",
+  "com.tempedge.error.agency.agencyappartmentrequired"                : "Agency appartment is required.",
+  "com.tempedge.error.agency.agencycountryrequired"                   : "Agency country is required.",
+  "com.tempedge.error.agency.agencydropdownrequired"                  : "Agency option is required."                        
 }

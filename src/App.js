@@ -35,7 +35,7 @@ class App extends React.Component{
 
     return(
       <Provider store={store}>
-        <LocalizeProvider store={store} initialize={{ languages: languages, options: options}}>
+        <LocalizeProvider store={store} initialize={{ languages: languages, options: options }}>
           <Favicon url="/img/favicon.ico" />
           <Router>
             <React.Fragment>

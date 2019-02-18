@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Field, reduxForm } from 'redux-form';
+import DropdownList from 'react-widgets/lib/DropdownList';
+import 'react-widgets/dist/css/react-widgets.css';
 import PropTypes from 'prop-types';
 import Validators from 'redux-form-validators';
 import { required, date } from 'redux-form-validators';
@@ -51,7 +53,7 @@ class CreateNewAgency extends Component{
     let errMsg = '';
 
     if(typeof formProps.input !== 'undefined'){
-      fieldId = `com.tempedge.error.person.${formProps.input.name}required`;
+      fieldId = `com.tempedge.error.agency.${formProps.input.name}required`;
       errMsg = formProps.meta.error;
 
       if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
@@ -60,6 +62,17 @@ class CreateNewAgency extends Component{
         );
       }
     }
+  }
+
+  renderDropdownList = (formProps) => {
+    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
+
+    return(
+      <div className={errorClass}>
+        <DropdownList {...formProps.input} data={formProps.data} valueField={formProps.valueField} textField={formProps.textField} onChange={formProps.input.onChange} />
+        {this.renderError(formProps)}
+      </div>
+    );
   }
 
   renderInput = (formProps) => {
@@ -78,21 +91,47 @@ class CreateNewAgency extends Component{
   }
 
   render(){
+    let country_list = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
+                      	,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
+                      	,"Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica"
+                      	,"Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea"
+                      	,"Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana"
+                      	,"Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India"
+                      	,"Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia"
+                      	,"Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania"
+                      	,"Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia"
+                      	,"New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal"
+                      	,"Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles"
+                      	,"Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan"
+                      	,"Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia"
+                      	,"Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay"
+                      	,"Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+    let option_list = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 2" ];
+
     return(
       <React.Fragment>
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
         <form onSubmit={this.props.handleSubmit(this.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
           <div className="form-group">
+            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate>:</label>
+            <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
+          </div>
+          <div className="form-group">
+            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.options">Options</Translate>:</label>
+            <Field  name="agencydropdown" component={this.renderDropdownList} data={option_list} valueField="value" textField="option" />
+          </div>
+          <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyname">Agency Name</Translate></label>
-              <Field name="firstName" type="text" placeholder="Agency Name" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyname" type="text" placeholder="Agency Name" component={(formProps) => this.renderInput(formProps)} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
-              <Field name="middleName" type="text" placeholder="Address" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyaddress" type="text" placeholder="Address" component={(formProps) => this.renderInput(formProps)} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate></label>
-              <Field name="lastName" type="text" placeholder="Apartment" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyappartment" type="text" placeholder="Apartment" component={(formProps) => this.renderInput(formProps)} />
           </div>
           <div className="form-group">
               <div className="col-md-6 col-md-offset-3">
