@@ -6,7 +6,8 @@
   "com.tempedge.msg.label.create_account"                             : "Create an Account",
   "com.tempedge.msg.label.rights"                                     : "All rights reserved..",
   "com.tempedge.msg.label.welcome"                                    : "Welcome",
-  "com.tempedge.msg.label.apply_now"                                  : "Apply Now",
+  "com.tempedge.msg.label.newuser"                                    : "New User",
+  "com.tempedge.msg.label.newagency"                                  : "New Agency",
   "com.tempedge.msg.label.firstname"                                  : "First Name",
   "com.tempedge.msg.label.middlename"                                 : "Middle Name",
   "com.tempedge.msg.label.lastname"                                   : "Last Name",
@@ -31,10 +32,14 @@
   "com.tempedge.msg.label.newuser"                                    : "New User",
   "com.tempedge.msg.label.newagency"                                  : "New Agency",
   "com.tempedge.msg.label.country"                                    : "Country",
-  "com.tempedge.msg.label.options"                                    : "Options",
+  "com.tempedge.msg.label.addresstype"                                : "Address Type",
+  "com.tempedge.msg.label.agencyzipcode"                              : "Zip Code",
   "com.tempedge.error.agency.agencynamerequired"                      : "Agency name is required.",
   "com.tempedge.error.agency.agencyaddressrequired"                   : "Agency address is required.",
   "com.tempedge.error.agency.agencyappartmentrequired"                : "Agency appartment is required.",
   "com.tempedge.error.agency.agencycountryrequired"                   : "Agency country is required.",
-  "com.tempedge.error.agency.agencydropdownrequired"                  : "Agency option is required."                        
+  "com.tempedge.error.agency.agencystaterequired"                     : "Agency state is required",
+  "com.tempedge.error.agency.agencydropdownrequired"                  : "Agency option is required.",
+  "com.tempedge.msg.label.next"                                       : "Next",
+  "com.tempedge.msg.label.state"                                      : "State"
 }

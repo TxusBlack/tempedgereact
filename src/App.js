@@ -12,7 +12,7 @@ import Footer from './components/common/Footer/Footer';
 import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser';
-import CreateNewAgency from './Pages/Login/CreateNewAgency';
+import CreateNewAgency from './Pages/Login/CreateNewAgency/WizardCreateNewAgency';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 
 class App extends React.Component{
