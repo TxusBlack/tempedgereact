@@ -58,6 +58,20 @@ body {
   left:15px;
 }
 
+.menu ul li:hover a{
+  position: relative;
+}
+
+.menu ul li:hover a:after{
+  position: absolute;
+  content: "";
+  height:3px;
+  width:calc(100% - 30px);
+  background-color: #0c790ac9;
+  top:75%;
+  left:15px;
+}
+
 .company-logo{
   height: 62px;
   width: 190px;
@@ -137,6 +151,9 @@ body {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 }
 
+.register-link{
+  padding-bottom: 40px;
+}
 /***********************/
 
 
@@ -146,9 +163,14 @@ body {
   padding: 30px 0;
 }
 
+.register-form-field-array{
+  width: 70% !important;
+  padding: 30px 0;
+}
+
 .register-save-btn{
-  width: 30%;
-  margin: 0 auto;
+  width: 50%;
+  margin: 0 auto 40px auto;
 }
 
 .has-error-dob div{
@@ -156,8 +178,59 @@ body {
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
 }
+
+.agency-phone-box{
+  margin-bottom: 10px;
+}
+
+.phone-num-btn-close{
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-image: linear-gradient(#fff,#d5d5d5);
+  border: 1px solid #d5d5d5;
+  color: #000;
+}
+
+form ul{
+  list-style: none;
+}
+
+form ul li{
+  text-decoration: none;
+}
+
+form ul li:last-child button {
+    float: none;
+    white-space: nowrap;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-top: 20px;
+    font-size: 15px;
+    color: #fff;
+    background-image: linear-gradient(#fff,#d5d5d5);
+    border: 1px solid #d5d5d5;
+    color: #000;
+}
+
+.agency-phone-li{
+  margin-bottom: 20px;
+  border: 1px solid #d5d5d5;
+  padding: 20px 30px;
+  border-radius: 5px;
+}
+
+.translation-placeholder{
+  visibility: hidden;
+}
+
+.prev-next-btns{
+  margin-top: 30px;
+}
 /************************/
 
+/* Create New User / Agency */
+
+/*************************/
 
 /* Footer */
 .footer{

@@ -7,8 +7,6 @@ import Validators from 'redux-form-validators';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
 
-const $ = window.$;
-
 class Login extends Component{
   constructor(props) {
     super(props);
@@ -105,7 +103,7 @@ class Login extends Component{
                       <Link to={forgotPasswordRoute} className="pull-right"><Translate id="com.tempedge.msg.label.password_retrieve">Forgot Password?</Translate></Link>
                   </div>
               </form>
-              <p className="text-center"><Link to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create an Account</Translate></Link></p>
+              <p className="text-center register-link"><Link to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create an Account</Translate></Link></p>
             </div>
           </div>
         </div>

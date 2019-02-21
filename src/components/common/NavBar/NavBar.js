@@ -20,9 +20,15 @@ class NavBar extends React.Component{
       if(this.props.activePage === 'auth'){
         activeMenuItem[0] = 'active';
         activeMenuItem[1] = '';
+        activeMenuItem[2] = '';
       }else if(this.props.activePage === 'register'){
         activeMenuItem[0] = '';
         activeMenuItem[1] = 'active';
+        activeMenuItem[2] = '';
+      }else if(this.props.activePage === 'registerAgency'){
+        activeMenuItem[0] = '';
+        activeMenuItem[1] = '';
+        activeMenuItem[2] = 'active';
       }
     }
   }
@@ -31,7 +37,8 @@ class NavBar extends React.Component{
     let { languages, activeLanguage, lang } = this.props;
     let loginRoute = `/auth/${lang}`;
     let registerRoute = `/register/${lang}`;
-    let activeMenuItem = ['active', ''];
+    let registerAgencyRoute = `/registerAgency/${lang}`;
+    let activeMenuItem = ['active', '', ''];
 
     this.checkMenuItemActive(activeMenuItem);
 
@@ -74,7 +81,8 @@ class NavBar extends React.Component{
                 <div className="collapse navbar-collapse menu">
                   <ul className="nav navbar-nav menu-ul">
                     <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.welcome">Welcome</Translate></Link></li>
-                    <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.apply_now">Apply Now</Translate></Link></li>
+                    <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser">New User</Translate></Link></li>
+                    <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></Link></li>
                   </ul>
                  </div>
                </div>
