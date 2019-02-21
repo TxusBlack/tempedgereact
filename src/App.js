@@ -14,6 +14,7 @@ import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser';
 import CreateNewAgency from './Pages/Login/CreateNewAgency/WizardCreateNewAgency';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
+import FaceMash from './Pages/FaceMash/FaceMash';
 
 class App extends React.Component{
   constructor(props){
@@ -46,6 +47,7 @@ class App extends React.Component{
                 <Route exact path="/register/:lang" render={ (props) => <CreateNewUser params={props.match.params} {...props} /> } />
                 <Route exact path="/registerAgency/:lang" render={ (props) => <CreateNewAgency params={props.match.params} {...props} /> } />
                 <Route exact path="/resetpassword/:lang" render={ (props) => <ForgotPassword params={props.match.params} {...props} /> } />
+                <Route exact path="/snapshot/:lang" render={ (props) => <FaceMash params={props.match.params} {...props} /> } />
               </Switch>
             </React.Fragment>
           </Router>

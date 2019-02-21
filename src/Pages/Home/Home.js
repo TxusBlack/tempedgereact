@@ -39,13 +39,15 @@ class HomePage extends Component{
     let loginRoute = `/auth/${this.props.lang}`;
     let registerRoute = `/register/${this.props.lang}`;
     let registerAgencyRoute = `/registerAgency/${this.props.lang}`;
+    let snapshotRoute = `/snapshot/${this.props.lang}`;
 
     return(
       <div className="container-fluid">
         HOMEPAGE!<br />
         <Link to={loginRoute}>Login</Link><br />
         <Link to={registerRoute}>Create New User</Link><br />
-        <Link to={registerAgencyRoute}>Create New Agency</Link>
+        <Link to={registerAgencyRoute}>Create New Agency</Link><br />
+        <Link to={snapshotRoute}>Capture Face Snapshot</Link>
       </div>
     );
   }
