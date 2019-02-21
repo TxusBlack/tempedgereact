@@ -41,7 +41,6 @@ class CreateNewAgency extends Component {
     let countries = countryList();
 
     console.log("this.state.page: ",this.state.page);
-    console.log("countryList: ", countries);
 
     return (
       <div>

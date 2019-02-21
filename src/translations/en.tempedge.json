@@ -41,5 +41,7 @@
   "com.tempedge.error.agency.agencystaterequired"                     : "Agency state is required",
   "com.tempedge.error.agency.agencydropdownrequired"                  : "Agency option is required.",
   "com.tempedge.msg.label.next"                                       : "Next",
-  "com.tempedge.msg.label.state"                                      : "State"
+  "com.tempedge.msg.label.state"                                      : "State",
+  "com.tempedge.msg.label.newagencyphonenumber"                       : "Phone: Extension:",
+  "com.tempedge.error.agency.agencyphonenumbers.phonenumberrequired"  : "Please enter a phone number."
 }

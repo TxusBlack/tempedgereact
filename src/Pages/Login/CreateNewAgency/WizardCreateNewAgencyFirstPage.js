@@ -156,7 +156,7 @@ class WizardCreateNewAgencyFirstPage extends Component{
             <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate>:</label>
             <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
           </div>
-          <div className="form-group">
+          <div className="form-group prev-next-btns">
               <div className="col-md-6 col-md-offset-3">
                 <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
               </div>

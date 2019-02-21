@@ -41,5 +41,7 @@
   "com.tempedge.error.agency.agencystaterequired"                     : "Estado o provincia de la agencia es requerido.",
   "com.tempedge.error.agency.agencydropdownrequired"                  : "Opcion de agencia es requerida.",
   "com.tempedge.msg.label.next"                                       : "Siguiente",
-  "com.tempedge.msg.label.state"                                      : "Estado o Provincia"
+  "com.tempedge.msg.label.state"                                      : "Estado o Provincia",
+  "com.tempedge.msg.label.newagencyphonenumber"                       : "Telefono: Extencion:",
+  "com.tempedge.error.agency.agencyphonenumbers.phonenumberrequired"  : "Numero telefonico es requerido."
 }

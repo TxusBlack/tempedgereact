@@ -7,8 +7,6 @@ import Validators from 'redux-form-validators';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
 
-const $ = window.$;
-
 class Login extends Component{
   constructor(props) {
     super(props);

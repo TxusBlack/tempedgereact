@@ -118,7 +118,7 @@ class WizardCreateNewAgencyThirdPage extends Component{
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate></label>
               <Field name="agencyappartment" type="text" placeholder="Apartment" component={(formProps) => this.renderInput(formProps)} />
           </div>
-          <div className="form-group">
+          <div className="form-group prev-next-btns">
               <div className="col-md-6 col-md-offset-3">
                 <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
               </div>
