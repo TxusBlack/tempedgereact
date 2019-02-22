@@ -1,11 +1,26 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from '../Redux/reducers/index';
-
-let initialState = {};
+import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer } from 'redux-persist';
+import { createBlacklistFilter } from 'redux-persist-transform-filter';
 
 let middleware = [thunk];
 
-let store = createStore(rootReducer, initialState, compose(applyMiddleware(...middleware), window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__()));
+let saveSubsetBlacklistFilter = createBlacklistFilter(
+  'form',
+  ['login']
+);
 
-export default store;
+let config = {
+  key: 'root',
+  storage: storage,
+  //blacklist: ['form'],
+  transforms: [saveSubsetBlacklistFilter]
+}
+
+let store = createStore(persistReducer(config, rootReducer), compose(applyMiddleware(...middleware), window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__()));
+
+let persistor = persistStore(store);
+
+export { store, persistor };
