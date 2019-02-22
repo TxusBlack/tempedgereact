@@ -75,7 +75,7 @@ class NavBar extends React.Component{
             <div className="container">
               <div className="row">
                 <div className="col-md-2 logo">
-                  <img className="company-logo" src="./img/Temp_Edge_250-80.png" />
+                  <Link to="/"><img className="company-logo" src="./img/Temp_Edge_250-80.png" /></Link>
                 </div>
                 <div className="col-md-10">
                 <div className="collapse navbar-collapse menu">
