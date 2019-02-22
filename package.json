@@ -21,6 +21,7 @@
     "redux-form": "^8.1.0",
     "redux-form-validators": "^2.7.5",
     "redux-persist": "^5.10.0",
+    "redux-persist-transform-filter": "0.0.18",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
