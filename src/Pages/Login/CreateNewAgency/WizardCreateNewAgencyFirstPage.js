@@ -122,6 +122,7 @@ class WizardCreateNewAgencyFirstPage extends Component{
       country_list.push(country.countryName);
     });
 
+    console.log("this.props: ", this.props);
     console.log("First Page");
 
     return(

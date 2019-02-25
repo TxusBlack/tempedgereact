@@ -272,10 +272,10 @@ let faceDetect = (function(window, undefined) {
       window.cancelAnimationFrame(requestId);
     });
     task.on('run', function() {
-      setTimeout(() => {
+      // setTimeout(() => {
         stopRequestAnimationFrame = false;
         requestAnimationFrame_();
-      }, 3000);
+      // }, 3000);
     });
     task.on('stopVideoFeed', function() {
       element.srcObject.getVideoTracks()[0].stop();
