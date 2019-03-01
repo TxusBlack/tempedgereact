@@ -17,12 +17,11 @@ class WizardCreateNewAgencyFourthPage extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, phonelabels: '' }
+  state= { mounted: false, salespersonlabels: '', reCaptchaToken: '', btnDisabled: true }
 
   componentDidMount(){
     this.setState({
-      mounted: true,
-      phonelabels: 'OfficeName Address City Phone'
+      mounted: true
     });
   }
 
@@ -52,7 +51,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
         if(this.state.mounted && phonelabel != '') {
           this.setState({
-            phonelabels: phonelabel
+            salespersonlabels: phonelabel
           });
         }
       });
@@ -61,30 +60,27 @@ class WizardCreateNewAgencyFourthPage extends Component{
   renderError(formProps){
     let fieldId='';
 
-    console.log("formProps: ", formProps);
+    if(typeof formProps.input !== 'undefined'){
+      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
+        if(formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1){
+           if(formProps.input.name.indexOf("salespersonfirstname") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired`;
+           }else if(formProps.input.name.indexOf("salespersonlastname") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonlastnamerequired`;
+           }else if(formProps.input.name.indexOf("salespersongenre") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersongenrerequired`;
+           }else if(formProps.input.name.indexOf("salespersonphonenumber") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonphonenumberrequired`;
+          }
+        }
+      }
 
-    return '';
-    // if(typeof formProps.input !== 'undefined'){
-    //   if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
-    //     if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
-    //        if(formProps.input.name.indexOf("officeName") !== -1){
-    //          fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired`;
-    //        }else if(formProps.input.name.indexOf("address") !== -1){
-    //          fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired`;
-    //        }else if(formProps.input.name.indexOf("city") !== -1){
-    //          fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired`;
-    //        }else if(formProps.input.name.indexOf("phonenumber") !== -1){
-    //          fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired`;
-    //       }
-    //     }
-    //   }
-    //
-    //   if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
-    //     return(
-    //       <p style={{color: '#a94442'}}>{formProps.meta.error}</p>
-    //     );
-    //   }
-    // }
+      if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
+        return(
+          <p style={{color: '#a94442'}}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
+        );
+      }
+    }
   }
 
   renderSalesPersonInputs = (formProps) => {
@@ -103,8 +99,8 @@ class WizardCreateNewAgencyFourthPage extends Component{
         <Field name={`${recruitmentOffice}.salespersonfirstname`} type="text" placeholder="First Name" index={index} label={recruitment_office[0]} component={this.renderInput} />
         <Field name={`${recruitmentOffice}.salespersonlastname`} type="text" placeholder="Last Name" index={index} label={recruitment_office[1]} component={this.renderInput} />
         <div className="row agency-phone-box">
-          <label class="col-xs-2 control-label">{recruitment_office[2]}</label>
-          <div class="col-xs-10">
+          <label className="col-xs-2 control-label">{recruitment_office[2]}</label>
+          <div className="col-xs-10">
             <label><Field name={`${recruitmentOffice}.salespersongenre`} type="radio" index={index} value="male" component="input" />{recruitment_office[3]}</label><br />
             <label><Field name={`${recruitmentOffice}.salespersongenre`} type="radio" index={index} value="female" component="input" />{recruitment_office[4]}</label>
           </div>
@@ -149,9 +145,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     this.setState({
       reCaptchaToken: recaptchaToken,
       btnDisabled: false
-    }, () => {
-      console.log("this.state.btnDisabled: ", this.state.btnDisabled);
-    })
+    });
   }
 
   renderReCaptcha = (formProps) => {
@@ -184,14 +178,14 @@ class WizardCreateNewAgencyFourthPage extends Component{
         <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
           <div className="form-group">
             <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficesalespersongenre">FirstName LastName Sex Male Female Phone</Translate></span>
-            <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderSalesPersonInputs} />
+            <FieldArray name="recruitmentofficesalespersons" type="text" placeholder="Phone Number" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
           </div>
           <div className="form-group prev-next-btns">
             <div className="col-md-4 col-md-offset-2">
               <button type="button" className="btn btn-primary btn-block register-save-btn previous" onClick={this.props.previousPage}>Previous</button>
             </div>
             <div className="col-md-4">
-              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.submit">Submit</Translate></button>
+              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit">Submit</Translate></button>
             </div>
           </div>
         </form>
@@ -210,45 +204,42 @@ class WizardCreateNewAgencyFourthPage extends Component{
 let validate = (formValues) => {
   let errors = {};
 
-  if (!formValues.recruitmentofficephonenumbers || !formValues.recruitmentofficephonenumbers.length) {
-    errors.recruitmentofficephonenumbers = { _error: 'At least one recruitment office phone number must be entered.' };
+  if (!formValues.recruitmentofficesalespersons || !formValues.recruitmentofficesalespersons.length) {
+    errors.recruitmentofficesalespersons = { _error: 'At least one sales person must be entered.' };
   }else{
-    let recruitmentofficephonenumbersArrayErrors = [];
+    let recruitmentofficesalespersonsArrayErrors = [];
 
-    formValues.recruitmentofficephonenumbers.forEach((recruitmentoffice, index) => {
-      let recruitmentofficephonenumbersErrors = {};
+    formValues.recruitmentofficesalespersons.forEach((salesperson, index) => {
+      let recruitmentofficesalespersonsErrors = {};
       let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
 
-      if (!regX.test(recruitmentoffice.phonenumber)){
-        recruitmentofficephonenumbersErrors.phonenumber = 'Enter the recruitment office phone number.';
+      if (!regX.test(salesperson.salespersonphonenumber)){
+        recruitmentofficesalespersonsErrors.salespersonphonenumber = 'Enter the sales person phone number.';
       }
 
-      if(!recruitmentoffice.officeName){
-        recruitmentofficephonenumbersErrors.officeName = 'Enter the recruitment office name.';
+      if(!salesperson.salespersonfirstname){
+        recruitmentofficesalespersonsErrors.salespersonfirstname = 'Enter the sales person first name.';
       }
 
-      if(!recruitmentoffice.address){
-        recruitmentofficephonenumbersErrors.address = 'Enter the recruitment office address.';
+      if(!salesperson.salespersonlastname){
+        recruitmentofficesalespersonsErrors.salespersonlastname = 'Enter the sales person last name.';
       }
 
-      if(!recruitmentoffice.city){
-        recruitmentofficephonenumbersErrors.city = "Enter the recruitment office city.";
+      if(!salesperson.salespersongenre){
+        recruitmentofficesalespersonsErrors.salespersongenre = "Enter a genre.";
       }
 
-      recruitmentofficephonenumbersArrayErrors[index] = recruitmentofficephonenumbersErrors;
+      recruitmentofficesalespersonsArrayErrors[index] = recruitmentofficesalespersonsErrors;
     });
 
-    if(recruitmentofficephonenumbersArrayErrors.length){
-      errors.recruitmentofficephonenumbers = recruitmentofficephonenumbersArrayErrors;
+    if(recruitmentofficesalespersonsArrayErrors.length){
+      errors.recruitmentofficesalespersons = recruitmentofficesalespersonsArrayErrors;
     }
   }
 
   return errors;
 }
 
-WizardCreateNewAgencyFourthPage.propTypes = {
-  setActivePage: PropTypes.func.isRequired
-}
 
 let mapStateToProps = (state) => {
   return({
@@ -256,8 +247,13 @@ let mapStateToProps = (state) => {
   });
 }
 
+WizardCreateNewAgencyFourthPage.propTypes = {
+  setActivePage: PropTypes.func.isRequired
+}
+
 WizardCreateNewAgencyFourthPage = reduxForm({
   form: 'CreateNewAgency',
+  destroyOnUnmount: false,
   validate: validate
 })(WizardCreateNewAgencyFourthPage);
 

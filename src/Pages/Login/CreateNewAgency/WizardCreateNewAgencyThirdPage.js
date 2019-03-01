@@ -20,8 +20,7 @@ class WizardCreateNewAgencyThirdPage extends Component{
 
   componentDidMount(){
     this.setState({
-      mounted: true,
-      phonelabels: 'OfficeName Address City Phone'
+      mounted: true
     });
   }
 
@@ -229,6 +228,7 @@ let mapStateToProps = (state) => {
 
 WizardCreateNewAgencyThirdPage = reduxForm({
   form: 'CreateNewAgency',
+  destroyOnUnmount: false,
   validate: validate
 })(WizardCreateNewAgencyThirdPage);
 

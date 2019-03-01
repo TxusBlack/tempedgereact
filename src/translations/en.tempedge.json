@@ -51,5 +51,10 @@
   "com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired"         : "Enter the recruitment office city.",
   "com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired"  : "Enter the recruitment office phone number.",
   "com.tempedge.msg.label.recruitmentofficesalespersongenre"          : "FirstName LastName Sex Male Female Phone",
-  "com.tempedge.msg.label.submit"                                     : "Submit"
+  "com.tempedge.msg.label.submit"                                     : "Submit",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired"   : "Enter the sales person first name.",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonlastnamerequired"    : "Enter the sales person last name",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersongenrerequired"       : "Enter a genre.",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonphonenumberrequired" : "Enter the sales person phone number."
+
 }

@@ -186,6 +186,7 @@ let mapStateToProps = (state) => {
 
 WizardCreateNewAgencySecondPage = reduxForm({
   form: 'CreateNewAgency',
+  destroyOnUnmount: false,
   validate: validate
 })(WizardCreateNewAgencySecondPage);
 

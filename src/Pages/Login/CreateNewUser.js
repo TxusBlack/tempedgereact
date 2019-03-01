@@ -87,7 +87,7 @@ class CreateNewUser extends Component{
 
     return(
       <div className={errorClass}>
-        <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
+        <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
         {this.renderError(formProps)}
       </div>
     );
@@ -110,9 +110,7 @@ class CreateNewUser extends Component{
     this.setState({
       reCaptchaToken: recaptchaToken,
       btnDisabled: false
-    }, () => {
-      console.log("this.state.btnDisabled: ", this.state.btnDisabled);
-    })
+    });
   }
 
   renderReCaptcha = (formProps) => {
@@ -138,6 +136,8 @@ class CreateNewUser extends Component{
   }
 
   render(){
+    console.log("this.state.btnDisabled: ", this.state.btnDisabled);
+
     return(
       <React.Fragment>
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newuser">New User</Translate></h2>
@@ -164,7 +164,7 @@ class CreateNewUser extends Component{
           </div>
           <div className="form-group">
               <div className="col-md-6 col-md-offset-3">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn new-gency-register-save-btn" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
+                <button type="submit" className="btn btn-primary btn-block register-save-btn new-gency-register-save-btn" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
               </div>
           </div>
       </form>
