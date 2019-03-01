@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import WizardCreateNewAgencyFirstPage from './WizardCreateNewAgencyFirstPage';
 import WizardCreateNewAgencySecondPage from './WizardCreateNewAgencySecondPage';
 import WizardCreateNewAgencyThirdPage from './WizardCreateNewAgencyThirdPage';
+import WizardCreateNewAgencyFourthPage from './WizardCreateNewAgencyFourthPage';
 import { connect } from 'react-redux';
 import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
 import countryList from '../../../country-region-data/data';
@@ -48,7 +49,10 @@ class CreateNewAgency extends Component {
         {page === 2 &&
           <WizardCreateNewAgencySecondPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} params={this.props.match.params} {...this.props} />}
         {page === 3 &&
-          <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.onSubmit} countryList={countries} params={this.props.match.params} {...this.props} />}
+          <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} params={this.props.match.params} {...this.props} />}
+        {page === 4 &&
+          <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.onSubmit} countryList={countries} params={this.props.match.params} {...this.props} />}
+
       </div>
     );
   }

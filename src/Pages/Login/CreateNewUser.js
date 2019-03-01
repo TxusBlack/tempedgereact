@@ -11,6 +11,8 @@ import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
+import ReCaptcha from "react-google-recaptcha";
+import keys from '../../apiKeys/keys';
 
 momentLocaliser(moment);
 
@@ -31,6 +33,8 @@ class CreateNewUser extends Component{
 
     this.addTranslationsForActiveLanguage();
   }
+
+  state = { reCaptchaToken: '', btnDisabled: true }
 
   componentWillMount(){
     this.props.history.location.pathname = `/register/${this.props.activeLanguage.code}`;
@@ -100,15 +104,44 @@ class CreateNewUser extends Component{
     );
   }
 
+  onChange = (recaptchaToken) => {
+    console.log("recaptchaToken: ", recaptchaToken);
+
+    this.setState({
+      reCaptchaToken: recaptchaToken,
+      btnDisabled: false
+    }, () => {
+      console.log("this.state.btnDisabled: ", this.state.btnDisabled);
+    })
+  }
+
+  renderReCaptcha = (formProps) => {
+    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
+
+    return(
+      <div className={errorClass}>
+        <ReCaptcha
+            ref={(ref) => {this.captcha = ref;}}
+            size={formProps.size}
+            height={formProps.height}
+            theme={formProps.theme}
+            sitekey={keys.RECAPTCHA_SITE_KEY}
+            onChange={this.onChange}
+        />
+      </div>
+    );
+  }
+
   onSubmit(formValues){
     console.log(formValues);
+    //this.captcha.reset();
   }
 
   render(){
     return(
       <React.Fragment>
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newuser">New User</Translate></h2>
-        <form onSubmit={this.props.handleSubmit(this.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
+        <form onSubmit={this.props.handleSubmit(this.onSubmit)} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.firstname">First Name (Required)</Translate></label>
               <Field name="firstName" type="text" placeholder="First Name" component={(formProps) => this.renderInput(formProps)} />
@@ -131,10 +164,17 @@ class CreateNewUser extends Component{
           </div>
           <div className="form-group">
               <div className="col-md-6 col-md-offset-3">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
+                <button type="submit" className="btn btn-primary btn-block register-save-btn new-gency-register-save-btn" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
               </div>
           </div>
       </form>
+      <div className="row">
+        <div className="col-md-12">
+          <div className="center-block new-agency-captcha">
+            <Field name='captcha' size="normal" height="130px" theme="light" component={this.renderReCaptcha} />
+          </div>
+        </div>
+      </div>
     </React.Fragment>
     );
   }

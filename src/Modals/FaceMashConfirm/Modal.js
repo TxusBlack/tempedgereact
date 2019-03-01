@@ -8,7 +8,11 @@ class Modal extends React.Component{
   }
 
   onClose(){
-    this.props.reStartfaceDetectTracker();
+    console.log("this.props.reStartfaceDetectTracker: ", this.props.reStartfaceDetectTracker);
+    if(this.props.reStartfaceDetectTracker !== null){
+      console.log("Restarting face detect tracker.");
+      this.props.reStartfaceDetectTracker();
+    }
   }
 
   componentDidMount(){

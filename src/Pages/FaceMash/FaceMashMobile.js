@@ -15,7 +15,7 @@ const $ = window.$;
 let canvas_width = 320;
 let canvas_height: 240;
 
-class FaceMash extends React.Component {
+class FaceMashMobile extends React.Component {
   constructor(props){
     super(props);
   }
@@ -172,7 +172,7 @@ class FaceMash extends React.Component {
         if(!this.state.faceDetected){
           console.log("Face Detected!");
 
-          this.resetFaceDetected(true);
+          this.resetFaceDetected(true);   //Set faceDetected to true.
         }
       })
     })
@@ -201,6 +201,7 @@ class FaceMash extends React.Component {
         console.log("start: ", this.state.start);
         console.log("elapsed: ", elapsed);
         console.log("secs: ", seconds);
+        this.setState({ waitMsg: `Please stand still for ${parseInt(6-seconds)} seconds.` });
 
         if(seconds > this.state.delay){
           let imageSrc = this.capture();
@@ -219,7 +220,7 @@ class FaceMash extends React.Component {
               employeeName: "Luis Diaz",
               timeStatus: "In"
             }, () => {
-              this.toggleModal(0);   //Opens Modal
+              this.toggleModal(0);   //Opens Sucess Modal
             });
 
             /*** ON FAIL ***/
@@ -227,7 +228,7 @@ class FaceMash extends React.Component {
             //   employeeName: "Luis Diaz",
             //   timeStatus: ""
             // }, () => {
-            //   this.toggleModal(-1);   //Opens Modal
+            //   this.toggleModal(-1);   //Opens Fail Modal
             // });
             //*****
           }
@@ -254,7 +255,7 @@ class FaceMash extends React.Component {
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", width: 320, height: 240, marginBottom:40}} className="center-block">
+            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height, marginBottom:40}} className="center-block">
               <Webcam className="center-block"
                 audio={false}
                 height={240}
@@ -276,4 +277,4 @@ class FaceMash extends React.Component {
   }
 }
 
-export default withLocalize(connect(null)(FaceMash));
+export default withLocalize(connect(null)(FaceMashMobile));

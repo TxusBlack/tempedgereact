@@ -43,5 +43,13 @@
   "com.tempedge.msg.label.next"                                       : "Next",
   "com.tempedge.msg.label.state"                                      : "State",
   "com.tempedge.msg.label.newagencyphonenumber"                       : "Phone: Extension:",
-  "com.tempedge.error.agency.agencyphonenumbers.phonenumberrequired"  : "Please enter a phone number."
+  "com.tempedge.error.agency.agencyphonenumbers.phonenumberrequired"  : "Please enter a phone number.",
+  "com.tempedge.msg.label.recruitingoffice"                           : "Recruiting Office",
+  "com.tempedge.msg.label.recruitmentofficephonenumbers"              : "OfficeName Address City Phone",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired"   : "Enter the recruitment office name.",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired"      : "Enter the recruitment office address.",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired"         : "Enter the recruitment office city.",
+  "com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired"  : "Enter the recruitment office phone number.",
+  "com.tempedge.msg.label.recruitmentofficesalespersongenre"          : "FirstName LastName Sex Male Female Phone",
+  "com.tempedge.msg.label.submit"                                     : "Submit"
 }

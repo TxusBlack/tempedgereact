@@ -6,15 +6,19 @@ import { Field, reduxForm } from 'redux-form';
 import Validators from 'redux-form-validators';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
+import ReCaptcha from "react-google-recaptcha";
+import keys from '../../apiKeys/keys';
 
 class Login extends Component{
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.addTranslationsForActiveLanguage();
   }
 
-  componentWillMount(){
+  state = { reCaptchaToken: '', btnDisabled: true }
+
+  componentDidMount(){
     this.props.history.location.pathname = `/auth/${this.props.activeLanguage.code}`;
     this.props.history.push(`/auth/${this.props.activeLanguage.code}`);
     this.props.setActivePage("auth");
@@ -71,8 +75,37 @@ class Login extends Component{
     );
   }
 
+  onChange = (recaptchaToken) => {
+    console.log("recaptchaToken: ", recaptchaToken);
+
+    this.setState({
+      reCaptchaToken: recaptchaToken,
+      btnDisabled: false
+    }, () => {
+      console.log("this.state.btnDisabled: ", this.state.btnDisabled);
+    })
+  }
+
+  renderReCaptcha = (formProps) => {
+    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
+
+    return(
+      <div className={errorClass}>
+        <ReCaptcha
+            ref={(ref) => {this.captcha = ref;}}
+            size={formProps.size}
+            height={formProps.height}
+            theme={formProps.theme}
+            sitekey={keys.RECAPTCHA_SITE_KEY}
+            onChange={this.onChange}
+        />
+      </div>
+    );
+  }
+
   onSubmit(formValues){
     console.log(formValues);
+    //this.captcha.reset();
   }
 
   render(){
@@ -93,7 +126,7 @@ class Login extends Component{
                     <Field name="password" type="text" placeholder="Password" component={(formProps) => this.renderInput(formProps)} />
                   </div>
                   <div className="form-group">
-                      <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.login">Log In</Translate></button>
+                      <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.login">Log In</Translate></button>
                   </div>
                   <div className="clearfix">
                       <label className="pull-left checkbox-inline">
@@ -104,6 +137,13 @@ class Login extends Component{
                   </div>
               </form>
               <p className="text-center register-link"><Link to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create an Account</Translate></Link></p>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="center-block" style={{width: "304px", marginBottom: "40px"}}>
+                    <Field name='captcha' size="normal" height="130px" theme="light" component={this.renderReCaptcha} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
