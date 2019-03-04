@@ -129,19 +129,19 @@ class WizardCreateNewAgencyFirstPage extends Component{
         <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyname">Agency Name</Translate></label>
-              <Field name="agencyname" type="text" placeholder="Agency Name" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
-              <Field name="agencyaddress" type="text" placeholder="Address" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyaddress" type="text" placeholder="Address" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate></label>
-              <Field name="agencyappartment" type="text" placeholder="Apartment" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyappartment" type="text" placeholder="Apartment" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
-              <Field name="agencyzipcode" type="text" placeholder="Zip Code" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="agencyzipcode" type="text" placeholder="Zip Code" component={this.renderInput} />
           </div>
           <div className="form-group">
             <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.addresstype">Address Type</Translate></label>

@@ -69,7 +69,7 @@ class Login extends Component{
 
     return(
       <div className={errorClass}>
-        <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
+        <input className="form-control login-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
         {this.renderError(formProps)}
       </div>
     );
@@ -87,7 +87,7 @@ class Login extends Component{
   }
 
   renderReCaptcha = (formProps) => {
-    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
+    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'captcha'}`;
 
     return(
       <div className={errorClass}>
@@ -115,31 +115,40 @@ class Login extends Component{
     return(
       <div className="container-fluid login-container">
         <div className="row">
-          <div className="col-md-6 col-md-offset-3">
+          <div className="col-md-12">
             <div className="login-form">
-              <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.login">Log In</Translate></h2>
-                  <div className="form-group">
-                    <Field name="username" type="text" placeholder="Username" component={(formProps) => this.renderInput(formProps)} />
-                  </div>
-                  <div className="form-group">
-                    <Field name="password" type="text" placeholder="Password" component={(formProps) => this.renderInput(formProps)} />
-                  </div>
-                  <div className="form-group">
-                      <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.login">Log In</Translate></button>
-                  </div>
-                  <div className="clearfix">
-                      <label className="pull-left checkbox-inline">
-                        <Field name="rememberme" id="rememberme" component="input" type="checkbox"/>
-                        <Translate id="com.tempedge.msg.label.remember_me">Remember me</Translate>
-                      </label>
-                      <Link to={forgotPasswordRoute} className="pull-right"><Translate id="com.tempedge.msg.label.password_retrieve">Forgot Password?</Translate></Link>
-                  </div>
-              </form>
-              <p className="text-center register-link"><Link to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create an Account</Translate></Link></p>
+              <div className="card login-form-panel">
+                <div className="card-header login-header">
+                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.login">Sign In</Translate></h2>
+                </div>
+                <form className="card-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                    <div className="form-group">
+                      <p className="text-left label-p">Username</p>
+                      <Field name="username" type="text" placeholder="Enter username" component={this.renderInput} />
+                    </div>
+                    <div className="form-group">
+                      <p className="text-left label-p">Password</p>
+                      <Field name="password" type="text" placeholder="Enter password" component={this.renderInput} />
+                    </div>
+                    <div className="clearfix">
+                        <label className="pull-left checkbox-inline label-p">
+                          <Field name="rememberme" id="rememberme" component="input" type="checkbox"/>
+                          <span style={{marginLeft: 4}}><Translate id="com.tempedge.msg.label.remember_me">Remember me</Translate></span>
+                        </label>
+                        <Link to={forgotPasswordRoute} className="pull-right forgot-password"><Translate id="com.tempedge.msg.label.password_retrieve">Forgot Password?</Translate></Link>
+                    </div>
+                    <div className="form-group">
+                        <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.login">Sign In</Translate></button>
+                    </div>
+                </form>
+                <div className="card-footer login-footer">
+                  <span className="text-right no-account-query">Don't have an account?</span>
+                  <span className="text-right register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create Account</Translate></Link></span>
+                </div>
+              </div>
               <div className="row">
                 <div className="col-md-12">
-                  <div className="center-block" style={{width: "304px", marginBottom: "40px"}}>
+                  <div className="center-block captcha-panel" style={{width: "304px"}}>
                     <Field name='captcha' size="normal" height="130px" theme="light" component={this.renderReCaptcha} />
                   </div>
                 </div>

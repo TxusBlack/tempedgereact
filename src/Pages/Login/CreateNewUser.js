@@ -144,19 +144,19 @@ class CreateNewUser extends Component{
         <form onSubmit={this.props.handleSubmit(this.onSubmit)} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.firstname">First Name (Required)</Translate></label>
-              <Field name="firstName" type="text" placeholder="First Name" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="firstName" type="text" placeholder="First Name" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.middlename">Middle Name</Translate></label>
-              <Field name="middleName" type="text" placeholder="Middle Name" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="middleName" type="text" placeholder="Middle Name" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.lastname">Last Name (Required)</Translate></label>
-              <Field name="lastName" type="text" placeholder="Last Name" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="lastName" type="text" placeholder="Last Name" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.email">Email</Translate></label>
-              <Field name="email" type="email" placeholder="Email" component={(formProps) => this.renderInput(formProps)} />
+              <Field name="email" type="email" placeholder="Email" component={this.renderInput} />
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.birthday">Birthday</Translate></label>
