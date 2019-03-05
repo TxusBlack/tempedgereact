@@ -1,9 +1,12 @@
 {
   "com.tempedge.msg.label.sign_in"                                    : "Sign In",
   "com.tempedge.msg.label.login"                                      : "Log In",
+  "com.tempedge.msg.label.username"                                   : "Username",
+  "com.tempedge.msg.label.password"                                   : "Password",
   "com.tempedge.msg.label.password_retrieve"                          : "Forgot Password?",
   "com.tempedge.msg.label.remember_me"                                : "Remember me",
   "com.tempedge.msg.label.create_account"                             : "Create an Account",
+  "com.tempedge.msg.label.no_account"                                 : "Don't have an account?",
   "com.tempedge.msg.label.rights"                                     : "All rights reserved..",
   "com.tempedge.msg.label.welcome"                                    : "Welcome",
   "com.tempedge.msg.label.newuser"                                    : "New User",

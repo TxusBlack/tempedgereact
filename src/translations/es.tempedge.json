@@ -1,9 +1,12 @@
 {
   "com.tempedge.msg.label.sign_in"                                    : "Iniciar Sesion",
   "com.tempedge.msg.label.login"                                      : "Iniciar Sesion",
+  "com.tempedge.msg.label.username"                                   : "Usuario",
+  "com.tempedge.msg.label.password"                                   : "Contraseña",
   "com.tempedge.msg.label.password_retrieve"                          : "Olvido Su Contraseña?",
   "com.tempedge.msg.label.remember_me"                                : "Recordar Usuario",
   "com.tempedge.msg.label.create_account"                             : "Crear Una Cuenta",
+  "com.tempedge.msg.label.no_account"                                 : "No tiene una cuenta aun?",
   "com.tempedge.msg.label.rights"                                     : "Todos los derechos reservados.",
   "com.tempedge.msg.label.welcome"                                    : "Bienvenido",
   "com.tempedge.msg.label.newuser"                                    : "Nuevo Usuario",

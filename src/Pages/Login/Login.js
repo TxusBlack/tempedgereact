@@ -58,7 +58,7 @@ class Login extends Component{
 
       if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
         return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
+          <p className="text-left" style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
         );
       }
     }
@@ -66,6 +66,10 @@ class Login extends Component{
 
   renderInput = (formProps) => {
     let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
+
+    if(formProps.input.name === "username"){
+      errorClass = errorClass.concat(" ", "first-input-spacer");
+    }
 
     return(
       <div className={errorClass}>
@@ -117,17 +121,17 @@ class Login extends Component{
         <div className="row">
           <div className="col-md-12">
             <div className="login-form">
-              <div className="card login-form-panel">
-                <div className="card-header login-header">
-                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.login">Sign In</Translate></h2>
+              <div className="panel panel-default login-form-panel">
+                <div className="panel-heading login-header">
+                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></h2>
                 </div>
-                <form className="card-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <div className="form-group">
-                      <p className="text-left label-p">Username</p>
+                      <p className="text-left label-p"><Translate id="com.tempedge.msg.label.username">Username</Translate></p>
                       <Field name="username" type="text" placeholder="Enter username" component={this.renderInput} />
                     </div>
                     <div className="form-group">
-                      <p className="text-left label-p">Password</p>
+                      <p className="text-left label-p"><Translate id="com.tempedge.msg.label.password">Password</Translate></p>
                       <Field name="password" type="text" placeholder="Enter password" component={this.renderInput} />
                     </div>
                     <div className="clearfix">
@@ -138,11 +142,11 @@ class Login extends Component{
                         <Link to={forgotPasswordRoute} className="pull-right forgot-password"><Translate id="com.tempedge.msg.label.password_retrieve">Forgot Password?</Translate></Link>
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.login">Sign In</Translate></button>
+                        <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></button>
                     </div>
                 </form>
-                <div className="card-footer login-footer">
-                  <span className="text-right no-account-query">Don't have an account?</span>
+                <div className="panel-footer login-footer">
+                  <span className="text-right no-account-query"><Translate id="com.tempedge.msg.label.no_account">Don't have an account?</Translate></span>
                   <span className="text-right register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create Account</Translate></Link></span>
                 </div>
               </div>
