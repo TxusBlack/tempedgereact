@@ -25,7 +25,6 @@ class WizardCreateNewAgencyFirstPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      console.log("props ---WizardFirst---: ", this.props);
       this.props.params.lang = this.props.activeLanguage.code;
       this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
       this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
@@ -129,31 +128,31 @@ class WizardCreateNewAgencyFirstPage extends Component{
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
         <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
           <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyname">Agency Name</Translate>:</label>
-              <Field name="agencyname" type="text" placeholder="Agency Name" component={(formProps) => this.renderInput(formProps)} />
+              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyname">Agency Name</Translate></label>
+              <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
           </div>
           <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate>:</label>
-              <Field name="agencyaddress" type="text" placeholder="Address" component={(formProps) => this.renderInput(formProps)} />
+              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
+              <Field name="agencyaddress" type="text" placeholder="Address" component={this.renderInput} />
           </div>
           <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate>:</label>
-              <Field name="agencyappartment" type="text" placeholder="Apartment" component={(formProps) => this.renderInput(formProps)} />
+              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate></label>
+              <Field name="agencyappartment" type="text" placeholder="Apartment" component={this.renderInput} />
           </div>
           <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate>:</label>
-              <Field name="agencyzipcode" type="text" placeholder="Zip Code" component={(formProps) => this.renderInput(formProps)} />
+              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
+              <Field name="agencyzipcode" type="text" placeholder="Zip Code" component={this.renderInput} />
           </div>
           <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.addresstype">Address Type</Translate>:</label>
+            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.addresstype">Address Type</Translate></label>
             <Field  name="agencydropdown" component={this.renderDropdownList} data={address_list} valueField="value" textField="option" />
           </div>
           <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.state">State</Translate>:</label>
+            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
             <Field  name="agencystate" component={this.renderDropdownList} data={this.state.region_list} valueField="value" textField="state" />
           </div>
           <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate>:</label>
+            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
             <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
           </div>
           <div className="form-group prev-next-btns">
@@ -183,15 +182,19 @@ let validate = (formValues) => {
   }
 
   if(!formValues.agencyname){
-    errors.agencyname = 'Please enter the agency name';
+    errors.agencyname = 'Please enter the agency name.';
   }
 
   if(!formValues.agencyaddress){
-    errors.agencyaddress = 'Please enter the agency address';
+    errors.agencyaddress = 'Please enter the agency address.';
   }
 
   if(!formValues.agencyappartment){
-    errors.agencyappartment = 'Please enter the agency appartment';
+    errors.agencyappartment = 'Please enter the agency appartment.';
+  }
+
+  if(!formValues.agencyzipcode){
+    errors.agencyzipcode = 'Please enter the agency zip code.';
   }
 
   return errors;
@@ -200,7 +203,7 @@ let validate = (formValues) => {
 WizardCreateNewAgencyFirstPage = reduxForm({
   form: 'CreateNewAgency', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   validate: validate
 })(WizardCreateNewAgencyFirstPage);
 

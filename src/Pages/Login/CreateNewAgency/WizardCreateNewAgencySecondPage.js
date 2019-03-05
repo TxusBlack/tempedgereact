@@ -28,7 +28,6 @@ class WizardCreateNewAgencySecondPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      console.log("props ---WizardSecond---: ", this.props);
       this.props.params.lang = this.props.activeLanguage.code;
       this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
       this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
@@ -59,7 +58,6 @@ class WizardCreateNewAgencySecondPage extends Component{
 
   renderError(formProps){
     let fieldId='';
-    let errMsg = '';
 
     if(typeof formProps.input !== 'undefined'){
       if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
@@ -68,11 +66,9 @@ class WizardCreateNewAgencySecondPage extends Component{
       }else
         fieldId = `com.tempedge.error.agency.${formProps.input.name}phonenumberrequiredrequired`;
 
-      errMsg = formProps.meta.error;
-
-      if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
+      if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
         return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
+          <p style={{color: '#a94442'}}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
         );
       }
     }
@@ -81,19 +77,19 @@ class WizardCreateNewAgencySecondPage extends Component{
   renderPhoneNumberInputs = (formProps) => {
     let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
+    if(formProps.fields.length < 1){
+      formProps.fields.push({});
+    }
+
     return(
       <ul>
-        <li key={0} className="agency-phone-li">
-          <Field name={`phonenumber_${0}`} index={0} type="text" label={formProps.label.substring(0, formProps.label.indexOf(":")+1)} component={this.renderInput} />
-          <Field name={`phoneext_${0}`} index={0} type="text" label={formProps.label.substring(formProps.label.indexOf(": ")+2, formProps.label.lenght)} component={this.renderInput} />
-        </li>
         {formProps.fields.map((agency, index) => (
-          <li key={index+1} className="agency-phone-li">
+          <li key={index} className="agency-phone-li">
             <div className="row">
-              <button type="button" className="pull-right phone-num-btn-close" title="Remove Agency" onClick={() => formProps.fields.remove(index)}>X</button>
+              { (index > 0)? <button type="button" className="pull-right phone-num-btn-close" title="Remove Agency" onClick={() => formProps.fields.remove(index)}>X</button>: '' }
             </div>
-            <Field name={`${agency}.phonenumber`} type="text" index={index+1} label={formProps.label.substring(0, formProps.label.indexOf(":")+1)} component={this.renderInput} />
-            <Field name={`${agency}.phoneext`} type="text" index={index+1} label={formProps.label.substring(formProps.label.indexOf(": ")+2, formProps.label.lenght)} component={this.renderInput} />
+            <Field name={`${agency}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" label={formProps.label.substring(0, formProps.label.indexOf(":")+1)} component={this.renderInput} />
+            <Field name={`${agency}.phoneext`} type="text" index={index} placeholder="xxxx" label={formProps.label.substring(formProps.label.indexOf(": ")+2, formProps.label.lenght)} component={this.renderInput} />
           </li>
         ))}
         <li>
@@ -157,10 +153,6 @@ let validate = (formValues) => {
 
   console.log("formValues: ", formValues);
 
-  if(!formValues.phonenumber_0){
-    errors.phonenumber_0 = 'Please enter a phone number.';
-  }
-
   if (!formValues.agencyphonenumbers || !formValues.agencyphonenumbers.length) {
     errors.agencyphonenumbers = { _error: 'At least one phone number must be entered' };
   } else {
@@ -194,6 +186,7 @@ let mapStateToProps = (state) => {
 
 WizardCreateNewAgencySecondPage = reduxForm({
   form: 'CreateNewAgency',
+  destroyOnUnmount: false,
   validate: validate
 })(WizardCreateNewAgencySecondPage);
 

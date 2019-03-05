@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import engFlag from "./icons/united-kingdom.png"; // Tell Webpack this JS file uses this image
-import spaFlag from "./icons/spain.png";
+import usaFlag from "./icons/usa.png"; // Tell Webpack this JS file uses this image
+import spaFlag from "./icons/spanish.png";
 
 class NavBar extends React.Component{
   constructor(props){
@@ -53,7 +53,7 @@ class NavBar extends React.Component{
           </button>
         </div>
         <div className="row">
-          <div className="col-md-12 top-bar-part">
+          {/*<div className="col-md-12 top-bar-part">
             <div className="container">
               <div className="row">
                 <div className="col-md-10 language">
@@ -70,14 +70,14 @@ class NavBar extends React.Component{
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="col-md-12 bottom-bar-part">
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
-                <div className="col-md-2 logo">
+                <div className="col-md-2 col-md-offset-1 logo">
                   <Link to="/"><img className="company-logo" src="./img/Temp_Edge_250-80.png" /></Link>
                 </div>
-                <div className="col-md-10">
+                <div className="col-md-6">
                 <div className="collapse navbar-collapse menu">
                   <ul className="nav navbar-nav menu-ul">
                     <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.welcome">Welcome</Translate></Link></li>
@@ -85,6 +85,16 @@ class NavBar extends React.Component{
                     <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></Link></li>
                   </ul>
                  </div>
+               </div>
+               <div className="col-md-2 language">
+                 <span><Translate id="com.tempedge.msg.label.language">Language</Translate></span>&nbsp;&nbsp;
+                 <span>
+                   {languages.map(lang => {
+                     return(
+                       <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? usaFlag: spaFlag} />&nbsp;&nbsp;</span>
+                     );
+                   })}
+                 </span>
                </div>
              </div>
            </div>

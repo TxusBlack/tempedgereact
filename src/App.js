@@ -15,8 +15,16 @@ import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser';
 import CreateNewAgency from './Pages/Login/CreateNewAgency/WizardCreateNewAgency';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
-import FaceMash from './Pages/FaceMash/FaceMash';
+import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
+import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
+import ReCaptcha from "react-google-recaptcha";
+
+window.recaptchaOptions = {
+  lang: 'en',
+  useRecaptchaNet: false,
+  removeOnUnmount: true,
+};
 
 class App extends React.Component{
   constructor(props){
@@ -50,7 +58,8 @@ class App extends React.Component{
                   <Route exact path="/register/:lang" render={ (props) => <CreateNewUser params={props.match.params} {...props} /> } />
                   <Route exact path="/registerAgency/:lang" render={ (props) => <CreateNewAgency params={props.match.params} {...props} /> } />
                   <Route exact path="/resetpassword/:lang" render={ (props) => <ForgotPassword params={props.match.params} {...props} /> } />
-                  <Route exact path="/snapshot/:lang" render={ (props) => <FaceMash params={props.match.params} {...props} /> } />
+                  <Route exact path="/snapshot-mobile/:lang" render={ (props) => <FaceMashMobile params={props.match.params} {...props} /> } />
+                  <Route exact path="/snapshot-desktop/:lang" render={ (props) => <FaceMashDesktop params={props.match.params} {...props} /> } />
                 </Switch>
               </React.Fragment>
             </Router>

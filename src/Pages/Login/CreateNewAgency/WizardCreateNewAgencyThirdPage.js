@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, reduxForm } from 'redux-form';
-import DropdownList from 'react-widgets/lib/DropdownList';
-import 'react-widgets/dist/css/react-widgets.css';
+import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
-import { required, date } from 'redux-form-validators';
-import 'react-widgets/dist/css/react-widgets.css';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
+
+const $ = window.$;
+const selector = formValueSelector('CreateNewAgency');
 
 class WizardCreateNewAgencyThirdPage extends Component{
   constructor(props){
@@ -17,11 +16,18 @@ class WizardCreateNewAgencyThirdPage extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
+  state= { mounted: false, phonelabels: '' }
+
+  componentDidMount(){
+    this.setState({
+      mounted: true
+    });
+  }
+
   componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      console.log("props ---WizardThird---: ", this.props);
       this.props.params.lang = this.props.activeLanguage.code;
       this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
       this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
@@ -32,40 +38,97 @@ class WizardCreateNewAgencyThirdPage extends Component{
   addTranslationsForActiveLanguage(){
     const {activeLanguage} = this.props;
 
-    if (!activeLanguage) {
+    if(!activeLanguage){
       return;
     }
 
     import(`../../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
+      .then(async translations => {
+        await this.props.addTranslationForLanguage(translations, activeLanguage.code);
+
+        let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
+
+        if(this.state.mounted && phonelabel != '') {
+          this.setState({
+            phonelabels: phonelabel
+          });
+        }
       });
   }
 
   renderError(formProps){
     let fieldId='';
-    let errMsg = '';
 
     if(typeof formProps.input !== 'undefined'){
-      fieldId = `com.tempedge.error.agency.${formProps.input.name}required`;
-      errMsg = formProps.meta.error;
+      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
+        if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
+           if(formProps.input.name.indexOf("officeName") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired`;
+           }else if(formProps.input.name.indexOf("address") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired`;
+           }else if(formProps.input.name.indexOf("city") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired`;
+           }else if(formProps.input.name.indexOf("phonenumber") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired`;
+          }
+        }
+      }
 
-      if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
+      if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
         return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
+          <p style={{color: '#a94442'}}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
         );
       }
     }
   }
 
-  renderDropdownList = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-dob': ''}`;
+  renderPhoneNumberInputs = (formProps) => {
+    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
+    let recruitment_office = formProps.label.split(" ");
+
+    if(this.props.activeLanguage.code === 'en'){
+      recruitment_office[0] = (recruitment_office[0] === 'OfficeName')? 'Office Name': '';
+    }else if(this.props.activeLanguage.code === 'es'){
+      recruitment_office[0] = (recruitment_office[0] === 'NombredeOficina')? 'Nombre de Oficina': '';
+    }
+
+    if(formProps.fields.length < 1){
+      formProps.fields.push({});
+    }
+
+    let block = formProps.fields.map((recruitmentOffice, index) => (
+      <li key={index} className="agency-phone-li">
+        <div className="row">
+          { (index > 0)? <button type="button" className="pull-right phone-num-btn-close" title="Remove Agency" onClick={() => formProps.fields.remove(index)}>X</button>: '' }
+        </div>
+        <Field name={`${recruitmentOffice}.officeName`} type="text" placeholder="Office Name" index={index} label={recruitment_office[0]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.address`} type="text" placeholder="Address" index={index} label={recruitment_office[1]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.city`} type="text" placeholder="City" index={index} label={recruitment_office[2]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.phonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[3]} component={this.renderInput} />
+      </li>
+    ));
+
+    let addBtn = (
+      <li>
+        <div className="row">
+          <button type="button" className="center-block" onClick={() => formProps.fields.push({})}>Add a New Recruitment Office</button>
+        </div>
+      </li>
+    );
 
     return(
-      <div className={errorClass}>
-        <DropdownList {...formProps.input} data={formProps.data} valueField={formProps.valueField} textField={formProps.textField} onChange={formProps.input.onChange} />
-        {this.renderError(formProps)}
-      </div>
+      <React.Fragment>
+        <div className="clearfix recruiting-office-phone">
+            <label className="pull-left checkbox-inline">
+              <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
+            </label>
+            <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
+        </div>
+        <ul>
+          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? block: '' }
+          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? addBtn: ''}
+        </ul>
+      </React.Fragment>
     );
   }
 
@@ -73,10 +136,15 @@ class WizardCreateNewAgencyThirdPage extends Component{
     let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
     return(
-      <div className={errorClass}>
-        <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
-        {this.renderError(formProps)}
-      </div>
+      <React.Fragment>
+        <div className="row agency-phone-box">
+          <label className="col-xs-2 control-label">{formProps.label}</label>
+          <div className={errorClass}>
+            <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
+            {this.renderError(formProps)}
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 
@@ -85,13 +153,6 @@ class WizardCreateNewAgencyThirdPage extends Component{
   }
 
   render(){
-    let country_list = [];
-    let option_list = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 2" ];
-
-    this.props.countryList.map((country) => {
-       country_list.push(country.countryName);
-    });
-
     console.log("Third Page");
 
     return(
@@ -99,29 +160,16 @@ class WizardCreateNewAgencyThirdPage extends Component{
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
         <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
           <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate>:</label>
-            <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
-          </div>
-          <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.options">Options</Translate>:</label>
-            <Field  name="agencydropdown" component={this.renderDropdownList} data={option_list} valueField="value" textField="option" />
-          </div>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyname">Agency Name</Translate></label>
-              <Field name="agencyname" type="text" placeholder="Agency Name" component={(formProps) => this.renderInput(formProps)} />
-          </div>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
-              <Field name="agencyaddress" type="text" placeholder="Address" component={(formProps) => this.renderInput(formProps)} />
-          </div>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate></label>
-              <Field name="agencyappartment" type="text" placeholder="Apartment" component={(formProps) => this.renderInput(formProps)} />
+            <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">Office Name Address City Phone</Translate></span>
+            <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
           </div>
           <div className="form-group prev-next-btns">
-              <div className="col-md-6 col-md-offset-3">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
-              </div>
+            <div className="col-md-4 col-md-offset-2">
+              <button type="button" className="btn btn-primary btn-block register-save-btn previous" onClick={this.props.previousPage}>Previous</button>
+            </div>
+            <div className="col-md-4">
+              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+            </div>
           </div>
         </form>
       </React.Fragment>
@@ -130,26 +178,39 @@ class WizardCreateNewAgencyThirdPage extends Component{
 }
 
 let validate = (formValues) => {
-  let errors ={};
+  let errors = {};
 
-  if(!formValues.agencycountry){
-    errors.agencycountry = 'Please choose a country from the list.';
-  }
+  if (!formValues.recruitmentofficephonenumbers || !formValues.recruitmentofficephonenumbers.length) {
+    errors.recruitmentofficephonenumbers = { _error: 'At least one recruitment office phone number must be entered.' };
+  }else{
+    let recruitmentofficephonenumbersArrayErrors = [];
 
-  if(!formValues.agencydropdown){
-    errors.agencydropdown = 'Please choose an option from the list.';
-  }
+    formValues.recruitmentofficephonenumbers.forEach((recruitmentoffice, index) => {
+      let recruitmentofficephonenumbersErrors = {};
+      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
 
-  if(!formValues.agencyname){
-    errors.agencyname = 'Please enter the agency name';
-  }
+      if (!regX.test(recruitmentoffice.phonenumber)){
+        recruitmentofficephonenumbersErrors.phonenumber = 'Enter the recruitment office phone number.';
+      }
 
-  if(!formValues.agencyaddress){
-    errors.agencyaddress = 'Please enter the agency address';
-  }
+      if(!recruitmentoffice.officeName){
+        recruitmentofficephonenumbersErrors.officeName = 'Enter the recruitment office name.';
+      }
 
-  if(!formValues.agencyappartment){
-    errors.agencyappartment = 'Please enter the agency appartment';
+      if(!recruitmentoffice.address){
+        recruitmentofficephonenumbersErrors.address = 'Enter the recruitment office address.';
+      }
+
+      if(!recruitmentoffice.city){
+        recruitmentofficephonenumbersErrors.city = "Enter the recruitment office city.";
+      }
+
+      recruitmentofficephonenumbersArrayErrors[index] = recruitmentofficephonenumbersErrors;
+    });
+
+    if(recruitmentofficephonenumbersArrayErrors.length){
+      errors.recruitmentofficephonenumbers = recruitmentofficephonenumbersArrayErrors;
+    }
   }
 
   return errors;
@@ -167,7 +228,14 @@ let mapStateToProps = (state) => {
 
 WizardCreateNewAgencyThirdPage = reduxForm({
   form: 'CreateNewAgency',
+  destroyOnUnmount: false,
   validate: validate
 })(WizardCreateNewAgencyThirdPage);
+
+WizardCreateNewAgencyThirdPage = connect(
+  state => ({
+    checkbox: selector(state, 'recruitingofficecheckbox')
+  })
+)(WizardCreateNewAgencyThirdPage)
 
 export default withLocalize(connect(mapStateToProps, { setActivePage })(WizardCreateNewAgencyThirdPage));

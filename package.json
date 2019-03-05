@@ -8,6 +8,7 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-favicon": "^0.0.14",
+    "react-google-recaptcha": "^1.0.5",
     "react-image": "^2.0.0",
     "react-loading": "^2.0.3",
     "react-localize-redux": "^3.5.2",

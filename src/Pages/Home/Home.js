@@ -39,7 +39,8 @@ class HomePage extends Component{
     let loginRoute = `/auth/${this.props.lang}`;
     let registerRoute = `/register/${this.props.lang}`;
     let registerAgencyRoute = `/registerAgency/${this.props.lang}`;
-    let snapshotRoute = `/snapshot/${this.props.lang}`;
+    let snapshotRouteMobile = `/snapshot-mobile/${this.props.lang}`;
+    let snapshotRouteDesktop = `/snapshot-desktop/${this.props.lang}`;
 
     return(
       <div className="container-fluid">
@@ -47,7 +48,8 @@ class HomePage extends Component{
         <Link to={loginRoute}>Login</Link><br />
         <Link to={registerRoute}>Create New User</Link><br />
         <Link to={registerAgencyRoute}>Create New Agency</Link><br />
-        <Link to={snapshotRoute}>Capture Face Snapshot</Link>
+        <Link to={snapshotRouteMobile}>Capture Face Snapshot - Mobile View</Link><br />
+        <Link to={snapshotRouteDesktop}>Capture Face Snapshot - Desktop View</Link>
       </div>
     );
   }
