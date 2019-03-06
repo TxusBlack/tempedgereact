@@ -5,7 +5,7 @@ import WizardCreateNewAgencySecondPage from './WizardCreateNewAgencySecondPage';
 import WizardCreateNewAgencyThirdPage from './WizardCreateNewAgencyThirdPage';
 import WizardCreateNewAgencyFourthPage from './WizardCreateNewAgencyFourthPage';
 import { connect } from 'react-redux';
-import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
+import { setActivePage } from '../../../Redux/actions/tempEdgeActions';
 import countryList from '../../../country-region-data/data';
 
 class CreateNewAgency extends Component {

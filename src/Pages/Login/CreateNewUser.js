@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import Validators from 'redux-form-validators';
-import { required, date } from 'redux-form-validators';
+import Validators, { required, date } from 'redux-form-validators';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import 'react-widgets/dist/css/react-widgets.css';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
-import ReCaptcha from "react-google-recaptcha";
-import keys from '../../apiKeys/keys';
+import Captcha from '../../components/common/Captcha/Captcha';
+import { push } from 'connected-react-router';
 
 momentLocaliser(moment);
 
@@ -34,27 +31,19 @@ class CreateNewUser extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state = { reCaptchaToken: '', btnDisabled: true }
-
-  componentWillMount(){
-    this.props.history.location.pathname = `/register/${this.props.activeLanguage.code}`;
-    this.props.history.push(`/register/${this.props.activeLanguage.code}`);
-    this.props.setActivePage("register");
-  }
+  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
   componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/register/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/register/${this.props.activeLanguage.code}`);
+      this.props.push(`/register/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
 
   addTranslationsForActiveLanguage(){
-    const {activeLanguage} = this.props;
+    const { activeLanguage } = this.props;
 
     if (!activeLanguage) {
       return;
@@ -113,31 +102,21 @@ class CreateNewUser extends Component{
     });
   }
 
-  renderReCaptcha = (formProps) => {
-    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
+  setCaptchaRef = (ref) => {
+    this.setState({
+          captchaRef: React.createRef(ref)
+    });
+  }
 
-    return(
-      <div className={errorClass}>
-        <ReCaptcha
-            ref={(ref) => {this.captcha = ref;}}
-            size={formProps.size}
-            height={formProps.height}
-            theme={formProps.theme}
-            sitekey={keys.RECAPTCHA_SITE_KEY}
-            onChange={this.onChange}
-        />
-      </div>
-    );
+  generateCaptcha = (formProps) => {
+    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
 
   onSubmit(formValues){
     console.log(formValues);
-    //this.captcha.reset();
   }
 
   render(){
-    console.log("this.state.btnDisabled: ", this.state.btnDisabled);
-
     return(
       <React.Fragment>
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newuser">New User</Translate></h2>
@@ -160,7 +139,7 @@ class CreateNewUser extends Component{
           </div>
           <div className="form-group">
               <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.birthday">Birthday</Translate></label>
-              <Field name="birthday" type="text" component={(formProps) => this.renderDateTimePicker(formProps)} validate={date()} />
+              <Field name="birthday" type="text" component={this.renderDateTimePicker} validate={date()} />
           </div>
           <div className="form-group">
               <div className="col-md-6 col-md-offset-3">
@@ -171,7 +150,7 @@ class CreateNewUser extends Component{
       <div className="row">
         <div className="col-md-12">
           <div className="center-block new-agency-captcha">
-            <Field name='captcha' size="normal" height="130px" theme="light" component={this.renderReCaptcha} />
+            <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
           </div>
         </div>
       </div>
@@ -204,19 +183,9 @@ let validate = (formValues) => {
   return errors;
 }
 
-CreateNewUser.propTypes = {
-  setActivePage: PropTypes.func.isRequired
-}
-                      //Current REDUX state
-let mapStateToProps = (state) => {
-  return({
-    activePage: state.tempEdge.active_page
-  });
-}
-
 CreateNewUser = reduxForm({
   form: 'createNewUser',
   validate: validate
 })(CreateNewUser);
 
-export default withLocalize(connect(mapStateToProps, { setActivePage })(CreateNewUser));
+export default withLocalize(connect(null, { push })(CreateNewUser));

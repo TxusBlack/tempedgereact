@@ -1,6 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { store, persistor } from './store/store';
+import 'babel-polyfill';
+import { Switch, Route } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router'
+import { store, persistor, history } from './store/store';
 import { Provider } from "react-redux";
 import { LocalizeProvider } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -40,7 +42,7 @@ class App extends React.Component{
     ];
 
     let options = {
-      defaultLanguage: "en",
+      defaultLanguage: defaultLanguage,
       renderToStaticMarkup: renderToStaticMarkup
     };
 
@@ -49,25 +51,25 @@ class App extends React.Component{
         <PersistGate loading={<LoadingView />} persistor={persistor}>
           <LocalizeProvider store={store} initialize={{ languages: languages, options: options }}>
             <Favicon url="/img/favicon.ico" />
-            <Router>
+            <ConnectedRouter history={history}>
               <React.Fragment>
                 <NavBar />
                 <Switch>
                   <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
-                  <Route exact path="/auth/:lang" render={ (props) => <Login params={props.match.params} {...props} /> } />
-                  <Route exact path="/register/:lang" render={ (props) => <CreateNewUser params={props.match.params} {...props} /> } />
+                  <Route exact path="/auth/:lang" component={Login} />
+                  <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" render={ (props) => <CreateNewAgency params={props.match.params} {...props} /> } />
-                  <Route exact path="/resetpassword/:lang" render={ (props) => <ForgotPassword params={props.match.params} {...props} /> } />
-                  <Route exact path="/snapshot-mobile/:lang" render={ (props) => <FaceMashMobile params={props.match.params} {...props} /> } />
-                  <Route exact path="/snapshot-desktop/:lang" render={ (props) => <FaceMashDesktop params={props.match.params} {...props} /> } />
+                  <Route exact path="/resetpassword/:lang" component={ForgotPassword} />
+                  <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
+                  <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                 </Switch>
               </React.Fragment>
-            </Router>
+            </ConnectedRouter>
             <Footer />
           </LocalizeProvider>
         </PersistGate>
       </Provider>
-      );
+    );
   }
  }
 

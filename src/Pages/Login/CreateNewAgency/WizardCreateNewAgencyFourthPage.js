@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
-import ReCaptcha from "react-google-recaptcha";
-import keys from '../../../apiKeys/keys';
+import Captcha from '../../../components/common/Captcha/Captcha';
 
 const $ = window.$;
 
@@ -17,7 +16,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, salespersonlabels: '', reCaptchaToken: '', btnDisabled: true }
+  state= { mounted: false, salespersonlabels: '', captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
   componentDidMount(){
     this.setState({
@@ -148,21 +147,18 @@ class WizardCreateNewAgencyFourthPage extends Component{
     });
   }
 
-  renderReCaptcha = (formProps) => {
-    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
-
-    return(
-      <div className={errorClass}>
-        <ReCaptcha
-            ref={(ref) => {this.captcha = ref;}}
-            size={formProps.size}
-            height={formProps.height}
-            theme={formProps.theme}
-            sitekey={keys.RECAPTCHA_SITE_KEY}
-            onChange={this.onChange}
-        />
-      </div>
+  setCaptchaRef = (ref) => {
+    this.setState(
+      () => {
+        return{
+          captchaRef: React.createRef(ref)
+        }
+      }
     );
+  }
+
+  generateCaptcha = (formProps) => {
+    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
 
   onSubmit(formValues){
@@ -192,7 +188,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
         <div className="row">
           <div className="col-md-12">
             <div className="center-block new-agency-captcha">
-              <Field name='captcha' size="normal" height="130px" theme="light" component={this.renderReCaptcha} />
+              <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
             </div>
           </div>
         </div>

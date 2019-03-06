@@ -11,11 +11,10 @@ class NavBar extends React.Component{
   }
 
   changeActiveLang = (language) => {
-    console.log("language: ",language);
     this.props.setActiveLanguage(language);
   }
 
-  checkMenuItemActive= (activeMenuItem) => {
+  checkMenuItemActive = (activeMenuItem) => {
     if(typeof this.props.activePage !== 'undefined' || this.props.activePage != ""){
       if(this.props.activePage === 'auth'){
         activeMenuItem[0] = 'active';
@@ -34,10 +33,10 @@ class NavBar extends React.Component{
   }
 
   render(){
-    let { languages, activeLanguage, lang } = this.props;
-    let loginRoute = `/auth/${lang}`;
-    let registerRoute = `/register/${lang}`;
-    let registerAgencyRoute = `/registerAgency/${lang}`;
+    let { languages, activeLanguage } = this.props;
+    let loginRoute = `/auth/${activeLanguage.code}`;
+    let registerRoute = `/register/${activeLanguage.code}`;
+    let registerAgencyRoute = `/registerAgency/${activeLanguage.code}`;
     let activeMenuItem = ['active', '', ''];
 
     this.checkMenuItemActive(activeMenuItem);
@@ -53,24 +52,6 @@ class NavBar extends React.Component{
           </button>
         </div>
         <div className="row">
-          {/*<div className="col-md-12 top-bar-part">
-            <div className="container">
-              <div className="row">
-                <div className="col-md-10 language">
-                  <p><Translate id="com.tempedge.msg.label.language">Language</Translate>&nbsp;&nbsp;
-                    {languages.map(lang => {
-                      return(
-                        <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? engFlag: spaFlag} />&nbsp;&nbsp;</span>
-                      );
-                    })}
-                  </p>
-                </div>
-                <div className="col-md-2">
-                  <Link className="sign-in" to={loginRoute} style={{color: "#fff"}}><span className="signInIcon"></span><p style={{padding: "8px 0 0 0"}}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></p></Link>
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className="col-md-12 bottom-bar-part">
             <div className="container-fluid">
               <div className="row">
@@ -107,8 +88,11 @@ class NavBar extends React.Component{
 
                       //Current REDUX state
 let mapStateToProps = (state) => {
+  let path = state.router.location.pathname;
+  let parsedPath = state.router.location.pathname.split("/");
+
   return({
-    activePage: state.tempEdge.active_page
+    activePage: parsedPath[1]   //HomePage is [0]
   });
 }
 

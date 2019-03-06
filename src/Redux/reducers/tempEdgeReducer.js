@@ -9,7 +9,7 @@ export default function(state = initialState, action){
     case SET_ACTIVE_PAGE:
       return{
         ...state,
-        active_page: action.payload  
+        active_page: action.payload
       };
     default:
       return state;

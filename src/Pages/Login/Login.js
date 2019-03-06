@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import Validators from 'redux-form-validators';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
-import ReCaptcha from "react-google-recaptcha";
-import keys from '../../apiKeys/keys';
+import Captcha from '../../components/common/Captcha/Captcha';
+import { push } from 'connected-react-router';
 
 class Login extends Component{
   constructor(props, context) {
@@ -16,21 +13,13 @@ class Login extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state = { reCaptchaToken: '', btnDisabled: true }
-
-  componentDidMount(){
-    this.props.history.location.pathname = `/auth/${this.props.activeLanguage.code}`;
-    this.props.history.push(`/auth/${this.props.activeLanguage.code}`);
-    this.props.setActivePage("auth");
-  }
+  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
   componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/auth/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/auth/${this.props.activeLanguage.code}`);
+      this.props.push(`/auth/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -85,36 +74,28 @@ class Login extends Component{
     this.setState({
       reCaptchaToken: recaptchaToken,
       btnDisabled: false
-    }, () => {
-      console.log("this.state.btnDisabled: ", this.state.btnDisabled);
-    })
+    });
   }
 
-  renderReCaptcha = (formProps) => {
-    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'captcha'}`;
+  setCaptchaRef = (ref) => {
+    this.setState({
+      captchaRef: React.createRef(ref)
+    });
+  }
 
-    return(
-      <div className={errorClass}>
-        <ReCaptcha
-            ref={(ref) => {this.captcha = ref;}}
-            size={formProps.size}
-            height={formProps.height}
-            theme={formProps.theme}
-            sitekey={keys.RECAPTCHA_SITE_KEY}
-            onChange={this.onChange}
-        />
-      </div>
-    );
+  generateCaptcha = (formProps) => {
+    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
 
   onSubmit(formValues){
     console.log(formValues);
-    //this.captcha.reset();
+    //this.state.captchaRef.reset();
   }
 
   render(){
-    let forgotPasswordRoute = `/resetpassword/${this.props.params.lang}`;
-    let registerRoute = `/register/${this.props.params.lang}`;
+    let { activeLanguage }  = this.props;
+    let forgotPasswordRoute = `/resetpassword/${activeLanguage.code}`;
+    let registerRoute = `/register/${activeLanguage.code}`;
 
     return(
       <div className="container-fluid login-container">
@@ -153,7 +134,7 @@ class Login extends Component{
               <div className="row">
                 <div className="col-md-12">
                   <div className="center-block captcha-panel" style={{width: "304px"}}>
-                    <Field name='captcha' size="normal" height="130px" theme="light" component={this.renderReCaptcha} />
+                    <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                   </div>
                 </div>
               </div>
@@ -179,19 +160,9 @@ let validate = (formValues) => {
   return errors;
 }
 
-Login.propTypes = {
-  setActivePage: PropTypes.func.isRequired
-}
-                      //Current REDUX state
-let mapStateToProps = (state) => {
-  return({
-    activePage: state.tempEdge.active_page
-  });
-}
-
 Login = reduxForm({
   form: 'login',
   validate: validate
 })(Login);
 
-export default withLocalize(connect(mapStateToProps, { setActivePage })(Login));
+export default withLocalize(connect(null, { push })(Login));
