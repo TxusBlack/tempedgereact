@@ -4,7 +4,7 @@ import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
+import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 
 const $ = window.$;
@@ -28,9 +28,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
+      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -253,4 +251,4 @@ WizardCreateNewAgencyFourthPage = reduxForm({
   validate: validate
 })(WizardCreateNewAgencyFourthPage);
 
-export default withLocalize(connect(mapStateToProps, { setActivePage })(WizardCreateNewAgencyFourthPage));
+export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencyFourthPage));

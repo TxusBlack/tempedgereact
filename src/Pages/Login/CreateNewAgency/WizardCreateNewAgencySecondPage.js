@@ -4,7 +4,7 @@ import { Field, FieldArray, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
+import { push } from 'connected-react-router';
 
 const $ = window.$;
 
@@ -28,9 +28,7 @@ class WizardCreateNewAgencySecondPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
+      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -190,4 +188,4 @@ WizardCreateNewAgencySecondPage = reduxForm({
   validate: validate
 })(WizardCreateNewAgencySecondPage);
 
-export default withLocalize(connect(mapStateToProps, { setActivePage })(WizardCreateNewAgencySecondPage));
+export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencySecondPage));
