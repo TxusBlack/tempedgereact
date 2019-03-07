@@ -126,16 +126,14 @@ class Login extends Component{
                         <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></button>
                     </div>
                 </form>
-                <div className="panel-footer login-footer">
-                  <span className="text-right no-account-query"><Translate id="com.tempedge.msg.label.no_account">Don't have an account?</Translate></span>
-                  <span className="text-right register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create Account</Translate></Link></span>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12">
+                <div className="captcha-container">
                   <div className="center-block captcha-panel" style={{width: "304px"}}>
                     <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                   </div>
+                </div>
+                <div className="panel-footer login-footer">
+                  <span className="text-right no-account-query"><Translate id="com.tempedge.msg.label.no_account">Don't have an account?</Translate></span>
+                  <span className="text-right register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create Account</Translate></Link></span>
                 </div>
               </div>
             </div>
