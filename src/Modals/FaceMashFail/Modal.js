@@ -10,11 +10,7 @@ class Modal extends React.Component{
   onClose(){
     this.props.reStartfaceDetectTracker();
   }
-
-  componentDidMount(){
-    console.log("FaceMashFail Modal Mounted!");
-  }
-
+  
   render(){
     return(
       <div className="modal fade" id="openingModal" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="false">
