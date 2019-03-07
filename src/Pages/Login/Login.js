@@ -5,6 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Captcha from '../../components/common/Captcha/Captcha';
 import { push } from 'connected-react-router';
+import { notify } from 'reapop';
 
 class Login extends Component{
   constructor(props, context) {
@@ -87,9 +88,24 @@ class Login extends Component{
     return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
 
-  onSubmit(formValues){
+  onSubmit = (formValues) => {
     console.log(formValues);
+    this.fireNotification();
     //this.state.captchaRef.reset();
+  }
+
+  fireNotification = () => {
+    console.log("NOTIFY RAN!");
+    let { notify } = this.props;
+
+    notify({
+      title: 'Login Submitted',
+      message: 'you clicked on the Submit button',
+      status: 'success',
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
   }
 
   render(){
@@ -163,4 +179,4 @@ Login = reduxForm({
   validate: validate
 })(Login);
 
-export default withLocalize(connect(null, { push })(Login));
+export default withLocalize(connect(null, { push, notify })(Login));

@@ -21,6 +21,7 @@ import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
 import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
 import ReCaptcha from "react-google-recaptcha";
+import Notifications from './components/common/Notifications/Notifications';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -53,6 +54,7 @@ class App extends React.Component{
             <Favicon url="/img/favicon.ico" />
             <ConnectedRouter history={history}>
               <React.Fragment>
+                <Notifications />
                 <NavBar />
                 <Switch>
                   <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
