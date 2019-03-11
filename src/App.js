@@ -60,7 +60,7 @@ class App extends React.Component{
                   <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
-                  <Route exact path="/registerAgency/:lang" render={ (props) => <CreateNewAgency params={props.match.params} {...props} /> } />
+                  <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
                   <Route exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
