@@ -53,7 +53,7 @@ class App extends React.Component{
           <LocalizeProvider store={store} initialize={{ languages: languages, options: options }}>
             <Favicon url="/img/favicon.ico" />
             <ConnectedRouter history={history}>
-              <React.Fragment>
+              <div className="contents">
                 <Notifications />
                 <NavBar />
                 <Switch>
@@ -65,7 +65,7 @@ class App extends React.Component{
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                 </Switch>
-              </React.Fragment>
+              </div>
             </ConnectedRouter>
             <Footer />
           </LocalizeProvider>

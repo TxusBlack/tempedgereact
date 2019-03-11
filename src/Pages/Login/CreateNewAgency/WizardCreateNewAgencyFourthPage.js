@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Captcha from '../../../components/common/Captcha/Captcha';
+import Validate from '../Validations/Validations';
 
 const $ = window.$;
+const selector = formValueSelector('CreateNewAgency');
 
 class WizardCreateNewAgencyFourthPage extends Component{
   constructor(props){
@@ -16,7 +17,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, salespersonlabels: '', captchaRef: null, reCaptchaToken: '', btnDisabled: true }
+  state= { mounted: false, phonelabels: '' }
 
   componentDidMount(){
     this.setState({
@@ -48,7 +49,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
         if(this.state.mounted && phonelabel != '') {
           this.setState({
-            salespersonlabels: phonelabel
+            phonelabels: phonelabel
           });
         }
       });
@@ -59,15 +60,15 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
     if(typeof formProps.input !== 'undefined'){
       if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
-        if(formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1){
-           if(formProps.input.name.indexOf("salespersonfirstname") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired`;
-           }else if(formProps.input.name.indexOf("salespersonlastname") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonlastnamerequired`;
-           }else if(formProps.input.name.indexOf("salespersongenre") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersongenrerequired`;
-           }else if(formProps.input.name.indexOf("salespersonphonenumber") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonphonenumberrequired`;
+        if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
+           if(formProps.input.name.indexOf("officeName") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired`;
+           }else if(formProps.input.name.indexOf("address") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired`;
+           }else if(formProps.input.name.indexOf("city") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired`;
+           }else if(formProps.input.name.indexOf("phonenumber") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired`;
           }
         }
       }
@@ -80,9 +81,15 @@ class WizardCreateNewAgencyFourthPage extends Component{
     }
   }
 
-  renderSalesPersonInputs = (formProps) => {
+  renderPhoneNumberInputs = (formProps) => {
     let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
     let recruitment_office = formProps.label.split(" ");
+
+    if(this.props.activeLanguage.code === 'en'){
+      recruitment_office[0] = (recruitment_office[0] === 'OfficeName')? 'Office Name': '';
+    }else if(this.props.activeLanguage.code === 'es'){
+      recruitment_office[0] = (recruitment_office[0] === 'NombredeOficina')? 'Nombre de Oficina': '';
+    }
 
     if(formProps.fields.length < 1){
       formProps.fields.push({});
@@ -91,30 +98,34 @@ class WizardCreateNewAgencyFourthPage extends Component{
     let block = formProps.fields.map((recruitmentOffice, index) => (
       <li key={index} className="agency-phone-li">
         <div className="row">
-          { (index > 0)? <button type="button" className="pull-right phone-num-btn-close" title="Remove Salesperson" onClick={() => formProps.fields.remove(index)}>X</button>: '' }
+          { (index > 0)? <button type="button" className="pull-right phone-num-btn-close" title="Remove Agency" onClick={() => formProps.fields.remove(index)}>X</button>: '' }
         </div>
-        <Field name={`${recruitmentOffice}.salespersonfirstname`} type="text" placeholder="First Name" index={index} label={recruitment_office[0]} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.salespersonlastname`} type="text" placeholder="Last Name" index={index} label={recruitment_office[1]} component={this.renderInput} />
-        <div className="row agency-phone-box">
-          <label className="col-xs-2 control-label">{recruitment_office[2]}</label>
-          <div className="col-xs-10">
-            <label><Field name={`${recruitmentOffice}.salespersongenre`} type="radio" index={index} value="male" component="input" />{recruitment_office[3]}</label><br />
-            <label><Field name={`${recruitmentOffice}.salespersongenre`} type="radio" index={index} value="female" component="input" />{recruitment_office[4]}</label>
-          </div>
-        </div>
-        <Field name={`${recruitmentOffice}.salespersonphonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[5]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.officeName`} type="text" placeholder="Office Name" index={index} label={recruitment_office[0]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.address`} type="text" placeholder="Address" index={index} label={recruitment_office[1]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.city`} type="text" placeholder="City" index={index} label={recruitment_office[2]} component={this.renderInput} />
+        <Field name={`${recruitmentOffice}.phonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[3]} component={this.renderInput} />
       </li>
     ));
 
+    let addBtn = (
+      <li>
+        <div className="row">
+          <button type="button" className="center-block" onClick={() => formProps.fields.push({})}>Add a New Recruitment Office</button>
+        </div>
+      </li>
+    );
+
     return(
       <React.Fragment>
+        <div className="clearfix recruiting-office-phone">
+            <label className="pull-left checkbox-inline">
+              <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
+            </label>
+            <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
+        </div>
         <ul>
-          { block }
-          <li>
-            <div className="row">
-              <button type="button" className="center-block" onClick={() => formProps.fields.push({})}>Add a New Salesperson</button>
-            </div>
-          </li>
+          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? block: '' }
+          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? addBtn: ''}
         </ul>
       </React.Fragment>
     );
@@ -136,33 +147,6 @@ class WizardCreateNewAgencyFourthPage extends Component{
     );
   }
 
-  onChange = (recaptchaToken) => {
-    console.log("recaptchaToken: ", recaptchaToken);
-
-    this.setState({
-      reCaptchaToken: recaptchaToken,
-      btnDisabled: false
-    });
-  }
-
-  setCaptchaRef = (ref) => {
-    this.setState(
-      () => {
-        return{
-          captchaRef: React.createRef(ref)
-        }
-      }
-    );
-  }
-
-  generateCaptcha = (formProps) => {
-    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
-  }
-
-  onSubmit(formValues){
-    console.log(formValues);
-  }
-
   render(){
     console.log("Fourth Page");
 
@@ -171,84 +155,33 @@ class WizardCreateNewAgencyFourthPage extends Component{
         <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
         <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
           <div className="form-group">
-            <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficesalespersongenre">FirstName LastName Sex Male Female Phone</Translate></span>
-            <FieldArray name="recruitmentofficesalespersons" type="text" placeholder="Phone Number" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
+            <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">Office Name Address City Phone</Translate></span>
+            <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
           </div>
           <div className="form-group prev-next-btns">
             <div className="col-md-4 col-md-offset-2">
               <button type="button" className="btn btn-primary btn-block register-save-btn previous" onClick={this.props.previousPage}>Previous</button>
             </div>
             <div className="col-md-4">
-              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit">Submit</Translate></button>
+              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
             </div>
           </div>
         </form>
-        <div className="row">
-          <div className="col-md-12">
-            <div className="center-block new-agency-captcha">
-              <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
-            </div>
-          </div>
-        </div>
       </React.Fragment>
     );
   }
 }
 
-let validate = (formValues) => {
-  let errors = {};
-
-  if (!formValues.recruitmentofficesalespersons || !formValues.recruitmentofficesalespersons.length) {
-    errors.recruitmentofficesalespersons = { _error: 'At least one sales person must be entered.' };
-  }else{
-    let recruitmentofficesalespersonsArrayErrors = [];
-
-    formValues.recruitmentofficesalespersons.forEach((salesperson, index) => {
-      let recruitmentofficesalespersonsErrors = {};
-      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
-
-      if (!regX.test(salesperson.salespersonphonenumber)){
-        recruitmentofficesalespersonsErrors.salespersonphonenumber = 'Enter the sales person phone number.';
-      }
-
-      if(!salesperson.salespersonfirstname){
-        recruitmentofficesalespersonsErrors.salespersonfirstname = 'Enter the sales person first name.';
-      }
-
-      if(!salesperson.salespersonlastname){
-        recruitmentofficesalespersonsErrors.salespersonlastname = 'Enter the sales person last name.';
-      }
-
-      if(!salesperson.salespersongenre){
-        recruitmentofficesalespersonsErrors.salespersongenre = "Enter a genre.";
-      }
-
-      recruitmentofficesalespersonsArrayErrors[index] = recruitmentofficesalespersonsErrors;
-    });
-
-    if(recruitmentofficesalespersonsArrayErrors.length){
-      errors.recruitmentofficesalespersons = recruitmentofficesalespersonsArrayErrors;
-    }
-  }
-
-  return errors;
-}
-
-
-let mapStateToProps = (state) => {
-  return({
-    activePage: state.tempEdge.active_page
-  });
-}
-
-WizardCreateNewAgencyFourthPage.propTypes = {
-  setActivePage: PropTypes.func.isRequired
-}
-
 WizardCreateNewAgencyFourthPage = reduxForm({
   form: 'CreateNewAgency',
   destroyOnUnmount: false,
-  validate: validate
+  validate: Validate
 })(WizardCreateNewAgencyFourthPage);
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencyFourthPage));
+WizardCreateNewAgencyFourthPage = connect(
+  state => ({
+    checkbox: selector(state, 'recruitingofficecheckbox')
+  })
+)(WizardCreateNewAgencyFourthPage)
+
+export default withLocalize(connect(null, { push })(WizardCreateNewAgencyFourthPage));

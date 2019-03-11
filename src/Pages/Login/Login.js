@@ -63,7 +63,7 @@ class Login extends Component{
 
     return(
       <div className={errorClass}>
-        <input className="form-control login-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
+        <input className="form-control tempEdge-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
         {this.renderError(formProps)}
       </div>
     );
