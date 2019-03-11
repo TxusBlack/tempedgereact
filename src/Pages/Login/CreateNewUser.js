@@ -49,7 +49,7 @@ class CreateNewUser extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if(hasActiveLanguageChanged){
-      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
+      this.props.push(`/register/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
