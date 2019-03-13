@@ -24,8 +24,8 @@ body {
 
 .form-horizontal .control-label{
   display: flex;
-  padding-top: 3px;
-  padding-bottom: 2px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .captcha-container{
@@ -84,6 +84,12 @@ body {
 }
 
 .tempEdge-dateTimePicker-input-box.has-error-dob div{
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-color: #a94442 !important;
+}
+
+.tempEdge-dropdown-input-box.has-error-dropdown div{
   -webkit-box-shadow: none;
   box-shadow: none;
   border-color: #a94442 !important;
@@ -191,14 +197,8 @@ body {
   padding-bottom: 1rem;
 }
 
-/* .top-bar-part{
-  background: #1273c7;
-  color: #fff;
-} */
-
 .bottom-bar-part{
   color: #000;
-  /* padding: 17px 0 20px 0; */
 }
 
 .top-bar-part div.container, .bottom-bar-part div.container{
@@ -292,13 +292,13 @@ body {
 }
 
 .btn {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
 }
 
 .btn-block{
   border-radius: 1.6rem;
-  background-color: #5abeec;
+  background-image: linear-gradient(54deg, #5abeec, #69c8f4);
   min-height: 4.8rem;
   margin-top: 4.2rem;
 }
@@ -317,7 +317,7 @@ body {
   box-shadow: inset 0 0.1rem 0.1rem rgba(0,0,0,.075) !important;
 }
 
-.register-link{
+.sign-in-link{
   padding-bottom: 2rem;
   text-align: right;
 }
@@ -446,12 +446,16 @@ body {
 }
 
 .translation-placeholder{
-  visibility: hidden;
+  display: none;
 }
 
 .prev-next-btns{
   margin-top: 3rem;
   margin-bottom: 0;
+}
+
+.prev-next-btns-agency{
+  margin: 1rem 0
 }
 
 .panel-footer.register-footer{
@@ -463,6 +467,10 @@ body {
   border-bottom-left-radius: 1.6rem;
   border-top: 0.1rem solid #ced4da;
   min-height: 6.6rem;
+}
+
+.panel-footer.register-footer.panel-footer-agency-height-override{
+  min-height: 6.9rem;
 }
 
 .captcha-register{
@@ -477,25 +485,53 @@ body {
 .register-form-agency{
   border: none;
   border-bottom: none;
-  padding: 3.1rem 0;
+  padding: 0 0 3.1rem 0;
 }
+
+.register-agency-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-agency-input-left{
+  padding-right: 3.8rem;
+}
+
+.register-agency-input-right{
+  padding-left: 3.8rem;
+}
+
+.page-title-agency{
+  margin-top: 1.6rem;
+}
+
+.form-horizontal .control-label.top-label-agency-form{
+  padding-top: 0.1rem;
+}
+
 .wizard-create-agency{
   width: 1398px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  //text-align: center;
-  margin: 0 auto 1% auto;
+  margin: 0 auto 2% auto;
   min-height: 20rem;
 }
 
 .wizard-wrapper, .sign-up-wrapper{
   width: 1160px;
-  margin-top: 2.8rem;
+  margin-top: 2.3rem;
   border-radius: 16px;
   box-shadow: 0px 2px 14.7px 1.3px rgba(104, 104, 104, 0.4);
   background-color: #ffffff;
+}
+
+.wizard-register-agency-form{
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  margin-bottom: 0;
+  padding: 0.5rem 2.5rem 1.1rem 2.5rem;
 }
 
 .new-agency-captcha{
@@ -506,21 +542,22 @@ body {
 
 .row-agency-name{
   padding: 0 2.7rem;
+  margin-bottom: 13px;
 }
 
 .captcha{
   padding: 0;
 }
 
-form ul{
+form div.list{
   list-style: none;
 }
 
-form ul li{
+form div.list .list-item{
   text-decoration: none;
 }
 
-form ul li:last-child button {
+form div.list .list-item:last-child button {
   float: none;
   white-space: nowrap;
   border-radius: 0.5rem;
@@ -540,6 +577,15 @@ form ul li:last-child button {
   border-radius: 0.5rem;
 }
 
+.agency-phone-type>div{
+  width: calc(100% - 62px);
+  display: inline-block;
+}
+
+.agency-phone-delete{
+  width: calc(100% - 55px);
+}
+
 .recruiting-office-phone{
   margin-bottom: 2rem;
   padding: 0 3rem;
@@ -549,9 +595,49 @@ form ul li:last-child button {
   margin: 1.2rem 0 0 1.2rem;
 }
 
+.gender-radio-group{
+  padding: 10px 0;
+}
+
+.radio-label{
+  padding-left: 10px;
+}
+
+.add-fieldArray-btn{
+  margin-top: 12.8rem;
+  margin-bottom: -12px
+}
+
+.add-fieldArray-btn:hover{
+  cursor: pointer;
+}
+
 .new-gency-register-save-btn{
   margin: 2rem auto;
 }
+
+.delete-icon{
+  padding: 8px 0;
+}
+
+.delete-btn{
+  margin: 0 -9px 0 0;
+}
+
+.delete-icon:hover{
+  cursor: pointer;
+}
+
+.previous, .previous:hover{
+  color: #000 !important;
+  background-image: linear-gradient(315deg, #d7d7d7, #c5c5c5);
+  border-color: #d7d7d7;
+}
+/*
+.previous:active, .previous:focus{
+  background-color: #484d4d !important;
+  border-color: #d7d7d7 !important;
+} */
 
 /*************************/
 

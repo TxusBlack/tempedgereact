@@ -49,7 +49,7 @@ class CreateNewAgency extends Component {
 
     return (
       <div className="wizard-create-agency">
-        <Stepper steps={ this.state.steps } activeStep={ page-1 } />
+        <Stepper steps={ this.state.steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" />
         <div className="wizard-wrapper">
           {page === 1 && <WizardCreateNewAgencyFirstPage onSubmit={this.nextPage} countryList={countries} {...this.props} />}
           {page === 2 &&

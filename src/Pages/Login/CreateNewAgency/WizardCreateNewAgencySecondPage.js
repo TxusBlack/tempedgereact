@@ -72,7 +72,7 @@ class WizardCreateNewAgencySecondPage extends Component{
   }
 
   renderDropdownList = (formProps) => {
-    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error-dob': ''}`;
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'tempEdge-dropdown-input-box has-error-dropdown': ''}`;
 
     return(
       <div className={errorClass}>
@@ -129,15 +129,15 @@ class WizardCreateNewAgencySecondPage extends Component{
 
     return(
       <React.Fragment>
-        <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
+        <form className="panel-body" onSubmit={(e) => e.preventDefault} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
                   <label className="control-label pull-right" style={{paddingTop: 13}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0}}>
+                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
                 </div>
               </div>
@@ -149,53 +149,63 @@ class WizardCreateNewAgencySecondPage extends Component{
             </div>
           </div>
           <div className="register-form-panel-inputs">
-            <div className="form-group row">
-              <div className="col-md-6">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
-                <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
+            <div className="form-group register-form wizard-register-agency-form row">
+              <div className="register-agency-flex">
+                <div className="col-md-6 register-agency-input-left">
+                  <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
+                  <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
+                </div>
+
+                <div className="col-md-6 register-agency-input-right">
+                  <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.addresstype">Address Type</Translate></label>
+                  <Field name="agencydropdown" component={this.renderDropdownList} data={address_list} valueField="value" textField="option" />
+                </div>
               </div>
 
-              <div className="col-md-6">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.addresstype">Address Type</Translate></label>
-                <Field name="agencydropdown" component={this.renderDropdownList} data={address_list} valueField="value" textField="option" />
+              <div className="register-agency-flex">
+                <div className="col-md-12">
+                  <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
+                  <Field name="agencyaddress" type="textarea" placeholder="Enter Address" component={this.renderInput} />
+                </div>
               </div>
 
-              <div className="col-md-12">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
-                <Field name="agencyaddress" type="textarea" placeholder="Enter Address" component={this.renderInput} />
+              <div className="register-agency-flex">
+                <div className="col-md-6 register-agency-input-left">
+                  <label className="control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment</Translate></label>
+                  <Field name="agencyappartment" type="text" placeholder="Enter Apartment" component={this.renderInput} />
+                </div>
+
+                <div className="col-md-6 register-agency-input-right">
+                  <label className="control-label"><Translate id="com.tempedge.msg.label.city">City</Translate></label>
+                  <Field name="agencycity" type="text" placeholder="Enter City" component={this.renderInput} />
+                </div>
               </div>
 
-              <div className="col-md-6">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment</Translate></label>
-                <Field name="agencyappartment" type="text" placeholder="Enter Apartment" component={this.renderInput} />
-              </div>
+              <div className="register-agency-flex">
+                <div className="col-md-6 register-agency-input-left">
+                  <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
+                  <Field name="agencyzipcode" type="text" placeholder="Enter Zip Code" component={this.renderInput} />
+                </div>
 
-              <div className="col-md-6">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.city">City</Translate></label>
-                <Field name="agencycity" type="text" placeholder="Enter City" component={this.renderInput} />
-              </div>
-
-              <div className="col-md-6">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
-                <Field name="agencyzipcode" type="text" placeholder="Enter Zip Code" component={this.renderInput} />
-              </div>
-
-              <div className="col-md-6">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
-                <Field name="agencystate" component={this.renderDropdownList} data={this.state.region_list} valueField="value" textField="state" />
-              </div>
-            </div>
-
-            <div className="form-group prev-next-btns">
-              <div className="col-md-4 col-md-offset-2">
-                <button type="button" className="btn btn-primary btn-block register-save-btn previous" onClick={this.props.previousPage}>Previous</button>
-              </div>
-              <div className="col-md-4">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                <div className="col-md-6 register-agency-input-right">
+                  <label className="control-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
+                  <Field name="agencystate" component={this.renderDropdownList} data={this.state.region_list} valueField="value" textField="state" />
+                </div>
               </div>
             </div>
           </div>
         </form>
+
+        <div className="panel-footer register-footer panel-footer-agency-height-override">
+          <div className="prev-next-btns-agency">
+            <div className="col-md-4 col-md-offset-2">
+              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+            </div>
+            <div className="col-md-4">
+              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+            </div>
+          </div>
+        </div>
       </React.Fragment>
     );
   }

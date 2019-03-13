@@ -53,6 +53,11 @@ let validate = (formValues) => {
     errors.agencyappartment = 'Please enter the agency appartment.';
   }
 
+  if(!formValues.agencycity){
+    errors.agencycity = 'Please enter the agency city.';
+  }
+
+
   if(!formValues.agencyzipcode){
     errors.agencyzipcode = 'Please enter the agency zip code.';
   }

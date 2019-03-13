@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 import { Field, FieldArray, reduxForm } from 'redux-form';
+import DropdownList from 'react-widgets/lib/DropdownList';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../Validations/Validations';
+import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
+import addIcon from "./assets/plus.png";
 
 const $ = window.$;
 
@@ -21,7 +25,7 @@ class WizardCreateNewAgencyThirdPage extends Component{
   componentDidMount(){
     this.setState({
       mounted: true,
-      phonelabels: 'Phone: Extension:'
+      phonelabels: 'Phone: Extension: Phone Type'
     });
   }
 
@@ -74,47 +78,58 @@ class WizardCreateNewAgencyThirdPage extends Component{
   }
 
   renderPhoneNumberInputs = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
+    let phoneTypeList = ["fax", "local", "other", "toll-free", "tty"];
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
     if(formProps.fields.length < 1){
       formProps.fields.push({});
     }
 
     return(
-      <ul>
+      <div className="list" style={{padding: 0}}>
         {formProps.fields.map((agency, index) => (
-          <li key={index} className="agency-phone-li">
-            <div className="row">
-              { (index > 0)? <button type="button" className="pull-right phone-num-btn-close" title="Remove Agency" onClick={() => formProps.fields.remove(index)}>X</button>: '' }
-            </div>
-            <Field name={`${agency}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" label={formProps.label.substring(0, formProps.label.indexOf(":")+1)} component={this.renderInput} />
-            <Field name={`${agency}.phoneext`} type="text" index={index} placeholder="xxxx" label={formProps.label.substring(formProps.label.indexOf(": ")+2, formProps.label.lenght)} component={this.renderInput} />
-          </li>
-        ))}
-        <li>
-          <div className="row">
-            <button type="button" className="center-block" onClick={() => formProps.fields.push({})}>Add Phone Number</button>
+          <div key={index} className="list-item row">
+            <Field name={`${agency}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" label={formProps.label.substring(0, formProps.label.indexOf(":"))} component={this.renderInput} />
+            <Field name={`${agency}.phoneext`} type="text" index={index} placeholder="xxxx" label={formProps.label.substring(formProps.label.indexOf(":")+2, formProps.label.lastIndexOf(":"))} component={this.renderInput} />
+            <Field name={`${agency}.phonetype`} label={formProps.label.substring(formProps.label.lastIndexOf(":")+2, formProps.label.lenght)} index={index} fields={formProps.fields} component={this.renderDropdownList} data={phoneTypeList} valueField="value" textField="option" />
           </div>
-        </li>
-      </ul>
+        ))}
+        <div className="list-item">
+          <div className="row">
+            <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} /></span>
+          </div>
+        </div>
+      </div>
     );
   }
 
   renderInput = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
-
-    console.log("formProps: ", formProps);
+    let colClass = (formProps.input.name === "agencyname")? "col-md-12": "col-md-4";
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
     return(
-      <React.Fragment>
-        <div className="row agency-phone-box">
-          <label className="col-xs-2 control-label">{formProps.label}</label>
+      <div className={colClass}>
+        <label className="control-label">{formProps.label}</label>
           <div className={errorClass}>
-            <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
-            {this.renderError(formProps)}
+            <input className="form-control tempEdge-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
+              {this.renderError(formProps)}
           </div>
+      </div>
+    );
+  }
+
+  renderDropdownList = (formProps) => {
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'tempEdge-dropdown-input-box has-error-dropdown': ''}`;
+
+    return(
+      <div className="col-md-4 agency-phone-type">
+        <label className="control-label">{formProps.label}</label>
+        <div className={errorClass}>
+          <DropdownList {...formProps.input} data={formProps.data} valueField={formProps.valueField} textField={formProps.textField} onChange={formProps.input.onChange} />
+          {this.renderError(formProps)}
         </div>
-      </React.Fragment>
+        { (formProps.index > 0)? <span className="pull-right" title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+      </div>
     );
   }
 
@@ -123,21 +138,47 @@ class WizardCreateNewAgencyThirdPage extends Component{
 
     return(
       <React.Fragment>
-        <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
-        <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
-          <div className="form-group">
-            <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.newagencyphonenumber">Phone: Extension:</Translate></span>
-            <FieldArray name="agencyphonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
-          </div>
-          <div className="form-group prev-next-btns">
-            <div className="col-md-4 col-md-offset-2">
-              <button type="button" className="btn btn-primary btn-block register-save-btn previous" onClick={this.props.previousPage}>Previous</button>
+        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
+        <form className="panel-body" onSubmit={(e) => e.preventDefault} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+          <div className="form-group row row-agency-name">
+            <div className="col-md-6">
+              <div className="row">
+                <div className="col-md-2">
+                  <label className="control-label pull-right" style={{paddingTop: 13}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                </div>
+                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                  <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
+                </div>
+              </div>
             </div>
-            <div className="col-md-4">
-              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+          </div>
+          <div className="panel register-form-panel">
+            <div className="panel-heading register-header">
+              <h2 className="text-center"><Translate id="com.tempedge.msg.label.phones">Phones</Translate></h2>
+            </div>
+          </div>
+          <div className="register-form-panel-inputs">
+            <div className="form-group register-form wizard-register-agency-form row">
+              <div className="register-agency-flex">
+                <div className="col-md-12">
+                  <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.newagencyphonenumber">Phone: Extension: Phone Type</Translate></span>
+                  <FieldArray name="agencyphonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
+                </div>
+              </div>
             </div>
           </div>
         </form>
+
+        <div className="panel-footer register-footer panel-footer-agency-height-override">
+          <div className="prev-next-btns-agency">
+            <div className="col-md-4 col-md-offset-2">
+              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+            </div>
+            <div className="col-md-4">
+              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+            </div>
+          </div>
+        </div>
       </React.Fragment>
     );
   }

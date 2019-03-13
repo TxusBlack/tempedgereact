@@ -163,7 +163,7 @@ class CreateNewUser extends Component{
 
   render(){
     let { activeLanguage }  = this.props;
-    let registerRoute = `/register/${activeLanguage.code}`;
+    let signInRoute = `/auth/${activeLanguage.code}`;
 
     return(
       <div className="sign-up-wrapper">
@@ -231,7 +231,7 @@ class CreateNewUser extends Component{
         <div className="panel-footer register-footer">
           <div className="pull-right">
             <span className="no-account-query"><Translate id="com.tempedge.msg.label.account_exists">Already have an account?</Translate></span>
-            <span className="register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></Link></span>
+            <span className="sign-in-link"><Link className="create-account" to={signInRoute}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></Link></span>
           </div>
         </div>
       </div>
