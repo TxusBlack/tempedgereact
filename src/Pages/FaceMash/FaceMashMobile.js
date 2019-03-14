@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Webcam from "react-webcam";
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
+import { push } from 'connected-react-router';
 import EventEmitter from 'events';
 import FaceTracker from '../assets/tracking';
 import '../assets/face.min.js';
@@ -18,6 +18,8 @@ let canvas_height: 240;
 class FaceMashMobile extends React.Component {
   constructor(props){
     super(props);
+
+    this.addTranslationsForActiveLanguage();
   }
 
   state = {
@@ -49,6 +51,28 @@ class FaceMashMobile extends React.Component {
       this.initFaceTracker(tracker, canvas, context, this.state.trackerTask);
       this.initFaceDetectTracker(tracker2, canvas, context, this.state.faceDetectTracker);
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+
+    if (hasActiveLanguageChanged) {
+      this.props.push(`/snapshot-mobile/${this.props.activeLanguage.code}`);
+      this.addTranslationsForActiveLanguage();
+    }
+  }
+
+  addTranslationsForActiveLanguage() {
+    const {activeLanguage} = this.props;
+
+    if (!activeLanguage) {
+      return;
+    }
+
+    import(`../../translations/${activeLanguage.code}.tempedge.json`)
+      .then(translations => {
+        this.props.addTranslationForLanguage(translations, activeLanguage.code)
+      });
   }
 
   componentWillUnmount(){
@@ -277,4 +301,4 @@ class FaceMashMobile extends React.Component {
   }
 }
 
-export default withLocalize(connect(null)(FaceMashMobile));
+export default withLocalize(connect(null, { push })(FaceMashMobile));

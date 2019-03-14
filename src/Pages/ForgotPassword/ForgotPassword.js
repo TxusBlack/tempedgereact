@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
+import { push } from 'connected-react-router';
 
 class ForgotPassword extends React.Component{
   constructor(props) {
@@ -10,19 +11,12 @@ class ForgotPassword extends React.Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  componentWillMount(){
-    this.props.history.location.pathname = `/resetpassword/${this.props.activeLanguage.code}`;
-    this.props.history.push(`/resetpassword/${this.props.activeLanguage.code}`);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     console.log("ForgotPassword UPDATED!");
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/resetpassword/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/resetpassword/${this.props.activeLanguage.code}`);
+      this.props.push(`/resetpassword/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -108,7 +102,9 @@ let validate = (formValues) => {
   return errors;
 }
 
-export default withLocalize(reduxForm({
+ForgotPassword = withLocalize(reduxForm({
   form: 'forgotpassword',
   validate: validate
 })(ForgotPassword));
+
+export default connect(null, { push })(ForgotPassword);

@@ -1,60 +1,86 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Link } from 'react-router-dom';
+import { Field, reduxForm } from 'redux-form';
+import Validators, { required, date } from 'redux-form-validators';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import DropdownList from 'react-widgets/lib/DropdownList';
 import 'react-widgets/dist/css/react-widgets.css';
-import PropTypes from 'prop-types';
-import { required, date } from 'redux-form-validators';
-import 'react-widgets/dist/css/react-widgets.css';
+import moment from 'moment';
+import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
+import { push } from 'connected-react-router';
+import Validate from '../Validations/Validations';
+
+const $ = window.$;
+
+momentLocaliser(moment);
+
+Object.assign(Validators.messages, {
+  dateFormat: {
+    id: "form.errors.dateFormat",
+    defaultMessage: "Date field is required"
+  }
+});
+
+Object.assign(Validators.defaultOptions, {
+  dateFormat: 'mm/dd/yyyy'
+});
 
 class WizardCreateNewAgencyFirstPage extends Component{
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.addTranslationsForActiveLanguage();
   }
 
-  state = {
-    region_list: []
+  state= { mounted: false, genders: [] }
+
+  componentDidMount(){
+    this.setState(() => ({
+      mounted: true
+    }));
+
+    this.setGenderOptions();
   }
 
   componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
+    if(hasActiveLanguageChanged){
+      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    if(typeof nextProps.country === 'undefined'){
-      this.setState({
-        region_list: this.createRegionsPerCountryList("United States")
-      })
-    }else{
-      this.setState({
-        region_list: this.createRegionsPerCountryList(nextProps.country)
-      });
-    }
-  }
-
   addTranslationsForActiveLanguage(){
-    const {activeLanguage} = this.props;
+    const { activeLanguage } = this.props;
 
-    if (!activeLanguage) {
+    if(!activeLanguage){
       return;
     }
 
     import(`../../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
+      .then(async translations => {
+        await this.props.addTranslationForLanguage(translations, activeLanguage.code);
+
+        let gendersTranslate = this.setGenderOptions();
+
+        if(this.state.mounted && gendersTranslate.length != 0){
+          this.setState(() => ({
+            genders: gendersTranslate
+          }));
+        }
       });
+  }
+
+  setGenderOptions = () => {
+     let gendersTranslate = [];
+     gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
+     gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
+
+     return gendersTranslate;
   }
 
   renderError(formProps){
@@ -62,19 +88,29 @@ class WizardCreateNewAgencyFirstPage extends Component{
     let errMsg = '';
 
     if(typeof formProps.input !== 'undefined'){
-      fieldId = `com.tempedge.error.agency.${formProps.input.name}required`;
-      errMsg = formProps.meta.error;
+      fieldId = `com.tempedge.error.person.${formProps.input.name}required`;
 
-      if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
+      if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
         return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
+          <p style={{color: '#a94442'}}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
         );
       }
     }
   }
 
+  renderInput = (formProps) => {
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
+
+    return(
+      <div className={errorClass}>
+        <input className="form-control tempEdge-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
+        {this.renderError(formProps)}
+      </div>
+    );
+  }
+
   renderDropdownList = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-dob': ''}`;
+    let errorClass = `tempEdge-dateTimePicker-input-box ${(formProps.meta.error && formProps.meta.touched)? 'has-error-dob': ''}`;
 
     return(
       <div className={errorClass}>
@@ -84,134 +120,92 @@ class WizardCreateNewAgencyFirstPage extends Component{
     );
   }
 
-  renderInput = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
+  renderDateTimePicker = (formProps) => {
+    let errorClass = `tempEdge-dateTimePicker-input-box ${(formProps.meta.error && formProps.meta.touched)? 'has-error-dob': ''}`;
 
     return(
       <div className={errorClass}>
-        <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
+        <DateTimePicker onChange={formProps.input.onChange} onBlur={formProps.input.onBlur} format="MM/DD/YYYY" time={formProps.showTime} value={!formProps.input.value ? null : new Date(formProps.input.value)} />
         {this.renderError(formProps)}
       </div>
     );
   }
 
-  createRegionsPerCountryList(selectedCountry){
-    let regions;
-    let regions_list = [];
-
-    this.props.countryList.map((country) => {
-      if(country.countryName === selectedCountry){
-        regions = country.regions;
-      }
-    });
-
-    regions.map((region) => {
-      regions_list.push(region.name);
-    });
-
-    return regions_list;
-  }
-
   render(){
-    let country_list = [];
-    let region_list = [];
-    let address_list = ["billing", "other", "p-o-box", "shipping"];
-
-    this.props.countryList.map((country) => {
-      country_list.push(country.countryName);
-    });
-
-    console.log("First Page");
+    let { activeLanguage }  = this.props;
+    let signInRoute = `/auth/${activeLanguage.code}`;
 
     return(
       <React.Fragment>
-        <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
-        <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyname">Agency Name</Translate></label>
-              <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
+        <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.sign_up">Sign Up</Translate></h2>
+        <h3 className="text-center page-subtitle"><Translate id="com.tempedge.msg.label.sign_up.subtitle">Sign up to your new account</Translate></h3>
+        <div className="panel register-form-panel">
+          <div className="panel-heading register-header">
+            <h2 className="text-center"><Translate id="com.tempedge.msg.label.accountinformation">Account Information</Translate></h2>
           </div>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
-              <Field name="agencyaddress" type="text" placeholder="Address" component={this.renderInput} />
-          </div>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyappartment">Apartment (Required)</Translate></label>
-              <Field name="agencyappartment" type="text" placeholder="Apartment" component={this.renderInput} />
-          </div>
-          <div className="form-group">
-              <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
-              <Field name="agencyzipcode" type="text" placeholder="Zip Code" component={this.renderInput} />
-          </div>
-          <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.addresstype">Address Type</Translate></label>
-            <Field  name="agencydropdown" component={this.renderDropdownList} data={address_list} valueField="value" textField="option" />
-          </div>
-          <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
-            <Field  name="agencystate" component={this.renderDropdownList} data={this.state.region_list} valueField="value" textField="state" />
-          </div>
-          <div className="form-group">
-            <label className="col-xs-2 control-label"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
-            <Field  name="agencycountry" component={this.renderDropdownList} data={country_list} valueField="value" textField="country" />
-          </div>
-          <div className="form-group prev-next-btns">
-              <div className="col-md-6 col-md-offset-3">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+        </div>
+        <div className="register-form-panel-inputs">
+          <form className="panel-body" onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
+            <div className="form-group row">
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.firstname">First Name (Required)</Translate></label>
+                <Field name="firstName" type="text" placeholder="First Name" component={this.renderInput} />
               </div>
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.middlename">Middle Name</Translate></label>
+                <Field name="middleName" type="text" placeholder="Middle Name" component={this.renderInput} />
+              </div>
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.lastname">Last Name (Required)</Translate></label>
+                <Field name="lastName" type="text" placeholder="Last Name" component={this.renderInput} />
+              </div>
+            </div>
+
+            <div className="form-group row">
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
+                <Field name="username" type="text" placeholder="Enter username" component={this.renderInput} />
+              </div>
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.email">Email</Translate></label>
+                <Field name="email" type="email" placeholder="Email" component={this.renderInput} />
+              </div>
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.birthday">Birthday</Translate></label>
+                <Field name="birthday" type="text" component={this.renderDateTimePicker} validate={date()} />
+              </div>
+            </div>
+
+            <div className="form-group row">
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.gender">Gender</Translate></label>
+                  <span style={{display: "none"}} ref="maleOption"><Translate id="com.tempedge.msg.label.gender.male">Male</Translate></span>
+                  <span style={{display: "none"}} ref="femaleOption"><Translate id="com.tempedge.msg.label.gender.female">Female</Translate></span>
+                  <Field id="genderDropdown" name="gender" component={this.renderDropdownList} data={this.state.genders} valueField="value" textField="gender" />
+              </div>
+            </div>
+
+            <div className="form-group prev-next-btns">
+                <div className="col-md-6 col-md-offset-3">
+                  <button type="submit" className="btn btn-primary btn-block register-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                </div>
+            </div>
+          </form>
+        </div>
+        <div className="panel-footer register-footer">
+          <div className="pull-right">
+            <span className="no-account-query"><Translate id="com.tempedge.msg.label.account_exists">Already have an account?</Translate></span>
+            <span className="sign-in-link"><Link className="create-account" to={signInRoute}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></Link></span>
           </div>
-        </form>
+        </div>
       </React.Fragment>
     );
   }
 }
 
-let validate = (formValues) => {
-  let errors ={};
-
-  if(!formValues.agencycountry){
-    errors.agencycountry = 'Please choose a country from the list.';
-  }
-
-  if(!formValues.agencystate){
-    errors.agencystate = 'Please choose a state from the list.';
-  }
-
-  if(!formValues.agencydropdown){
-    errors.agencydropdown = 'Please choose an option from the list.';
-  }
-
-  if(!formValues.agencyname){
-    errors.agencyname = 'Please enter the agency name.';
-  }
-
-  if(!formValues.agencyaddress){
-    errors.agencyaddress = 'Please enter the agency address.';
-  }
-
-  if(!formValues.agencyappartment){
-    errors.agencyappartment = 'Please enter the agency appartment.';
-  }
-
-  if(!formValues.agencyzipcode){
-    errors.agencyzipcode = 'Please enter the agency zip code.';
-  }
-
-  return errors;
-}
-
 WizardCreateNewAgencyFirstPage = reduxForm({
-  form: 'CreateNewAgency', //                 <------ form name
-  destroyOnUnmount: false, //        <------ preserve form data
-  // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  validate: validate
+  form: 'CreateNewAgency',
+  validate: Validate
 })(WizardCreateNewAgencyFirstPage);
 
-let mapStateToProps = (state) => {
-  let selector = formValueSelector('CreateNewAgency') // <-- same as form name
-  return({
-    country: selector(state, 'agencycountry')
-  });
-}
-
-export default withLocalize(connect(mapStateToProps)(WizardCreateNewAgencyFirstPage));
+export default withLocalize(connect(null, { push })(WizardCreateNewAgencyFirstPage));

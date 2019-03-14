@@ -4,8 +4,9 @@ import WizardCreateNewAgencyFirstPage from './WizardCreateNewAgencyFirstPage';
 import WizardCreateNewAgencySecondPage from './WizardCreateNewAgencySecondPage';
 import WizardCreateNewAgencyThirdPage from './WizardCreateNewAgencyThirdPage';
 import WizardCreateNewAgencyFourthPage from './WizardCreateNewAgencyFourthPage';
+import WizardCreateNewAgencyFifthPage from './WizardCreateNewAgencyFifthPage';
+import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
-import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
 import countryList from '../../../country-region-data/data';
 
 class CreateNewAgency extends Component {
@@ -16,11 +17,14 @@ class CreateNewAgency extends Component {
 
     this.state = {
       page: 1,
+      steps: [
+       {title: ""},
+       {title: ""},
+       {title: ""},
+       {title: ""},
+       {title: ""}
+      ]
     };
-  }
-
-  componentWillMount(){
-    this.props.setActivePage("registerAgency");
   }
 
   nextPage(){
@@ -44,28 +48,22 @@ class CreateNewAgency extends Component {
     console.log("this.state.page: ",this.state.page);
 
     return (
-      <div>
-        {page === 1 && <WizardCreateNewAgencyFirstPage onSubmit={this.nextPage} countryList={countries} params={this.props.match.params} {...this.props} />}
-        {page === 2 &&
-          <WizardCreateNewAgencySecondPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} params={this.props.match.params} {...this.props} />}
-        {page === 3 &&
-          <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} params={this.props.match.params} {...this.props} />}
-        {page === 4 &&
-          <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.onSubmit} countryList={countries} params={this.props.match.params} {...this.props} />}
-
+      <div className="wizard-create-agency">
+        <Stepper steps={ this.state.steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" />
+        <div className="wizard-wrapper">
+          {page === 1 && <WizardCreateNewAgencyFirstPage onSubmit={this.nextPage} countryList={countries} {...this.props} />}
+          {page === 2 &&
+            <WizardCreateNewAgencySecondPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
+          {page === 3 &&
+            <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
+          {page === 4 &&
+            <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
+            {page === 5 &&
+              <WizardCreateNewAgencyFifthPage previousPage={this.previousPage} onSubmit={this.onSubmit} countryList={countries} {...this.props} />}
+        </div>
       </div>
     );
   }
 }
 
-CreateNewAgency.propTypes = {
-  setActivePage: PropTypes.func.isRequired
-};
-
-let mapStateToProps = (state) => {
-  return({
-    activePage: state.tempEdge.active_page
-  });
-}
-
-export default connect(mapStateToProps, { setActivePage })(CreateNewAgency);
+export default connect(null)(CreateNewAgency);

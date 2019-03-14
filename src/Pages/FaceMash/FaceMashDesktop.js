@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Webcam from "react-webcam";
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../Redux/actions/tempEdgeActions';
+import { push } from 'connected-react-router';
 import Tracker from '../assets/tracking';
 import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
 import ModalFail from '../../Modals/FaceMashFail/Modal';
@@ -14,6 +14,12 @@ let canvas_width = 320;
 let canvas_height: 240;
 
 class FaceMashDesktop extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.addTranslationsForActiveLanguage();
+  }
+
   state = {
     employeeName: "",
     timeStatus: "",
@@ -28,6 +34,28 @@ class FaceMashDesktop extends React.Component {
     this.setState({
       trackerTask: window.tracking.track('#facemash', tracker, { camera: true })
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+
+    if (hasActiveLanguageChanged) {
+      this.props.push(`/snapshot-desktop/${this.props.activeLanguage.code}`);
+      this.addTranslationsForActiveLanguage();
+    }
+  }
+
+  addTranslationsForActiveLanguage() {
+    const {activeLanguage} = this.props;
+
+    if (!activeLanguage) {
+      return;
+    }
+
+    import(`../../translations/${activeLanguage.code}.tempedge.json`)
+      .then(translations => {
+        this.props.addTranslationForLanguage(translations, activeLanguage.code)
+      });
   }
 
   componentWillUnmount(){
@@ -106,4 +134,4 @@ class FaceMashDesktop extends React.Component {
   }
 }
 
-export default withLocalize(connect(null)(FaceMashDesktop));
+export default withLocalize(connect(null, { push })(FaceMashDesktop));

@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
+import { Link } from 'react-router-dom';
+import { Field, FieldArray, reduxForm } from 'redux-form';
+import DropdownList from 'react-widgets/lib/DropdownList';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
-import  { setActivePage } from '../../../Redux/actions/tempEdgeActions';
+import { push } from 'connected-react-router';
+import Validate from '../Validations/Validations';
+import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
+import addIcon from "./assets/plus.png";
 
 const $ = window.$;
-const selector = formValueSelector('CreateNewAgency');
 
 class WizardCreateNewAgencyThirdPage extends Component{
   constructor(props){
@@ -20,7 +24,8 @@ class WizardCreateNewAgencyThirdPage extends Component{
 
   componentDidMount(){
     this.setState({
-      mounted: true
+      mounted: true,
+      phonelabels: 'Phone: Extension: Phone Type'
     });
   }
 
@@ -28,9 +33,7 @@ class WizardCreateNewAgencyThirdPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.params.lang = this.props.activeLanguage.code;
-      this.props.history.location.pathname = `/registerAgency/${this.props.activeLanguage.code}`;
-      this.props.history.push(`/registerAgency/${this.props.activeLanguage.code}`);
+      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -38,7 +41,7 @@ class WizardCreateNewAgencyThirdPage extends Component{
   addTranslationsForActiveLanguage(){
     const {activeLanguage} = this.props;
 
-    if(!activeLanguage){
+    if (!activeLanguage) {
       return;
     }
 
@@ -61,18 +64,10 @@ class WizardCreateNewAgencyThirdPage extends Component{
 
     if(typeof formProps.input !== 'undefined'){
       if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
-        if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
-           if(formProps.input.name.indexOf("officeName") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired`;
-           }else if(formProps.input.name.indexOf("address") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired`;
-           }else if(formProps.input.name.indexOf("city") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired`;
-           }else if(formProps.input.name.indexOf("phonenumber") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired`;
-          }
-        }
-      }
+        if(formProps.input.name.indexOf("agencyphonenumbers") !== -1 || formProps.input.name.indexOf("phonenumber_0")!== -1)
+          fieldId = `com.tempedge.error.agency.agencyphonenumbers.phonenumberrequired`;
+      }else
+        fieldId = `com.tempedge.error.agency.${formProps.input.name}phonenumberrequiredrequired`;
 
       if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
         return(
@@ -83,73 +78,59 @@ class WizardCreateNewAgencyThirdPage extends Component{
   }
 
   renderPhoneNumberInputs = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
-    let recruitment_office = formProps.label.split(" ");
-
-    if(this.props.activeLanguage.code === 'en'){
-      recruitment_office[0] = (recruitment_office[0] === 'OfficeName')? 'Office Name': '';
-    }else if(this.props.activeLanguage.code === 'es'){
-      recruitment_office[0] = (recruitment_office[0] === 'NombredeOficina')? 'Nombre de Oficina': '';
-    }
+    let phoneTypeList = ["fax", "local", "other", "toll-free", "tty"];
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
     if(formProps.fields.length < 1){
       formProps.fields.push({});
     }
 
-    let block = formProps.fields.map((recruitmentOffice, index) => (
-      <li key={index} className="agency-phone-li">
-        <div className="row">
-          { (index > 0)? <button type="button" className="pull-right phone-num-btn-close" title="Remove Agency" onClick={() => formProps.fields.remove(index)}>X</button>: '' }
-        </div>
-        <Field name={`${recruitmentOffice}.officeName`} type="text" placeholder="Office Name" index={index} label={recruitment_office[0]} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.address`} type="text" placeholder="Address" index={index} label={recruitment_office[1]} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.city`} type="text" placeholder="City" index={index} label={recruitment_office[2]} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.phonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[3]} component={this.renderInput} />
-      </li>
-    ));
-
-    let addBtn = (
-      <li>
-        <div className="row">
-          <button type="button" className="center-block" onClick={() => formProps.fields.push({})}>Add a New Recruitment Office</button>
-        </div>
-      </li>
-    );
-
     return(
-      <React.Fragment>
-        <div className="clearfix recruiting-office-phone">
-            <label className="pull-left checkbox-inline">
-              <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
-            </label>
-            <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
+      <div className="list" style={{padding: 0}}>
+        {formProps.fields.map((agency, index) => (
+          <div key={index} className="list-item row">
+            <Field name={`${agency}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" label={formProps.label.substring(0, formProps.label.indexOf(":"))} component={this.renderInput} />
+            <Field name={`${agency}.phoneext`} type="text" index={index} placeholder="xxxx" label={formProps.label.substring(formProps.label.indexOf(":")+2, formProps.label.lastIndexOf(":"))} component={this.renderInput} />
+            <Field name={`${agency}.phonetype`} label={formProps.label.substring(formProps.label.lastIndexOf(":")+2, formProps.label.lenght)} index={index} fields={formProps.fields} component={this.renderDropdownList} data={phoneTypeList} valueField="value" textField="option" />
+          </div>
+        ))}
+        <div className="list-item">
+          <div className="row">
+            <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} /></span>
+          </div>
         </div>
-        <ul>
-          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? block: '' }
-          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? addBtn: ''}
-        </ul>
-      </React.Fragment>
+      </div>
     );
   }
 
   renderInput = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
+    let colClass = (formProps.input.name === "agencyname")? "col-md-12": "col-md-4";
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
     return(
-      <React.Fragment>
-        <div className="row agency-phone-box">
-          <label className="col-xs-2 control-label">{formProps.label}</label>
+      <div className={colClass}>
+        <label className="control-label">{formProps.label}</label>
           <div className={errorClass}>
-            <input className="form-control" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
-            {this.renderError(formProps)}
+            <input className="form-control tempEdge-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
+              {this.renderError(formProps)}
           </div>
-        </div>
-      </React.Fragment>
+      </div>
     );
   }
 
-  onSubmit(formValues){
-    console.log(formValues);
+  renderDropdownList = (formProps) => {
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'tempEdge-dropdown-input-box has-error-dropdown': ''}`;
+
+    return(
+      <div className="col-md-4 agency-phone-type">
+        <label className="control-label">{formProps.label}</label>
+        <div className={errorClass}>
+          <DropdownList {...formProps.input} data={formProps.data} valueField={formProps.valueField} textField={formProps.textField} onChange={formProps.input.onChange} />
+          {this.renderError(formProps)}
+        </div>
+        { (formProps.index > 0)? <span className="pull-right" title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+      </div>
+    );
   }
 
   render(){
@@ -157,85 +138,56 @@ class WizardCreateNewAgencyThirdPage extends Component{
 
     return(
       <React.Fragment>
-        <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></h2>
-        <form onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{width: "40%", padding: "30px 0"}}>
-          <div className="form-group">
-            <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">Office Name Address City Phone</Translate></span>
-            <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
-          </div>
-          <div className="form-group prev-next-btns">
-            <div className="col-md-4 col-md-offset-2">
-              <button type="button" className="btn btn-primary btn-block register-save-btn previous" onClick={this.props.previousPage}>Previous</button>
+        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
+        <form className="panel-body" onSubmit={(e) => e.preventDefault} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+          <div className="form-group row row-agency-name">
+            <div className="col-md-6">
+              <div className="row">
+                <div className="col-md-2">
+                  <label className="control-label pull-right" style={{paddingTop: 13}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                </div>
+                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                  <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
+                </div>
+              </div>
             </div>
-            <div className="col-md-4">
-              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+          </div>
+          <div className="panel register-form-panel">
+            <div className="panel-heading register-header">
+              <h2 className="text-center"><Translate id="com.tempedge.msg.label.phones">Phones</Translate></h2>
+            </div>
+          </div>
+          <div className="register-form-panel-inputs">
+            <div className="form-group register-form wizard-register-agency-form row">
+              <div className="register-agency-flex">
+                <div className="col-md-12">
+                  <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.newagencyphonenumber">Phone: Extension: Phone Type</Translate></span>
+                  <FieldArray name="agencyphonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
+                </div>
+              </div>
             </div>
           </div>
         </form>
+
+        <div className="panel-footer register-footer panel-footer-agency-height-override">
+          <div className="prev-next-btns-agency">
+            <div className="col-md-4 col-md-offset-2">
+              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+            </div>
+            <div className="col-md-4">
+              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+            </div>
+          </div>
+        </div>
       </React.Fragment>
     );
   }
 }
 
-let validate = (formValues) => {
-  let errors = {};
-
-  if (!formValues.recruitmentofficephonenumbers || !formValues.recruitmentofficephonenumbers.length) {
-    errors.recruitmentofficephonenumbers = { _error: 'At least one recruitment office phone number must be entered.' };
-  }else{
-    let recruitmentofficephonenumbersArrayErrors = [];
-
-    formValues.recruitmentofficephonenumbers.forEach((recruitmentoffice, index) => {
-      let recruitmentofficephonenumbersErrors = {};
-      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
-
-      if (!regX.test(recruitmentoffice.phonenumber)){
-        recruitmentofficephonenumbersErrors.phonenumber = 'Enter the recruitment office phone number.';
-      }
-
-      if(!recruitmentoffice.officeName){
-        recruitmentofficephonenumbersErrors.officeName = 'Enter the recruitment office name.';
-      }
-
-      if(!recruitmentoffice.address){
-        recruitmentofficephonenumbersErrors.address = 'Enter the recruitment office address.';
-      }
-
-      if(!recruitmentoffice.city){
-        recruitmentofficephonenumbersErrors.city = "Enter the recruitment office city.";
-      }
-
-      recruitmentofficephonenumbersArrayErrors[index] = recruitmentofficephonenumbersErrors;
-    });
-
-    if(recruitmentofficephonenumbersArrayErrors.length){
-      errors.recruitmentofficephonenumbers = recruitmentofficephonenumbersArrayErrors;
-    }
-  }
-
-  return errors;
-}
-
-WizardCreateNewAgencyThirdPage.propTypes = {
-  setActivePage: PropTypes.func.isRequired
-}
-
-let mapStateToProps = (state) => {
-  return({
-    activePage: state.tempEdge.active_page
-  });
-}
-
 WizardCreateNewAgencyThirdPage = reduxForm({
   form: 'CreateNewAgency',
   destroyOnUnmount: false,
-  validate: validate
+  validate: Validate
 })(WizardCreateNewAgencyThirdPage);
 
-WizardCreateNewAgencyThirdPage = connect(
-  state => ({
-    checkbox: selector(state, 'recruitingofficecheckbox')
-  })
-)(WizardCreateNewAgencyThirdPage)
-
-export default withLocalize(connect(mapStateToProps, { setActivePage })(WizardCreateNewAgencyThirdPage));
+export default withLocalize(connect(null, { push })(WizardCreateNewAgencyThirdPage));
