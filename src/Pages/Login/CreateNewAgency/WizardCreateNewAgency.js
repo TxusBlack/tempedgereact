@@ -5,6 +5,8 @@ import WizardCreateNewAgencySecondPage from './WizardCreateNewAgencySecondPage';
 import WizardCreateNewAgencyThirdPage from './WizardCreateNewAgencyThirdPage';
 import WizardCreateNewAgencyFourthPage from './WizardCreateNewAgencyFourthPage';
 import WizardCreateNewAgencyFifthPage from './WizardCreateNewAgencyFifthPage';
+import WizardCreateNewAgencySixthPage from './WizardCreateNewAgencySixthPage';
+import WizardCreateNewAgencySeventhPage from './WizardCreateNewAgencySeventhPage';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import countryList from '../../../country-region-data/data';
@@ -18,6 +20,7 @@ class CreateNewAgency extends Component {
     this.state = {
       page: 1,
       steps: [
+       {title: ""},
        {title: ""},
        {title: ""},
        {title: ""},
@@ -45,8 +48,6 @@ class CreateNewAgency extends Component {
     let { page } = this.state;
     let countries = countryList();
 
-    console.log("this.state.page: ",this.state.page);
-
     return (
       <div className="wizard-create-agency">
         <Stepper steps={ this.state.steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" />
@@ -58,8 +59,12 @@ class CreateNewAgency extends Component {
             <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
           {page === 4 &&
             <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
-            {page === 5 &&
-              <WizardCreateNewAgencyFifthPage previousPage={this.previousPage} onSubmit={this.onSubmit} countryList={countries} {...this.props} />}
+          {page === 5 &&
+            <WizardCreateNewAgencyFifthPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
+          {page === 6 &&
+            <WizardCreateNewAgencySixthPage previousPage={this.previousPage} onSubmit={this.nextPage} countryList={countries} {...this.props} />}
+          {page === 7 &&
+            <WizardCreateNewAgencySeventhPage previousPage={this.previousPage} onSubmit={this.onSubmit} countryList={countries} {...this.props} />}
         </div>
       </div>
     );

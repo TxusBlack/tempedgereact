@@ -19,7 +19,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, salespersonlabels: '', captchaRef: null, reCaptchaToken: '', btnDisabled: true }
+  state= { mounted: false, salespersonlabels: '' }
 
   componentDidMount(){
     this.setState({
@@ -138,28 +138,6 @@ class WizardCreateNewAgencyFifthPage extends Component{
     );
   }
 
-  onChange = (recaptchaToken) => {
-    console.log("recaptchaToken: ", recaptchaToken);
-
-    this.setState({
-      reCaptchaToken: recaptchaToken,
-      btnDisabled: false
-    });
-  }
-
-  setCaptchaRef = (ref) => {
-    this.setState(
-      () => {
-        return{
-          captchaRef: React.createRef(ref)
-        }
-    });
-  }
-
-  generateCaptcha = (formProps) => {
-    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
-  }
-
   render(){
     console.log("Fifth Page");
 
@@ -192,14 +170,6 @@ class WizardCreateNewAgencyFifthPage extends Component{
                   <FieldArray name="recruitmentofficesalespersons" type="text" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
                 </div>
               </div>
-
-              <div className="row">
-              <div className="col-md-12">
-                <div className="center-block new-agency-captcha">
-                  <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
-                </div>
-              </div>
-            </div>
             </div>
           </div>
         </form>
@@ -210,7 +180,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
               <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
             </div>
             <div className="col-md-4">
-              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit">Submit</Translate></button>
+              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
             </div>
           </div>
         </div>

@@ -146,6 +146,18 @@ let validate = (formValues) => {
     }
   }
 
+  if(!formValues.weekdaysdropdown1){
+    errors.weekdaysdropdown1 = "Please select a week day";
+  }
+
+  if(!formValues.weekdaysdropdown2){
+    errors.weekdaysdropdown2 = "Please select a week day";
+  }
+
+  if(!formValues.weekdaysdropdown3){
+    errors.weekdaysdropdown3 = "Please select a week day";
+  }
+
   return errors;
 }
 

@@ -27,6 +27,14 @@
   "com.tempedge.msg.label.gender"                                     : "Gender",
   "com.tempedge.msg.label.gender.male"                                : "Male",
   "com.tempedge.msg.label.gender.female"                              : "Female",
+  "com.tempedge.msg.label.recruitingoffice"                           : "Recruiting Office",
+  "com.tempedge.msg.label.confirm"                                    : "Confirm",
+  "com.tempedge.msg.label.confirminformation"                         : "Confirm Information",
+  "com.tempedge.msg.label.address"                                    : "Address",
+  "com.tempedge.msg.label.city"                                       : "City",
+  "com.tempedge.msg.label.addrecruitingoffice"                        : "Add Recruitment Office",
+  "com.tempedge.msg.label.phonesadded"                                : "Phones Added",
+  "com.tempedge.msg.label.salesmenadded"                              : "Salesmen Added",
   "com.tempedge.error.person.genderrequired"                          : "Please select a gender.",
   "com.tempedge.error.person.lastNamerequired"                        : "Lastname is required.",
   "com.tempedge.error.person.middleNamerequired"                      : "Middlename or initial is required.",
@@ -49,7 +57,11 @@
   "com.tempedge.msg.label.country"                                    : "Country",
   "com.tempedge.msg.label.addresstype"                                : "Address Type",
   "com.tempedge.msg.label.agencyzipcode"                              : "Zip Code",
-  "com.tempedge.msg.label.officeinformation"                          : "Main Office Information",
+  "com.tempedge.msg.label.officeinformation"                          : "Main office information",
+  "com.tempedge.msg.label.payrollhours"                               : "Last date to add payroll hours",
+  "com.tempedge.msg.label.payrollvalidation"                          : "Last day for payroll validation",
+  "com.tempedge.msg.label.fundingcompany"                             : "Select if your company uses a funding company",
+  "com.tempedge.msg.label.information"                                : "Information",
   "com.tempedge.error.agency.agencynamerequired"                      : "Agency name is required.",
   "com.tempedge.error.agency.agencyaddressrequired"                   : "Agency address is required.",
   "com.tempedge.error.agency.agencyappartmentrequired"                : "Agency appartment is required.",
@@ -71,6 +83,8 @@
   "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired"   : "Enter the sales person first name.",
   "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonlastnamerequired"    : "Enter the sales person last name",
   "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersongenrerequired"       : "Enter a genre.",
-  "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonphonenumberrequired" : "Enter the sales person phone number."
-
+  "com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonphonenumberrequired" : "Enter the sales person phone number.",
+  "com.tempedge.error.agency.weekdaysdropdown1required"                                               : "Please select a weekday.",
+  "com.tempedge.error.agency.weekdaysdropdown2required"                                               : "Please select a weekday.",
+  "com.tempedge.error.agency.weekdaysdropdown3required"                                               : "Please select a weekday."
 }

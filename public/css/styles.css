@@ -633,11 +633,45 @@ form div.list .list-item:last-child button {
   background-image: linear-gradient(315deg, #d7d7d7, #c5c5c5);
   border-color: #d7d7d7;
 }
-/*
-.previous:active, .previous:focus{
-  background-color: #484d4d !important;
-  border-color: #d7d7d7 !important;
-} */
+
+.payroll-hours-validation{
+  padding-bottom: 22.0rem;
+}
+
+.confirmation-page-subtitle{
+  font-size: 15px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: #3eb7e9;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.confirmation-page-categories{
+  font-size: 15px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: #2d2d2d;
+}
+
+.confirmation-page-paragraph{
+  font-size: 15px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: rgba(45, 45, 45, 0.6);
+}
 
 /*************************/
 

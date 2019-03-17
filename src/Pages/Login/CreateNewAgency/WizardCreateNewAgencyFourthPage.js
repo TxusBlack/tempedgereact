@@ -168,7 +168,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
           </div>
           <div className="panel register-form-panel">
             <div className="panel-heading register-header">
-              <h2 className="text-center"><Translate id="com.tempedge.msg.label.phones">Phones</Translate></h2>
+              <h2 className="text-center"><Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate></h2>
             </div>
           </div>
           <div className="register-form-panel-inputs">
