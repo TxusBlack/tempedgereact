@@ -22,6 +22,7 @@ import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
 import ReCaptcha from "react-google-recaptcha";
 import Notifications from './components/common/Notifications/Notifications';
+import UploadFile from './components/common/UploadFile/UploadFile';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -64,6 +65,7 @@ class App extends React.Component{
                   <Route exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
+                  <Route exact path="/upload/:lang" component={UploadFile} />
                 </Switch>
               </div>
             </ConnectedRouter>

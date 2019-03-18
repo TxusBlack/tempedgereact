@@ -30,7 +30,8 @@
     "redux-form-validators": "^2.7.5",
     "redux-persist": "^5.10.0",
     "redux-persist-transform-filter": "0.0.18",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "xlsx": "^0.14.1"
   },
   "scripts": {
     "start": "react-scripts start",
