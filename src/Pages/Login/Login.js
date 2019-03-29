@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Captcha from '../../components/common/Captcha/Captcha';
+import Validate from '../Validations/Validations';
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
+import httpService from '../../utils/services/httpService/httpService.js';
 
 class Login extends Component{
   constructor(props, context) {
@@ -88,10 +90,18 @@ class Login extends Component{
     return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
 
-  onSubmit = (formValues) => {
-    console.log(formValues);
+  onSubmit = async (formValues) => {
+    let values = formValues;
+    values.grant_type = "password";
+    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
+
+    // let res = await httpService.get('/users/listAll');
+    // console.log('response: ', res);
+
+    let res = await httpService.post('/oauth/token', values);
+    console.log('response: ', res);
+
     this.fireNotification();
-    //this.state.captchaRef.reset();
   }
 
   fireNotification = () => {
@@ -160,23 +170,9 @@ class Login extends Component{
   }
 }
 
-let validate = (formValues) => {
-  let errors = {};
-
-  if(!formValues.username){
-    errors.username = 'Please enter your username.';
-  }
-
-  if(!formValues.password){
-    errors.password = 'Please enter your password.';
-  }
-
-  return errors;
-}
-
 Login = reduxForm({
   form: 'login',
-  validate: validate
+  validate: Validate
 })(Login);
 
 export default withLocalize(connect(null, { push, notify })(Login));

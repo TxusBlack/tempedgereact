@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import DropdownList from 'react-widgets/lib/DropdownList';
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
+import InputBox from '../../../components/common/InputBox/InputBox.js';
+import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
+import DropdownList from 'react-widgets/lib/DropdownList';
+import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
-import Validate from '../Validations/Validations';
+import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
 
@@ -17,7 +20,7 @@ class WizardCreateNewAgencySixthPage extends Component{
   constructor(props){
     super(props);
 
-    this.addTranslationsForActiveLanguage();
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
   state= { mounted: false }
@@ -33,65 +36,8 @@ class WizardCreateNewAgencySixthPage extends Component{
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
-      this.addTranslationsForActiveLanguage();
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
-  }
-
-  addTranslationsForActiveLanguage(){
-    const {activeLanguage} = this.props;
-
-    if(!activeLanguage){
-      return;
-    }
-
-    import(`../../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(async translations => {
-        await this.props.addTranslationForLanguage(translations, activeLanguage.code);
-      });
-  }
-
-  renderError(formProps){
-    let fieldId='';
-    let errMsg = '';
-
-    if(typeof formProps.input !== 'undefined'){
-      fieldId = `com.tempedge.error.agency.${formProps.input.name}required`;
-      errMsg = formProps.meta.error;
-
-      if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
-        return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
-        );
-      }
-    }
-  }
-
-  renderInput = (formProps) => {
-    let colClass = (formProps.input.name === "agencyname")? "col-md-12": "col-md-3";
-    colClass = (formProps.label === "Phone" || formProps.label === "Telefono")? "col-md-4": colClass;
-    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
-    let inputClass = ((formProps.label === "Phone" || formProps.label === "Telefono"))? "form-control tempEdge-input-box agency-phone-delete": "form-control tempEdge-input-box";
-
-    return(
-      <div className={colClass}>
-        <label className="control-label">{formProps.label}</label>
-        <div className={errorClass}>
-          <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
-          {this.renderError(formProps)}
-        </div>
-      </div>
-    );
-  }
-
-  renderDropdownList = (formProps) => {
-    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'tempEdge-dropdown-input-box has-error-dropdown': ''}`;
-
-    return(
-      <div className={errorClass}>
-        <DropdownList {...formProps.input} data={formProps.data} valueField={formProps.valueField} textField={formProps.textField} onChange={formProps.input.onChange} />
-        {this.renderError(formProps)}
-      </div>
-    );
   }
 
   render(){
@@ -102,15 +48,15 @@ class WizardCreateNewAgencySixthPage extends Component{
     return(
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
-        <form className="panel-body" onSubmit={this.props.onSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
-                  <label className="control-label pull-right" style={{paddingTop: 24}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                  <label className="control-label pull-right" style={{paddingTop: 8}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
                 </div>
                 <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
-                  <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
+                  <Field name="agencyname" type="text" placeholder="Agency Name" category="agency" component={InputBox} />
                 </div>
               </div>
             </div>
@@ -125,17 +71,17 @@ class WizardCreateNewAgencySixthPage extends Component{
               <div className="register-agency-flex payroll-hours-validation">
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollhours">Last date to add payroll hours</Translate></label>
-                  <Field name="weekdaysdropdown1" component={this.renderDropdownList} data={weekdays} valueField="value" textField="country" />
+                  <Field name="weekdaysdropdown1" data={weekdays} valueField="value" textField="country" category="agency" component={Dropdown} />
                 </div>
 
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollvalidation">Last day for payroll validation</Translate></label>
-                  <Field name="weekdaysdropdown2" component={this.renderDropdownList} data={weekdays} valueField="value" textField="option" />
+                  <Field name="weekdaysdropdown2" data={weekdays} valueField="value" textField="option" category="agency" component={Dropdown} />
                 </div>
 
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.fundingcompany">Select if your company uses a funding company</Translate></label>
-                  <Field name="weekdaysdropdown3" component={this.renderDropdownList} data={weekdays} valueField="value" textField="option" />
+                  <Field name="weekdaysdropdown3" data={weekdays} valueField="value" textField="option" category="agency" component={Dropdown} />
                 </div>
               </div>
             </div>
@@ -155,10 +101,6 @@ class WizardCreateNewAgencySixthPage extends Component{
       </React.Fragment>
     );
   }
-}
-
-WizardCreateNewAgencySixthPage.propTypes = {
-  setActivePage: PropTypes.func.isRequired
 }
 
 WizardCreateNewAgencySixthPage = reduxForm({

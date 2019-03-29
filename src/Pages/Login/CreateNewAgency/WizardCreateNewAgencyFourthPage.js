@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import InputBox from '../../../components/common/InputBox/InputBox.js';
+import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Validate from '../Validations/Validations';
+import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
 
@@ -36,25 +37,16 @@ class WizardCreateNewAgencyFourthPage extends Component{
     }
   }
 
-  addTranslationsForActiveLanguage(){
-    const {activeLanguage} = this.props;
+  addTranslationsForActiveLanguage = async () => {
+    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
-    if(!activeLanguage){
-      return;
-    }
+    let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    import(`../../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(async translations => {
-        await this.props.addTranslationForLanguage(translations, activeLanguage.code);
-
-        let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
-
-        if(this.state.mounted && phonelabel != '') {
-          this.setState({
-            phonelabels: phonelabel
-          });
-        }
+    if(this.state.mounted && phonelabel != '') {
+      this.setState({
+        phonelabels: phonelabel
       });
+    }
   }
 
   renderError(formProps){
@@ -69,6 +61,8 @@ class WizardCreateNewAgencyFourthPage extends Component{
              fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired`;
            }else if(formProps.input.name.indexOf("city") !== -1){
              fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired`;
+           }else if(formProps.input.name.indexOf("zip") !== -1){
+             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.zipcoderequired`;
            }else if(formProps.input.name.indexOf("phonenumber") !== -1){
              fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired`;
           }
@@ -94,17 +88,26 @@ class WizardCreateNewAgencyFourthPage extends Component{
     }
 
     if(formProps.fields.length < 1){
+      console.log("Refill!")
       formProps.fields.push({});
     }
 
-    let block = formProps.fields.map((recruitmentOffice, index) => (
-      <div key={index}>
-        <Field name={`${recruitmentOffice}.officeName`} type="text" placeholder="Office Name" index={index} label={recruitment_office[0]} fields={formProps.fields} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.address`} type="text" placeholder="Address" index={index} label={recruitment_office[1]} fields={formProps.fields} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.city`} type="text" placeholder="City" index={index} label={recruitment_office[2]} fields={formProps.fields} component={this.renderInput} />
-        <Field name={`${recruitmentOffice}.phonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[3]} fields={formProps.fields} component={this.renderInput} />
-      </div>
-    ));
+    let block = formProps.fields.map((recruitmentOffice, index) => {
+      return(
+        <div key={index} className="recruitment-office-row">
+          <div className="row">
+            <Field name={`${recruitmentOffice}.officeName`} type="text" placeholder="Office Name" index={index} label={recruitment_office[0]} fields={formProps.fields} component={this.renderInput} />
+            <Field name={`${recruitmentOffice}.address`} type="text" placeholder="Address" index={index} label={recruitment_office[1]} fields={formProps.fields} component={this.renderInput} />
+          </div>
+
+          <div className="row">
+            <Field name={`${recruitmentOffice}.city`} type="text" placeholder="City" index={index} label={recruitment_office[2]} fields={formProps.fields} component={this.renderInput} />
+            <Field name={`${recruitmentOffice}.zip`} type="text" placeholder="Zip Code" index={index} label={recruitment_office[3]} fields={formProps.fields} component={this.renderInput} />
+            <Field name={`${recruitmentOffice}.phonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[4]} fields={formProps.fields} component={this.renderInput} />
+          </div>
+        </div>
+      );
+    });
 
     let addBtn = (
       <div>
@@ -117,10 +120,10 @@ class WizardCreateNewAgencyFourthPage extends Component{
     return(
       <React.Fragment>
         <div className="clearfix recruiting-office-phone">
-            <label className="pull-left checkbox-inline">
-              <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
-            </label>
-            <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
+          <label className="pull-left checkbox-inline">
+            <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
+          </label>
+          <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
         </div>
         <div>
           { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? block: '' }
@@ -131,14 +134,26 @@ class WizardCreateNewAgencyFourthPage extends Component{
   }
 
   renderInput = (formProps) => {
-    let colClass = (formProps.input.name === "agencyname")? "col-md-12": "col-md-3";
+    let colClass;
     let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
-    let inputClass = ((formProps.label === "Phone" || formProps.label === "Telefono"))? "form-control tempEdge-input-box agency-phone-delete": "form-control tempEdge-input-box";
+    let inputClass = (formProps.label === "Phone" || formProps.label === "Telefono")? "form-control tempEdge-input-box agency-phone-delete": "form-control tempEdge-input-box";
+    let deleteIconClass = "pull-right delete-btn";
+
+    if(formProps.input.name.indexOf("officeName") !== -1){
+      colClass = "col-md-4";
+    }else if(formProps.input.name.indexOf("address") !== -1){
+      colClass = "col-md-8";
+      inputClass = "form-control tempEdge-input-box agency-phone-delete";
+    }else if(formProps.input.name === "agencyname"){
+      colClass = "col-md-12";
+    }else{
+      colClass = "col-md-4";
+    }
 
     return(
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { ((formProps.label === "Phone" || formProps.label === "Telefono") && (formProps.index > 0))? <span className="pull-right delete-btn" title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className={deleteIconClass} title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
@@ -153,15 +168,15 @@ class WizardCreateNewAgencyFourthPage extends Component{
     return(
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
-        <form className="panel-body" onSubmit={(e) => e.preventDefault} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
-                  <label className="control-label pull-right" style={{paddingTop: 13}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                  <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
                 </div>
                 <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
-                  <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
+                  <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
                 </div>
               </div>
             </div>
@@ -175,7 +190,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
             <div className="form-group register-form wizard-register-agency-form row">
               <div className="register-agency-flex">
                 <div className="col-md-12">
-                  <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">Office Name Address City Phone</Translate></span>
+                  <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">OfficeName Address City Zip Phone</Translate></span>
                   <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
                 </div>
               </div>

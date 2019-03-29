@@ -9,6 +9,7 @@ import FaceTracker from '../assets/tracking';
 import '../assets/face.min.js';
 import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
 import ModalFail from '../../Modals/FaceMashFail/Modal';
+import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 
 const $ = window.$;
 
@@ -19,7 +20,7 @@ class FaceMashMobile extends React.Component {
   constructor(props){
     super(props);
 
-    this.addTranslationsForActiveLanguage();
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
   state = {
@@ -58,21 +59,8 @@ class FaceMashMobile extends React.Component {
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/snapshot-mobile/${this.props.activeLanguage.code}`);
-      this.addTranslationsForActiveLanguage();
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
-  }
-
-  addTranslationsForActiveLanguage() {
-    const {activeLanguage} = this.props;
-
-    if (!activeLanguage) {
-      return;
-    }
-
-    import(`../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
-      });
   }
 
   componentWillUnmount(){

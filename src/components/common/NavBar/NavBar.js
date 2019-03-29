@@ -56,9 +56,9 @@ class NavBar extends React.Component{
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-2 col-md-offset-1 logo">
-                  <Link to="/"><img className="company-logo" src="./img/Temp_Edge_250-80.png" /></Link>
+                  <Link to="/"><img className="company-logo" src="./img/Temp_Edge_250-80-1.png" /></Link>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 menu-list">
                 <div className="collapse navbar-collapse menu">
                   <ul className="nav navbar-nav menu-ul">
                     <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.welcome">Welcome</Translate></Link></li>
