@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { date } from 'redux-form-validators';
-import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList';
+import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
@@ -20,7 +20,7 @@ const $ = window.$;
 
 momentLocaliser(moment);
 
-class WizardCreateNewAgencyFirstPage extends Component{
+class WizardCreateNewUserFirstPage extends Component{
   constructor(props) {
     super(props);
 
@@ -30,6 +30,10 @@ class WizardCreateNewAgencyFirstPage extends Component{
   state= { mounted: false, genders: [] }
 
   componentDidMount(){
+    let parent = $(ReactDOM.findDOMNode(this.refs.createNewUser1));
+    parent.closest(".wizard-wrapper").css("width", "1160px");
+    parent.closest(".wizard-create-agency").css("width", "1398px");
+
     this.setState(() => ({
       mounted: true
     }));
@@ -39,7 +43,7 @@ class WizardCreateNewAgencyFirstPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if(hasActiveLanguageChanged){
-      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
+      this.props.push(`/register/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
@@ -62,16 +66,16 @@ class WizardCreateNewAgencyFirstPage extends Component{
     let signInRoute = `/auth/${this.props.activeLanguage.code}`;
 
     return(
-      <React.Fragment>
-        <h2 className="text-center page-title"><Translate id="com.tempedge.msg.label.sign_up">Sign Up</Translate></h2>
-        <h3 className="text-center page-subtitle"><Translate id="com.tempedge.msg.label.sign_up.subtitle">Sign up to your new account</Translate></h3>
+      <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
+        <h2 className="text-center page-title-register"><Translate id="com.tempedge.msg.label.sign_up">Sign Up</Translate></h2>
+        <h3 className="text-center page-subtitle page-subtitle-register"><Translate id="com.tempedge.msg.label.sign_up.subtitle">Sign up to your new account</Translate></h3>
         <div className="panel register-form-panel">
           <div className="panel-heading register-header">
             <h2 className="text-center"><Translate id="com.tempedge.msg.label.accountinformation">Account Information</Translate></h2>
           </div>
         </div>
         <div className="register-form-panel-inputs">
-          <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
+          <form className="panel-body" onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
             <div className="form-group row">
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.firstname">First Name (Required)</Translate></label>
@@ -118,7 +122,7 @@ class WizardCreateNewAgencyFirstPage extends Component{
 
             <div className="form-group prev-next-btns">
                 <div className="col-md-6 col-md-offset-3">
-                  <button type="submit" className="btn btn-primary btn-block register-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                  <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                 </div>
             </div>
           </form>
@@ -129,14 +133,16 @@ class WizardCreateNewAgencyFirstPage extends Component{
             <span className="sign-in-link"><Link className="create-account" to={signInRoute}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></Link></span>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
 
-WizardCreateNewAgencyFirstPage = reduxForm({
-  form: 'CreateNewAgency',
+WizardCreateNewUserFirstPage = reduxForm({
+  form: 'CreateNewUser', //                 <------ form name
+  destroyOnUnmount: false, //        <------ preserve form data
+  // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   validate: Validate
-})(WizardCreateNewAgencyFirstPage);
+})(WizardCreateNewUserFirstPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewAgencyFirstPage));
+export default withLocalize(connect(null, { push })(WizardCreateNewUserFirstPage));

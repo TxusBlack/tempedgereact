@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
-import PropTypes from 'prop-types';
+import InputBox from '../../../components/common/InputBox/InputBox.js';
+import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
-import Validate from '../Validations/Validations';
+import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
 
@@ -19,7 +20,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, salespersonlabels: '', captchaRef: null, reCaptchaToken: '', btnDisabled: true }
+  state= { mounted: false, salespersonlabels: '' }
 
   componentDidMount(){
     this.setState({
@@ -36,25 +37,16 @@ class WizardCreateNewAgencyFifthPage extends Component{
     }
   }
 
-  addTranslationsForActiveLanguage(){
-    const {activeLanguage} = this.props;
+  addTranslationsForActiveLanguage = async () => {
+    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
-    if(!activeLanguage){
-      return;
-    }
+    let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    import(`../../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(async translations => {
-        await this.props.addTranslationForLanguage(translations, activeLanguage.code);
-
-        let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
-
-        if(this.state.mounted && phonelabel != '') {
-          this.setState({
-            salespersonlabels: phonelabel
-          });
-        }
+    if(this.state.mounted && phonelabel != '') {
+      this.setState({
+        salespersonlabels: phonelabel
       });
+    }
   }
 
   renderError(formProps){
@@ -92,14 +84,14 @@ class WizardCreateNewAgencyFifthPage extends Component{
     }
 
     let block = formProps.fields.map((salesPerson, index) => (
-      <div key={index}>
+      <div key={index} className="row">
         <Field name={`${salesPerson}.salespersonfirstname`} type="text" placeholder="First Name" index={index} label={recruitment_office[0]} fields={formProps.fields} component={this.renderInput} />
         <Field name={`${salesPerson}.salespersonlastname`} type="text" placeholder="Last Name" index={index} label={recruitment_office[1]} fields={formProps.fields} component={this.renderInput} />
         <div className="col-md-2">
           <label className="control-label">{recruitment_office[2]}</label>
           <div className="gender-radio-group">
-            <label style={{paddingRight: 7}}><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="male" fields={formProps.fields} component="input" /><span className="radio-label">{recruitment_office[3]}</span></label>
-            <label><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="female" fields={formProps.fields} component="input" /><span className="radio-label">{recruitment_office[4]}</span></label>
+            <label style={{paddingRight: 7}}><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="male" fields={formProps.fields} component="input" /><span className="radio-label" style={{fontWeight: "normal"}}>{recruitment_office[3]}</span></label>
+            <label><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="female" fields={formProps.fields} component="input" /><span className="radio-label" style={{fontWeight: "normal"}}>{recruitment_office[4]}</span></label>
           </div>
         </div>
         <Field name={`${salesPerson}.salespersonphonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[5]} fields={formProps.fields} component={this.renderInput} />
@@ -129,7 +121,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     return(
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { ((formProps.label === "Phone" || formProps.label === "Telefono") && (formProps.index > 0))? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
@@ -138,43 +130,21 @@ class WizardCreateNewAgencyFifthPage extends Component{
     );
   }
 
-  onChange = (recaptchaToken) => {
-    console.log("recaptchaToken: ", recaptchaToken);
-
-    this.setState({
-      reCaptchaToken: recaptchaToken,
-      btnDisabled: false
-    });
-  }
-
-  setCaptchaRef = (ref) => {
-    this.setState(
-      () => {
-        return{
-          captchaRef: React.createRef(ref)
-        }
-    });
-  }
-
-  generateCaptcha = (formProps) => {
-    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
-  }
-
   render(){
     console.log("Fifth Page");
 
     return(
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
-        <form className="panel-body" onSubmit={this.props.onSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
-                  <label className="control-label pull-right" style={{paddingTop: 13}}><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                  <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
                 </div>
                 <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
-                  <Field name="agencyname" type="text" placeholder="Agency Name" component={this.renderInput} />
+                  <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
                 </div>
               </div>
             </div>
@@ -192,14 +162,6 @@ class WizardCreateNewAgencyFifthPage extends Component{
                   <FieldArray name="recruitmentofficesalespersons" type="text" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
                 </div>
               </div>
-
-              <div className="row">
-              <div className="col-md-12">
-                <div className="center-block new-agency-captcha">
-                  <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
-                </div>
-              </div>
-            </div>
             </div>
           </div>
         </form>
@@ -210,17 +172,13 @@ class WizardCreateNewAgencyFifthPage extends Component{
               <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
             </div>
             <div className="col-md-4">
-              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit">Submit</Translate></button>
+              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
             </div>
           </div>
         </div>
       </React.Fragment>
     );
   }
-}
-
-WizardCreateNewAgencyFifthPage.propTypes = {
-  setActivePage: PropTypes.func.isRequired
 }
 
 WizardCreateNewAgencyFifthPage = reduxForm({

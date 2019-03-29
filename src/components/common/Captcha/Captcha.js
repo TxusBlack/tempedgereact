@@ -5,7 +5,6 @@ import keys from '../../../apiKeys/keys';
 let Captcha = (props) => {
   let errorClass = `col-xs-12 ${(props.formProps.meta.error && props.formProps.meta.touched)? 'has-error-login login-input-error': 'captcha'}`;
 
-  console.log("props: ", props);
   return(
     <div className={errorClass}>
       <ReCaptcha

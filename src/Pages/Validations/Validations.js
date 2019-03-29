@@ -16,7 +16,11 @@ let validate = (formValues) => {
   }
 
   if(!formValues.username){
-    errors.username = 'Please enter a username';
+    errors.username = 'Please enter your username.';
+  }
+
+  if(!formValues.password){
+    errors.password = 'Please enter your password.';
   }
 
   if (!formValues.email) {
@@ -26,7 +30,19 @@ let validate = (formValues) => {
   }
 
   if(!formValues.gender){
-    errors.gender = 'Please select a gender';
+    errors.gender = 'Please select a gender.';
+  }
+
+  if(!formValues.agencyrole){
+    errors.agencyrole = "Please enter role.";
+  }
+
+  if(!formValues.agencyorganization){
+    errors.agencyorganization = "Please enter the organization name.";
+  }
+
+  if(!formValues.agencyclient){
+    errors.agencyclient = "Please enter the client name.";
   }
 
   if(!formValues.agencycountry){
@@ -50,7 +66,7 @@ let validate = (formValues) => {
   }
 
   if(!formValues.agencyappartment){
-    errors.agencyappartment = 'Please enter the agency appartment.';
+    errors.agencyappartment = 'Please enter the agency address.';
   }
 
   if(!formValues.agencycity){
@@ -89,20 +105,24 @@ let validate = (formValues) => {
       let recruitmentofficephonenumbersErrors = {};
       let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
 
-      if (!regX.test(recruitmentoffice.phonenumber)){
-        recruitmentofficephonenumbersErrors.phonenumber = 'Enter the recruitment office phone number.';
-      }
-
       if(!recruitmentoffice.officeName){
-        recruitmentofficephonenumbersErrors.officeName = 'Enter the recruitment office name.';
+        recruitmentofficephonenumbersErrors.officeName = 'Enter recruitment office name.';
       }
 
       if(!recruitmentoffice.address){
-        recruitmentofficephonenumbersErrors.address = 'Enter the recruitment office address.';
+        recruitmentofficephonenumbersErrors.address = 'Enter recruitment office address.';
       }
 
       if(!recruitmentoffice.city){
-        recruitmentofficephonenumbersErrors.city = "Enter the recruitment office city.";
+        recruitmentofficephonenumbersErrors.city = "Enter  recruitment office city.";
+      }
+
+      if(!recruitmentoffice.zip){
+        recruitmentofficephonenumbersErrors.zip = "Enter recruitment office zip code.";
+      }
+
+      if (!regX.test(recruitmentoffice.phonenumber)){
+        recruitmentofficephonenumbersErrors.phonenumber = 'Enter recruitment office phone number.';
       }
 
       recruitmentofficephonenumbersArrayErrors[index] = recruitmentofficephonenumbersErrors;
@@ -144,6 +164,18 @@ let validate = (formValues) => {
     if(recruitmentofficesalespersonsArrayErrors.length){
       errors.recruitmentofficesalespersons = recruitmentofficesalespersonsArrayErrors;
     }
+  }
+
+  if(!formValues.weekdaysdropdown1){
+    errors.weekdaysdropdown1 = "Please select a week day";
+  }
+
+  if(!formValues.weekdaysdropdown2){
+    errors.weekdaysdropdown2 = "Please select a week day";
+  }
+
+  if(!formValues.weekdaysdropdown3){
+    errors.weekdaysdropdown3 = "Please select a week day";
   }
 
   return errors;
