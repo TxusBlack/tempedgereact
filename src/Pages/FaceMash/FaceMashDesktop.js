@@ -111,7 +111,7 @@ class FaceMashDesktop extends React.Component {
     let res = await httpService.postImages('/faceRecognition/saveNewSubject', this.state.imgCollection);
     console.log('response: ', res);
 
-    this.fireNotification();
+    //this.fireNotification();
   }
 
     //ONCE CALL ON PROMISE SOLVED DO THIS:

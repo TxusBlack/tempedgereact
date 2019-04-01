@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import WizardCreateNewAgencyFirstPage from './WizardCreateNewAgencyFirstPage';
 import WizardCreateNewAgencySecondPage from './WizardCreateNewAgencySecondPage';
 import WizardCreateNewAgencyThirdPage from './WizardCreateNewAgencyThirdPage';
@@ -50,7 +49,7 @@ class CreateNewAgency extends Component {
 
     return (
       <div className="wizard-create-agency">
-        <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize="16" />
+        <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
           {page === 1 && <WizardCreateNewAgencyFirstPage onSubmit={this.nextPage} countryList={countries} {...this.props} />}
           {page === 2 &&
@@ -70,9 +69,5 @@ class CreateNewAgency extends Component {
     );
   }
 }
-
-CreateNewAgency.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
 
 export default connect(null)(CreateNewAgency);

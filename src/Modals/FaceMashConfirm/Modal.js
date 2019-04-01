@@ -1,12 +1,6 @@
 import React from 'react';
 
-const $ = window.$;
-
 class Modal extends React.Component{
-  constructor(props){
-    super(props);
-  }
-
   onClose(){
     if(this.props.reStartfaceDetectTracker !== null){
       this.props.reStartfaceDetectTracker();

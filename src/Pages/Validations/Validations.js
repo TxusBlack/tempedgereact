@@ -1,8 +1,6 @@
 let validate = (formValues) => {
   let errors ={};
 
-  console.log("formValues: ", formValues);
-
   if(!formValues.firstName){
     errors.firstName = 'Please enter your first name';
   }

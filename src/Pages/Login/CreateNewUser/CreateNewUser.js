@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
@@ -71,9 +70,5 @@ class CreateNewUser extends Component {
     );
   }
 }
-
-CreateNewUser.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
 
 export default connect(null, { notify })(CreateNewUser);

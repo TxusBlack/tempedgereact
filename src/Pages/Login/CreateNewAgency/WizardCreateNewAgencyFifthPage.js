@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
+import { Field, FieldArray, reduxForm } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
@@ -42,7 +41,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel != '') {
+    if(this.state.mounted && phonelabel !== '') {
       this.setState({
         salespersonlabels: phonelabel
       });
@@ -53,7 +52,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     let fieldId='';
 
     if(typeof formProps.input !== 'undefined'){
-      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
+      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
         if(formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1){
            if(formProps.input.name.indexOf("salespersonfirstname") !== -1){
              fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired`;
@@ -76,7 +75,6 @@ class WizardCreateNewAgencyFifthPage extends Component{
   }
 
   renderSalesPersonInputs = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
     let recruitment_office = formProps.label.split(" ");
 
     if(formProps.fields.length < 1){
@@ -104,7 +102,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
           { block }
           <div>
             <div className="row">
-              <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} /></span>
+              <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
             </div>
           </div>
         </div>
@@ -121,7 +119,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     return(
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span>: '' }
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}

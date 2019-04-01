@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router-dom';
 import { Field, FieldArray, reduxForm } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
@@ -42,7 +41,7 @@ class WizardCreateNewAgencyThirdPage extends Component{
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel != '') {
+    if(this.state.mounted && phonelabel !== '') {
       this.setState({
         phonelabels: phonelabel
       });

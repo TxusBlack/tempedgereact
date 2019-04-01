@@ -1,16 +1,10 @@
 import React from 'react';
 
-const $ = window.$;
-
 class Modal extends React.Component{
-  constructor(props){
-    super(props);
-  }
-
   onClose(){
     this.props.reStartfaceDetectTracker();
   }
-  
+
   render(){
     return(
       <div className="modal fade" id="openingModal" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="false">

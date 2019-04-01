@@ -6,12 +6,9 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import addIcon from "./assets/plus.png";
 
 let renderPhoneNumberInputs = (formProps) => {
-  console.log("formProps: ", formProps);
   let phoneTypeList = ["fax", "local", "other", "toll-free", "tty"];
-  let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
 
   if(formProps.fields.length < 1){
-    console.log("Refill!");
     formProps.fields.push({});
   }
 
@@ -32,7 +29,7 @@ let renderPhoneNumberInputs = (formProps) => {
 
             <div className="col-md-4 agency-phone-type">
               <label className="control-label">{formProps.label.substring(formProps.label.lastIndexOf(":")+2, formProps.label.lenght)}</label>
-              { <span className="pull-right" title="Remove Agency" onClick={() => formProps.fields.remove(index)}><img className="delete-icon" src={deleteIcon} /></span> }
+              { <span className="pull-right" title="Remove Agency" onClick={() => formProps.fields.remove(index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> }
               <Field name={`${agency}.phonetype`} data={phoneTypeList} valueField="value" textField="option" category="agency" component={Dropdown} />
             </div>
           </div>
@@ -42,7 +39,7 @@ let renderPhoneNumberInputs = (formProps) => {
 
       <div className="list-item">
         <div className="row">
-          <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} /></span>
+          <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
         </div>
       </div>
     </div>

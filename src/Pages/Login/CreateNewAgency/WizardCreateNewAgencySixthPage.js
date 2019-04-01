@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
-import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
-import addIcon from "./assets/plus.png";
-
-const $ = window.$;
 
 class WizardCreateNewAgencySixthPage extends Component{
   constructor(props){
