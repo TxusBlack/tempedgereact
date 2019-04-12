@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import InputBox from '../../components/common/InputBox/InputBox.js';
 import { Field, reduxForm } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Captcha from '../../components/common/Captcha/Captcha';
 import Validate from '../Validations/Validations';
+import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
 import httpService from '../../utils/services/httpService/httpService.js';
@@ -13,62 +15,18 @@ class Login extends Component{
   constructor(props, context) {
     super(props, context);
 
-    this.addTranslationsForActiveLanguage();
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
   state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/auth/${this.props.activeLanguage.code}`);
-      this.addTranslationsForActiveLanguage();
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
-  }
-
-  addTranslationsForActiveLanguage() {
-    const {activeLanguage} = this.props;
-
-    if (!activeLanguage) {
-      return;
-    }
-
-    import(`../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
-      });
-  }
-
-  renderError(formProps){
-    let fieldId='';
-    let errMsg = '';
-
-    if(typeof formProps.input !== 'undefined'){
-      fieldId = `com.tempedge.error.person.${formProps.input.name}required`;
-      errMsg = formProps.meta.error;
-
-      if(formProps.meta.touched && formProps.meta.error && typeof errMsg !== 'undefined'){
-        return(
-          <p className="text-left" style={{color: '#a94442'}}><Translate id={fieldId}>{errMsg}</Translate></p>
-        );
-      }
-    }
-  }
-
-  renderInput = (formProps) => {
-    let errorClass = `col-xs-12 ${(formProps.meta.error && formProps.meta.touched)? 'has-error-login login-input-error': 'login-input'}`;
-
-    if(formProps.input.name === "username"){
-      errorClass = errorClass.concat(" ", "first-input-spacer");
-    }
-
-    return(
-      <div className={errorClass}>
-        <input className="form-control tempEdge-input-box" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />      {/*<input onChange={formProps.input.onChange} value={formProps.input.value} />*/}
-        {this.renderError(formProps)}
-      </div>
-    );
   }
 
   onChange = (recaptchaToken) => {
@@ -98,10 +56,10 @@ class Login extends Component{
     // let res = await httpService.get('/users/listAll');
     // console.log('response: ', res);
 
-    let res = await httpService.post('/oauth/token', values);
+    let res = await httpService.postA('/oauth/token', values);
     console.log('response: ', res);
 
-    this.fireNotification();
+    //this.fireNotification();
   }
 
   fireNotification = () => {
@@ -135,11 +93,11 @@ class Login extends Component{
                 <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <div className="form-group">
                       <p className="text-left label-p"><Translate id="com.tempedge.msg.label.username">Username</Translate></p>
-                      <Field name="username" type="text" placeholder="Enter username" component={this.renderInput} />
+                      <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
                     </div>
                     <div className="form-group">
                       <p className="text-left label-p"><Translate id="com.tempedge.msg.label.password">Password</Translate></p>
-                      <Field name="password" type="text" placeholder="Enter password" component={this.renderInput} />
+                      <Field name="password" type="text" placeholder="Enter password"category="person" component={InputBox} />
                     </div>
                     <div className="clearfix">
                         <label className="pull-left checkbox-inline label-p">

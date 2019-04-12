@@ -14,21 +14,21 @@ let renderPhoneNumberInputs = (formProps) => {
 
   return(
     <div className="list" style={{padding: 0}}>
-      {formProps.fields.map((agency, index) => {
+      {formProps.fields.map((phoneOwner, index) => {
         return(
           <div key={index} className="list-item row">
             <div className="col-md-4">
               <label className="control-label">{formProps.label.substring(0, formProps.label.indexOf(":"))}</label>
-              <Field name={`${agency}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" component={InputBox} />
+              <Field name={`${phoneOwner}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" component={InputBox} />
             </div>
 
             <div className="col-md-4">
               <label className="control-label">{formProps.label.substring(formProps.label.indexOf(":")+2, formProps.label.lastIndexOf(":"))}</label>
-              <Field name={`${agency}.phoneext`} type="text" index={index} placeholder="xxxx" component={InputBox} />
+              <Field name={`${phoneOwner}.phoneext`} type="text" index={index} placeholder="xxxx" component={InputBox} />
             </div>
 
             <div className="col-md-4 agency-phone-type">
-              { <span className="pull-right" title="Remove Agency" onClick={() => formProps.fields.remove(index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> }
+              { <span className="pull-right" title="Remove Phone" onClick={() => formProps.fields.remove(index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> }
             </div>
           </div>
         );
