@@ -15,7 +15,7 @@ import Footer from './components/common/Footer/Footer';
 import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
-import CreateNewAgency from './Pages/Login/CreateNewAgency/WizardCreateNewAgency';
+import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
 import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';

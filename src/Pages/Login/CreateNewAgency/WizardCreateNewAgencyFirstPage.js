@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { date } from 'redux-form-validators';
-import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList';
+import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
@@ -135,7 +135,9 @@ class WizardCreateNewAgencyFirstPage extends Component{
 }
 
 WizardCreateNewAgencyFirstPage = reduxForm({
-  form: 'CreateNewAgency',
+  form: 'CreateNewAgency', //                 <------ form name
+  destroyOnUnmount: false, //        <------ preserve form data
+  // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   validate: Validate
 })(WizardCreateNewAgencyFirstPage);
 

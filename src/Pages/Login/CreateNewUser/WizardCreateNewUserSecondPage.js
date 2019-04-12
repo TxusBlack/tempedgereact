@@ -57,7 +57,7 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   render(){
-    let rolesList = ["Client", "Agency"];
+    let rolesList = [{ role: "Client", value: 0 }, { role: "Agency", value: 1 }];
 
     console.log("Second Page");
 

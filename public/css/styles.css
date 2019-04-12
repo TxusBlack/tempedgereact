@@ -116,6 +116,26 @@ body {
   margin: 0;
 }
 
+#facemash, #facemash-mobile{
+  object-fit: fill;
+  border-top-left-radius: 1.6rem;
+  border-top-right-radius: 1.6rem;
+}
+
+#facemash-mobile{
+  border-bottom-left-radius: 1.6rem;
+  border-bottom-right-radius: 1.6rem;
+}
+
+.phone-num-btn-submit{
+  min-height: 4rem !important;
+  min-width: 46rem;
+  border-radius: 1.6rem !important;
+  background-image: linear-gradient(54deg, #5abeec, #69c8f4);
+  border: none;
+  margin: 3.4rem auto;
+}
+
 /* NavBar */
 .flag{
   height: 2.7rem;
@@ -217,6 +237,22 @@ body {
 
 .logo h2{
   padding: 1rem;
+}
+
+.face-tile-container{
+  margin-bottom: 18px;
+  margin-right: 27px;
+}
+
+.face-tile, .face-tile img{
+  width: 335px;
+  min-height: 240px;
+  margin: auto;
+  background-color: #fff;
+}
+
+.face-tile img{
+  padding: 10px;
 }
 /*************************/
 
@@ -437,12 +473,13 @@ body {
   margin-bottom: 1rem;
 }
 
-.phone-num-btn-close{
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-  background-image: linear-gradient(#fff,#d5d5d5);
-  border: 0.1rem solid #d5d5d5;
-  color: #000;
+.phone-num-btn-close, .phone-num-btn-close:hover, .phone-num-btn-close:active, .phone-num-btn-close:focus{
+  width: 46rem;
+  height: 7.8rem;
+  background-color: #8cb544 !important;
+  color: #fff;
+  border-bottom-left-radius: 1.6rem;
+  border-bottom-right-radius: 1.6rem;
 }
 
 .translation-placeholder{

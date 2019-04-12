@@ -10,11 +10,12 @@ import '../assets/face.min.js';
 import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
 import ModalFail from '../../Modals/FaceMashFail/Modal';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
+import httpService from '../../utils/services/httpService/httpService.js';
 
 const $ = window.$;
 
-let canvas_width = 320;
-let canvas_height: 240;
+let canvas_width = 460;
+let canvas_height: 359;
 
 class FaceMashMobile extends React.Component {
   constructor(props){
@@ -26,7 +27,7 @@ class FaceMashMobile extends React.Component {
   state = {
     initialized: 0,
     start: 0,
-    delay: 5,  // <== Face Detection Time
+    delay: 3,  // <== Face Detection Time
     trackerTask: null,
     faceDetectTracker: null,
     faceDetected: false,
@@ -46,8 +47,8 @@ class FaceMashMobile extends React.Component {
     this.setWaitMessage(this.state.delay);
     this.setState({
       waitMsg: `Please Wait.`,
-      trackerTask: window.tracking.track('#facemash', tracker, { camera: true }),
-      faceDetectTracker: window.tracking.track('#facemash', tracker2, { camera: true })
+      trackerTask: window.tracking.track('#facemash-mobile', tracker, { camera: true }),
+      faceDetectTracker: window.tracking.track('#facemash-mobile', tracker2, { camera: true })
     }, () => {
       this.initFaceTracker(tracker, canvas, context, this.state.trackerTask);
       this.initFaceDetectTracker(tracker2, canvas, context, this.state.faceDetectTracker);
@@ -94,7 +95,7 @@ class FaceMashMobile extends React.Component {
 
   //re-starts 2nd tracker that takes picture
    reStartTracking = async () => {
-    let delay = 3000;    //Delay before 'Please Wait' message gets replaced.
+    let delay = 2000;    //Delay before 'Please Wait' message gets replaced.
 
     //Set canvas width (default 320px) where trackers will detect faces and draw rectangles.
     this.setCanvasWidth(canvas_width);
@@ -136,7 +137,7 @@ class FaceMashMobile extends React.Component {
   setWaitMessage = (sec) => {
     if(sec > 0){
       this.setState({ waitMsg: `Please stand still for ${sec} seconds.` });
-    }else if(sec < 6){
+    }else if(sec < 4){
       this.setState({ waitMsg: `` });
     }
   }
@@ -203,7 +204,7 @@ class FaceMashMobile extends React.Component {
     tracker.on('track', event => {
       context.clearRect(0, 0, canvas.width, canvas.height);
 
-      event.data.forEach(rect => {
+      event.data.forEach(async rect => {
         // Calculate elapsed to tenth of a second:
         let elapsed = Math.round((new Date() - this.state.start) / 100);
 
@@ -213,7 +214,7 @@ class FaceMashMobile extends React.Component {
         console.log("start: ", this.state.start);
         console.log("elapsed: ", elapsed);
         console.log("secs: ", seconds);
-        this.setState({ waitMsg: `Please stand still for ${parseInt(6-seconds)} seconds.` });
+        this.setState({ waitMsg: `Please stand still for ${parseInt(4-seconds)} seconds.` });
 
         if(seconds > this.state.delay){
           let imageSrc = this.capture();
@@ -221,28 +222,31 @@ class FaceMashMobile extends React.Component {
           this.setCanvasWidth(0);
 
           //CALL TO SERVER REST API
-          // ...
-          //***
+          let res = await httpService.postImage('/faceRecognition/recognizeFace', imageSrc);
+          console.log('res: ', res);
 
-          //ONCE CALL ON PROMISE SOLVED DO THIS:
-          if(this.state.faceDetected){
-            console.log("Success!");
-            /*** ON SUCCESS ***/
+          let employee = "Employee";
+
+          if(res.data.matchedEmpId == 60)
+            employee = "Jose Vasconcellos";
+          else if(res.data.matchedEmpId == 70)
+            employee = "Luis Diaz";
+          else
+            employee = "Employee";
+
+          if(res.data.message === "Face matched"){
             this.setState({
-              employeeName: "Luis Diaz",
+              employeeName: employee,
               timeStatus: "In"
             }, () => {
               this.toggleModal(0);   //Opens Sucess Modal
             });
-
-            /*** ON FAIL ***/
-            // this.setState({
-            //   employeeName: "Luis Diaz",
-            //   timeStatus: ""
-            // }, () => {
-            //   this.toggleModal(-1);   //Opens Fail Modal
-            // });
-            //*****
+          }else{
+            this.setState({
+              employeeName: "Employee"
+            }, () => {
+              this.toggleModal(-1);   //Opens Fail Modal
+            });
           }
 
           console.log("Canvas Width: ", canvasWidth);
@@ -267,17 +271,17 @@ class FaceMashMobile extends React.Component {
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height, marginBottom:40}} className="center-block">
+            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height}} className="center-block">
               <Webcam className="center-block"
                 audio={false}
-                height={240}
-                id="facemash"
+                height={359}
+                id="facemash-mobile"
                 ref={this.setRef}
                 screenshotFormat="image/jpeg"
-                width={320}
+                width={videoConstraints.width}
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width="320" height="240" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width={videoConstraints.width} height="359" style={{position: "absolute", top: 0}}></canvas>
             </div>
             <h3 style={{textAlign: "center"}}>{this.state.waitMsg}</h3>
           </div>

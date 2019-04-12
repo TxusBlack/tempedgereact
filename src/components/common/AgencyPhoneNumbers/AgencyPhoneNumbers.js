@@ -28,9 +28,7 @@ let renderPhoneNumberInputs = (formProps) => {
             </div>
 
             <div className="col-md-4 agency-phone-type">
-              <label className="control-label">{formProps.label.substring(formProps.label.lastIndexOf(":")+2, formProps.label.lenght)}</label>
               { <span className="pull-right" title="Remove Agency" onClick={() => formProps.fields.remove(index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> }
-              <Field name={`${agency}.phonetype`} data={phoneTypeList} valueField="value" textField="option" category="agency" component={Dropdown} />
             </div>
           </div>
         );
