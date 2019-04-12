@@ -4,7 +4,7 @@ import Webcam from "react-webcam";
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Tracker from '../assets/tracking';
+import Tracker from './assets/tracking';
 import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
 import ModalFail from '../../Modals/FaceMashFail/Modal';
 import PicModal from '../../Modals/PicModal/PicModal';

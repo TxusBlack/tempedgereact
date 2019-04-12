@@ -31,7 +31,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
   componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if (hasActiveLanguageChanged) {
+    if (hasActiveLanguageChanged){
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
@@ -42,7 +42,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel !== '') {
+    if(this.state.mounted && phonelabel !== ''){
       this.setState({
         phonelabels: phonelabel
       });

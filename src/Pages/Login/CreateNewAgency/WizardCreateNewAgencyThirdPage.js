@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
-import renderPhoneNumberInputs from '../../../components/common/AgencyPhoneNumbers/AgencyPhoneNumbers.js';
+import renderPhoneNumberInputs from '../../../components/common/PhoneNumberListGen/PhoneNumberListGen.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';

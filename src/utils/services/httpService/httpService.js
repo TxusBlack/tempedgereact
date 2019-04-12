@@ -29,7 +29,7 @@ let HttpService = {
 
     return response;
   },
-  postCreateNew: async (url, data) => {
+  postCreateNew: async (url, data) => {     //Create New User, Agency & others
     let response = await Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
