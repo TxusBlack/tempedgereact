@@ -1,11 +1,17 @@
 let getCountryList = (countryList) => {
   let country_list = [];
 
-  countryList.map((country) => {
-    country_list.push(country.countryName);
+  countryList.map((country, index) => {
+    country_list.push({
+      country: country.countryName,
+      value: index
+    });
   });
 
-  return country_list;
+  return {
+    countryList,
+    country_list
+  };
 }
 
 let getRegionList = (countryList, selectedCountry) => {
@@ -18,8 +24,11 @@ let getRegionList = (countryList, selectedCountry) => {
     }
   });
 
-  regions.map((region) => {
-    regions_list.push(region.name);
+  regions.map((region, index) => {
+    regions_list.push({
+      region: region.name,
+      value: index
+    });
   });
 
   return regions_list;

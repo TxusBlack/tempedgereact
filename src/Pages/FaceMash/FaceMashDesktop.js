@@ -14,8 +14,8 @@ import JSOG from 'jsog';
 
 const $ = window.$;
 
-let canvas_width = 480;
-let canvas_height: 480;
+let canvas_width = 460;
+let canvas_height: 359;
 
 class FaceMashDesktop extends React.Component {
   constructor(props){
@@ -83,8 +83,10 @@ class FaceMashDesktop extends React.Component {
   mountPic = () => {
     let picWall = this.state.picWall;
     let picElement = (
-      <div className="col-md-6">
-        <img src={this.state.currentImage} style={{width: "100%", maxHeight: 300, margin: "auto", marginBottom: 20}}/>
+      <div className="col-md-5 face-tile-container">
+        <div className="face-tile">
+          <img src={this.state.currentImage} alt="Face Tile" />
+        </div>
       </div>
     );
 
@@ -109,9 +111,12 @@ class FaceMashDesktop extends React.Component {
 
   onSubmit = async (formValues) => {
     let res = await httpService.postImages('/faceRecognition/saveNewSubject', this.state.imgCollection);
+    //let res = await httpService.postImage('/faceRecognition/recognizeFace', this.state.currentImage);
+
+    //let res = await httpService.postA('/api/country/listAll');
     console.log('response: ', res);
 
-    this.fireNotification();
+    //this.fireNotification();
   }
 
     //ONCE CALL ON PROMISE SOLVED DO THIS:
@@ -148,7 +153,7 @@ class FaceMashDesktop extends React.Component {
       facingMode: "user"
     };
 
-    let tempEdgeSubmitShow = (this.state.imgCollection.length < 3)? '': <button className="btn btn-primary phone-num-btn-close center-block" onClick={this.onSubmit}>Submit</button>;
+    let tempEdgeSubmitShow = (this.state.imgCollection.length < 3)? '': <button className="btn btn-primary phone-num-btn-submit center-block" onClick={this.onSubmit}>Save</button>;
 
     return(
       <div className="container-fluid">
@@ -158,20 +163,20 @@ class FaceMashDesktop extends React.Component {
             <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height}} className="center-block">
               <Webcam className="center-block"
                 audio={false}
-                height={480}
+                height={359}
                 id="facemash"
                 ref={this.setRef}
                 screenshotFormat="image/jpeg"
-                width={480}
+                width={videoConstraints.width}
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width="320" height="240" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width={videoConstraints.width} height="359" style={{position: "absolute", top: 0}}></canvas>
             </div>
-            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button><br/><br/>
+            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button>
             {tempEdgeSubmitShow}
           </div>
           <div className="col-md-7">
-            <div style={{border: "1px solid black", padding:40, minHeight:'calc(100vh - 130px)'}}>
+            <div style={{padding:40, minHeight:'calc(100vh - 130px)'}}>
               <div className="row">
                 {this.state.picWall}
               </div>

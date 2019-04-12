@@ -42,7 +42,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel != '') {
+    if(this.state.mounted && phonelabel !== '') {
       this.setState({
         phonelabels: phonelabel
       });
@@ -53,7 +53,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     let fieldId='';
 
     if(typeof formProps.input !== 'undefined'){
-      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
+      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
         if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
            if(formProps.input.name.indexOf("officeName") !== -1){
              fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired`;
@@ -78,7 +78,6 @@ class WizardCreateNewAgencyFourthPage extends Component{
   }
 
   renderPhoneNumberInputs = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
     let recruitment_office = formProps.label.split(" ");
 
     if(this.props.activeLanguage.code === 'en'){
@@ -88,7 +87,6 @@ class WizardCreateNewAgencyFourthPage extends Component{
     }
 
     if(formProps.fields.length < 1){
-      console.log("Refill!")
       formProps.fields.push({});
     }
 
@@ -112,7 +110,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     let addBtn = (
       <div>
         <div className="row">
-          <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} /></span>
+          <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
         </div>
       </div>
     );
@@ -153,7 +151,7 @@ class WizardCreateNewAgencyFourthPage extends Component{
     return(
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className={deleteIconClass} title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className={deleteIconClass} title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span>: '' }
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
@@ -196,18 +194,18 @@ class WizardCreateNewAgencyFourthPage extends Component{
               </div>
             </div>
           </div>
-        </form>
 
-        <div className="panel-footer register-footer panel-footer-agency-height-override">
-          <div className="prev-next-btns-agency">
-            <div className="col-md-4 col-md-offset-2">
-              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
-            </div>
-            <div className="col-md-4">
-              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+          <div className="panel-footer register-footer panel-footer-agency-height-override">
+            <div className="prev-next-btns-agency">
+              <div className="col-md-4 col-md-offset-2">
+                <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+              </div>
+              <div className="col-md-4">
+                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </React.Fragment>
     );
   }

@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-import DropdownList from 'react-widgets/lib/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
-import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
-import PropTypes from 'prop-types';
+import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
-import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
-import addIcon from "./assets/plus.png";
-
-const $ = window.$;
 
 class WizardCreateNewAgencySeventhPage extends Component{
   constructor(props){
@@ -61,7 +54,7 @@ class WizardCreateNewAgencySeventhPage extends Component{
     return(
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
@@ -109,13 +102,14 @@ class WizardCreateNewAgencySeventhPage extends Component{
               </div>
             </div>
           </div>
+
           <div className="panel-footer register-footer panel-footer-agency-height-override">
             <div className="prev-next-btns-agency">
               <div className="col-md-4 col-md-offset-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
               <div className="col-md-4">
-                <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
+                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
               </div>
             </div>
           </div>

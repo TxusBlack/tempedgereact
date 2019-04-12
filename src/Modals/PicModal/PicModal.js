@@ -1,12 +1,6 @@
 import React from 'react';
 
-const $ = window.$;
-
 class Modal extends React.Component{
-  constructor(props){
-    super(props);
-  }
-
   onClose(choice = "keep"){
     if(this.props.reStartfaceDetectTracker !== null){
       this.props.reStartfaceDetectTracker();
@@ -31,7 +25,7 @@ class Modal extends React.Component{
               </button>
             </div>
             <div className="modal-body">
-              <img src={this.props.pic} style={{width: "100%"}} />
+              <img src={this.props.pic} style={{width: "100%"}} alt="User Pic" />
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-primary close-btn" data-dismiss="modal" onClick={() => this.onClose()}>Keep</button>

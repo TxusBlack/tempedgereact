@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
-import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
-import addIcon from "./assets/plus.png";
-
-const $ = window.$;
 
 class WizardCreateNewAgencySixthPage extends Component{
   constructor(props){
@@ -41,7 +33,19 @@ class WizardCreateNewAgencySixthPage extends Component{
   }
 
   render(){
-    let weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    let weekdays = [
+      { day: "Monday", value: "1" },
+      { day: "Tuesday", value: "2" },
+      { day: "Wednesday", value: "3" },
+      { day: "Thursday", value: "4" },
+      { day: "Friday", value: "5" },
+      { day: "Saturday", value: "6" },
+      { day: "Sunday", value: "0" }
+    ];
+
+    let fundingCompany = [
+      { company: "TRICOM", value: 1 }
+    ];
 
     console.log("Sixth Page");
 
@@ -71,33 +75,33 @@ class WizardCreateNewAgencySixthPage extends Component{
               <div className="register-agency-flex payroll-hours-validation">
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollhours">Last date to add payroll hours</Translate></label>
-                  <Field name="weekdaysdropdown1" data={weekdays} valueField="value" textField="country" category="agency" component={Dropdown} />
+                  <Field name="weekdaysdropdown1" data={weekdays} valueField="value" textField="day" category="agency" component={Dropdown} />
                 </div>
 
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollvalidation">Last day for payroll validation</Translate></label>
-                  <Field name="weekdaysdropdown2" data={weekdays} valueField="value" textField="option" category="agency" component={Dropdown} />
+                  <Field name="weekdaysdropdown2" data={weekdays} valueField="value" textField="day" category="agency" component={Dropdown} />
                 </div>
 
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.fundingcompany">Select if your company uses a funding company</Translate></label>
-                  <Field name="weekdaysdropdown3" data={weekdays} valueField="value" textField="option" category="agency" component={Dropdown} />
+                  <Field name="fundingCompanydropdown" data={fundingCompany} valueField="value" textField="company" category="agency" component={Dropdown} />
                 </div>
               </div>
             </div>
           </div>
-        </form>
 
-        <div className="panel-footer register-footer panel-footer-agency-height-override">
-          <div className="prev-next-btns-agency">
-            <div className="col-md-4 col-md-offset-2">
-              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
-            </div>
-            <div className="col-md-4">
-              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+          <div className="panel-footer register-footer panel-footer-agency-height-override">
+            <div className="prev-next-btns-agency">
+              <div className="col-md-4 col-md-offset-2">
+                <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+              </div>
+              <div className="col-md-4">
+                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </React.Fragment>
     );
   }

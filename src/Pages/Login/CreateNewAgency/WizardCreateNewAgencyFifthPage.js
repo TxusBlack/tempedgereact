@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
+import { Field, FieldArray, reduxForm } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
@@ -42,7 +41,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel != '') {
+    if(this.state.mounted && phonelabel !== '') {
       this.setState({
         salespersonlabels: phonelabel
       });
@@ -53,7 +52,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     let fieldId='';
 
     if(typeof formProps.input !== 'undefined'){
-      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index != ''){
+      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
         if(formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1){
            if(formProps.input.name.indexOf("salespersonfirstname") !== -1){
              fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired`;
@@ -76,7 +75,6 @@ class WizardCreateNewAgencyFifthPage extends Component{
   }
 
   renderSalesPersonInputs = (formProps) => {
-    let errorClass = `col-xs-10 ${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
     let recruitment_office = formProps.label.split(" ");
 
     if(formProps.fields.length < 1){
@@ -104,7 +102,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
           { block }
           <div>
             <div className="row">
-              <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} /></span>
+              <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
             </div>
           </div>
         </div>
@@ -121,7 +119,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
     return(
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} /></span>: '' }
+        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span>: '' }
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
@@ -164,18 +162,18 @@ class WizardCreateNewAgencyFifthPage extends Component{
               </div>
             </div>
           </div>
-        </form>
 
-        <div className="panel-footer register-footer panel-footer-agency-height-override">
-          <div className="prev-next-btns-agency">
-            <div className="col-md-4 col-md-offset-2">
-              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
-            </div>
-            <div className="col-md-4">
-              <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.onSubmit} disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+          <div className="panel-footer register-footer panel-footer-agency-height-override">
+            <div className="prev-next-btns-agency">
+              <div className="col-md-4 col-md-offset-2">
+                <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+              </div>
+              <div className="col-md-4">
+                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </React.Fragment>
     );
   }

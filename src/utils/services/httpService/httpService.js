@@ -1,53 +1,105 @@
 import Axios from 'axios';
 import FormData from 'form-data'
 
-let baseUrlTempEdge = `http://10.1.10.101:8080`;
-let baseUrlFaceRecognition = `http://10.1.10.101:9191`;
+let baseUrlTempEdge = `http://localhost:8080`;
+let baseUrlFaceRecognition = `http://localhost:9191`;
+
+function dataURLtoFile(dataurl, filename) {
+  var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, {type:mime});
+}
 
 let HttpService = {
-  get: async (url) => {
-    console.log("url: ", baseUrlFaceRecognition + url);
-    let response = await Axios.get(baseUrlFaceRecognition + url, {
-      params: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTM4NTk3MTUsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiI4N2NiMWM1ZS0xMWE1LTQ4YzItYTM1Ni02NmY1MDEyNTRiNjEiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.tiymxbf-o0_48aqw8dO1RBFA2co91bXTqbAx-eUDf1c"
+  postA: async (url) => {
+    console.log("url: ", baseUrlTempEdge + url);
+    let response = await Axios.post(baseUrlTempEdge + url, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: {
+        user: {
+          IPAddress: "10.1.101.162"
+        }
       }
     });
 
     return response;
   },
-  post: async (url, data) => {
-    console.log("JSON.stringify(data): ", JSON.stringify(data));
-    let response = await Axios.post( baseUrlTempEdge + url, {
+  postCreateNew: async (url, data) => {
+    let response = await Axios({
+      url: baseUrlTempEdge + url,
+      method: 'post',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'auth': {
-          username: 'my-trusted-clientt',
-          password: 'secret'
-        }
+        'Content-Type': 'application/json'
       },
-      body: data
+      data: data
+    });
+
+    return response;
+  },
+  postToken: async (url, data) => {      //FUNCIONA !!!!!!!
+    var bodyFormData = new FormData();
+    bodyFormData.set('username', data.username);
+    bodyFormData.set('password', data.password);
+    bodyFormData.set('grant_type', data.grant_type);
+
+    let response = await Axios.post( (baseUrlTempEdge + url), bodyFormData, {
+      headers: {
+        'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
+      },
     });
 
     return response;
   },
   postImages: async (url, data) => {
-    console.log("data: ", data);
+    var bodyFormData = new FormData();
 
-    let imgJSONData = {
-      file: data,
-      empId: 5,
-      role: ["ADMIN"]
-    }
+    let newArray = await data.map( (img, index) => {
+      let file = dataURLtoFile(img, `user-${index}.jpeg`);
+      bodyFormData.append('file', file);
+    });
 
-    let response = await Axios.post( (baseUrlFaceRecognition + url), imgJSONData, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': `application/json`,
+    bodyFormData.append('empId', "60");
+    // bodyFormData.set('role', "ADMIN");
+
+    let response = await Axios({
+      method: 'post',
+      url: baseUrlFaceRecognition + url,
+      data: bodyFormData,
+      config: {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       },
       params: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTM5MTUyNzQsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJlMDU3YWVkNS1mMGVjLTQzOGQtYTVlZC04ODEwOWViYjc5YWIiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.LkLEx7acIYLOGRmPbixW0B35VE3tlX_pkKalk3B5_OY"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTUwNzc5ODgsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJlMWM4ZjY2Ni1hMTUyLTQwZjQtYjdhOS00NmFiZjUyNWMxN2EiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.GFCWMxBRWMh6wfzVWvOKCYWT0XFU0uyKlNgDd9rq2oc"
+      }
+    });
+
+    return response;
+  },
+  postImage: async (url, data) => {
+    let file = dataURLtoFile(data, `snapshot-${1}.jpg`);
+
+    var bodyFormData = new FormData();
+    bodyFormData.append("file",file);
+    bodyFormData.append('empIds', ["60"]);
+
+    let response = await Axios({
+      method: 'post',
+      url: baseUrlFaceRecognition + url,
+      data: bodyFormData,
+      config: {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      },
+      params: {
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTUwNzc5ODgsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJlMWM4ZjY2Ni1hMTUyLTQwZjQtYjdhOS00NmFiZjUyNWMxN2EiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.GFCWMxBRWMh6wfzVWvOKCYWT0XFU0uyKlNgDd9rq2oc"
       }
     });
 

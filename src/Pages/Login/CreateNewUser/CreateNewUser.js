@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
@@ -31,16 +30,35 @@ class CreateNewUser extends Component {
   }
 
   onSubmit = async (formValues) => {
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
+    console.log("formValues: ", formValues);
 
-    // httpService.post('/recognizeFace', this.state.currentImage)
-    //   .then((res) => {
-    //     console.log('response: ', res);
-    //   }).catch((err) => {
-    //     console.log('error: ', err);
-    //   });
+    let response = {
+      "org_id" : 123,
+      "user" : {
+          "firstName" : formValues.firstName,
+          "lastName" : formValues.lastName,
+          "username" : formValues.username,
+          "password" : formValues.password,
+          "email" : formValues.email
+      },
+      "portalUserConfigurationEntity" : {
+          "clientId" : "",
+          "officeId" : 1,
+          "userRoleId" : formValues.agencyrole.value,
+          "orgId" : 123
+      }
+    }
 
-    this.fireNotification();
+    console.log("response: ", response);
+
+    httpService.postCreateNew('/api/user/save', response)
+      .then((res) => {
+        console.log('response: ', res);
+      }).catch((err) => {
+        console.log('error: ', err);
+      });
+
+    //this.fireNotification();
   }
 
   fireNotification = () => {
@@ -71,9 +89,5 @@ class CreateNewUser extends Component {
     );
   }
 }
-
-CreateNewUser.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
 
 export default connect(null, { notify })(CreateNewUser);
