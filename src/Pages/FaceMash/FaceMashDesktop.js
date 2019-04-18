@@ -7,12 +7,11 @@ import { push } from 'connected-react-router';
 import Tracker from './assets/tracking';
 import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
 import ModalFail from '../../Modals/FaceMashFail/Modal';
-import PicModal from '../../Modals/PicModal/PicModal';
+import PicModal from '../../Modals/PicModal/Modal';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import httpService from '../../utils/services/httpService/httpService.js';
+import { notify } from 'reapop';
 import JSOG from 'jsog';
-
-const $ = window.$;
 
 let canvas_width = 460;
 let canvas_height: 359;
@@ -30,7 +29,8 @@ class FaceMashDesktop extends React.Component {
     picWall: [],
     employeeName: "",
     timeStatus: "",
-    trackerTask: null
+    trackerTask: null,
+    showModal: false
   };
 
   componentDidMount(){
@@ -58,55 +58,58 @@ class FaceMashDesktop extends React.Component {
 
   setRef = webcam => {
     this.webcam = webcam;
-  };
+  }
 
+  //Capture image from webcam and save to component state
   capture = () => {
-    let imageSrc = this.state.imgCollection;
     let currentImage = this.webcam.getScreenshot();
 
-    console.log("currentImage: ", currentImage);
-
-    if(imageSrc.length < 3){
-      imageSrc.push(currentImage);
-
+    //If there's less than 3 images on the list only
+    if(this.state.imgCollection.length < 3){
       this.setState({
-        imgCollection: imageSrc,
         currentImage: currentImage
-      }, () => {
-        $(ReactDOM.findDOMNode(this.refs.picModal)).modal();
+      },() => {
+        this.toggleModalOnOff();    //Open Modal
       });
-    }else{
-
     }
   }
 
+  //Adds currentImage to collection of images in the component state
+  addImagetoCollection = () => {
+    let imageSrc = this.state.imgCollection;
+    imageSrc.push(this.state.currentImage);
+
+    this.setState({
+      imgCollection: imageSrc
+    });
+  }
+
+  //Set Modal visible or not
+  toggleModalOnOff = () => {
+    this.setState({
+      showModal: !this.state.showModal
+    });
+  }
+
+  //Mount current image to wall and increase images collection by one
   mountPic = () => {
-    let picWall = this.state.picWall;
+    let picWall = this.state.picWall;   //Wall with all images
+    this.addImagetoCollection();        //Add currentImage to collection of images in the component state
+
+    //New Tile containing currentImage
     let picElement = (
-      <div className="col-md-5 face-tile-container">
+      <div key={`tile-${picWall.length}`} className="col-md-5 face-tile-container">
         <div className="face-tile">
           <img src={this.state.currentImage} alt="Face Tile" />
         </div>
       </div>
     );
 
+    //Add New Tile to wall
     picWall.push(picElement);
     this.setState({
       picWall: picWall
     });
-  }
-
-  removePic = () => {
-    let currentPicIndex = this.state.imgCollection.indexOf(this.state.imgCollection);
-    let imageCollection = this.state.imgCollection;
-
-    if (currentPicIndex > -1) {
-      imageCollection.splice(currentPicIndex, 1);
-
-      this.setState({
-        imgCollection: imageCollection
-      });
-    }
   }
 
   onSubmit = async (formValues) => {
@@ -116,34 +119,21 @@ class FaceMashDesktop extends React.Component {
     //let res = await httpService.postA('/api/country/listAll');
     console.log('response: ', res);
 
-    //this.fireNotification();
+    this.fireNotification();
   }
 
-    //ONCE CALL ON PROMISE SOLVED DO THIS:
+  fireNotification = () => {
+    console.log("NOTIFY RAN!");
+    let { notify } = this.props;
 
-    /*** ON SUCCESS ***/
-    // this.setState({
-    //   employeeName: "Luis Diaz",
-    //   timeStatus: "In"
-    // }, () => {
-    //   this.toggleModal(0);   //Opens Sucess Modal
-    // });
-
-    /*** ON FAIL ***/
-    // this.setState({
-    //   employeeName: "Luis Diaz"
-    // }, () => {
-    //   this.toggleModal(-1);   //Opens Fail Modal
-    // });
-  //};
-
-  //Open Login success/failure modals
-  toggleModal(mode){
-    if(mode > -1){
-      $(ReactDOM.findDOMNode(this.refs.faceMashConfirmModal)).modal();
-    }else if(mode < 0){
-      $(ReactDOM.findDOMNode(this.refs.faceMashFailModal)).modal();
-    }
+    notify({
+      title: 'Images Submitted',
+      message: 'Your images have been successfully saved to our records.',
+      status: 'success',
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
   }
 
   render() {
@@ -183,12 +173,10 @@ class FaceMashDesktop extends React.Component {
             </div>
           </div>
         </div>
-        <ModalConfirm title="TempEdge Time Track" employee={this.state.employeeName} timeStatus={this.state.timeStatus} reStartfaceDetectTracker={null} ref="faceMashConfirmModal" />
-        <ModalFail title="TempEdge Time Track" employee={this.state.employeeName} reStartfaceDetectTracker={null} ref="faceMashFailModal" />
-        <PicModal title="Current Snapshot" pic={this.state.currentImage} mountPic={this.mountPic} removePic={this.removePic} reStartfaceDetectTracker={null} ref="picModal" />
+        <PicModal title="Current Snapshot" open={this.state.showModal} toggleModal={this.toggleModalOnOff} pic={this.state.currentImage} mountPic={this.mountPic} reStartfaceDetectTracker={null} />
       </div>
     );
   }
 }
 
-export default withLocalize(connect(null, { push })(FaceMashDesktop));
+export default withLocalize(connect(null, { push, notify })(FaceMashDesktop));

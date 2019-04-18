@@ -33,7 +33,8 @@ class CreateNewUser extends Component {
     console.log("formValues: ", formValues);
 
     let response = {
-      "org_id" : 123,
+      "orgId" : 1,
+      "IPAddress" : "10.1.1.1",
       "user" : {
           "firstName" : formValues.firstName,
           "lastName" : formValues.lastName,
@@ -41,11 +42,10 @@ class CreateNewUser extends Component {
           "password" : formValues.password,
           "email" : formValues.email
       },
-      "portalUserConfigurationEntity" : {
+      "portalUserConfEntity" : {
           "clientId" : "",
           "officeId" : 1,
-          "userRoleId" : formValues.agencyrole.value,
-          "orgId" : 123
+          "userRoleId" : formValues.agencyrole.value
       }
     }
 

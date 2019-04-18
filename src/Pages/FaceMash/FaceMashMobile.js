@@ -12,8 +12,6 @@ import ModalFail from '../../Modals/FaceMashFail/Modal';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import httpService from '../../utils/services/httpService/httpService.js';
 
-const $ = window.$;
-
 let canvas_width = 460;
 let canvas_height: 359;
 
@@ -35,7 +33,9 @@ class FaceMashMobile extends React.Component {
     stop: null,
     waitMsg: "",
     employeeName: "",
-    timeStatus: ""
+    timeStatus: "",
+    showSuccessModal: false,
+    showFailModal: false
   };
 
   componentDidMount(){
@@ -147,11 +147,24 @@ class FaceMashMobile extends React.Component {
     if(mode > -1){
       this.setWaitMessage(0);
       this.resetFaceDetected(false);
-      $(ReactDOM.findDOMNode(this.refs.faceMashConfirmModal)).modal();
+      this.toggleModalOnOff("success");
     }else if(mode < 0){
       this.setWaitMessage(0);
       this.resetFaceDetected(false);
-      $(ReactDOM.findDOMNode(this.refs.faceMashFailModal)).modal();
+      this.toggleModalOnOff("fail");
+    }
+  }
+
+  //Change Modals states
+  toggleModalOnOff = (mode) => {
+    if(mode === "success"){
+      this.setState({
+        showSuccessModal: !this.state.showSuccessModal
+      });
+    }else{
+      this.setState({
+        showFailModal: !this.state.showFailModal
+      });
     }
   }
 
@@ -243,7 +256,7 @@ class FaceMashMobile extends React.Component {
             });
           }else{
             this.setState({
-              employeeName: "Employee"
+              employeeName: "Person"
             }, () => {
               this.toggleModal(-1);   //Opens Fail Modal
             });
@@ -286,8 +299,8 @@ class FaceMashMobile extends React.Component {
             <h3 style={{textAlign: "center"}}>{this.state.waitMsg}</h3>
           </div>
         </div>
-        <ModalConfirm title="TempEdge Time Track" employee={this.state.employeeName} timeStatus={this.state.timeStatus} reStartfaceDetectTracker={() => this.reStartfaceDetectTracker()} ref="faceMashConfirmModal" />
-        <ModalFail title="TempEdge Time Track" employee={this.state.employeeName} reStartfaceDetectTracker={() => this.reStartfaceDetectTracker()} ref="faceMashFailModal" />
+        <ModalConfirm open={this.state.showSuccessModal} toggleModal={this.toggleModalOnOff} title="TempEdge Time Track" employee={this.state.employeeName} timeStatus={this.state.timeStatus} reStartfaceDetectTracker={() => this.reStartfaceDetectTracker()} />
+        <ModalFail open={this.state.showFailModal} toggleModal={this.toggleModalOnOff} title="TempEdge Time Track" employee={this.state.employeeName} reStartfaceDetectTracker={() => this.reStartfaceDetectTracker()} />
       </div>
     );
   }

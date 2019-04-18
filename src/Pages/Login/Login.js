@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import InputBox from '../../components/common/InputBox/InputBox.js';
 import { Field, reduxForm } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -10,6 +11,9 @@ import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguage
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
 import httpService from '../../utils/services/httpService/httpService.js';
+import actions from '../../Redux/actions/tempEdgeActions.js'
+import { setActivePage, doLogin } from '../../Redux/actions/tempEdgeActions';
+
 
 class Login extends Component{
   constructor(props, context) {
@@ -50,16 +54,22 @@ class Login extends Component{
 
   onSubmit = async (formValues) => {
     let values = formValues;
+    values.username = "admin";
+    values.password = "admin";
     values.grant_type = "password";
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 
-    // let res = await httpService.get('/users/listAll');
+    // let res = await httpService.getCountryList('/api/country/listAll');
+    // let res2 = await httpService.getCountryList("/api/funding/listAll");
     // console.log('response: ', res);
+    // console.log('response: ', res2);
 
-    let res = await httpService.postA('/oauth/token', values);
-    console.log('response: ', res);
-
-    //this.fireNotification();
+    // let res3 = await httpService.getAuthToken('/oauth/token', values);
+    // console.log('response: ', res3);
+    //this.props.setActivePage("Login");
+    this.props.doLogin('/api/login', values);
+    //console.log("Active Page: ", this.props.activePage);
+    this.fireNotification();
   }
 
   fireNotification = () => {
@@ -128,9 +138,22 @@ class Login extends Component{
   }
 }
 
+
+Login.propTypes = {
+  setActivePage: PropTypes.func.isRequired,
+  doLogin: PropTypes.func.isRequired
+}
+                      //Current REDUX state
+let mapStateToProps = (state) => {
+  return({
+    activePage: state.tempEdge.active_page,
+    login: state.tempEdge.login
+  });
+}
+
 Login = reduxForm({
   form: 'login',
   validate: Validate
 })(Login);
 
-export default withLocalize(connect(null, { push, notify })(Login));
+export default withLocalize(connect(mapStateToProps, { setActivePage, doLogin, push, notify })(Login));

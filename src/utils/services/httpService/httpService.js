@@ -1,7 +1,8 @@
 import Axios from 'axios';
 import FormData from 'form-data'
 
-let baseUrlTempEdge = `http://localhost:8080`;
+//let baseUrlTempEdge = `http://localhost:8080`;
+let baseUrlTempEdge = `http://96.56.31.162:9191`;
 let baseUrlFaceRecognition = `http://localhost:9191`;
 
 function dataURLtoFile(dataurl, filename) {
@@ -14,17 +15,42 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 let HttpService = {
-  postA: async (url) => {
+  getCountryList: async (url) => {
     console.log("url: ", baseUrlTempEdge + url);
-    let response = await Axios.post(baseUrlTempEdge + url, {
+
+    let response = await Axios({
+      url: baseUrlTempEdge + url,
+      method: 'post',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: {
-        user: {
-          IPAddress: "10.1.101.162"
-        }
+      data: {
+        "IPAddress" : "10.1.1.1"
       }
+    });
+
+    return response;
+  },
+  postA: async (url, username) => {
+    console.log("url: ", baseUrlTempEdge + url);
+    let ipAddress = "";
+    //let token = "";
+
+    let response = await Axios({
+      url: baseUrlTempEdge + url,
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        user: {
+          "username" : username,
+          "IPAddress": ipAddress
+        }
+      }//,
+      // params: {
+      //   access_token: token
+      // }
     });
 
     return response;
@@ -41,19 +67,32 @@ let HttpService = {
 
     return response;
   },
-  postToken: async (url, data) => {      //FUNCIONA !!!!!!!
-    var bodyFormData = new FormData();
+  getAuthToken: async(url, data) => {      //FR y TempEdge
+    let bodyFormData = new FormData();
     bodyFormData.set('username', data.username);
     bodyFormData.set('password', data.password);
     bodyFormData.set('grant_type', data.grant_type);
 
-    let response = await Axios.post( (baseUrlTempEdge + url), bodyFormData, {
+    return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
       headers: {
-        'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
-      },
+          'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
+      }
     });
 
-    return response;
+    // let bodyFormData = new FormData();
+    // bodyFormData.set('username', data.username);
+    // bodyFormData.set('password', data.password);
+    // bodyFormData.set('grant_type', data.grant_type);
+    //
+    // console.log("baseUrlTempEdge + url: ", baseUrlTempEdge + url);
+    //
+    // let response = await Axios.post( (baseUrlTempEdge + url), bodyFormData, {
+    //   headers: {
+    //     'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
+    //   },
+    // });
+    //
+    // return response;
   },
   postImages: async (url, data) => {
     var bodyFormData = new FormData();
@@ -76,7 +115,7 @@ let HttpService = {
         }
       },
       params: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTUwNzc5ODgsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJlMWM4ZjY2Ni1hMTUyLTQwZjQtYjdhOS00NmFiZjUyNWMxN2EiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.GFCWMxBRWMh6wfzVWvOKCYWT0XFU0uyKlNgDd9rq2oc"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTU2MzcwMjEsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiI4NzkwZTgyYi1kZTUyLTQyM2ItYjg1OC03MWRjZGMyNDNiZjMiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.84RitXDEV4MhAlGpQVoqSmM6HvziYL-k2OZrbg5cyp8"
       }
     });
 
@@ -99,7 +138,7 @@ let HttpService = {
         }
       },
       params: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTUwNzc5ODgsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJlMWM4ZjY2Ni1hMTUyLTQwZjQtYjdhOS00NmFiZjUyNWMxN2EiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.GFCWMxBRWMh6wfzVWvOKCYWT0XFU0uyKlNgDd9rq2oc"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTU2MzcwMjEsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiI4NzkwZTgyYi1kZTUyLTQyM2ItYjg1OC03MWRjZGMyNDNiZjMiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.84RitXDEV4MhAlGpQVoqSmM6HvziYL-k2OZrbg5cyp8"
       }
     });
 
