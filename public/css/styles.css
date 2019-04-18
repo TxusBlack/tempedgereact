@@ -136,6 +136,10 @@ body {
   margin: 3.4rem auto;
 }
 
+.facemash-modal{
+  display: block;
+}
+
 /* NavBar */
 .flag{
   height: 2.7rem;

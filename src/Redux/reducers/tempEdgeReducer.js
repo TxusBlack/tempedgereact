@@ -1,7 +1,8 @@
-import { SET_ACTIVE_PAGE } from '../actions/types';
+import { SET_ACTIVE_PAGE, LOGIN } from '../actions/types';
 
 let initialState = {
-  active_page: ''
+  active_page: '',
+  login: ''
 }
 
 export default function(state = initialState, action){
@@ -10,6 +11,11 @@ export default function(state = initialState, action){
       return{
         ...state,
         active_page: action.payload
+      };
+    case LOGIN:
+      return{
+        ...state,
+        login: action.payload
       };
     default:
       return state;
