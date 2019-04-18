@@ -1,17 +1,9 @@
-import { SET_ACTIVE_PAGE, LOGIN } from './types';
+import { LOGIN } from './types';
 import Axios from 'axios';
+import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
 let baseUrlTempEdge = `http://96.56.31.162:9191`;
-
-export let setActivePage = (activePage) => {
-  return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
-    dispatch({
-      type: SET_ACTIVE_PAGE,
-      payload: activePage
-    });
-  }
-}
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
@@ -22,22 +14,32 @@ export let doLogin = (url, data) => {
         console.log("token: ", token);
         console.log("ipAddress: ", ipAddress);
 
-        Axios({
-          url: baseUrlTempEdge + url,
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: {
-            "username" : data.username,
-            "IPAddress": "http://10.1.1.1"
-          },
-          params: {
-            access_token: token
-          }
-        }).then((response) => {
-          console.log("response: ", response);
-        });
+        ls.set('access_token', token);
+        tempedgeAPI(url, data, LOGIN);
       });
+  }
+}
+
+export let tempedgeAPI = (url, data, actionName) =>{
+  return (dispatch) => {
+    let token = ls.get('access_token');
+    data.IPAddress = window.location.hostname;
+    Axios({
+      url: baseUrlTempEdge + url,
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data,
+      params: {
+        access_token: token
+      }
+    }).then((response) => {
+      console.log("response: ", response);
+      dispatch({
+        type: actionName,
+        payload: response.data.results
+      });
+    });
   }
 }

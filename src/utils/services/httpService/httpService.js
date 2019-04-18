@@ -31,30 +31,6 @@ let HttpService = {
 
     return response;
   },
-  postA: async (url, username) => {
-    console.log("url: ", baseUrlTempEdge + url);
-    let ipAddress = "";
-    //let token = "";
-
-    let response = await Axios({
-      url: baseUrlTempEdge + url,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: {
-        user: {
-          "username" : username,
-          "IPAddress": ipAddress
-        }
-      }//,
-      // params: {
-      //   access_token: token
-      // }
-    });
-
-    return response;
-  },
   postCreateNew: async (url, data) => {     //Create New User, Agency & others
     let response = await Axios({
       url: baseUrlTempEdge + url,
@@ -78,21 +54,6 @@ let HttpService = {
           'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
       }
     });
-
-    // let bodyFormData = new FormData();
-    // bodyFormData.set('username', data.username);
-    // bodyFormData.set('password', data.password);
-    // bodyFormData.set('grant_type', data.grant_type);
-    //
-    // console.log("baseUrlTempEdge + url: ", baseUrlTempEdge + url);
-    //
-    // let response = await Axios.post( (baseUrlTempEdge + url), bodyFormData, {
-    //   headers: {
-    //     'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
-    //   },
-    // });
-    //
-    // return response;
   },
   postImages: async (url, data) => {
     var bodyFormData = new FormData();
