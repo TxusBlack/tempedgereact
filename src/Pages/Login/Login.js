@@ -64,11 +64,7 @@ class Login extends Component{
     // console.log('response: ', res);
     // console.log('response: ', res2);
 
-    // let res3 = await httpService.getAuthToken('/oauth/token', values);
-    // console.log('response: ', res3);
-    //this.props.setActivePage("Login");
     this.props.doLogin('/api/login', values);
-    //console.log("Active Page: ", this.props.activePage);
     this.fireNotification();
   }
 
@@ -140,13 +136,11 @@ class Login extends Component{
 
 
 Login.propTypes = {
-  setActivePage: PropTypes.func.isRequired,
   doLogin: PropTypes.func.isRequired
 }
                       //Current REDUX state
 let mapStateToProps = (state) => {
   return({
-    activePage: state.tempEdge.active_page,
     login: state.tempEdge.login
   });
 }
