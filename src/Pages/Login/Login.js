@@ -12,7 +12,7 @@ import { push } from 'connected-react-router';
 import { notify } from 'reapop';
 import httpService from '../../utils/services/httpService/httpService.js';
 import actions from '../../Redux/actions/tempEdgeActions.js'
-import { setActivePage, doLogin } from '../../Redux/actions/tempEdgeActions';
+import { doLogin } from '../../Redux/actions/tempEdgeActions';
 
 
 class Login extends Component{
@@ -156,4 +156,4 @@ Login = reduxForm({
   validate: Validate
 })(Login);
 
-export default withLocalize(connect(mapStateToProps, { setActivePage, doLogin, push, notify })(Login));
+export default withLocalize(connect(mapStateToProps, { doLogin, push, notify })(Login));
