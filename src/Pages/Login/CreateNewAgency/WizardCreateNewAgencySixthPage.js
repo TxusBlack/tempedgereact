@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import httpService from '../../../utils/services/httpService/httpService.js';
 
 class WizardCreateNewAgencySixthPage extends Component{
   constructor(props){
@@ -17,7 +18,7 @@ class WizardCreateNewAgencySixthPage extends Component{
 
   state= { mounted: false }
 
-  componentDidMount(){
+  componentDidMount = async() => {
     this.setState({
       mounted: true
     });
@@ -41,10 +42,6 @@ class WizardCreateNewAgencySixthPage extends Component{
       { day: "Friday", value: "5" },
       { day: "Saturday", value: "6" },
       { day: "Sunday", value: "0" }
-    ];
-
-    let fundingCompany = [
-      { company: "TRICOM", value: 1 }
     ];
 
     console.log("Sixth Page");
@@ -85,7 +82,7 @@ class WizardCreateNewAgencySixthPage extends Component{
 
                 <div className="col-md-4">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.fundingcompany">Select if your company uses a funding company</Translate></label>
-                  <Field name="fundingCompanydropdown" data={fundingCompany} valueField="value" textField="company" category="agency" component={Dropdown} />
+                  <Field name="fundingCompanydropdown" data={this.props.funding_list} valueField="fundingId" textField="name" category="agency" component={Dropdown} />
                 </div>
               </div>
             </div>
@@ -113,4 +110,10 @@ WizardCreateNewAgencySixthPage = reduxForm({
   validate: Validate
 })(WizardCreateNewAgencySixthPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewAgencySixthPage));
+let mapStateToProps = (state) => {
+  return{
+    funding_list: state.tempEdge.funding_list,
+  };
+}
+
+export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencySixthPage));

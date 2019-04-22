@@ -1,10 +1,10 @@
 let getCountryList = (countryList) => {
   let country_list = [];
-
-  countryList.map((country, index) => {
+  
+  countryList.map((country) => {
     country_list.push({
-      country: country.countryName,
-      value: index
+      name: country.name,
+      countryId: country.countryId
     });
   });
 
@@ -14,20 +14,20 @@ let getCountryList = (countryList) => {
   };
 }
 
-let getRegionList = (countryList, selectedCountry) => {
+let getRegionList = async (countryList, selectedCountry) => {
   let regions;
   let regions_list = [];
 
-  countryList.map((country) => {
-    if(country.countryName === selectedCountry){
-      regions = country.regions;
+  await countryList.map((country) => {
+    if(country.name === selectedCountry){
+      regions = country.regionEntityList;
     }
   });
 
   regions.map((region, index) => {
     regions_list.push({
-      region: region.name,
-      value: index
+      name: region.name,
+      regionId: region.regionId
     });
   });
 

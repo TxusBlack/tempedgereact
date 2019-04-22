@@ -11,16 +11,31 @@ export let doLogin = (url, data) => {
       .then(async(res) => {
         let token = res.data.access_token;
         let ipAddress = window.location.hostname;
-        console.log("token: ", token);
-        console.log("ipAddress: ", ipAddress);
+        data.IPAddress = window.location.hostname;
 
         ls.set('access_token', token);
-        tempedgeAPI(url, data, LOGIN);
+        Axios({
+          url: baseUrlTempEdge + url,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: data,
+          params: {
+            access_token: token
+          }
+        }).then((response) => {
+          console.log("response: ", response);
+          dispatch({
+            type: LOGIN,
+            payload: response.data.result
+          });
+        });
       });
   }
 }
 
-export let tempedgeAPI = (url, data, actionName) =>{
+export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = ls.get('access_token');
     data.IPAddress = window.location.hostname;
@@ -38,8 +53,20 @@ export let tempedgeAPI = (url, data, actionName) =>{
       console.log("response: ", response);
       dispatch({
         type: actionName,
-        payload: response.data.results
+        payload: response.data.result
       });
     });
   }
+}
+
+export let getList = (url, actionName) => {
+  return (dispatch) => {
+    httpService.getList(url)
+      .then((response) => {
+        dispatch({
+          type: actionName,
+          payload: response.data.result
+        });
+      });
+    }
 }

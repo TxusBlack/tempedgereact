@@ -19,34 +19,44 @@ class WizardCreateNewAgencySecondPage extends Component{
   }
 
   state = {
+    country_list: [],
     region_list: []
+  }
+
+  componentDidMount = async() => {
+    let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
+
+    this.setState({
+      country_list: list
+    });
   }
 
   componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if (hasActiveLanguageChanged) {
+    if (hasActiveLanguageChanged){
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    console.log("nextProps: ", nextProps);
+  componentWillReceiveProps = async(nextProps) => {
     if(typeof nextProps.country === 'undefined'){
+      let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
+
       this.setState({
-        region_list: CountryRegionParser.getRegionList(this.props.countryList, "United States")
-      })
+        region_list: regionsList
+      });
     }else{
+      let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
+
       this.setState({
-        region_list: CountryRegionParser.getRegionList(this.props.countryList, nextProps.country.country)
+        region_list: regionsList
       });
     }
   }
 
   render(){
-    let country_list = CountryRegionParser.getCountryList(this.props.countryList).country_list;
-
     console.log("Second Page");
 
     return(
@@ -75,7 +85,7 @@ class WizardCreateNewAgencySecondPage extends Component{
               <div className="register-agency-flex">
                 <div className="col-md-6 register-agency-input-left">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
-                  <Field name="agencycountry" data={country_list} valueField="value" textField="country" category="agency" component={Dropdown} />
+                  <Field name="agencycountry" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
                 </div>
               </div>
 
@@ -106,7 +116,7 @@ class WizardCreateNewAgencySecondPage extends Component{
 
                 <div className="col-md-6 register-agency-input-right">
                   <label className="control-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
-                  <Field name="agencystate" data={this.state.region_list} valueField="value" textField="region" category="agency" component={Dropdown} />
+                  <Field name="agencystate" data={this.state.region_list} valueField="regionId" textField="name" category="agency" component={Dropdown} />
                 </div>
               </div>
             </div>
@@ -136,8 +146,10 @@ WizardCreateNewAgencySecondPage = reduxForm({
 })(WizardCreateNewAgencySecondPage);
 
 let mapStateToProps = (state) => {
-  let selector = formValueSelector('CreateNewAgency') // <-- same as form name
+  let selector = formValueSelector('CreateNewAgency'); // <-- same as form name
+
   return({
+    country_region_list: state.tempEdge.country_region_list,
     country: selector(state, 'agencycountry')
   });
 }

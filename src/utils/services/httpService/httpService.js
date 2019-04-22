@@ -15,7 +15,7 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 let HttpService = {
-  getCountryList: async (url) => {
+  getList: async (url) => {
     console.log("url: ", baseUrlTempEdge + url);
 
     let response = await Axios({

@@ -59,16 +59,12 @@ class Login extends Component{
     values.grant_type = "password";
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 
-    // let res = await httpService.getCountryList('/api/country/listAll');
-    // let res2 = await httpService.getCountryList("/api/funding/listAll");
-    // console.log('response: ', res);
+    let res = await httpService.getList('/api/country/listAll');
+    // let res2 = await httpService.getList("/api/funding/listAll");
+    console.log('response: ', res);
     // console.log('response: ', res2);
 
-    // let res3 = await httpService.getAuthToken('/oauth/token', values);
-    // console.log('response: ', res3);
-    //this.props.setActivePage("Login");
     this.props.doLogin('/api/login', values);
-    //console.log("Active Page: ", this.props.activePage);
     this.fireNotification();
   }
 
@@ -140,13 +136,11 @@ class Login extends Component{
 
 
 Login.propTypes = {
-  setActivePage: PropTypes.func.isRequired,
   doLogin: PropTypes.func.isRequired
 }
                       //Current REDUX state
 let mapStateToProps = (state) => {
   return({
-    activePage: state.tempEdge.active_page,
     login: state.tempEdge.login
   });
 }

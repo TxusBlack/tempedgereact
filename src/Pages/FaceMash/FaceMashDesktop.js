@@ -13,8 +13,8 @@ import httpService from '../../utils/services/httpService/httpService.js';
 import { notify } from 'reapop';
 import JSOG from 'jsog';
 
-let canvas_width = 460;
-let canvas_height: 359;
+let canvas_width = 461;
+let canvas_height: 343;
 
 class FaceMashDesktop extends React.Component {
   constructor(props){
@@ -39,7 +39,7 @@ class FaceMashDesktop extends React.Component {
     let tracker = new window.tracking.ObjectTracker("face");      //Tracker, canvas and context are needed to turn off the camera on componentUnmount
 
     this.setState({
-      trackerTask: window.tracking.track('#facemash', tracker, { camera: true })
+      trackerTask: window.tracking.track('.facemash', tracker, { camera: true })
     });
   }
 
@@ -98,7 +98,7 @@ class FaceMashDesktop extends React.Component {
 
     //New Tile containing currentImage
     let picElement = (
-      <div key={`tile-${picWall.length}`} className="col-md-5 face-tile-container">
+      <div key={`tile-${picWall.length}`} className="col-md-6 face-tile-container">
         <div className="face-tile">
           <img src={this.state.currentImage} alt="Face Tile" />
         </div>
@@ -116,7 +116,6 @@ class FaceMashDesktop extends React.Component {
     let res = await httpService.postImages('/faceRecognition/saveNewSubject', this.state.imgCollection);
     //let res = await httpService.postImage('/faceRecognition/recognizeFace', this.state.currentImage);
 
-    //let res = await httpService.postA('/api/country/listAll');
     console.log('response: ', res);
 
     this.fireNotification();
@@ -150,17 +149,17 @@ class FaceMashDesktop extends React.Component {
         <div className="row">
           <div className="col-md-5">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height}} className="center-block">
-              <Webcam className="center-block"
+            <div style={{position: "relative", height: videoConstraints.height}} className="center-block">
+              <Webcam className="center-block facemash"
                 audio={false}
-                height={359}
+                height={`${videoConstraints.height}`}
                 id="facemash"
                 ref={this.setRef}
                 screenshotFormat="image/jpeg"
-                width={videoConstraints.width}
+                width="90%"
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width={videoConstraints.width} height="359" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0}}></canvas>
             </div>
             <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button>
             {tempEdgeSubmitShow}

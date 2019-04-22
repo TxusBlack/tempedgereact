@@ -47,8 +47,8 @@ class FaceMashMobile extends React.Component {
     this.setWaitMessage(this.state.delay);
     this.setState({
       waitMsg: `Please Wait.`,
-      trackerTask: window.tracking.track('#facemash-mobile', tracker, { camera: true }),
-      faceDetectTracker: window.tracking.track('#facemash-mobile', tracker2, { camera: true })
+      trackerTask: window.tracking.track('.facemash-mobile', tracker, { camera: true }),
+      faceDetectTracker: window.tracking.track('.facemash-mobile', tracker2, { camera: true })
     }, () => {
       this.initFaceTracker(tracker, canvas, context, this.state.trackerTask);
       this.initFaceDetectTracker(tracker2, canvas, context, this.state.faceDetectTracker);
@@ -285,7 +285,7 @@ class FaceMashMobile extends React.Component {
           <div className="col-md-8 col-md-offset-2">
             <div style={{height:40}}></div>
             <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height}} className="center-block">
-              <Webcam className="center-block"
+              <Webcam className="center-block facemash-mobile"
                 audio={false}
                 height={359}
                 id="facemash-mobile"
