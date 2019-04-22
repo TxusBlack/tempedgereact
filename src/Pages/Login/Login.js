@@ -59,9 +59,9 @@ class Login extends Component{
     values.grant_type = "password";
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 
-    // let res = await httpService.getCountryList('/api/country/listAll');
-    // let res2 = await httpService.getCountryList("/api/funding/listAll");
-    // console.log('response: ', res);
+    let res = await httpService.getList('/api/country/listAll');
+    // let res2 = await httpService.getList("/api/funding/listAll");
+    console.log('response: ', res);
     // console.log('response: ', res2);
 
     this.props.doLogin('/api/login', values);

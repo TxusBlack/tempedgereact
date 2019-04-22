@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
+import { getList } from '../../../Redux/actions/tempEdgeActions';
+import { GET_ROLE_LIST } from '../../../Redux/actions/types.js'
 import httpService from '../../../utils/services/httpService/httpService.js';
 import WizardCreateNewUserFirstPage from './WizardCreateNewUserFirstPage.js';
 import WizardCreateNewUserSecondPage from './WizardCreateNewUserSecondPage.js';
 
 class CreateNewUser extends Component {
-  constructor(props) {
+  constructor(props){
     super(props);
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
@@ -19,6 +22,10 @@ class CreateNewUser extends Component {
        {title: ""}
       ]
     };
+  }
+
+  componentDidMount = () => {
+    this.props.getList('/api/role/listAll', GET_ROLE_LIST);
   }
 
   nextPage(){
@@ -45,7 +52,7 @@ class CreateNewUser extends Component {
       "portalUserConfEntity" : {
           "clientId" : "",
           "officeId" : 1,
-          "userRoleId" : formValues.agencyrole.value
+          "userRoleId" : formValues.agencyrole.id
       }
     }
 
@@ -90,4 +97,8 @@ class CreateNewUser extends Component {
   }
 }
 
-export default connect(null, { notify })(CreateNewUser);
+CreateNewUser.propTypes = {
+  getList: PropTypes.func.isRequired
+}
+
+export default connect(null, { notify, getList })(CreateNewUser);

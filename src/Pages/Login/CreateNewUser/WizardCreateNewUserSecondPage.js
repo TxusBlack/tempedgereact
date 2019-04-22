@@ -57,18 +57,18 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   render(){
-    let rolesList = [{ role: "Client", value: 0 }, { role: "Agency", value: 1 }];
+    // let rolesList = [{ name: "Client", id: 0 }, { name: "Agency", id: 1 }];
 
     console.log("Second Page");
 
     return(
       <div ref="userConfigContainer">
-        <h2 className="text-center page-title-agency" style={{marginBottom: "0.7rem"}}><Translate id="com.tempedge.msg.label.userconfiguration">User Configuration</Translate></h2>
+        <h2 className="text-center page-title-agency" style={{marginBottom: "0.7rem"}}><Translate id="com.tempedge.msg.label.userconfiguration"></Translate></h2>
         <h3 className="text-center page-subtitle" style={{marginTop: 0}}>Please tell us more about you.</h3>
         <form name="newUser" className="panel-body" onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="panel register-form-panel">
             <div className="panel-heading register-header">
-              <h2 className="text-center"><Translate id="com.tempedge.msg.label.userinformation">User Information</Translate></h2>
+              <h2 className="text-center"><Translate id="com.tempedge.msg.label.userinformation"></Translate></h2>
             </div>
           </div>
           <div className="register-form-panel-inputs">
@@ -76,19 +76,19 @@ class WizardCreateNewUserSecondPage extends Component{
               <div>
                 <div className="row">
                   <div className="col-md-12">
-                    <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.role">Role</Translate></label>
-                    <Field name="agencyrole" data={rolesList} valueField="value" textField="role" category="agency" component={Dropdown} />
+                    <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.role"></Translate></label>
+                    <Field name="agencyrole" data={this.props.role_list} valueField="id" textField="name" category="agency" component={Dropdown} />
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.organization">Organization</Translate></label>
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.organization"></Translate></label>
                     <Field name="agencyorganization" type="textarea" placeholder="Enter Organization Name" category="agency" component={InputBox} />
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.client">Client</Translate></label>
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.client"></Translate></label>
                     <Field name="agencyclient" type="textarea" placeholder="Enter Client" category="agency" component={InputBox} />
                   </div>
                 </div>
@@ -108,7 +108,7 @@ class WizardCreateNewUserSecondPage extends Component{
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
               <div className="col-md-4">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit">Submit</Translate></button>
+                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit"></Translate></button>
               </div>
             </div>
           </div>
@@ -125,4 +125,10 @@ WizardCreateNewUserSecondPage = reduxForm({
   validate: Validate
 })(WizardCreateNewUserSecondPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewUserSecondPage));
+let mapStateToProps = (state) => {
+  return{
+    role_list: state.tempEdge.role_list,
+  };
+}
+
+export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewUserSecondPage));

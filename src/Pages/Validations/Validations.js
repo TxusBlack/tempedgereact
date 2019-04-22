@@ -31,6 +31,10 @@ let validate = (formValues) => {
     errors.gender = 'Please select a gender.';
   }
 
+  if(!formValues.birthday){
+    errors.birthday = "Please enter your birthday";
+  }
+
   if(!formValues.agencyrole){
     errors.agencyrole = "Please enter role.";
   }

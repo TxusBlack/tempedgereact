@@ -35,7 +35,7 @@ export let doLogin = (url, data) => {
   }
 }
 
-export let tempedgeAPI = (url, data, actionName) =>{
+export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = ls.get('access_token');
     data.IPAddress = window.location.hostname;
@@ -57,4 +57,16 @@ export let tempedgeAPI = (url, data, actionName) =>{
       });
     });
   }
+}
+
+export let getList = (url, actionName) => {
+  return (dispatch) => {
+    httpService.getList(url)
+      .then((response) => {
+        dispatch({
+          type: actionName,
+          payload: response.data.result
+        });
+      });
+    }
 }

@@ -116,20 +116,20 @@ body {
   margin: 0;
 }
 
-#facemash, #facemash-mobile{
+#facemash, .facemash, #facemash-mobile, .facemash-mobile{
   object-fit: fill;
   border-top-left-radius: 1.6rem;
   border-top-right-radius: 1.6rem;
 }
 
-#facemash-mobile{
+#facemash-mobile, .facemash-mobile{
   border-bottom-left-radius: 1.6rem;
   border-bottom-right-radius: 1.6rem;
 }
 
 .phone-num-btn-submit{
   min-height: 4rem !important;
-  min-width: 46rem;
+  min-width: 90%;
   border-radius: 1.6rem !important;
   background-image: linear-gradient(54deg, #5abeec, #69c8f4);
   border: none;
@@ -245,11 +245,12 @@ body {
 
 .face-tile-container{
   margin-bottom: 18px;
-  margin-right: 27px;
+  //margin-right: 27px;
 }
 
 .face-tile, .face-tile img{
-  width: 335px;
+  //width: 335px;
+  width: 100%;
   min-height: 240px;
   margin: auto;
   background-color: #fff;
@@ -478,10 +479,11 @@ body {
 }
 
 .phone-num-btn-close, .phone-num-btn-close:hover, .phone-num-btn-close:active, .phone-num-btn-close:focus{
-  width: 46rem;
+  width: 90%;
   height: 7.8rem;
   background-color: #8cb544 !important;
   color: #fff;
+  border-radius: 0;
   border-bottom-left-radius: 1.6rem;
   border-bottom-right-radius: 1.6rem;
 }
