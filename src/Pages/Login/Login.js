@@ -61,8 +61,6 @@ class Login extends Component{
 
     await this.props.doLogin('/api/login', values);
 
-    //this.props.push(`/protected/${this.props.activeLanguage.code}`);
-
     this.fireNotification();
   }
 
