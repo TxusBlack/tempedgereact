@@ -23,6 +23,8 @@ import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashSc
 import ReCaptcha from "react-google-recaptcha";
 import Notifications from './components/common/Notifications/Notifications';
 import UploadFile from './components/common/UploadFile/UploadFile';
+import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
+import Welcome from './Pages/Welcome/Welcome';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -66,6 +68,7 @@ class App extends React.Component{
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                   <Route exact path="/upload/:lang" component={UploadFile} />
+                  <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" component={Welcome} />
                 </Switch>
               </div>
             </ConnectedRouter>

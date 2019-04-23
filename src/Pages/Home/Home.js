@@ -41,6 +41,7 @@ class HomePage extends Component{
     let snapshotRouteMobile = `/snapshot-mobile/${this.props.lang}`;
     let snapshotRouteDesktop = `/snapshot-desktop/${this.props.lang}`;
     let inputFileRoute = `/upload/${this.props.lang}`;
+    let protectedRoute = `/protected/${this.props.lang}`;
 
     return(
       <div className="container-fluid">
@@ -50,7 +51,8 @@ class HomePage extends Component{
         <Link to={registerAgencyRoute}>Create New Agency</Link><br />
         <Link to={snapshotRouteMobile}>Capture Face Snapshot - Mobile View</Link><br />
         <Link to={snapshotRouteDesktop}>Capture Face Snapshot - Desktop View</Link><br />
-        <Link to={inputFileRoute}>Upload File</Link>
+        <Link to={inputFileRoute}>Upload File</Link><br />
+        <Link to={protectedRoute}>Protected Route</Link>
       </div>
     );
   }

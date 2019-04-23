@@ -1,4 +1,5 @@
 import { LOGIN } from './types';
+import history from '../../history.js';
 import Axios from 'axios';
 import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
@@ -25,11 +26,14 @@ export let doLogin = (url, data) => {
             access_token: token
           }
         }).then((response) => {
-          console.log("response: ", response);
           dispatch({
             type: LOGIN,
             payload: response.data.result
           });
+
+          let lang = window.location.pathname;
+          lang = lang.split("/");
+          history.push(`/protected/${lang}`);
         });
       });
   }
