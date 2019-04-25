@@ -13,8 +13,8 @@ export let doLogin = (url, data) => {
         let token = res.data.access_token;
         let ipAddress = window.location.hostname;
         data.IPAddress = window.location.hostname;
-
-        ls.set('access_token', token);
+        console.log("data: ", data);
+        sessionStorage.setItem('access_token', token);
         Axios({
           url: baseUrlTempEdge + url,
           method: 'post',
@@ -26,6 +26,8 @@ export let doLogin = (url, data) => {
             access_token: token
           }
         }).then((response) => {
+          console.log("response: ", response);
+          console.log("response.data.result: ", response.data.result);
           dispatch({
             type: LOGIN,
             payload: response.data.result
@@ -33,15 +35,31 @@ export let doLogin = (url, data) => {
 
           let lang = window.location.pathname;
           lang = lang.split("/");
-          history.push(`/protected/${lang}`);
+
+          console.log("response.data.result.portalUserList[0].status: ", response.data.result.portalUserList[0].status);
+          if(response.data.result.portalUserList[0].status === "A"){
+            history.push(`/protected/${lang[2]}`);
+          }else if(response.data.result.portalUserList[0].status === "P"){
+            history.push(`/pending/${lang[2]}`);
+          }else if(response.data.result.portalUserList[0].status === "ERROR"){
+            history.push(`/error/${lang[2]}`);
+          }else{
+            history.push(`/auth/${lang[2]}`);
+          }
         });
+      }).catch((error) => {
+        let lang = window.location.pathname;
+        lang = lang.split("/");
+        console.log("lang: ", lang[2]);
+        console.log("history: ", history);
+        history.push(`/error/${lang[2]}`);
       });
   }
 }
 
 export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
-    let token = ls.get('access_token');
+    let token = sessionStorage.getItem('access_token');
     data.IPAddress = window.location.hostname;
     Axios({
       url: baseUrlTempEdge + url,

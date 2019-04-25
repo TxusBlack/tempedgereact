@@ -24,6 +24,7 @@ import ReCaptcha from "react-google-recaptcha";
 import Notifications from './components/common/Notifications/Notifications';
 import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
+import Error from './Pages/Error/Error';
 import Welcome from './Pages/Welcome/Welcome';
 
 window.recaptchaOptions = {
@@ -68,6 +69,8 @@ class App extends React.Component{
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                   <Route exact path="/upload/:lang" component={UploadFile} />
+                  <Route exact path="/pending/:lang" component={Error} />
+                  <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" component={Welcome} />
                 </Switch>
               </div>

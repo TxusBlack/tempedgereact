@@ -54,8 +54,6 @@ class Login extends Component{
 
   onSubmit = async (formValues) => {
     let values = formValues;
-    values.username = "admin";
-    values.password = "admin";
     values.grant_type = "password";
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 
@@ -136,6 +134,7 @@ Login.propTypes = {
 }
                       //Current REDUX state
 let mapStateToProps = (state) => {
+  //console.log("state.tempEdge: ", state.tempEdge);
   return({
     login: state.tempEdge.login,
     status: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: null
