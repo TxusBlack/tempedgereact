@@ -54,17 +54,11 @@ class Login extends Component{
 
   onSubmit = async (formValues) => {
     let values = formValues;
-    values.username = "admin";
-    values.password = "admin";
     values.grant_type = "password";
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 
-    let res = await httpService.getList('/api/country/listAll');
-    // let res2 = await httpService.getList("/api/funding/listAll");
-    console.log('response: ', res);
-    // console.log('response: ', res2);
+    await this.props.doLogin('/api/login', values);
 
-    this.props.doLogin('/api/login', values);
     this.fireNotification();
   }
 
@@ -140,8 +134,10 @@ Login.propTypes = {
 }
                       //Current REDUX state
 let mapStateToProps = (state) => {
+  //console.log("state.tempEdge: ", state.tempEdge);
   return({
-    login: state.tempEdge.login
+    login: state.tempEdge.login,
+    status: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: null
   });
 }
 

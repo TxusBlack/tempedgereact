@@ -48,6 +48,7 @@ let HttpService = {
     bodyFormData.set('username', data.username);
     bodyFormData.set('password', data.password);
     bodyFormData.set('grant_type', data.grant_type);
+    // bodyFormData.set('role', data.role);
 
     return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
       headers: {
