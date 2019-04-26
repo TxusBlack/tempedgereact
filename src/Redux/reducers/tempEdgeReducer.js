@@ -1,16 +1,31 @@
-import { SET_ACTIVE_PAGE } from '../actions/types';
+import { LOGIN, GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST, GET_ROLE_LIST } from '../actions/types';
 
 let initialState = {
-  active_page: ''
+  login: ''
 }
 
 export default function(state = initialState, action){
   switch(action.type){
-    case SET_ACTIVE_PAGE:
+    case LOGIN:
       return{
         ...state,
-        active_page: action.payload
+        login: action.payload
       };
+    case GET_COUNTRY_REGION_LIST:
+      return{
+        ...state,
+        country_region_list: action.payload
+      };
+    case GET_FUNDING_LIST:
+      return{
+        ...state,
+        funding_list: action.payload
+      }
+    case GET_ROLE_LIST:
+      return{
+        ...state,
+        role_list: action.payload
+      }
     default:
       return state;
   }

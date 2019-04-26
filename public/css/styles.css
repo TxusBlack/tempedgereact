@@ -52,7 +52,7 @@ body {
 .tempEdge-input-box, .rw-widget-container{
   border-radius: 1.6rem !important;
   border: 0.1rem solid #ced4da;
-  min-height: 4.8rem !important;
+  min-height: 4.8rem;
   width: -webkit-fill-available;
 }
 
@@ -114,6 +114,30 @@ body {
 
 .has-error p{
   margin: 0;
+}
+
+#facemash, .facemash, #facemash-mobile, .facemash-mobile{
+  object-fit: fill;
+  border-top-left-radius: 1.6rem;
+  border-top-right-radius: 1.6rem;
+}
+
+#facemash-mobile, .facemash-mobile{
+  border-bottom-left-radius: 1.6rem;
+  border-bottom-right-radius: 1.6rem;
+}
+
+.phone-num-btn-submit{
+  min-height: 4rem !important;
+  min-width: 90%;
+  border-radius: 1.6rem !important;
+  background-image: linear-gradient(54deg, #5abeec, #69c8f4);
+  border: none;
+  margin: 3.4rem auto;
+}
+
+.facemash-modal{
+  display: block;
 }
 
 /* NavBar */
@@ -217,6 +241,23 @@ body {
 
 .logo h2{
   padding: 1rem;
+}
+
+.face-tile-container{
+  margin-bottom: 18px;
+  //margin-right: 27px;
+}
+
+.face-tile, .face-tile img{
+  //width: 335px;
+  width: 100%;
+  min-height: 240px;
+  margin: auto;
+  background-color: #fff;
+}
+
+.face-tile img{
+  padding: 10px;
 }
 /*************************/
 
@@ -437,12 +478,14 @@ body {
   margin-bottom: 1rem;
 }
 
-.phone-num-btn-close{
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-  background-image: linear-gradient(#fff,#d5d5d5);
-  border: 0.1rem solid #d5d5d5;
-  color: #000;
+.phone-num-btn-close, .phone-num-btn-close:hover, .phone-num-btn-close:active, .phone-num-btn-close:focus{
+  width: 90%;
+  height: 7.8rem;
+  background-color: #8cb544 !important;
+  color: #fff;
+  border-radius: 0;
+  border-bottom-left-radius: 1.6rem;
+  border-bottom-right-radius: 1.6rem;
 }
 
 .translation-placeholder{
@@ -503,6 +546,10 @@ body {
 
 .page-title-agency{
   margin-top: 1.6rem;
+}
+
+.control-label.agency-label{
+  padding-top: 13px;
 }
 
 .form-horizontal .control-label.top-label-agency-form{
@@ -620,6 +667,10 @@ form div.list .list-item:last-child button {
   padding: 8px 0;
 }
 
+.delete-icon-show{
+  display: none;
+}
+
 .delete-btn{
   margin: 0 -9px 0 0;
 }
@@ -633,11 +684,45 @@ form div.list .list-item:last-child button {
   background-image: linear-gradient(315deg, #d7d7d7, #c5c5c5);
   border-color: #d7d7d7;
 }
-/*
-.previous:active, .previous:focus{
-  background-color: #484d4d !important;
-  border-color: #d7d7d7 !important;
-} */
+
+.payroll-hours-validation{
+  padding-bottom: 22.0rem;
+}
+
+.confirmation-page-subtitle{
+  font-size: 15px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: #3eb7e9;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.confirmation-page-categories{
+  font-size: 15px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: #2d2d2d;
+}
+
+.confirmation-page-paragraph{
+  font-size: 15px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: rgba(45, 45, 45, 0.6);
+}
 
 /*************************/
 
@@ -660,3 +745,99 @@ form div.list .list-item:last-child button {
   color: #ffffff;
 }
 /****************************/
+@media screen and (max-width: 1600px) {
+  .navbar{
+    max-height: 9rem;
+  }
+
+  .company-logo {
+    height: 6.5rem;
+    width: 19rem;
+    margin: 0.8rem 0 1.6rem 0;
+  }
+
+  .menu-ul, .language span {
+    padding: 3.5rem 0 2.4rem 0;
+    font-size: 1.6rem;
+  }
+
+  .menu, .menu-list{
+    padding-left: 0;
+  }
+
+  .register-form-panel, .register-form-panel-inputs{
+    padding: 0 2rem;
+  }
+
+  .panel-footer.register-footer {
+    margin: auto 2rem 2rem 2rem;
+  }
+
+  .wizard-wrapper, .sign-up-wrapper {
+    margin-top: 0.7rem;
+  }
+
+  .language {
+    padding: 3.4rem 0 2.8rem 0;
+  }
+
+  .language span{
+    font-size: 1.6rem;
+  }
+
+  .page-title, .page-title-agency{
+    padding-top: 0;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    font-size: 2.5rem;
+  }
+
+  .page-title-agency{
+    margin-bottom: 1.5rem;
+  }
+
+  .page-subtitle{
+    margin-bottom: 1.5rem;
+  }
+
+  .tempEdge-input-box{
+    min-height: 4rem !important;
+  }
+
+  .tempEdge-dateTimePicker-input-box, .rw-datetime-picker.rw-widget, .rw-widget-picker.rw-widget-container, .tempEdge-dateTimePicker-input-box>div>div>input, .rw-widget-picker.rw-widget-container{
+    min-height: 4rem;
+  }
+
+  .register-form {
+    padding: 1rem 1.8rem 1rem 1.8rem;
+  }
+
+  .form-group.row .control-label{
+    padding-top: 0;
+  }
+
+  .form-group.row .control-label.agency-label{
+    padding-top: 8px;
+  }
+
+  .prev-next-btns {
+    margin-top: 2rem;
+  }
+
+  .register-btn {
+    margin: 0 auto 1rem auto;
+  }
+
+  .btn-block {
+    min-height: 4rem;
+  }
+
+  .footer {
+    min-height: 2.8rem;
+  }
+
+  .footer p {
+    padding: 0.7rem 0 0 0;
+    font-size: 1rem;
+  }
+}

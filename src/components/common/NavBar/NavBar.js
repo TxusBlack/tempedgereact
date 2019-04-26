@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { connect } from 'react-redux';
@@ -6,16 +6,12 @@ import usaFlag from "./icons/usa.png"; // Tell Webpack this JS file uses this im
 import spaFlag from "./icons/spanish.png";
 
 class NavBar extends React.Component{
-  constructor(props){
-    super(props);
-  }
-
   changeActiveLang = (language) => {
     this.props.setActiveLanguage(language);
   }
 
   checkMenuItemActive = (activeMenuItem) => {
-    if(typeof this.props.activePage !== 'undefined' || this.props.activePage != ""){
+    if(typeof this.props.activePage !== 'undefined' || this.props.activePage !== ""){
       if(this.props.activePage === 'auth'){
         activeMenuItem[0] = 'active';
         activeMenuItem[1] = '';
@@ -56,9 +52,9 @@ class NavBar extends React.Component{
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-2 col-md-offset-1 logo">
-                  <Link to="/"><img className="company-logo" src="./img/Temp_Edge_250-80.png" /></Link>
+                  <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" /></Link>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 menu-list">
                 <div className="collapse navbar-collapse menu">
                   <ul className="nav navbar-nav menu-ul">
                     <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.welcome">Welcome</Translate></Link></li>
@@ -72,7 +68,7 @@ class NavBar extends React.Component{
                  <span>
                    {languages.map(lang => {
                      return(
-                       <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? usaFlag: spaFlag} />&nbsp;&nbsp;</span>
+                       <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? usaFlag: spaFlag} alt="Country Flag" />&nbsp;&nbsp;</span>
                      );
                    })}
                  </span>
@@ -88,7 +84,6 @@ class NavBar extends React.Component{
 
                       //Current REDUX state
 let mapStateToProps = (state) => {
-  let path = state.router.location.pathname;
   let parsedPath = state.router.location.pathname.split("/");
 
   return({

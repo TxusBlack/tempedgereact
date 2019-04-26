@@ -14,14 +14,18 @@ import NavBar from './components/common/NavBar/NavBar';
 import Footer from './components/common/Footer/Footer';
 import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
-import CreateNewUser from './Pages/Login/CreateNewUser';
-import CreateNewAgency from './Pages/Login/CreateNewAgency/WizardCreateNewAgency';
+import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
+import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
 import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
 import ReCaptcha from "react-google-recaptcha";
 import Notifications from './components/common/Notifications/Notifications';
+import UploadFile from './components/common/UploadFile/UploadFile';
+import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
+import Error from './Pages/Error/Error';
+import Welcome from './Pages/Welcome/Welcome';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -64,6 +68,10 @@ class App extends React.Component{
                   <Route exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
+                  <Route exact path="/upload/:lang" component={UploadFile} />
+                  <Route exact path="/pending/:lang" component={Error} />
+                  <Route exact path="/error/:lang" component={Error} />
+                  <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" component={Welcome} />
                 </Switch>
               </div>
             </ConnectedRouter>

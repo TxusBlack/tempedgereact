@@ -13,9 +13,9 @@ import JSOG from 'jsog';    //Circular JSON Structures
 let middleware = [thunk, routerMiddleware(history)];
 
 let JSOGTransform = createTransform(
-    (inboundState, key) => JSOG.encode(inboundState),
-    (outboundState, key) => JSOG.decode(outboundState),
-)
+  (inboundState,  key) => JSOG.encode(inboundState),
+  (outboundState, key) => JSOG.decode(outboundState),
+);
 
 let saveSubsetBlacklistFilter = createBlacklistFilter(
   'form',

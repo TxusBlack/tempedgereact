@@ -4,26 +4,33 @@ import Webcam from "react-webcam";
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Tracker from '../assets/tracking';
+import Tracker from './assets/tracking';
 import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
 import ModalFail from '../../Modals/FaceMashFail/Modal';
+import PicModal from '../../Modals/PicModal/Modal';
+import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
+import httpService from '../../utils/services/httpService/httpService.js';
+import { notify } from 'reapop';
+import JSOG from 'jsog';
 
-const $ = window.$;
-
-let canvas_width = 320;
-let canvas_height: 240;
+let canvas_width = 461;
+let canvas_height: 343;
 
 class FaceMashDesktop extends React.Component {
   constructor(props){
     super(props);
 
-    this.addTranslationsForActiveLanguage();
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
   state = {
+    imgCollection: [],
+    currentImage: null,
+    picWall: [],
     employeeName: "",
     timeStatus: "",
-    trackerTask: null
+    trackerTask: null,
+    showModal: false
   };
 
   componentDidMount(){
@@ -32,7 +39,7 @@ class FaceMashDesktop extends React.Component {
     let tracker = new window.tracking.ObjectTracker("face");      //Tracker, canvas and context are needed to turn off the camera on componentUnmount
 
     this.setState({
-      trackerTask: window.tracking.track('#facemash', tracker, { camera: true })
+      trackerTask: window.tracking.track('.facemash', tracker, { camera: true })
     });
   }
 
@@ -41,21 +48,8 @@ class FaceMashDesktop extends React.Component {
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/snapshot-desktop/${this.props.activeLanguage.code}`);
-      this.addTranslationsForActiveLanguage();
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
-  }
-
-  addTranslationsForActiveLanguage() {
-    const {activeLanguage} = this.props;
-
-    if (!activeLanguage) {
-      return;
-    }
-
-    import(`../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
-      });
   }
 
   componentWillUnmount(){
@@ -64,40 +58,81 @@ class FaceMashDesktop extends React.Component {
 
   setRef = webcam => {
     this.webcam = webcam;
-  };
+  }
 
+  //Capture image from webcam and save to component state
   capture = () => {
-    let imageSrc = this.webcam.getScreenshot();
+    let currentImage = this.webcam.getScreenshot();
 
-    //CALL TO SERVER REST API
-    // ...
-    //***
-
-    //ONCE CALL ON PROMISE SOLVED DO THIS:
-
-    /*** ON SUCCESS ***/
-    this.setState({
-      employeeName: "Luis Diaz",
-      timeStatus: "In"
-    }, () => {
-      this.toggleModal(0);   //Opens Sucess Modal
-    });
-
-    /*** ON FAIL ***/
-    // this.setState({
-    //   employeeName: "Luis Diaz"
-    // }, () => {
-    //   this.toggleModal(-1);   //Opens Fail Modal
-    // });
-  };
-
-  //Open Login success/failure modals
-  toggleModal(mode){
-    if(mode > -1){
-      $(ReactDOM.findDOMNode(this.refs.faceMashConfirmModal)).modal();
-    }else if(mode < 0){
-      $(ReactDOM.findDOMNode(this.refs.faceMashFailModal)).modal();
+    //If there's less than 3 images on the list only
+    if(this.state.imgCollection.length < 3){
+      this.setState({
+        currentImage: currentImage
+      },() => {
+        this.toggleModalOnOff();    //Open Modal
+      });
     }
+  }
+
+  //Adds currentImage to collection of images in the component state
+  addImagetoCollection = () => {
+    let imageSrc = this.state.imgCollection;
+    imageSrc.push(this.state.currentImage);
+
+    this.setState({
+      imgCollection: imageSrc
+    });
+  }
+
+  //Set Modal visible or not
+  toggleModalOnOff = () => {
+    this.setState({
+      showModal: !this.state.showModal
+    });
+  }
+
+  //Mount current image to wall and increase images collection by one
+  mountPic = () => {
+    let picWall = this.state.picWall;   //Wall with all images
+    this.addImagetoCollection();        //Add currentImage to collection of images in the component state
+
+    //New Tile containing currentImage
+    let picElement = (
+      <div key={`tile-${picWall.length}`} className="col-md-6 face-tile-container">
+        <div className="face-tile">
+          <img src={this.state.currentImage} alt="Face Tile" />
+        </div>
+      </div>
+    );
+
+    //Add New Tile to wall
+    picWall.push(picElement);
+    this.setState({
+      picWall: picWall
+    });
+  }
+
+  onSubmit = async (formValues) => {
+    let res = await httpService.postImages('/faceRecognition/saveNewSubject', this.state.imgCollection);
+    //let res = await httpService.postImage('/faceRecognition/recognizeFace', this.state.currentImage);
+
+    console.log('response: ', res);
+
+    this.fireNotification();
+  }
+
+  fireNotification = () => {
+    console.log("NOTIFY RAN!");
+    let { notify } = this.props;
+
+    notify({
+      title: 'Images Submitted',
+      message: 'Your images have been successfully saved to our records.',
+      status: 'success',
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
   }
 
   render() {
@@ -107,31 +142,40 @@ class FaceMashDesktop extends React.Component {
       facingMode: "user"
     };
 
+    let tempEdgeSubmitShow = (this.state.imgCollection.length < 3)? '': <button className="btn btn-primary phone-num-btn-submit center-block" onClick={this.onSubmit}>Save</button>;
+
     return(
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-8 col-md-offset-2">
+          <div className="col-md-5">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height, marginBottom:40}} className="center-block">
-              <Webcam className="center-block"
+            <div style={{position: "relative", height: videoConstraints.height}} className="center-block">
+              <Webcam className="center-block facemash"
                 audio={false}
-                height={240}
+                height={`${videoConstraints.height}`}
                 id="facemash"
                 ref={this.setRef}
                 screenshotFormat="image/jpeg"
-                width={320}
+                width="90%"
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width="320" height="240" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0}}></canvas>
             </div>
             <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button>
-            <ModalConfirm title="TempEdge Time Track" employee={this.state.employeeName} timeStatus={this.state.timeStatus} reStartfaceDetectTracker={null} ref="faceMashConfirmModal" />
-            <ModalFail title="TempEdge Time Track" employee={this.state.employeeName} reStartfaceDetectTracker={null} ref="faceMashFailModal" />
+            {tempEdgeSubmitShow}
+          </div>
+          <div className="col-md-7">
+            <div style={{padding:40, minHeight:'calc(100vh - 130px)'}}>
+              <div className="row">
+                {this.state.picWall}
+              </div>
+            </div>
           </div>
         </div>
+        <PicModal title="Current Snapshot" open={this.state.showModal} toggleModal={this.toggleModalOnOff} pic={this.state.currentImage} mountPic={this.mountPic} reStartfaceDetectTracker={null} />
       </div>
     );
   }
 }
 
-export default withLocalize(connect(null, { push })(FaceMashDesktop));
+export default withLocalize(connect(null, { push, notify })(FaceMashDesktop));
