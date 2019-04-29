@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createRootReducer from '../Redux/reducers/index';
-import storage from 'redux-persist/lib/storage';
+import storageSession from 'redux-persist/lib/storage/session'
 import { persistStore, persistReducer } from 'redux-persist';
 import { createTransform } from 'redux-persist';
 import { createBlacklistFilter } from 'redux-persist-transform-filter';
@@ -24,7 +24,7 @@ let saveSubsetBlacklistFilter = createBlacklistFilter(
 
 let config = {
   key: 'root',
-  storage: storage,
+  storage: storageSession,
   //blacklist: ['form'],
   transforms: [saveSubsetBlacklistFilter, JSOGTransform]
 }
