@@ -11,9 +11,8 @@ export let doLogin = (url, data) => {
     httpService.getAuthToken('/oauth/token', data)
       .then(async(res) => {
         let token = res.data.access_token;
-        let ipAddress = window.location.hostname;
         data.IPAddress = window.location.hostname;
-        console.log("data: ", data);
+
         sessionStorage.setItem('access_token', token);
         Axios({
           url: baseUrlTempEdge + url,
@@ -26,8 +25,6 @@ export let doLogin = (url, data) => {
             access_token: token
           }
         }).then((response) => {
-          console.log("response: ", response);
-          console.log("response.data.result: ", response.data.result);
           dispatch({
             type: LOGIN,
             payload: response.data.result
@@ -50,8 +47,7 @@ export let doLogin = (url, data) => {
       }).catch((error) => {
         let lang = window.location.pathname;
         lang = lang.split("/");
-        console.log("lang: ", lang[2]);
-        console.log("history: ", history);
+        
         history.push(`/error/${lang[2]}`);
       });
   }
