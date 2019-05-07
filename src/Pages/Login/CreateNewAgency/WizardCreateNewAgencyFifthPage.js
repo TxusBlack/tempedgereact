@@ -55,13 +55,13 @@ class WizardCreateNewAgencyFifthPage extends Component{
       if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
         if(formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1){
            if(formProps.input.name.indexOf("salespersonfirstname") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonfirstnamerequired`;
+             fieldId = `com.tempedge.error.person.firstNamerequired`;
            }else if(formProps.input.name.indexOf("salespersonlastname") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonlastnamerequired`;
+             fieldId = `com.tempedge.error.person.lastNamerequired`;
            }else if(formProps.input.name.indexOf("salespersongenre") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersongenrerequired`;
+             fieldId = `com.tempedge.error.person.genderrequired`;
            }else if(formProps.input.name.indexOf("salespersonphonenumber") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficesalespersons.salespersonphonenumberrequired`;
+             fieldId = `com.tempedge.error.phonenumberrequired`;
           }
         }
       }

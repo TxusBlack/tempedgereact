@@ -56,22 +56,22 @@ class WizardCreateNewAgencyFourthPage extends Component{
       if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
         if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
            if(formProps.input.name.indexOf("officeName") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.officeNamerequired`;
+             fieldId = `com.tempedge.error.officeNamerequired`;
            }else if(formProps.input.name.indexOf("address") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.addressrequired`;
+             fieldId = `com.tempedge.error.addressrequired`;
            }else if(formProps.input.name.indexOf("city") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.cityrequired`;
+             fieldId = `com.tempedge.error.cityrequired`;
            }else if(formProps.input.name.indexOf("zip") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.zipcoderequired`;
+             fieldId = `com.tempedge.error.zipcoderequired`;
            }else if(formProps.input.name.indexOf("phonenumber") !== -1){
-             fieldId = `com.tempedge.error.recruitmentoffice.recruitmentofficephonenumbers.phonenumberrequired`;
+             fieldId = `com.tempedge.error.phonenumberrequired`;
           }
         }
       }
 
       if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
         return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
+          <p style={{color: '#a94442'}}><Translate id={fieldId}/></p>
         );
       }
     }

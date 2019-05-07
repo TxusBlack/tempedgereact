@@ -112,7 +112,12 @@ class WizardCreateNewAgencyFirstPage extends Component{
 
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
-                <Field name="password" type="text" placeholder="Enter password" category="person" component={InputBox} />
+                <Field name="initialpassword" type="password" placeholder="Enter password" category="person" component={InputBox} />
+              </div>
+
+              <div className="col-md-4">
+                <label className="control-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
+                <Field name="confirmpassword" type="password" placeholder="Confirm password" category="person" component={InputBox} />
               </div>
             </div>
 

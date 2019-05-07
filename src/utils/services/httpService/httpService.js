@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import FormData from 'form-data'
 
-//let baseUrlTempEdge = `http://localhost:8080`;
+//let baseUrlTempEdge = `http://10.1.10.101:9191`;
 let baseUrlTempEdge = `http://96.56.31.162:9191`;
 let baseUrlFaceRecognition = `http://localhost:9191`;
 
@@ -20,7 +20,7 @@ let HttpService = {
 
     let response = await Axios({
       url: baseUrlTempEdge + url,
-      method: 'post',
+      method: 'get',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -48,7 +48,6 @@ let HttpService = {
     bodyFormData.set('username', data.username);
     bodyFormData.set('password', data.password);
     bodyFormData.set('grant_type', data.grant_type);
-    // bodyFormData.set('role', data.role);
 
     return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
       headers: {

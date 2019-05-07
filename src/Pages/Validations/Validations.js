@@ -21,10 +21,23 @@ let validate = (formValues) => {
     errors.password = 'Please enter your password.';
   }
 
+  if(!formValues.initialpassword){
+    errors.initialpassword = 'Please enter your password.';
+  }
+
+  if(!formValues.confirmpassword){
+    errors.confirmpassword = 'Please confirm your password.';
+  }
+
+  if(formValues.initialpassword !==  formValues.confirmpassword){
+    errors.initialpassword = 'Password does not match.';
+    errors.confirmpassword = 'Password does not match.';
+  }
+
   if (!formValues.email) {
-      errors.email = 'Email field is required'
+      errors.email = 'Email field is required.'
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)) {
-      errors.email = 'Invalid email address'
+      errors.email = 'Invalid email address.'
   }
 
   if(!formValues.gender){
@@ -48,11 +61,11 @@ let validate = (formValues) => {
   }
 
   if(!formValues.agencycountry){
-    errors.agencycountry = 'Please choose a country from the list.';
+    errors.agencycountry = 'Country is required.';
   }
 
   if(!formValues.agencystate){
-    errors.agencystate = 'Please choose a state from the list.';
+    errors.agencystate = 'State is required.';
   }
 
   if(!formValues.agencydropdown){
@@ -60,24 +73,23 @@ let validate = (formValues) => {
   }
 
   if(!formValues.agencyname){
-    errors.agencyname = 'Please enter the agency name.';
+    errors.agencyname = 'Name is required.';
   }
 
   if(!formValues.agencyaddress){
-    errors.agencyaddress = 'Please enter the agency address.';
+    errors.agencyaddress = 'Address is required.';
   }
 
   if(!formValues.agencyappartment){
-    errors.agencyappartment = 'Please enter the agency address.';
+    errors.agencyappartment = 'Address is required.';
   }
 
   if(!formValues.agencycity){
-    errors.agencycity = 'Please enter the agency city.';
+    errors.agencycity = 'City is required.';
   }
 
-
   if(!formValues.agencyzipcode){
-    errors.agencyzipcode = 'Please enter the agency zip code.';
+    errors.agencyzipcode = 'Zip code is required.';
   }
 
   if (!formValues.agencyphonenumbers || !formValues.agencyphonenumbers.length) {
@@ -108,23 +120,23 @@ let validate = (formValues) => {
       let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
 
       if(!recruitmentoffice.officeName){
-        recruitmentofficephonenumbersErrors.officeName = 'Enter recruitment office name.';
+        recruitmentofficephonenumbersErrors.officeName = 'Name is required.';
       }
 
       if(!recruitmentoffice.address){
-        recruitmentofficephonenumbersErrors.address = 'Enter recruitment office address.';
+        recruitmentofficephonenumbersErrors.address = 'Address is required.';
       }
 
       if(!recruitmentoffice.city){
-        recruitmentofficephonenumbersErrors.city = "Enter  recruitment office city.";
+        recruitmentofficephonenumbersErrors.city = "City is required.";
       }
 
       if(!recruitmentoffice.zip){
-        recruitmentofficephonenumbersErrors.zip = "Enter recruitment office zip code.";
+        recruitmentofficephonenumbersErrors.zip = "Zip code is required.";
       }
 
       if (!regX.test(recruitmentoffice.phonenumber)){
-        recruitmentofficephonenumbersErrors.phonenumber = 'Enter recruitment office phone number.';
+        recruitmentofficephonenumbersErrors.phonenumber = 'Phone number is required.';
       }
 
       recruitmentofficephonenumbersArrayErrors[index] = recruitmentofficephonenumbersErrors;
@@ -145,19 +157,19 @@ let validate = (formValues) => {
       let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
 
       if (!regX.test(salesperson.salespersonphonenumber)){
-        recruitmentofficesalespersonsErrors.salespersonphonenumber = 'Enter the sales person phone number.';
+        recruitmentofficesalespersonsErrors.salespersonphonenumber = 'Phone number is required.';
       }
 
       if(!salesperson.salespersonfirstname){
-        recruitmentofficesalespersonsErrors.salespersonfirstname = 'Enter the sales person first name.';
+        recruitmentofficesalespersonsErrors.salespersonfirstname = 'Name is required.';
       }
 
       if(!salesperson.salespersonlastname){
-        recruitmentofficesalespersonsErrors.salespersonlastname = 'Enter the sales person last name.';
+        recruitmentofficesalespersonsErrors.salespersonlastname = 'Lastname is required.';
       }
 
       if(!salesperson.salespersongenre){
-        recruitmentofficesalespersonsErrors.salespersongenre = "Enter a genre.";
+        recruitmentofficesalespersonsErrors.salespersongenre = "Please select a gender.";
       }
 
       recruitmentofficesalespersonsArrayErrors[index] = recruitmentofficesalespersonsErrors;
@@ -169,15 +181,19 @@ let validate = (formValues) => {
   }
 
   if(!formValues.weekdaysdropdown1){
-    errors.weekdaysdropdown1 = "Please select a week day";
+    errors.weekdaysdropdown1 = "Please select a week day.";
   }
 
   if(!formValues.weekdaysdropdown2){
-    errors.weekdaysdropdown2 = "Please select a week day";
+    errors.weekdaysdropdown2 = "Please select a week day.";
   }
 
   if(!formValues.weekdaysdropdown3){
-    errors.weekdaysdropdown3 = "Please select a week day";
+    errors.weekdaysdropdown3 = "Please select a week day.";
+  }
+
+  if(!formValues.fundingCompanydropdown){
+    errors.fundingCompanydropdown = "Please select a funding company."
   }
 
   return errors;
