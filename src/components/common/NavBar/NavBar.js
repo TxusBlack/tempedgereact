@@ -57,9 +57,9 @@ class NavBar extends React.Component{
                 <div className="col-md-6 menu-list">
                 <div className="collapse navbar-collapse menu">
                   <ul className="nav navbar-nav menu-ul">
-                    <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.welcome">Welcome</Translate></Link></li>
-                    <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser">New User</Translate></Link></li>
-                    <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency">New Agency</Translate></Link></li>
+                    <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.sign_in" /></Link></li>
+                    <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser" /></Link></li>
+                    <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency" /></Link></li>
                   </ul>
                  </div>
                </div>

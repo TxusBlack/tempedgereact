@@ -1,7 +1,7 @@
 import { LOGIN } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
-import ls from 'local-storage'
+//import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
 let baseUrlTempEdge = `http://96.56.31.162:9191`;
@@ -16,7 +16,7 @@ export let doLogin = (url, data) => {
         sessionStorage.setItem('access_token', token);
         Axios({
           url: baseUrlTempEdge + url,
-          method: 'post',
+          method: 'get',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -25,6 +25,7 @@ export let doLogin = (url, data) => {
             access_token: token
           }
         }).then((response) => {
+          console.log("response: ", response);
           dispatch({
             type: LOGIN,
             payload: response.data.result
@@ -34,10 +35,18 @@ export let doLogin = (url, data) => {
           lang = lang.split("/");
 
           console.log("response.data.result.portalUserList[0].status: ", response.data.result.portalUserList[0].status);
-          if(response.data.result.portalUserList[0].status === "A"){
+          if(response.data.result.portalUserList[0].status === "A" && response.data.result.portalUserList[0].organizationEntity.status === "A"){
             history.push(`/protected/${lang[2]}`);
-          }else if(response.data.result.portalUserList[0].status === "P"){
-            history.push(`/pending/${lang[2]}`);
+          }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "A" && response.data.result.portalUserList[0].userRoleId >= 4){
+            history.push(`/pending/user/${lang[2]}`);
+          }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "P" && response.data.result.portalUserList[0].userRoleId >= 4){
+            history.push(`/pending/agency/${lang[2]}`);
+          }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "A" && response.data.result.portalUserList[0].userRoleId >= 4){
+            history.push(`/denied/user/${lang[2]}`);
+            //history.push(`/register/${lang[2]}`);
+          }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "D" && response.data.result.portalUserList[0].userRoleId >= 4){
+            history.push(`/denied/agency/${lang[2]}`);
+            //history.push(`/registerAgency/${lang[2]}`);
           }else if(response.data.result.portalUserList[0].status === "ERROR"){
             history.push(`/error/${lang[2]}`);
           }else{
@@ -47,7 +56,7 @@ export let doLogin = (url, data) => {
       }).catch((error) => {
         let lang = window.location.pathname;
         lang = lang.split("/");
-        
+
         history.push(`/error/${lang[2]}`);
       });
   }

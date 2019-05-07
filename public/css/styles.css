@@ -403,7 +403,7 @@ body {
 
 
 /* Register Page */
-.register-form-panel{
+.register-form-panel, .main-form-panel{
   -webkit-box-shadow: none;
   border: none;
   box-shadow: none;
@@ -438,7 +438,7 @@ body {
   margin-top: 0;
 }
 
-.panel-heading.register-header{
+.panel-heading.register-header, .panel-heading.main-header{
   border-color: transparent;
   padding: 0;
   border-top-left-radius: 1.6rem;
@@ -447,7 +447,7 @@ body {
   color: #fff;
 }
 
-.register-header h2{
+.register-header h2, .main-header h2{
   font-size: 16px;
   font-weight: normal;
   font-style: normal;
@@ -501,7 +501,7 @@ body {
   margin: 1rem 0
 }
 
-.panel-footer.register-footer{
+.panel-footer.register-footer, .panel-footer.main-footer{
   background-color: #fff;
   padding: 0;
   margin: auto 2.7rem 2.4rem 2.7rem;
@@ -512,7 +512,7 @@ body {
   min-height: 6.6rem;
 }
 
-.panel-footer.register-footer.panel-footer-agency-height-override{
+.panel-footer.register-footer.panel-footer-agency-height-override, .panel-footer.main-footer.panel-footer-agency-height-override{
   min-height: 6.9rem;
 }
 
@@ -525,7 +525,7 @@ body {
 /************************/
 
 /* Create New User / Agency */
-.register-form-agency{
+.register-form-agency, .main-panel{
   border: none;
   border-bottom: none;
   padding: 0 0 3.1rem 0;
@@ -745,6 +745,13 @@ form div.list .list-item:last-child button {
   color: #ffffff;
 }
 /****************************/
+
+/*** DASHBOARD ***/
+.panel-footer.main-footer{
+  margin: auto;
+  border: 1px solid #ffff;
+}
+/*****************************/
 @media screen and (max-width: 1600px) {
   .navbar{
     max-height: 9rem;
@@ -765,8 +772,36 @@ form div.list .list-item:last-child button {
     padding-left: 0;
   }
 
-  .register-form-panel, .register-form-panel-inputs{
+  .register-form-panel, .register-form-panel-inputs, .main-form-panel{
     padding: 0 2rem;
+  }
+
+  .main-form{
+    border: none;
+  }
+
+  .main-form-panel{
+    padding: 2rem 2rem 0 2rem;
+    background: #e9e9e9;
+    margin-bottom: 0;
+  }
+
+  .main-form-panel-inputs{
+    padding: 0;
+    background: #fff;
+  }
+
+  .main-form-group{
+    margin-bottom: 0;
+    padding-bottom: 15px;
+  }
+
+  .panel-heading.main-header{
+    background: #ffff;
+  }
+
+  .main-header h2{
+    color: black;
   }
 
   .panel-footer.register-footer {
@@ -808,7 +843,7 @@ form div.list .list-item:last-child button {
     min-height: 4rem;
   }
 
-  .register-form {
+  .register-form, .main-form{
     padding: 1rem 1.8rem 1rem 1.8rem;
   }
 

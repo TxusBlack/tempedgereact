@@ -4,7 +4,7 @@ import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 
-class Welcome extends React.Component{
+class UserDashboard extends React.Component{
   constructor(props){
     super(props);
 
@@ -37,4 +37,4 @@ let mapStateToProps = (state) => {
   };
 }
 
-export default withLocalize(connect(mapStateToProps)(Welcome));
+export default withLocalize(connect(mapStateToProps)(UserDashboard));

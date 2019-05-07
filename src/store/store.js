@@ -26,7 +26,7 @@ let config = {
   key: 'root',
   storage: storageSession,
   //blacklist: ['form'],
-  transforms: [saveSubsetBlacklistFilter, JSOGTransform]
+  transforms: [saveSubsetBlacklistFilter, JSOGTransform] //[JSOGTransform]
 }
 
 let store = createStore(persistReducer(config, createRootReducer(history)), compose(applyMiddleware(...middleware), window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__()));

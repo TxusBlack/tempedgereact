@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
+import { reset } from 'redux-form';
 import httpService from '../../../utils/services/httpService/httpService.js';
 import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
@@ -50,18 +51,24 @@ class CreateNewAgency extends Component {
 
   onSubmit = async (formValues) => {
     console.log("CREATE NEW AGENCY SUBMITTED!!");
+    let recruitmentOffices = {};
+    var isRecruitmentOfficePhoneNumbersEmpty = !Object.keys(formValues.recruitmentofficephonenumbers[0]).length;
 
-    let recruitmentOffices = await formValues.recruitmentofficephonenumbers.map((recruitmentOffice) => {
-      return({
-          "address" : recruitmentOffice.officeName,
-          "city" : recruitmentOffice.city,
-          "country" : formValues.agencycountry.value,
-          "name" : recruitmentOffice.officeName,
-          "phone" : recruitmentOffice.phonenumber,
-          "zipcode" : recruitmentOffice.zip,
-          "region" : formValues.agencystate.value
+    if(isRecruitmentOfficePhoneNumbersEmpty){
+      recruitmentOffices = null;
+    }else{
+      recruitmentOffices = await formValues.recruitmentofficephonenumbers.map((recruitmentOffice) => {
+        return({
+            "address" : recruitmentOffice.officeName,
+            "city" : recruitmentOffice.city,
+            "country" : formValues.agencycountry.value,
+            "name" : recruitmentOffice.officeName,
+            "phone" : recruitmentOffice.phonenumber,
+            "zipcode" : recruitmentOffice.zip,
+            "region" : formValues.agencystate.value
+        });
       });
-    });
+    }
 
     let phoneList = await formValues.agencyphonenumbers.map((phoneNumber) => {
       return({
@@ -124,6 +131,10 @@ class CreateNewAgency extends Component {
     });
   }
 
+  componentWillUnmount(){
+    this.props.reset("CreateNewAgency");    //Reset form fields all to empty
+  }
+
   render(){
     let { page, steps } = this.state;
 
@@ -145,7 +156,8 @@ class CreateNewAgency extends Component {
 }
 
 CreateNewAgency.propTypes = {
-  getList: PropTypes.func.isRequired
+  getList: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired
 }
 
-export default connect(null, { notify, getList })(CreateNewAgency);
+export default connect(null, { notify, getList, reset  })(CreateNewAgency);
