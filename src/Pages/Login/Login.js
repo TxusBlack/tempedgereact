@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { reset, change, untouch } from 'redux-form';
 import PropTypes from 'prop-types';
 import InputBox from '../../components/common/InputBox/InputBox.js';
 import { Field, reduxForm } from 'redux-form';
@@ -24,12 +25,26 @@ class Login extends Component{
 
   state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
+  componentDidMount(){
+    document.title = "ProStaff";
+  }
+
   componentDidUpdate(prevProps, prevState){
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/auth/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    }
+  }
+
+  componentWillUnmount(){
+    //Username gets "remembered", not erase but password gets overwritten to empty string
+    if(this.props.rememberme === true){
+      this.props.change("password", "");
+      this.props.untouch("Login", "password");
+    }else{
+      this.props.reset("Login");    //Reset form fields all to empty
     }
   }
 
@@ -130,20 +145,33 @@ class Login extends Component{
 
 
 Login.propTypes = {
-  doLogin: PropTypes.func.isRequired
+  doLogin: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  untouch: PropTypes.func.isRequired
 }
                       //Current REDUX state
 let mapStateToProps = (state) => {
-  //console.log("state.tempEdge: ", state.tempEdge);
+  // console.log("state.form.login: ", state.form.login);
+  let rememberUser = null;
+
+  if(typeof state.form.login !== "undefined"){
+    if(typeof state.form.login.values !== "undefined"){
+      if(typeof state.form.login.values.rememberme !== "undefined")
+        rememberUser = state.form.login.values.rememberme;
+    }
+  }
+
   return({
-    login: state.tempEdge.login,
-    status: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: null
+    status: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: null,
+    rememberme: rememberUser
   });
 }
 
 Login = reduxForm({
   form: 'login',
+  destroyOnUnmount: false, //        <------ preserve form data
   validate: Validate
 })(Login);
 
-export default withLocalize(connect(mapStateToProps, { doLogin, push, notify })(Login));
+export default withLocalize(connect(mapStateToProps, { doLogin, push, notify, reset, change , untouch })(Login));

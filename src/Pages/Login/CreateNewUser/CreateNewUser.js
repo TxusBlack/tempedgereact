@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
+import { reset } from 'redux-form';
 import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { GET_ROLE_LIST } from '../../../Redux/actions/types.js'
 import httpService from '../../../utils/services/httpService/httpService.js';
@@ -82,6 +83,10 @@ class CreateNewUser extends Component {
     });
   }
 
+  componentWillUnmount(){
+    this.props.reset("CreateNewUser");    //Reset form fields all to empty
+  }
+
   render(){
     let { page, steps } = this.state;
 
@@ -98,7 +103,8 @@ class CreateNewUser extends Component {
 }
 
 CreateNewUser.propTypes = {
-  getList: PropTypes.func.isRequired
+  getList: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired
 }
 
-export default connect(null, { notify, getList })(CreateNewUser);
+export default connect(null, { notify, getList, reset })(CreateNewUser);

@@ -25,7 +25,9 @@ import Notifications from './components/common/Notifications/Notifications';
 import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Error from './Pages/Error/Error';
-import Welcome from './Pages/Welcome/Welcome';
+import GenericDashboard from './Pages/Dashboard/GenericDashboard';
+//import Welcome from './Pages/Welcome/Welcome';
+//import ApproveUser from './Pages/ApproveUser/ApproveUser';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -69,9 +71,14 @@ class App extends React.Component{
                   <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                   <Route exact path="/upload/:lang" component={UploadFile} />
-                  <Route exact path="/pending/:lang" component={Error} />
+                  <Route exact path="/pending/user/:lang" component={Error} />
+                  <Route exact path="/pending/agency/:lang" component={Error} />
+                  <Route exact path="/denied/user/:lang" component={Error} />
+                  <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
-                  <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" component={Welcome} />
+                  <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" />
+                  <Route exact path="/dashboard/:lang" component={GenericDashboard} />
+                  {/*<PrivateRoute exact path="/approveuser/:lang" redirectPath="/auth/:lang" component={ApproveUser} />*/}
                 </Switch>
               </div>
             </ConnectedRouter>
