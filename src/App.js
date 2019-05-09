@@ -7,10 +7,11 @@ import { Provider } from "react-redux";
 import { LocalizeProvider } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { initialize } from 'react-localize-redux';
-import { withLocalize } from 'react-localize-redux';
+import { withLocalize, Translate } from 'react-localize-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Favicon from 'react-favicon';
 import NavBar from './components/common/NavBar/NavBar';
+import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
 import Footer from './components/common/Footer/Footer';
 import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
@@ -40,6 +41,16 @@ class App extends React.Component{
     super(props);
   }
 
+  state = { panelNavShow: false }
+
+  togglePanelNav = () => {
+    this.setState(() => {
+      return { panelNavShow: !this.state.panelNavShow };
+    }, () => {
+      console.log("panelNavShow: ", this.state.panelNavShow);
+    });
+  }
+
   render(){
     let defaultLanguage = 'en';
 
@@ -53,6 +64,8 @@ class App extends React.Component{
       renderToStaticMarkup: renderToStaticMarkup
     };
 
+    let footerContent= <p> © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights">All rights reserved.</Translate> </p>;
+
     return(
       <Provider store={store}>
         <PersistGate loading={<LoadingView />} persistor={persistor}>
@@ -61,7 +74,8 @@ class App extends React.Component{
             <ConnectedRouter history={history}>
               <div className="contents">
                 <Notifications />
-                <NavBar />
+                <NavBar toggleNav={this.togglePanelNav} />
+                <NavPanelLeft toggleNav={this.togglePanelNav}show={this.state.panelNavShow} />
                 <Switch>
                   <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
                   <Route exact path="/auth/:lang" component={Login} />
@@ -78,11 +92,10 @@ class App extends React.Component{
                   <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" />
                   <Route exact path="/dashboard/:lang" component={GenericDashboard} />
-                  {/*<PrivateRoute exact path="/approveuser/:lang" redirectPath="/auth/:lang" component={ApproveUser} />*/}
                 </Switch>
               </div>
             </ConnectedRouter>
-            <Footer />
+            <Footer content={footerContent} />
           </LocalizeProvider>
         </PersistGate>
       </Provider>

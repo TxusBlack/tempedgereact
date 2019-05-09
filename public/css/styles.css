@@ -1,6 +1,7 @@
 html {
   height: 100%;
   box-sizing: border-box;
+  font-size: 10px;
 }
 
 *,
@@ -259,6 +260,152 @@ body {
 .face-tile img{
   padding: 10px;
 }
+
+/* Left Nav Panel Hamburger Button */
+.hamburger-btn{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 24px;
+  width: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  position: absolute;
+  top: 28px;
+  left: 70px;
+}
+
+.hamburger-btn:focus{
+  outline: none;
+}
+
+.hamburger-btn-dash{
+  width: 30px;
+  height: 2px;
+  background: #00cccc;
+}
+/***/
+
+/*************************/
+
+/* Left Nav Panel */
+.panel-nav-left{
+  position: absolute;
+  height: 100%;
+  background: #ffff;
+  box-shadow: 1px 0px 7px rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  width: 70%;
+  max-width: 251px;
+  z-index: 200;
+  transform: translateX(-100%);  /* The left side is -90% on the x-axis which means it's hidden */
+  transition: transform 0.3s ease-out;
+}
+
+.panel-nav-left .footer{
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  min-height: 3rem;
+}
+
+.panel-nav-left .footer p{
+  padding: 0;
+  text-align: left;
+  margin-bottom: 0;
+  margin-top: 3px;
+}
+
+.panel-nav-left .footer p a, .panel-nav-left .footer p a:hover{
+  color: #fff;
+}
+
+.panel-nav-left.show{
+  transform: translateX(0);     /* The left side is at position zero in the x axis which means it's showing */
+}
+
+.panel-nav-left ul{
+  list-style: none;
+  margin-bottom: 0;
+  padding-top: 1.5rem;
+  padding-left: 0;
+}
+
+.panel-nav-left li{
+  margin: 0;
+  padding-left: 2.5rem;
+  padding-top: .5rem;
+  padding-bottom: 1rem;
+}
+
+.panel-nav-left li:hover{
+  background-color: #3eb7e9;
+}
+
+.panel-nav-left a{
+  color: #2d2d2d;
+  text-decoration: none;
+  text-align: left;
+  font-size: 1.6rem;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+.panel-nav-left li:hover,
+.panel-nav-left a:hover,
+.panel-nav-left a:active{
+  color: #fff;
+}
+
+.panel-nav-left-close-btn{
+  background: #fff;
+  border: none;
+}
+
+.panel-user-img-name{
+  border-bottom: 1px solid rgba(104,104,104, 0.4);
+  max-width: 26.7rem;
+}
+
+.panel-user-img-name h4{
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #5abeec;
+  padding: 1.8rem 0 2.6rem 1.1rem;
+}
+
+.panel-user-img-name .col-md-7{
+  padding-left: 0;
+}
+
+.panel-user-img-name div{
+  margin-top: -1.4rem;
+}
+
+.usr-img{
+  width: 6.8rem;
+  height: 6.8rem;
+  margin-bottom: 2rem;
+  margin-left: 1.9rem;
+}
+
+.close-btn-row{
+  height: 3.5rem;
+}
+
+.panel-nav-left-close-btn{
+  padding-top: 1.3rem;
+  padding-bottom: 2.2rem;
+}
 /*************************/
 
 /** Login Page **/
@@ -400,7 +547,6 @@ body {
   color: #5abeec;
 }
 /***********************/
-
 
 /* Register Page */
 .register-form-panel, .main-form-panel{
@@ -731,6 +877,9 @@ form div.list .list-item:last-child button {
   background-color: #df963d;
   width: 100%;
   min-height: 4.8rem;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
 }
 
 .footer p{
@@ -747,11 +896,40 @@ form div.list .list-item:last-child button {
 /****************************/
 
 /*** DASHBOARD ***/
+.panel-heading.main-header{
+  background: #ffff;
+}
+
+.main-header h2{
+  color: black;
+}
+
+.main-form-panel{
+  padding: 2rem 2rem 0 2rem !important;
+  background: #e9e9e9;
+  margin-bottom: 0;
+}
+
+.main-form-panel-inputs{
+  padding: 0;
+  background: #fff;
+}
+
+.main-form{
+  border: none;
+}
+
+.main-form-group{
+  margin-bottom: 0;
+  padding-bottom: 15px;
+}
+
 .panel-footer.main-footer{
   margin: auto;
   border: 1px solid #ffff;
 }
 /*****************************/
+
 @media screen and (max-width: 1600px) {
   .navbar{
     max-height: 9rem;
@@ -774,34 +952,6 @@ form div.list .list-item:last-child button {
 
   .register-form-panel, .register-form-panel-inputs, .main-form-panel{
     padding: 0 2rem;
-  }
-
-  .main-form{
-    border: none;
-  }
-
-  .main-form-panel{
-    padding: 2rem 2rem 0 2rem;
-    background: #e9e9e9;
-    margin-bottom: 0;
-  }
-
-  .main-form-panel-inputs{
-    padding: 0;
-    background: #fff;
-  }
-
-  .main-form-group{
-    margin-bottom: 0;
-    padding-bottom: 15px;
-  }
-
-  .panel-heading.main-header{
-    background: #ffff;
-  }
-
-  .main-header h2{
-    color: black;
   }
 
   .panel-footer.register-footer {

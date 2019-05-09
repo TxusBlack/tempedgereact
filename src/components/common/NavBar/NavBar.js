@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { connect } from 'react-redux';
+import HamburgerButton from '../HamburgerButton/HamburgerButton';
 import usaFlag from "./icons/usa.png"; // Tell Webpack this JS file uses this image
 import spaFlag from "./icons/spanish.png";
 
@@ -34,6 +35,11 @@ class NavBar extends React.Component{
     let registerRoute = `/register/${activeLanguage.code}`;
     let registerAgencyRoute = `/registerAgency/${activeLanguage.code}`;
     let activeMenuItem = ['active', '', ''];
+    let hamburgerBtn = "";
+
+    if(this.props.pathname.includes("dashboard")){
+      hamburgerBtn = <HamburgerButton toggleNav={this.props.toggleNav} />;
+    }
 
     this.checkMenuItemActive(activeMenuItem);
 
@@ -51,6 +57,7 @@ class NavBar extends React.Component{
           <div className="col-md-12 bottom-bar-part">
             <div className="container-fluid">
               <div className="row">
+                {hamburgerBtn}
                 <div className="col-md-2 col-md-offset-1 logo">
                   <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" /></Link>
                 </div>
@@ -87,7 +94,8 @@ let mapStateToProps = (state) => {
   let parsedPath = state.router.location.pathname.split("/");
 
   return({
-    activePage: parsedPath[1]   //HomePage is [0]
+    activePage: parsedPath[1],   //HomePage is [0]
+    pathname: state.router.location.pathname
   });
 }
 
