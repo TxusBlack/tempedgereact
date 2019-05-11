@@ -73,58 +73,59 @@ class WizardCreateNewAgencyFirstPage extends Component{
         <div className="register-form-panel-inputs">
           <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
             <div className="form-group row">
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.firstname">First Name (Required)</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.firstname">First Name (Required)</Translate></label>
                 <Field name="firstName" type="text" placeholder="First Name" category="person" component={InputBox} />
               </div>
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.middlename">Middle Name</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.middlename">Middle Name</Translate></label>
                 <Field name="middleName" type="text" placeholder="Middle Name" category="person" component={InputBox} />
               </div>
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.lastname">Last Name (Required)</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.lastname">Last Name (Required)</Translate></label>
                 <Field name="lastName" type="text" placeholder="Last Name" category="person" component={InputBox} />
               </div>
             </div>
 
             <div className="form-group row">
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.gender">Gender</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.gender">Gender</Translate></label>
                   <span style={{display: "none"}} ref="maleOption"><Translate id="com.tempedge.msg.label.gender.male">Male</Translate></span>
                   <span style={{display: "none"}} ref="femaleOption"><Translate id="com.tempedge.msg.label.gender.female">Female</Translate></span>
                   <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={Dropdown} />
               </div>
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.email">Email</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.email">Email</Translate></label>
                 <Field name="email" type="email" placeholder="Email" category="person" component={InputBox} />
               </div>
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.birthday">Birthday</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.birthday">Birthday</Translate></label>
                 <Field name="birthday" type="text" category="person" component={DateTime} validate={date()} />
               </div>
             </div>
 
             <div className="form-group row">
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
                 <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
               </div>
 
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
                 <Field name="initialpassword" type="password" placeholder="Enter password" category="person" component={InputBox} />
               </div>
 
-              <div className="col-md-4">
-                <label className="control-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
+              <div className="col-lg-4">
+                <label className="col-form-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
                 <Field name="confirmpassword" type="password" placeholder="Confirm password" category="person" component={InputBox} />
               </div>
             </div>
 
             <div className="form-group prev-next-btns">
-                <div className="col-md-6 col-md-offset-3">
+                <div className="col-lg-6 offset-lg-3">
                   <button type="submit" className="btn btn-primary btn-block register-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                 </div>
+                <div style={{height: "1rem"}}></div>
             </div>
           </form>
         </div>

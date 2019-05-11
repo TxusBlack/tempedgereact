@@ -22,8 +22,8 @@ class Modal extends React.Component{
               </button>
             </div>
             <div className="modal-body">
-            <h4 className="text-center">Hi, {this.props.employee}</h4>
-            <h4 className="text-center">You have succesfully clocked {this.props.timeStatus}</h4>
+              <h4 className="text-center">Hi, {this.props.employee}</h4>
+              <h4 className="text-center">You have succesfully clocked {this.props.timeStatus}</h4>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-primary close-btn" data-dismiss="modal" onClick={() => this.onClose("success")}>Close</button>
