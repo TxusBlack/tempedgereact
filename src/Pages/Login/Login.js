@@ -126,7 +126,7 @@ class Login extends Component{
                     </div>
                 </form>
                 <div className="captcha-container">
-                  <div className="center-block captcha-panel" style={{width: "304px"}}>
+                  <div className="mx-auto captcha-panel" style={{width: "304px"}}>
                     <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                   </div>
                 </div>

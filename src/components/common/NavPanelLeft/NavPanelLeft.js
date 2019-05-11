@@ -33,15 +33,15 @@ class NavPanelLeft extends React.Component{
       <nav className={panelClass}>
         <div>
           <div className="row close-btn-row">
-            <div className="col-md-12">
-              <button onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right"><i class="fa fa-close"></i></button>
+            <div className="col-lg-12">
+              <button onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right"><i className="fa fa-close"></i></button>
             </div>
           </div>
           <div className="row panel-user-img-name">
-            <div className="col-md-5">
+            <div className="col-lg-5">
               <img src={user} className="usr-img" alt="user image" />
             </div>
-            <div className="col-md-7">
+            <div className="col-lg-7">
               <h4>Joe Schmoe</h4>
             </div>
           </div>
@@ -59,7 +59,7 @@ class NavPanelLeft extends React.Component{
             <li><a href="/">Administration</a></li>
           </ul>
         </div>
-        <Footer content={<p><a href="/">Sign Out</a></p>} />
+        <Footer content={<p><a href="/">Sign Out</a></p>} backgroundColor="#fff" />
       </nav>
     );
   }

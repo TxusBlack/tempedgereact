@@ -64,12 +64,12 @@ class WizardCreateNewAgencySecondPage extends Component{
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
         <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <div className="row">
-                <div className="col-md-2">
-                  <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                <div className="col-lg-2">
+                  <label className="col-form-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-lg-8" style={{paddingLeft: 0, paddingRight: 71}}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" category="agency" component={InputBox} />
                 </div>
               </div>
@@ -83,39 +83,39 @@ class WizardCreateNewAgencySecondPage extends Component{
           <div className="register-form-panel-inputs">
             <div className="form-group register-form wizard-register-agency-form row">
               <div className="register-agency-flex">
-                <div className="col-md-6 register-agency-input-left">
-                  <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
+                <div className="col-lg-6 register-agency-input-left">
+                  <label className="col-form-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country">Country</Translate></label>
                   <Field name="agencycountry" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
                 </div>
               </div>
 
               <div className="register-agency-flex">
-                <div className="col-md-12">
-                  <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
+                <div className="col-lg-12">
+                  <label className="col-form-label"><Translate id="com.tempedge.msg.label.agencyaddress">Address</Translate></label>
                   <Field name="agencyaddress" type="textarea" placeholder="Enter Address" category="agency" component={InputBox} />
                 </div>
               </div>
 
               <div className="register-agency-flex">
-                <div className="col-md-6 register-agency-input-left">
-                  <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress2">Address 2</Translate></label>
+                <div className="col-lg-6 register-agency-input-left">
+                  <label className="col-form-label"><Translate id="com.tempedge.msg.label.agencyaddress2">Address 2</Translate></label>
                   <Field name="agencyappartment" type="text" placeholder="Enter Apartment" category="agency" component={InputBox} />
                 </div>
 
-                <div className="col-md-6 register-agency-input-right">
-                  <label className="control-label"><Translate id="com.tempedge.msg.label.city">City</Translate></label>
+                <div className="col-lg-6 register-agency-input-right">
+                  <label className="col-form-label"><Translate id="com.tempedge.msg.label.city">City</Translate></label>
                   <Field name="agencycity" type="text" placeholder="Enter City" category="agency" component={InputBox} />
                 </div>
               </div>
 
               <div className="register-agency-flex">
-                <div className="col-md-6 register-agency-input-left">
-                  <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
+                <div className="col-lg-6 register-agency-input-left">
+                  <label className="col-form-label"><Translate id="com.tempedge.msg.label.agencyzipcode">Zip Code</Translate></label>
                   <Field name="agencyzipcode" type="text" placeholder="Enter Zip Code" category="agency" component={InputBox} />
                 </div>
 
-                <div className="col-md-6 register-agency-input-right">
-                  <label className="control-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
+                <div className="col-lg-6 register-agency-input-right">
+                  <label className="col-form-label"><Translate id="com.tempedge.msg.label.state">State</Translate></label>
                   <Field name="agencystate" data={this.state.region_list} valueField="regionId" textField="name" category="agency" component={Dropdown} />
                 </div>
               </div>
@@ -123,11 +123,11 @@ class WizardCreateNewAgencySecondPage extends Component{
           </div>
 
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency">
-              <div className="col-md-4 col-md-offset-2">
+            <div className="row prev-next-btns-agency">
+              <div className="col-lg-4 offset-lg-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
-              <div className="col-md-4">
+              <div className="col-lg-4">
                 <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
               </div>
             </div>

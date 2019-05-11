@@ -282,10 +282,10 @@ class FaceMashMobile extends React.Component {
     return(
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-8 col-md-offset-2">
+          <div className="col-lg-8 offset-lg-2">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height}} className="center-block">
-              <Webcam className="center-block facemash-mobile"
+            <div style={{position: "relative", width: videoConstraints.width, height: videoConstraints.height}} className="mx-auto">
+              <Webcam className="mx-auto facemash-mobile"
                 audio={false}
                 height={359}
                 id="facemash-mobile"
@@ -294,7 +294,7 @@ class FaceMashMobile extends React.Component {
                 width={videoConstraints.width}
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width={videoConstraints.width} height="359" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width={videoConstraints.width} height="359" style={{position: "absolute", top: 0, left:0}}></canvas>
             </div>
             <h3 style={{textAlign: "center"}}>{this.state.waitMsg}</h3>
           </div>

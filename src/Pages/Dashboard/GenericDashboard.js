@@ -34,29 +34,29 @@ class GenericDashboard extends React.Component{
             <div className="main-form-panel-inputs">
               <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-form" style={{paddingBottom: "0px"}}>
                 <div className="form-group main-form-group row">
-                  <div className="col-md-4">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
+                  <div className="col-lg-4">
+                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
                     <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
                   </div>
 
-                  <div className="col-md-4">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
+                  <div className="col-lg-4">
+                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
                     <Field name="initialpassword" type="password" placeholder="Enter password" category="person" component={InputBox} />
                   </div>
 
-                  <div className="col-md-4">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
+                  <div className="col-lg-4">
+                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
                     <Field name="confirmpassword" type="password" placeholder="Confirm password" category="person" component={InputBox} />
                   </div>
                 </div>
               </form>
             </div>
             <div className="panel-footer main-footer panel-footer-agency-height-override">
-              <div className="prev-next-btns-agency">
-                <div className="col-md-4 col-md-offset-2">
+              <div className="row prev-next-btns-agency">
+                <div className="col-lg-4 offset-lg-2">
                   <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                 </div>
-                <div className="col-md-4">
+                <div className="col-lg-4">
                   <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                 </div>
               </div>

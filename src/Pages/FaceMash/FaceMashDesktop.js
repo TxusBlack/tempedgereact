@@ -98,7 +98,7 @@ class FaceMashDesktop extends React.Component {
 
     //New Tile containing currentImage
     let picElement = (
-      <div key={`tile-${picWall.length}`} className="col-md-6 face-tile-container">
+      <div key={`tile-${picWall.length}`} className="col-lg-6 face-tile-container">
         <div className="face-tile">
           <img src={this.state.currentImage} alt="Face Tile" />
         </div>
@@ -147,10 +147,10 @@ class FaceMashDesktop extends React.Component {
     return(
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-5">
+          <div className="col-lg-5">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", height: videoConstraints.height}} className="center-block">
-              <Webcam className="center-block facemash"
+            <div style={{position: "relative", height: videoConstraints.height}} className="video-capture-container">
+              <Webcam className="mx-auto facemash"
                 audio={false}
                 height={`${videoConstraints.height}`}
                 id="facemash"
@@ -159,12 +159,16 @@ class FaceMashDesktop extends React.Component {
                 width="90%"
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0, left: 0}}></canvas>
             </div>
-            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button>
-            {tempEdgeSubmitShow}
+            <div className="video-capture-container">
+              <button className="btn btn-default phone-num-btn-close" onClick={this.capture}>Capture photo</button>
+            </div>
+            <div className="video-capture-container">
+              {tempEdgeSubmitShow}
+            </div>
           </div>
-          <div className="col-md-7">
+          <div className="col-lg-7">
             <div style={{padding:40, minHeight:'calc(100vh - 130px)'}}>
               <div className="row">
                 {this.state.picWall}

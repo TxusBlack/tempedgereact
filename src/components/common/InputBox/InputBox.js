@@ -6,6 +6,7 @@ let renderInput = (formProps) => {
   let input = null;
 
   console.log("formProps: ", formProps);
+  console.log("errorClass: ",errorClass);
 
   if(formProps.type === "textarea")
     input = <input className="form-control tempEdge-input-box" type="textarea" rows="2" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />

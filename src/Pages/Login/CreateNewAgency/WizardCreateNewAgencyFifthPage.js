@@ -85,8 +85,8 @@ class WizardCreateNewAgencyFifthPage extends Component{
       <div key={index} className="row">
         <Field name={`${salesPerson}.salespersonfirstname`} type="text" placeholder="First Name" index={index} label={recruitment_office[0]} fields={formProps.fields} component={this.renderInput} />
         <Field name={`${salesPerson}.salespersonlastname`} type="text" placeholder="Last Name" index={index} label={recruitment_office[1]} fields={formProps.fields} component={this.renderInput} />
-        <div className="col-md-2">
-          <label className="control-label">{recruitment_office[2]}</label>
+        <div className="col-lg-2">
+          <label className="col-form-label">{recruitment_office[2]}</label>
           <div className="gender-radio-group">
             <label style={{paddingRight: 7}}><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="male" fields={formProps.fields} component="input" /><span className="radio-label" style={{fontWeight: "normal"}}>{recruitment_office[3]}</span></label>
             <label><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="female" fields={formProps.fields} component="input" /><span className="radio-label" style={{fontWeight: "normal"}}>{recruitment_office[4]}</span></label>
@@ -102,7 +102,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
           { block }
           <div>
             <div className="row">
-              <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
+              <span className="ml-auto add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
             </div>
           </div>
         </div>
@@ -111,17 +111,17 @@ class WizardCreateNewAgencyFifthPage extends Component{
   }
 
   renderInput = (formProps) => {
-    let colClass = (formProps.input.name === "agencyname")? "col-md-12": "col-md-3";
-    colClass = (formProps.label === "Phone" || formProps.label === "Telefono")? "col-md-4": colClass;
+    let colClass = (formProps.input.name === "agencyname")? "col-lg-12": "col-lg-3";
+    colClass = (formProps.label === "Phone" || formProps.label === "Telefono")? "col-lg-4": colClass;
     let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
     let inputClass = ((formProps.label === "Phone" || formProps.label === "Telefono"))? "form-control tempEdge-input-box agency-phone-delete": "form-control tempEdge-input-box";
 
     return(
       <div className={colClass}>
-        <label className="control-label">{formProps.label}</label>
+        <label className="col-form-label">{formProps.label}</label>
         { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span>: '' }
         <div className={errorClass}>
-          <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
+          <input className={inputClass} type={formProps.type} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
         </div>
       </div>
@@ -136,12 +136,12 @@ class WizardCreateNewAgencyFifthPage extends Component{
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration">New Agency Registration</Translate></h2>
         <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
           <div className="form-group row row-agency-name">
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <div className="row">
-                <div className="col-md-2">
-                  <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
+                <div className="col-lg-2">
+                  <label className="col-form-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname">Agency</Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-lg-8" style={{paddingLeft: 0, paddingRight: 71}}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
                 </div>
               </div>
@@ -155,7 +155,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
           <div className="register-form-panel-inputs">
             <div className="form-group register-form wizard-register-agency-form row">
               <div className="register-agency-flex">
-                <div className="col-md-12">
+                <div className="col-lg-12">
                   <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficesalespersongenre">FirstName LastName Gender Male Female Phone</Translate></span>
                   <FieldArray name="recruitmentofficesalespersons" type="text" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
                 </div>
@@ -164,11 +164,11 @@ class WizardCreateNewAgencyFifthPage extends Component{
           </div>
 
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency">
-              <div className="col-md-4 col-md-offset-2">
+            <div className="row prev-next-btns-agency">
+              <div className="col-lg-4 offset-lg-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
-              <div className="col-md-4">
+              <div className="col-lg-4">
                 <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
               </div>
             </div>

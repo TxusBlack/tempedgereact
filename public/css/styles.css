@@ -17,16 +17,50 @@ body {
   min-height: 100%;
   font-family: Roboto;
   background-color: #e9e9e9;
+  font-size: 14px;
+}
+
+.h2, h2 {
+  font-size: 3rem;
+}
+
+.h3, h3{
+  font-size: 2.4rem
+}
+
+::-webkit-input-placeholder {
+   font-size: 14px;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  font-size: 14px;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  font-size: 14px;
+}
+
+input[type="text"], input[type="textarea"], input[type="email"], input[type="password"]
+{
+    font-size:14px;
+}
+
+.video-capture-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .contents{
   min-height: calc(100vh - 4.8rem);
 }
 
-.form-horizontal .control-label{
+.form-horizontal .col-form-label{
   display: flex;
   padding-top: 6px;
   padding-bottom: 6px;
+  margin-bottom: 0;
+  font-weight: 700;
 }
 
 .captcha-container{
@@ -113,6 +147,12 @@ body {
   margin-bottom: 2.5rem;
 }
 
+.has-error .form-control{
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+
 .has-error p{
   margin: 0;
 }
@@ -141,24 +181,19 @@ body {
   display: block;
 }
 
-/* NavBar */
-.flag{
-  height: 2.7rem;
-  width: 2.75rem;
-}
-
-.flag:hover{
-  cursor: pointer;
-}
-
-.sign-in p{
-  padding: 2.3rem 0 !important;
-  margin: 0;
-}
-
-.menu-ul, .language span {
-  padding: 4.2rem 0 3.5rem 0;
+.modal-title{
   font-size: 2rem;
+}
+
+/* NavBar */
+.menu-ul{
+  padding-left: 2.5rem !important;
+}
+
+.menu-ul li a , .language span{
+  padding: 4.2rem 0 3.5rem 0;
+  margin: 0 4rem 0 0;
+  font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
@@ -174,6 +209,7 @@ body {
 
 .menu-ul li.active a{
   background: transparent !important;
+  text-decoration: none;
 }
 
 .menu ul li.active a{
@@ -184,10 +220,10 @@ body {
   position: absolute;
   content: "";
   height: 0.3rem;
-  width:calc(100% - 3rem);
+  width: 100%;
   background-color: #1273c7;
   top: 75%;
-  left: 1.5rem;
+  left: 0;
 }
 
 .menu ul li:hover a{
@@ -198,10 +234,14 @@ body {
   position: absolute;
   content: "";
   height: 0.3rem;
-  width:calc(100% - 3rem);
+  width: 100%;
   background-color: #0c790ac9;
   top: 75%;
-  left: 1.5rem;
+  left: 0;
+}
+
+.menu ul li a:hover{
+  text-decoration: none;
 }
 
 .company-logo{
@@ -244,13 +284,31 @@ body {
   padding: 1rem;
 }
 
+.language span, .language span span{
+  margin-right: 0;
+}
+
+.flag{
+  height: 2.7rem;
+  width: 2.75rem;
+}
+
+.flag:hover{
+  cursor: pointer;
+}
+
+/*******************************/
+
+.sign-in p{
+  padding: 2.3rem 0 !important;
+  margin: 0;
+}
+
 .face-tile-container{
   margin-bottom: 18px;
-  //margin-right: 27px;
 }
 
 .face-tile, .face-tile img{
-  //width: 335px;
   width: 100%;
   min-height: 240px;
   margin: auto;
@@ -312,6 +370,7 @@ body {
   bottom: 0;
   width: 100%;
   min-height: 3rem;
+  border-top: 1px solid rgba(104,104,104, 0.4);
 }
 
 .panel-nav-left .footer p{
@@ -322,7 +381,7 @@ body {
 }
 
 .panel-nav-left .footer p a, .panel-nav-left .footer p a:hover{
-  color: #fff;
+  color: #2d2d2d;
 }
 
 .panel-nav-left.show{
@@ -380,15 +439,12 @@ body {
   letter-spacing: normal;
   text-align: left;
   color: #5abeec;
-  padding: 1.8rem 0 2.6rem 1.1rem;
+  padding: 2.6rem 0;
+  margin-left: -4px;
 }
 
 .panel-user-img-name .col-md-7{
   padding-left: 0;
-}
-
-.panel-user-img-name div{
-  margin-top: -1.4rem;
 }
 
 .usr-img{
@@ -421,6 +477,7 @@ body {
   width: 57.6rem;
   border-radius: 1.6rem !important;
   box-shadow: 0px 0.2rem 0.78rem 0.02rem rgba(104, 104, 104, 0.2);
+  background: #fff;
 }
 
 .panel-heading.login-header{
@@ -471,6 +528,7 @@ body {
   width: 2.1rem;
   height: 2.3rem;
   background-color: #fff;
+  margin-top: 0.5rem;
 }
 
 
@@ -519,6 +577,7 @@ body {
   letter-spacing: 0.03rem;
   text-decoration: underline;
   color: #5abeec;
+  margin-top: 0.5rem;
 }
 
 .no-account-query{
@@ -577,7 +636,7 @@ body {
 }
 
 .page-title-register{
-  padding-top: 0;
+  padding-top: 2.2rem;
 }
 
 .page-subtitle-register {
@@ -612,7 +671,7 @@ body {
 
 .register-save-btn{
   width: 85%;
-  margin: 0 auto 4rem auto;
+  margin: 0 auto 1.5rem auto;
 }
 
 .register-btn{
@@ -694,11 +753,11 @@ body {
   margin-top: 1.6rem;
 }
 
-.control-label.agency-label{
+.col-form-label.agency-label{
   padding-top: 13px;
 }
 
-.form-horizontal .control-label.top-label-agency-form{
+.form-horizontal .col-form-label.top-label-agency-form{
   padding-top: 0.1rem;
 }
 
@@ -725,6 +784,14 @@ body {
   margin-left: 0 !important;
   margin-bottom: 0;
   padding: 0.5rem 2.5rem 1.1rem 2.5rem;
+}
+
+.wizard-register-agency-form div{
+  width: 100%;
+}
+
+.wizard-register-agency-form div .row{
+  margin-left: 0;
 }
 
 .new-agency-captcha{
@@ -845,7 +912,7 @@ form div.list .list-item:last-child button {
   text-align: left;
   color: #3eb7e9;
   margin-bottom: 0;
-  padding-bottom: 0;
+  padding-bottom: 2rem;
 }
 
 .confirmation-page-categories{
@@ -877,9 +944,9 @@ form div.list .list-item:last-child button {
   background-color: #df963d;
   width: 100%;
   min-height: 4.8rem;
-  overflow: hidden;
+  /* overflow: hidden;
   position: fixed;
-  bottom: 0;
+  bottom: 0; */
 }
 
 .footer p{
@@ -974,7 +1041,6 @@ form div.list .list-item:last-child button {
     padding-top: 0;
     margin-top: 1.5rem;
     margin-bottom: 0;
-    font-size: 2.5rem;
   }
 
   .page-title-agency{
@@ -997,11 +1063,11 @@ form div.list .list-item:last-child button {
     padding: 1rem 1.8rem 1rem 1.8rem;
   }
 
-  .form-group.row .control-label{
+  .form-group.row .col-form-label{
     padding-top: 0;
   }
 
-  .form-group.row .control-label.agency-label{
+  .form-group.row .col-form-label.agency-label{
     padding-top: 8px;
   }
 

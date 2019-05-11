@@ -33,11 +33,11 @@ class AdminDashboard extends React.Component{
 
             </div>
             <div className="panel-footer main-footer panel-footer-agency-height-override">
-              <div className="prev-next-btns-agency">
-                <div className="col-md-4 col-md-offset-2">
+              <div className="row prev-next-btns-agency">
+                <div className="col-lg-4 offset-lg-2">
                   <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                 </div>
-                <div className="col-md-4">
+                <div className="col-lg-4">
                   <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                 </div>
               </div>
