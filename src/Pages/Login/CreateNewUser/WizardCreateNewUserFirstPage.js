@@ -92,20 +92,20 @@ class WizardCreateNewUserFirstPage extends Component{
             </div>
 
             <div className="form-group row">
-              <div className="col-md-4">
+              {/*<div className="col-md-4">
                 <label className="col-form-label"><Translate id="com.tempedge.msg.label.gender" /></label>
                   <span style={{display: "none"}} ref="maleOption"><Translate id="com.tempedge.msg.label.gender.male" /></span>
                   <span style={{display: "none"}} ref="femaleOption"><Translate id="com.tempedge.msg.label.gender.female" /></span>
                   <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={Dropdown} />
-              </div>
+              </div>*/}
               <div className="col-md-4">
                 <label className="col-form-label"><Translate id="com.tempedge.msg.label.email" /></label>
                 <Field name="email" type="email" placeholder="Email" category="person" component={InputBox} />
               </div>
-              <div className="col-md-4">
+              {/*<div className="col-md-4">
                 <label className="col-form-label"><Translate id="com.tempedge.msg.label.birthday" /></label>
                 <Field name="birthday" type="text" category="person" component={DateTime} validate={date()} />
-              </div>
+              </div>*/}
             </div>
 
             <div className="form-group row">

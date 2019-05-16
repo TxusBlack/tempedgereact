@@ -24,9 +24,10 @@ class GenericDashboard extends React.Component{
   }
 
   render(){
+    console.log("this.props: ", this.props);
+
     return(
-      <React.Fragment>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-panel" style={{paddingBottom: "0px"}}>
+        <form onClick={this.props.closeNav} className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-panel" style={{paddingBottom: "0px"}}>
           <div className="panel main-form-panel">
             <div className="panel-heading main-header">
               <h2 className="text-center"><Translate id="com.tempedge.msg.label.salesperson">Salesmen</Translate></h2>
@@ -63,7 +64,6 @@ class GenericDashboard extends React.Component{
             </div>
           </div>
         </form>
-      </React.Fragment>
     )
   }
 }

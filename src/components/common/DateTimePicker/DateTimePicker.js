@@ -7,7 +7,7 @@ import ErrorRender from '../ErrorRender/ErrorRender.js';
 let renderDateTimePicker = (formProps) => {
   let errorClass = `tempEdge-dateTimePicker-input-box ${(formProps.meta.error && formProps.meta.touched)? 'has-error-dob': ''}`;
   console.log("formProps: ", formProps);
-  console.log("errorClass: ", errorClass);
+  // console.log("errorClass: ", errorClass);
   return(
     <div className={errorClass}>
       <DateTimePicker onChange={formProps.input.onChange} onBlur={formProps.input.onBlur} format="MM/DD/YYYY" time={formProps.showTime} value={!formProps.input.value ? null : new Date(formProps.input.value)} />

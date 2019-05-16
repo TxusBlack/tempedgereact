@@ -1,4 +1,4 @@
-import { LOGIN } from './types';
+import { LOGIN, SAVE_FORM_POSITION } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -96,4 +96,16 @@ export let getList = (url, actionName) => {
         });
       });
     }
+}
+
+export let storeFormPageNumber = (formName, position) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_FORM_POSITION,
+      payload: {
+        form: formName,
+        pos: position
+      }
+    });
+  }
 }

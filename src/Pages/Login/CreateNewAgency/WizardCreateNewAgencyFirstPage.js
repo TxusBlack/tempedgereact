@@ -124,6 +124,7 @@ class WizardCreateNewAgencyFirstPage extends Component{
             <div className="form-group prev-next-btns">
                 <div className="col-lg-6 offset-lg-3">
                   <button type="submit" className="btn btn-primary btn-block register-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                  {console.log("this.props  --First Page-- : ", this.props)}
                 </div>
                 <div style={{height: "1rem"}}></div>
             </div>

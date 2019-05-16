@@ -167,6 +167,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
             <div className="row prev-next-btns-agency">
               <div className="col-lg-4 offset-lg-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+                {console.log("this.props  --Fifth Page-- : ", this.props)}
               </div>
               <div className="col-lg-4">
                 <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
