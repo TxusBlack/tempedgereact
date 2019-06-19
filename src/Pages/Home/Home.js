@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux';
 import { withLocalize } from 'react-localize-redux';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 class HomePage extends Component{
   constructor(props) {
@@ -43,6 +43,7 @@ class HomePage extends Component{
     let inputFileRoute = `/upload/${this.props.lang}`;
     let protectedRoute = `/protected/${this.props.lang}`;
     let genericDashboard = `/dashboard/${this.props.lang}`;
+    let employee = `/employee/${this.props.lang}`;
 
     return(
       <div className="container-fluid">
@@ -54,6 +55,7 @@ class HomePage extends Component{
         <Link to={snapshotRouteDesktop}>Capture Face Snapshot - Desktop View</Link><br />
         <Link to={inputFileRoute}>Upload File</Link><br />
         <Link to={protectedRoute}>Protected Route</Link><br />
+        <Link to={employee}>Employee</Link><br />
         <Link to={genericDashboard}>Generic Dashboard</Link>
       </div>
     );

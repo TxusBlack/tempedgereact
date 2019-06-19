@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import UserDashboard from '../../../Pages/UserDashboard/UserDashboard.js';
 import AdminDashboard from '../../../Pages/AdminDashboard/AdminDashboard.js';
+import EmployeeList from '../../../Pages/Employee/EmployeeList';
 
 let PrivateRoute = (props) => {
   let { ...rest } = props;

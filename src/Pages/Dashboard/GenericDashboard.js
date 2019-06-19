@@ -1,10 +1,10 @@
-import React from 'react';
-import { Field, FieldArray, reduxForm } from 'redux-form';
-import InputBox from '../../components/common/InputBox/InputBox.js';
-import { connect } from 'react-redux';
-import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
+import React from 'react';
+import { Translate, withLocalize } from 'react-localize-redux';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
+import InputBox from '../../components/common/InputBox/InputBox.js';
 import Validate from '../Validations/Validations';
 
 class GenericDashboard extends React.Component{

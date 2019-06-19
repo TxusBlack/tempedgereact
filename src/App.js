@@ -1,33 +1,31 @@
-import React from 'react';
 import 'babel-polyfill';
-import { Switch, Route } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router'
-import { store, persistor, history } from './store/store';
-import { Provider } from "react-redux";
-import { LocalizeProvider } from 'react-localize-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { initialize } from 'react-localize-redux';
-import { withLocalize, Translate } from 'react-localize-redux';
-import { PersistGate } from 'redux-persist/lib/integration/react';
 import Favicon from 'react-favicon';
-import NavBar from './components/common/NavBar/NavBar';
-import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
-import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
+import { LocalizeProvider, Translate, withLocalize } from 'react-localize-redux';
+import { Provider } from "react-redux";
+import { Route, Switch } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 import Footer from './components/common/Footer/Footer';
-import HomePage from './Pages/Home/Home';
-import Login from './Pages/Login/Login';
-import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
-import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
-import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
-import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
-import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
-import ReCaptcha from "react-google-recaptcha";
+import NavBar from './components/common/NavBar/NavBar';
+import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
+import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
 import Notifications from './components/common/Notifications/Notifications';
-import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
-import Error from './Pages/Error/Error';
+import UploadFile from './components/common/UploadFile/UploadFile';
 import GenericDashboard from './Pages/Dashboard/GenericDashboard';
+import EmployeeList from './Pages/Employee/EmployeeList';
+import Error from './Pages/Error/Error';
+import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
+import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
+import HomePage from './Pages/Home/Home';
+import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
+import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
+import Login from './Pages/Login/Login';
+import { history, persistor, store } from './store/store';
 //import Welcome from './Pages/Welcome/Welcome';
 //import ApproveUser from './Pages/ApproveUser/ApproveUser';
 
@@ -98,6 +96,7 @@ class App extends React.Component{
                   <Route exact path="/pending/user/:lang" component={Error} />
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
+                  <Route exact path="/employee/:lang" component={EmployeeList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" />
