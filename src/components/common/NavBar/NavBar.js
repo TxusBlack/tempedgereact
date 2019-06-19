@@ -38,6 +38,7 @@ class NavBar extends React.Component{
     let hamburgerBtn = "";
 
     if(this.props.pathname.includes("dashboard")){
+      console.log("this.props.pathname: ",this.props.pathname );
       hamburgerBtn = <HamburgerButton toggleNav={this.props.toggleNav} />;
     }
 

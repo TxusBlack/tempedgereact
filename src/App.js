@@ -7,6 +7,9 @@ import { LocalizeProvider, Translate, withLocalize } from 'react-localize-redux'
 import { Provider } from "react-redux";
 import { Route, Switch } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/lib/integration/react';
+import NavBar from './components/common/NavBar/NavBar';
+import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
+import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
 import Footer from './components/common/Footer/Footer';
 import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
@@ -21,6 +24,7 @@ import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import UploadFile from './components/common/UploadFile/UploadFile';
 import GenericDashboard from './Pages/Dashboard/GenericDashboard';
 import EmployeeList from './Pages/Employee/EmployeeList';
+import { history, persistor, store } from './store/store';
 
 window.recaptchaOptions = {
   lang: 'en',
