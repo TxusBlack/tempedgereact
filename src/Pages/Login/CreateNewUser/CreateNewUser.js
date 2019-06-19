@@ -4,7 +4,7 @@ import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset } from 'redux-form';
-import { getList, storeFormPageNumber } from '../../../Redux/actions/tempEdgeActions';
+import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { GET_ROLE_LIST } from '../../../Redux/actions/types.js'
 import httpService from '../../../utils/services/httpService/httpService.js';
 import WizardCreateNewUserFirstPage from './WizardCreateNewUserFirstPage.js';
@@ -25,36 +25,16 @@ class CreateNewUser extends Component {
     };
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.props.getList('/api/role/listAll', GET_ROLE_LIST);
-
-    if(typeof this.props.lastPage !== 'undefined' && this.props.lastPage.pos >= 1){
-      this.setState(() => {
-        return { page: this.props.lastPage.pos}
-      });
-    }
-  }
-
-  componentWillUnmount = () => {
-    this.props.storeFormPageNumber("CreateNewUser", 1);
-    this.props.reset("CreateNewUser");    //Reset form fields all to empty
   }
 
   nextPage(){
-    this.setState({
-      page: this.state.page + 1
-    },() => {
-      this.props.storeFormPageNumber("CreateNewUser", this.state.page);
-    });
+    this.setState({ page: this.state.page + 1 });
   }
 
   previousPage(){
-    this.setState({
-      page: this.state.page - 1
-    },() => {
-      this.props.storeFormPageNumber("CreateNewUser", this.state.page);
-      //Make this.props.invalid = false, force re-check on all fields
-    });
+    this.setState({ page: this.state.page - 1 });
   }
 
   onSubmit = async (formValues) => {
@@ -75,8 +55,6 @@ class CreateNewUser extends Component {
       }
     }
 
-    console.log("response: ", response);
-
     httpService.postCreateNew('/api/user/save', response)
       .then((res) => {
         console.log('response: ', res);
@@ -88,7 +66,6 @@ class CreateNewUser extends Component {
   }
 
   fireNotification = () => {
-    console.log("NOTIFY RAN!");
     let { notify } = this.props;
 
     notify({
@@ -99,6 +76,10 @@ class CreateNewUser extends Component {
       dismissible: true,
       dismissAfter: 3000
     });
+  }
+
+  componentWillUnmount(){
+    this.props.reset("CreateNewUser");    //Reset form fields all to empty
   }
 
   render(){
@@ -121,10 +102,4 @@ CreateNewUser.propTypes = {
   reset: PropTypes.func.isRequired
 }
 
-let mapStateToProps = (state) => {
-  return({
-    lastPage: state.tempEdge[`CreateNewUserWizardFormTracker`],
-  });
-}
-
-export default connect(mapStateToProps, { notify, getList, storeFormPageNumber, reset })(CreateNewUser);
+export default connect(null, { notify, getList, reset })(CreateNewUser);

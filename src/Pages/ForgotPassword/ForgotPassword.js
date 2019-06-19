@@ -12,7 +12,6 @@ class ForgotPassword extends React.Component{
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("ForgotPassword UPDATED!");
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
@@ -76,7 +75,7 @@ class ForgotPassword extends React.Component{
                   <h2 className="text-center"><Translate id="com.tempedge.msg.label.forgotpassword">Forgot Pasword</Translate></h2>
                   <p className="text-center"><Translate id="com.tempedge.msg.label.resetpasswordlink">Password reset link will be sent to your email.</Translate></p>
                   <div className="form-group">
-                    <Field name="forgotpassword" type="email" placeholder="Your email address" component={(formProps) => this.renderInput(formProps)} />
+                    <Field name="forgotpassword" type="email" placeholder="Your email address" component={this.renderInput} />
                   </div>
                   <div className="form-group">
                       <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.send">Send</Translate></button>

@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withLocalize, Translate } from 'react-localize-redux';
+import { withLocalize } from 'react-localize-redux';
 
 class Error extends React.Component{
   render(){
     let errorMessage = "";
     let path = window.location.pathname.split("/");
     let pendingEntity = path[2];
-
-    console.log("path: ", path);
 
     if(this.props.status === "P"){
       errorMessage = `Your application for new ${pendingEntity} creation is pending approval.`;

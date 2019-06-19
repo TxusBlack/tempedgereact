@@ -11,8 +11,6 @@ import Validate from '../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
-import httpService from '../../utils/services/httpService/httpService.js';
-import actions from '../../Redux/actions/tempEdgeActions.js'
 import { doLogin } from '../../Redux/actions/tempEdgeActions';
 
 
@@ -49,8 +47,6 @@ class Login extends Component{
   }
 
   onChange = (recaptchaToken) => {
-    console.log("recaptchaToken: ", recaptchaToken);
-
     this.setState({
       reCaptchaToken: recaptchaToken,
       btnDisabled: false
@@ -78,7 +74,6 @@ class Login extends Component{
   }
 
   fireNotification = () => {
-    console.log("NOTIFY RAN!");
     let { notify } = this.props;
 
     notify({
@@ -107,12 +102,12 @@ class Login extends Component{
                 </div>
                 <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <div className="form-group">
-                      <p className="text-left label-p"><Translate id="com.tempedge.msg.label.username">Username</Translate></p>
+                      <p className="text-left label-p"><Translate id="com.tempedge.msg.label.username"></Translate></p>
                       <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
                     </div>
                     <div className="form-group">
                       <p className="text-left label-p"><Translate id="com.tempedge.msg.label.password">Password</Translate></p>
-                      <Field name="password" type="text" placeholder="Enter password"category="person" component={InputBox} />
+                      <Field name="password" type="password" placeholder="Enter password"category="person" component={InputBox} />
                     </div>
                     <div className="clearfix">
                         <label className="pull-left checkbox-inline label-p">
@@ -126,7 +121,7 @@ class Login extends Component{
                     </div>
                 </form>
                 <div className="captcha-container">
-                  <div className="mx-auto captcha-panel" style={{width: "304px"}}>
+                  <div className="center-block captcha-panel" style={{width: "304px"}}>
                     <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                   </div>
                 </div>
@@ -152,7 +147,6 @@ Login.propTypes = {
 }
                       //Current REDUX state
 let mapStateToProps = (state) => {
-  // console.log("state.form.login: ", state.form.login);
   let rememberUser = null;
 
   if(typeof state.form.login !== "undefined"){

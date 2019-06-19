@@ -1,5 +1,5 @@
 import React from 'react';
-import { withLocalize, Translate } from 'react-localize-redux';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import Footer from '../Footer/Footer';
@@ -34,12 +34,12 @@ class NavPanelLeft extends React.Component{
         <div>
           <div className="row close-btn-row">
             <div className="col-lg-12">
-              <button onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right"><i className="fa fa-close"></i></button>
+              <span onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right">x</span>
             </div>
           </div>
           <div className="row panel-user-img-name">
             <div className="col-lg-5">
-              <img src={user} className="usr-img" alt="user image" />
+              <img src={user} className="usr-img" alt="user" />
             </div>
             <div className="col-lg-7">
               <h4>Joe Schmoe</h4>
@@ -59,7 +59,7 @@ class NavPanelLeft extends React.Component{
             <li><a href="/">Administration</a></li>
           </ul>
         </div>
-        <Footer content={<p><a href="/">Sign Out</a></p>} backgroundColor="#fff" />
+        <Footer textColor="#2d2d2d" background="#fff" content={<p><a href="/">Sign Out</a></p>} />
       </nav>
     );
   }

@@ -9,7 +9,7 @@ let baseUrlTempEdge = `http://localhost:9191`;
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
     httpService.getAuthToken('/oauth/token', data)
-      .then(async(res) => {
+      .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
 
@@ -25,7 +25,6 @@ export let doLogin = (url, data) => {
             access_token: token
           }
         }).then((response) => {
-          console.log("response: ", response);
           dispatch({
             type: LOGIN,
             payload: response.data.result

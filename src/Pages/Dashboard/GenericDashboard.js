@@ -10,7 +10,6 @@ import Validate from '../Validations/Validations';
 class GenericDashboard extends React.Component{
   constructor(props){
     super(props);
-    console.log("props: ", props);
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
@@ -18,52 +17,52 @@ class GenericDashboard extends React.Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.push(`/approveuser/${this.props.activeLanguage.code}`);
+      this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
 
   render(){
-    console.log("this.props: ", this.props);
-
     return(
-        <form onClick={this.props.closeNav} className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-panel" style={{paddingBottom: "0px"}}>
+      <React.Fragment>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-panel" style={{paddingBottom: "0px"}}>
           <div className="panel main-form-panel">
             <div className="panel-heading main-header">
               <h2 className="text-center"><Translate id="com.tempedge.msg.label.salesperson">Salesmen</Translate></h2>
             </div>
             <div className="main-form-panel-inputs">
-              <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-form" style={{paddingBottom: "0px"}}>
+              <div className="panel-body" className="form-horizontal center-block main-form" style={{paddingBottom: "0px"}}>
                 <div className="form-group main-form-group row">
-                  <div className="col-lg-4">
-                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
+                  <div className="col-md-4">
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
                     <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
                   </div>
 
-                  <div className="col-lg-4">
-                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
+                  <div className="col-md-4">
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
                     <Field name="initialpassword" type="password" placeholder="Enter password" category="person" component={InputBox} />
                   </div>
 
-                  <div className="col-lg-4">
-                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
+                  <div className="col-md-4">
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
                     <Field name="confirmpassword" type="password" placeholder="Confirm password" category="person" component={InputBox} />
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
             <div className="panel-footer main-footer panel-footer-agency-height-override">
-              <div className="row prev-next-btns-agency">
-                <div className="col-lg-4 offset-lg-2">
+              <div className="prev-next-btns-agency">
+                <div className="col-md-4 col-md-offset-2">
                   <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                 </div>
-                <div className="col-lg-4">
+                <div className="col-md-4">
                   <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                 </div>
               </div>
             </div>
           </div>
         </form>
+      </React.Fragment>
     )
   }
 }

@@ -14,17 +14,17 @@ class NavBar extends React.Component{
   checkMenuItemActive = (activeMenuItem) => {
     if(typeof this.props.activePage !== 'undefined' || this.props.activePage !== ""){
       if(this.props.activePage === 'auth'){
-        activeMenuItem[0] = 'nav-link active';
-        activeMenuItem[1] = 'nav-link';
-        activeMenuItem[2] = 'nav-link';
+        activeMenuItem[0] = 'active';
+        activeMenuItem[1] = '';
+        activeMenuItem[2] = '';
       }else if(this.props.activePage === 'register'){
-        activeMenuItem[0] = 'nav-link';
-        activeMenuItem[1] = 'nav-link active';
-        activeMenuItem[2] = 'nav-link';
+        activeMenuItem[0] = '';
+        activeMenuItem[1] = 'active';
+        activeMenuItem[2] = '';
       }else if(this.props.activePage === 'registerAgency'){
-        activeMenuItem[0] = 'nav-link';
-        activeMenuItem[1] = 'nav-link';
-        activeMenuItem[2] = 'nav-link active';
+        activeMenuItem[0] = '';
+        activeMenuItem[1] = '';
+        activeMenuItem[2] = 'active';
       }
     }
   }
@@ -34,7 +34,7 @@ class NavBar extends React.Component{
     let loginRoute = `/auth/${activeLanguage.code}`;
     let registerRoute = `/register/${activeLanguage.code}`;
     let registerAgencyRoute = `/registerAgency/${activeLanguage.code}`;
-    let activeMenuItem = ['nav-link active', 'nav-link', 'nav-link'];
+    let activeMenuItem = ['active', '', ''];
     let hamburgerBtn = "";
 
     if(this.props.pathname.includes("dashboard")){
@@ -44,37 +44,53 @@ class NavBar extends React.Component{
     this.checkMenuItemActive(activeMenuItem);
 
     return(
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        {hamburgerBtn}
-        <div className="col-lg-2 col-xs-1 offset-lg-1 logo" style={{display: "flex"}}>
-          <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" /></Link>
-          <div className="align-self-center ml-auto mr-3">
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
-            </button>
+        <nav className="navbar navbar-expand-sm">
+          {hamburgerBtn}
+          <div className="row" style={{pading: 0, margin: 0}}>
+            <div className="col-lg-1"></div>
+            <div className="col-lg-2 col-xs-6 col-sm-6">
+              <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Compnay Logo" /></Link>
+            </div>
+            <div className="col-xs-4 col-sm-4 language-container-xs">
+              <div className="language">
+               <div style={{width: "max-content", margin: "auto"}}>
+                 {languages.map(lang => {
+                   return(
+                     <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? usaFlag: spaFlag} alt="Country Flag" />&nbsp;&nbsp;</span>
+                   );
+                 })}
+               </div>
+              </div>
+            </div>
+            <div className="col-xs-2 col-sm-2 nav-btn-container">
+              <button className="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+                <i className="fa fa-bars" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div className="col-lg-6 col-xs-12 col-sm-12 menu-list">
+              <div className="navbar-collapse collapse" id="navbarsExample03">
+                <ul className="nav navbar-nav menu-ul mr-auto">
+                  <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.sign_in" /></Link></li>
+                  <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser" /></Link></li>
+                  <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency" /></Link></li>
+                </ul>
+              </div>
+            </div>
+            <div className="col-lg-3 language-container-lg">
+              <div className="language">
+               <span><Translate id="com.tempedge.msg.label.language">Language</Translate></span>&nbsp;&nbsp;
+               <span>
+                 {languages.map(lang => {
+                   return(
+                     <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? usaFlag: spaFlag} alt="Country Flag" />&nbsp;&nbsp;</span>
+                   );
+                 })}
+               </span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <div className="col-lg-8">
-            <ul className="navbar-nav menu-ul">
-              <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.sign_in" /></Link></li>
-              <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser" /></Link></li>
-              <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency" /></Link></li>
-            </ul>
-          </div>
-          <div className="col-lg-2 language">
-            <span className="float-left" style={{paddingLeft: "3.5rem"}}><Translate id="com.tempedge.msg.label.language">Language</Translate>&nbsp;&nbsp;</span>
-            <span className="float-right">
-              {languages.map(lang => {
-                return(
-                  <span key={ lang.code } onClick={() => this.changeActiveLang(lang.code)}><img className="flag" src={(lang.code === 'en')? usaFlag: spaFlag} alt="Country Flag" />&nbsp;&nbsp;</span>
-                );
-              })}
-            </span>
-          </div>
-        </div>
-      </nav>
-    );
+        </nav>
+    )
   }
 }
 

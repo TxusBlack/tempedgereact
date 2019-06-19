@@ -38,8 +38,6 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   onChange = (recaptchaToken) => {
-    console.log("recaptchaToken: ", recaptchaToken);
-
     this.setState({
       reCaptchaToken: recaptchaToken,
       btnDisabled: false
@@ -57,10 +55,6 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   render(){
-    // let rolesList = [{ name: "Client", id: 0 }, { name: "Agency", id: 1 }];
-
-    console.log("Second Page");
-
     return(
       <div ref="userConfigContainer">
         <h2 className="text-center page-title-agency" style={{marginBottom: "0.7rem"}}><Translate id="com.tempedge.msg.label.userconfiguration"></Translate></h2>
@@ -75,26 +69,26 @@ class WizardCreateNewUserSecondPage extends Component{
             <div className="form-group register-form wizard-register-agency-form row">
               <div>
                 <div className="row">
-                  <div className="col-lg-12">
-                    <label className="col-form-label top-label-agency-form"><Translate id="com.tempedge.msg.label.role"></Translate></label>
+                  <div className="col-md-12">
+                    <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.role"></Translate></label>
                     <Field name="agencyrole" data={this.props.role_list} valueField="id" textField="name" category="agency" component={Dropdown} />
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-lg-12">
-                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.organization"></Translate></label>
+                  <div className="col-md-12">
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.organization"></Translate></label>
                     <Field name="agencyorganization" type="textarea" placeholder="Enter Organization Name" category="agency" component={InputBox} />
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-lg-12">
-                    <label className="col-form-label"><Translate id="com.tempedge.msg.label.client"></Translate></label>
+                  <div className="col-md-12">
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.client"></Translate></label>
                     <Field name="agencyclient" type="textarea" placeholder="Enter Client" category="agency" component={InputBox} />
                   </div>
                 </div>
                 <div className="row">
                   <div className="captcha-container" style={{marginTop:40}}>
-                    <div className="mx-auto captcha-panel" style={{width: "304px"}}>
+                    <div className="center-block captcha-panel" style={{width: "304px"}}>
                       <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                     </div>
                   </div>
@@ -103,11 +97,11 @@ class WizardCreateNewUserSecondPage extends Component{
             </div>
           </div>
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="row prev-next-btns-agency">
-              <div className="col-lg-4 offset-lg-2">
+            <div className="prev-next-btns-agency">
+              <div className="col-md-4 col-md-offset-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
-              <div className="col-lg-4">
+              <div className="col-md-4">
                 <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.submit"></Translate></button>
               </div>
             </div>

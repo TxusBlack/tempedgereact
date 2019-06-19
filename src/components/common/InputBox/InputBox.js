@@ -5,9 +5,6 @@ let renderInput = (formProps) => {
   let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
   let input = null;
 
-  // console.log("formProps: ", formProps);
-  // console.log("errorClass: ",errorClass);
-
   if(formProps.type === "textarea")
     input = <input className="form-control tempEdge-input-box" type="textarea" rows="2" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
   else if(formProps.type === "password"){

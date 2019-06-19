@@ -19,7 +19,8 @@ let JSOGTransform = createTransform(
 
 let saveSubsetBlacklistFilter = createBlacklistFilter(
   'form',
-  ['login']
+  ['login'],
+  ['CreateNewAgency', 'CreateNewUser', 'CreateNewClient']
 );
 
 let config = {

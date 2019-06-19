@@ -61,8 +61,6 @@ class UploadFile extends React.Component{
       this.setState(() => ({
         workSheet: data
       }));
-
-      console.log("Data>>> ",data);
     };
   }
 

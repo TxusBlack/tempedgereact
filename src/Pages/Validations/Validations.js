@@ -98,7 +98,7 @@ let validate = (formValues) => {
     let agencyphonenumbersArrayErrors = [];
     formValues.agencyphonenumbers.forEach((agency, index) => {
       let agencyphonenumbersErrors = {};
-      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
+      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
 
       if (!agency || !regX.test(agency.phonenumber)) {
         agencyphonenumbersErrors.phonenumber = 'Please enter a phone number.';
@@ -117,7 +117,7 @@ let validate = (formValues) => {
 
     formValues.recruitmentofficephonenumbers.forEach((recruitmentoffice, index) => {
       let recruitmentofficephonenumbersErrors = {};
-      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
+      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
 
       if(!recruitmentoffice.officeName){
         recruitmentofficephonenumbersErrors.officeName = 'Name is required.';
@@ -154,7 +154,7 @@ let validate = (formValues) => {
 
     formValues.recruitmentofficesalespersons.forEach((salesperson, index) => {
       let recruitmentofficesalespersonsErrors = {};
-      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g);
+      let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
 
       if (!regX.test(salesperson.salespersonphonenumber)){
         recruitmentofficesalespersonsErrors.salespersonphonenumber = 'Phone number is required.';
@@ -194,6 +194,78 @@ let validate = (formValues) => {
 
   if(!formValues.fundingCompanydropdown){
     errors.fundingCompanydropdown = "Please select a funding company."
+  }
+
+  if(!formValues.company){
+    errors.company = 'Company is required.';
+  }
+
+  if(!formValues.salesman){
+    errors.salesman = 'Salesman is required.';
+  }
+
+  if(!formValues.payrollCycle){
+    errors.payrollCycle = 'Payroll Cycle is required.';
+  }
+
+  if(!formValues.workCompCode){
+    errors.workCompCode = 'Work compensation code is required.';
+  }
+
+  if(!formValues.workCompRate){
+    errors.workCompRate = 'Work compensation rate is required.';
+  }
+
+  if(!formValues.companyInitials){
+    errors.companyInitials = 'Company initials required.';
+  }
+
+  if(!formValues.attnTo){
+    errors.attnTo = 'Attn to required.';
+  }
+
+  if(!formValues.markup){
+    errors.markup = 'Markup is required.';
+  }
+
+  if(!formValues.otMarkup){
+    errors.otMarkup = 'Markup is required.';
+  }
+
+  if(!formValues.clientcountry){
+    errors.clientcountry = 'Country is required.';
+  }
+
+  if(!formValues.clientstate){
+    errors.clientstate = 'State is required.';
+  }
+
+  if(!formValues.clientaddress){
+    errors.clientaddress = 'Address is required.';
+  }
+
+  if(!formValues.clientcity){
+    errors.clientcity = "City is required.";
+  }
+
+  if(!formValues.clientzipcode){
+    errors.clientzipcode = "Zip code is required.";
+  }
+
+  if(!formValues.clientlastName){
+    errors.clientlastName = "Last name required.";
+  }
+
+  if(!formValues.clientfirstName){
+    errors.clientfirstName = "First name required.";
+  }
+
+  if(!formValues.clientcontactphone){
+    errors.clientcontactphone = "Contact phone number required.";
+  }
+
+  if(!formValues.clientcontactcellphone){
+    errors.clientcontactcellphone = "Contact cell phone number required.";
   }
 
   return errors;
