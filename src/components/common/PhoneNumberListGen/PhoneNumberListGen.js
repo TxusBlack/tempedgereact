@@ -17,18 +17,18 @@ let renderPhoneNumberInputs = (formProps) => {
       {formProps.fields.map((phoneOwner, index) => {
         return(
           <div key={index} className="list-item row">
-            <div className="col-lg-4">
-              <label className="col-form-label">{formProps.label.substring(0, formProps.label.indexOf(":"))}</label>
+            <div className="col-md-4">
+              <label className="control-label">{formProps.label.substring(0, formProps.label.indexOf(":"))}</label>
               <Field name={`${phoneOwner}.phonenumber`} type="text" index={index} placeholder="xxx-xxx-xxxx" component={InputBox} />
             </div>
 
-            <div className="col-lg-4">
-              <label className="col-form-label">{formProps.label.substring(formProps.label.indexOf(":")+2, formProps.label.lastIndexOf(":"))}</label>
+            <div className="col-md-4">
+              <label className="control-label">{formProps.label.substring(formProps.label.indexOf(":")+2, formProps.label.lastIndexOf(":"))}</label>
               <Field name={`${phoneOwner}.phoneext`} type="text" index={index} placeholder="xxxx" component={InputBox} />
             </div>
 
-            <div className="col-lg-4 agency-phone-type">
-              { <span className="float-right" title="Remove Phone" onClick={() => formProps.fields.remove(index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> }
+            <div className="col-md-4 agency-phone-type">
+              { <span className="pull-right" title="Remove Phone" onClick={() => formProps.fields.remove(index)}><img className="delete-icon-phones" src={deleteIcon} alt="deleteIcon" /></span> }
             </div>
           </div>
         );
@@ -37,7 +37,7 @@ let renderPhoneNumberInputs = (formProps) => {
 
       <div className="list-item">
         <div className="row">
-          <span className="ml-auto add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
+          <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset } from 'redux-form';
 import httpService from '../../../utils/services/httpService/httpService.js';
-import { getList, storeFormPageNumber } from '../../../Redux/actions/tempEdgeActions';
+import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
 import WizardCreateNewAgencyrFirstPage  from './WizardCreateNewAgencyFirstPage.js';
 import WizardCreateNewAgencySecondPage  from './WizardCreateNewAgencySecondPage.js';
@@ -14,7 +14,6 @@ import WizardCreateNewAgencyFourthPage  from './WizardCreateNewAgencyFourthPage'
 import WizardCreateNewAgencyFifthPage   from './WizardCreateNewAgencyFifthPage';
 import WizardCreateNewAgencySixthPage   from './WizardCreateNewAgencySixthPage';
 import WizardCreateNewAgencySeventhPage from './WizardCreateNewAgencySeventhPage';
-//import countryList from '../../../country-region-data/data';
 
 class CreateNewAgency extends Component {
   constructor(props) {
@@ -36,37 +35,17 @@ class CreateNewAgency extends Component {
     };
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
     this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
-
-    if(typeof this.props.lastPage !== 'undefined' && this.props.lastPage.pos >= 1){
-      this.setState(() => {
-        return { page: this.props.lastPage.pos}
-      });
-    }
-  }
-
-  componentWillUnmount = () => {
-    this.props.storeFormPageNumber("CreateNewAgency", 1);
-    this.props.reset("CreateNewAgency");    //Reset form fields all to empty
   }
 
   nextPage(){
-    this.setState({
-      page: this.state.page + 1
-    },() => {
-      this.props.storeFormPageNumber("CreateNewAgency", this.state.page);
-    });
+    this.setState({ page: this.state.page + 1 });
   }
 
   previousPage(){
-    this.setState({
-      page: this.state.page - 1
-    },() => {
-      this.props.storeFormPageNumber("CreateNewAgency", this.state.page);
-      //Make this.props.invalid = false, force re-check on all fields
-    });
+    this.setState({ page: this.state.page - 1 });
   }
 
   onSubmit = async (formValues) => {
@@ -123,9 +102,6 @@ class CreateNewAgency extends Component {
         "phoneList" : phoneList
     }
 
-    console.log("formValues: ", formValues);
-    console.log("payload: ", response);
-
     httpService.postCreateNew('/api/agency/save', response)
       .then((res) => {
         console.log('response: ', res);
@@ -137,7 +113,6 @@ class CreateNewAgency extends Component {
   }
 
   fireNotification = () => {
-    console.log("NOTIFY RAN!");
     let { notify } = this.props;
 
     notify({
@@ -150,10 +125,13 @@ class CreateNewAgency extends Component {
     });
   }
 
+  componentWillUnmount(){
+    this.props.reset("CreateNewAgency");    //Reset form fields all to empty
+  }
+
   render(){
     let { page, steps } = this.state;
 
-    console.log("Page --render-- :", page);
     return(
       <div className="wizard-create-agency">
         <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
@@ -173,14 +151,7 @@ class CreateNewAgency extends Component {
 
 CreateNewAgency.propTypes = {
   getList: PropTypes.func.isRequired,
-  reset: PropTypes.func.isRequired,
-  storeFormPageNumber: PropTypes.func.isRequired
+  reset: PropTypes.func.isRequired
 }
 
-let mapStateToProps = (state) => {
-  return({
-    lastPage: state.tempEdge[`CreateNewAgencyWizardFormTracker`],
-  });
-}
-
-export default connect(mapStateToProps, { notify, getList, storeFormPageNumber, reset  })(CreateNewAgency);
+export default connect(null, { notify, getList, reset  })(CreateNewAgency);

@@ -1,17 +1,13 @@
 import React from "react";
-import ReactDOM from 'react-dom';
 import Webcam from "react-webcam";
 import { connect } from 'react-redux';
-import { withLocalize, Translate } from 'react-localize-redux';
+import { withLocalize } from 'react-localize-redux';
 import { push } from 'connected-react-router';
-import Tracker from './assets/tracking';
-import ModalConfirm from '../../Modals/FaceMashConfirm/Modal';
-import ModalFail from '../../Modals/FaceMashFail/Modal';
-import PicModal from '../../Modals/PicModal/Modal';
+//import Tracker from './assets/tracking';    //Necessary!, DO NOT REMOVE or it will crash
+import Modal from '../../Modals/Modal/Modal';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import httpService from '../../utils/services/httpService/httpService.js';
 import { notify } from 'reapop';
-import JSOG from 'jsog';
 
 let canvas_width = 461;
 let canvas_height: 343;
@@ -36,10 +32,10 @@ class FaceMashDesktop extends React.Component {
   componentDidMount(){
     let canvas = document.getElementById('canvas');
     let context = canvas.getContext('2d');
-    let tracker = new window.tracking.ObjectTracker("face");      //Tracker, canvas and context are needed to turn off the camera on componentUnmount
+    //let tracker = new window.tracking.ObjectTracker("face");      //Tracker, canvas and context are needed to turn off the camera on componentUnmount
 
     this.setState({
-      trackerTask: window.tracking.track('.facemash', tracker, { camera: true })
+      //trackerTask: window.tracking.track('.facemash', tracker, { camera: true })
     });
   }
 
@@ -53,7 +49,7 @@ class FaceMashDesktop extends React.Component {
   }
 
   componentWillUnmount(){
-    this.state.trackerTask.events_.stopVideoFeed[0]();
+    //this.state.trackerTask.events_.stopVideoFeed[0]();
   }
 
   setRef = webcam => {
@@ -98,7 +94,7 @@ class FaceMashDesktop extends React.Component {
 
     //New Tile containing currentImage
     let picElement = (
-      <div key={`tile-${picWall.length}`} className="col-lg-6 face-tile-container">
+      <div key={`tile-${picWall.length}`} className="col-md-6 face-tile-container">
         <div className="face-tile">
           <img src={this.state.currentImage} alt="Face Tile" />
         </div>
@@ -112,17 +108,23 @@ class FaceMashDesktop extends React.Component {
     });
   }
 
+  //Close Modal
+  onClose = (choice) => {
+    if(choice === "keep"){
+      this.mountPic();    //Mount image to wall and add the images collection
+    }
+
+    this.toggleModalOnOff();   //Close Modal
+  }
+
+
   onSubmit = async (formValues) => {
     let res = await httpService.postImages('/faceRecognition/saveNewSubject', this.state.imgCollection);
-    //let res = await httpService.postImage('/faceRecognition/recognizeFace', this.state.currentImage);
-
-    console.log('response: ', res);
 
     this.fireNotification();
   }
 
   fireNotification = () => {
-    console.log("NOTIFY RAN!");
     let { notify } = this.props;
 
     notify({
@@ -144,13 +146,21 @@ class FaceMashDesktop extends React.Component {
 
     let tempEdgeSubmitShow = (this.state.imgCollection.length < 3)? '': <button className="btn btn-primary phone-num-btn-submit center-block" onClick={this.onSubmit}>Save</button>;
 
+    let modalContent = <img src={this.state.currentImage} style={{width: "100%"}} alt="User Pic" />;
+    let modalBtns = (
+      <React.Fragment>
+        <button type="button" className="btn btn-primary close-btn" data-dismiss="modal" onClick={() => this.onClose("keep")}>Keep</button>
+        <button type="button" className="btn btn-primary close-btn" data-dismiss="modal" onClick={() => this.onClose()}>Discard</button>
+      </React.Fragment>
+    );
+
     return(
       <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-5">
+          <div className="col-md-5">
             <div style={{height:40}}></div>
-            <div style={{position: "relative", height: videoConstraints.height}} className="video-capture-container">
-              <Webcam className="mx-auto facemash"
+            <div style={{position: "relative", height: videoConstraints.height}} className="center-block">
+              <Webcam className="center-block facemash"
                 audio={false}
                 height={`${videoConstraints.height}`}
                 id="facemash"
@@ -159,16 +169,12 @@ class FaceMashDesktop extends React.Component {
                 width="90%"
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0, left: 0}}></canvas>
+              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0}}></canvas>
             </div>
-            <div className="video-capture-container">
-              <button className="btn btn-default phone-num-btn-close" onClick={this.capture}>Capture photo</button>
-            </div>
-            <div className="video-capture-container">
-              {tempEdgeSubmitShow}
-            </div>
+            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button>
+            {tempEdgeSubmitShow}
           </div>
-          <div className="col-lg-7">
+          <div className="col-md-7">
             <div style={{padding:40, minHeight:'calc(100vh - 130px)'}}>
               <div className="row">
                 {this.state.picWall}
@@ -176,7 +182,7 @@ class FaceMashDesktop extends React.Component {
             </div>
           </div>
         </div>
-        <PicModal title="Current Snapshot" open={this.state.showModal} toggleModal={this.toggleModalOnOff} pic={this.state.currentImage} mountPic={this.mountPic} reStartfaceDetectTracker={null} />
+        <Modal title="Current Snapshot" open={this.state.showModal} onClose={this.onClose} content={modalContent} buttons={modalBtns} />
       </div>
     );
   }

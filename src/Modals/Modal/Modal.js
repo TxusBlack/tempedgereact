@@ -2,18 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class Modal extends React.Component{
-  // onClose(){
-  //   this.props.toggleModal();   //Close Modal
-  // }
-
   render(){
     let ModalComponent = this.props.open? (
-      <div onClick={() => this.onClose(this.props.modalType)} className="facemash-modal modal">
+      <div onClick={() => this.props.onClose()} className="facemash-modal modal">
         <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h2 className="modal-title text-center">{this.props.title}</h2>
-              <button type="button" onClick={() => this.props.onClose(this.props.modalType)} className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" onClick={() => this.props.onClose()} className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>

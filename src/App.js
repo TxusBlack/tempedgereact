@@ -6,7 +6,6 @@ import { store, persistor, history } from './store/store';
 import { Provider } from "react-redux";
 import { LocalizeProvider } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { initialize } from 'react-localize-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Favicon from 'react-favicon';
@@ -18,18 +17,15 @@ import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
 import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
+import CreateNewClient from './Pages/Client/CreateNewClient/CreateNewClient';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
-import FaceMashMobile from './Pages/FaceMash/FaceMashMobile';
 import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
-import ReCaptcha from "react-google-recaptcha";
 import Notifications from './components/common/Notifications/Notifications';
 import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Error from './Pages/Error/Error';
 import GenericDashboard from './Pages/Dashboard/GenericDashboard';
-//import Welcome from './Pages/Welcome/Welcome';
-//import ApproveUser from './Pages/ApproveUser/ApproveUser';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -38,10 +34,6 @@ window.recaptchaOptions = {
 };
 
 class App extends React.Component{
-  constructor(props){
-    super(props);
-  }
-
   state = { panelNavShow: false }
 
   togglePanelNav = () => {
@@ -71,7 +63,7 @@ class App extends React.Component{
       renderToStaticMarkup: renderToStaticMarkup
     };
 
-    let footerContent= <p> © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights">All rights reserved.</Translate> </p>;
+    let footerContent= <p> © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights"></Translate> </p>;
 
     let backgroundFade = (this.state.panelNavShow)? <BackgroundFade closeNav={this.closeNav} />: null;
 
@@ -91,8 +83,8 @@ class App extends React.Component{
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
+                  <Route exact path="/createClient/:lang" component={CreateNewClient} />
                   <Route exact path="/resetpassword/:lang" component={ForgotPassword} />
-                  <Route exact path="/snapshot-mobile/:lang" component={FaceMashMobile} />
                   <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                   <Route exact path="/upload/:lang" component={UploadFile} />
                   <Route exact path="/pending/user/:lang" component={Error} />
@@ -105,7 +97,7 @@ class App extends React.Component{
                 </Switch>
               </div>
             </ConnectedRouter>
-            <Footer content={footerContent} />
+            <Footer textColor="#fff" background="#df963d" content={footerContent} />
           </LocalizeProvider>
         </PersistGate>
       </Provider>

@@ -13,6 +13,7 @@ let addTranslationsForActiveLanguage = (activeLanguage, addTranslationForLanguag
     case 'es':
       translations = translationsES;
       break;
+    default:
   }
 
   if (!activeLanguage) {
