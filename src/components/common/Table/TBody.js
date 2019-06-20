@@ -35,14 +35,14 @@ class TBody extends Component {
                 {
                     data && data.length>0 ? data.map(row => {
                         return (
-                            <tr>
+                            <tr className='tableRow'>
                                 {columns ? columns.map((col , index) => {
                                     return (
                                         <td className={
-                                            index===0 ? "table-content": 
+                                            index===0 ? "table-content ": 
                                             index===(columns.length-1) ? "table-content" : 
                                             "table-content " + (col.hide !== "undefined" && col.hide != null ? " d-none d-"+col.hide+"-table-cell" : "") 
-                                        }>{row[col.field]} </td> 
+                                        }style={col.maxFieldSize>0 ? {maxWidth: col.maxFieldSize}:{}}>{row[col.field]}  </td> 
                                     )
                                 }) : "NO RECORDS FOUND!"
                                 }

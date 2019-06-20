@@ -31,7 +31,7 @@ class Container extends Component {
                         {this.props.children} 
                     </div>
                     <div className="">
-                        BTNS
+                        {this.props.btns}
                     </div>
                 </div>
 

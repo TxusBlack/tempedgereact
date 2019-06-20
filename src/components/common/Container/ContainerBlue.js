@@ -33,7 +33,7 @@ class ContainerBlue extends Component {
                         {this.props.children}
                     </div>
                     <div className="container-footer-blue">
-                        BTNS
+                        {this.props.btns}
                     </div>
                 </div>
 

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import Container from '../../components/common/Container/Container';
 import ContainerBlue from '../../components/common/Container/ContainerBlue';
+import TPaginator from '../../components/common/Table/TPaginator';
 import { tempedgeAPI } from '../../Redux/actions/tempEdgeActions';
 import Table from '../../components/common/Table/Table.js';
 
@@ -23,7 +24,6 @@ class EmployeeList extends Component {
 
     componentDidMount (){
         this.props.tempedgeAPI('/api/person/list',{orgId : 1},  GET_EMPLOYEE_LIST);
-        this.setState(() => ({data : this.props.employeeList}));
     }
     componentDidUpdate(prevProps, prevState) {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
@@ -34,21 +34,20 @@ class EmployeeList extends Component {
         }
     }
     render() {
-        console.log("props: ", this.props);
-        let data = this.state.data;
+        let data = this.props.employeeList;
 
         return (
             <React.Fragment>
-                <Container title="com.tempedge.msg.lable.employeeList">
+                <Container title="com.tempedge.msg.label.employeeList" btns ={<TPaginator/>}>
                 { data ? 
                     <div >
                         <Table data={data} />
                     </div> :
                     "NO RECORDS FOUND"
                 }
-                    
+
                 </Container>
-                <ContainerBlue title="com.tempedge.msg.lable.employeeList">
+                <ContainerBlue title="com.tempedge.msg.label.employeeList" btns ={<TPaginator/>}>
                  { data ? 
                     <div >
                         <Table data={data} />
