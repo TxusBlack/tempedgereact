@@ -66,7 +66,6 @@ class Login extends Component{
   onSubmit = async (formValues) => {
     let values = formValues;
     values.grant_type = "password";
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 
     await this.props.doLogin('/api/login', values);
 
@@ -156,8 +155,9 @@ let mapStateToProps = (state) => {
     }
   }
 
+  console.log("state.tempEdge.login.portalUserList: ", state.tempEdge.login.portalUserList);
   return({
-    status: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: null,
+    status: (state.tempEdge.login !== "" && state.tempEdge.login.portalUserList.length > 0)? state.tempEdge.login.portalUserList[0].status: null,
     rememberme: rememberUser
   });
 }

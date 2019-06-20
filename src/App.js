@@ -1,15 +1,17 @@
-import 'babel-polyfill';
-import { ConnectedRouter } from 'connected-react-router';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
-import Favicon from 'react-favicon';
-import { LocalizeProvider, Translate, withLocalize } from 'react-localize-redux';
+import 'babel-polyfill';
+import { Switch, Route } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router'
+import { store, persistor, history } from './store/store';
 import { Provider } from "react-redux";
-import { Route, Switch } from 'react-router-dom';
+import { LocalizeProvider } from 'react-localize-redux';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { withLocalize, Translate } from 'react-localize-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
+import Favicon from 'react-favicon';
 import NavBar from './components/common/NavBar/NavBar';
-import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
 import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
+import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
 import Footer from './components/common/Footer/Footer';
 import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
@@ -20,11 +22,11 @@ import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 import FaceMashDesktop from './Pages/FaceMash/FaceMashDesktop';
 import LoadingView from './components/common/LoadingSplashScreen/LoadingSplashScreen';
 import Notifications from './components/common/Notifications/Notifications';
-import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import UploadFile from './components/common/UploadFile/UploadFile';
+import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
+import Error from './Pages/Error/Error';
 import GenericDashboard from './Pages/Dashboard/GenericDashboard';
 import EmployeeList from './Pages/Employee/EmployeeList';
-import { history, persistor, store } from './store/store';
 
 window.recaptchaOptions = {
   lang: 'en',

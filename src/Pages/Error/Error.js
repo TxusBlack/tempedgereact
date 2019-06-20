@@ -14,8 +14,10 @@ class Error extends React.Component{
       errorMessage = `Your application for new ${pendingEntity} creation was denied.`;
     }else if(this.props.status === "ERROR"){
       errorMessage = "There was an error processing your request.";
+    }else if(this.props.status === "U"){
+      errorMessage = "Sorry we cannot not process your transaction, try again later."
     }else{
-      errorMessage = "Unauthorized User";
+      errorMessage = "Unauthorized User.";
     }
 
     return <h2>{errorMessage}</h2>;
@@ -23,8 +25,9 @@ class Error extends React.Component{
 }
 
 let mapStateToProps = (state) => {
+  console.log("state.tempEdge.login: ", state.tempEdge.login);
   return{
-    status: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: "U"
+    status: (state.tempEdge.login !== "" && state.tempEdge.login.portalUserList.length > 0)? state.tempEdge.login.portalUserList[0].status: "U"
   };
 }
 

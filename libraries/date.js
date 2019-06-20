@@ -1,3 +1,7 @@
+/*** MODIFIED VERSION FOR TEMPEDGE 			   ***/
+/*** REPLACE FILE IN:			   			   ***/
+/*** '\node_modules\redux-form-validators\lib' ***/
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

@@ -15,7 +15,7 @@ body {
   margin: 0;
   padding-bottom: 6rem;
   min-height: 100%;
-  font-family: Roboto !important;
+  font-family: Roboto;
   background-color: #e9e9e9;
 }
 
@@ -53,9 +53,8 @@ body {
 .tempEdge-input-box, .rw-widget-container{
   border-radius: 1.6rem !important;
   border: 0.1rem solid #ced4da;
-  min-height: 4rem;
+  min-height: 4.8rem;
   width: -webkit-fill-available;
-  
 }
 
 .tempEdge-dateTimePicker-input-box, .rw-datetime-picker.rw-widget, .rw-widget-picker.rw-widget-container, .tempEdge-dateTimePicker-input-box>div>div>input, .rw-widget-picker.rw-widget-container{
@@ -98,9 +97,7 @@ body {
 }
 
 .page-title{
-  padding-top: 0;
-  margin-top: 1.5rem;
-  margin-bottom: 0;
+  margin-top: 2.3rem;
 }
 
 .page-subtitle{
@@ -113,7 +110,7 @@ body {
   letter-spacing: 0.03rem;
   text-align: center;
   color: #8e8e8e;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .has-error p{
@@ -255,7 +252,7 @@ ul.menu-ul li:hover a:after{
 }
 
 .language span{
-  padding: 3.5rem 0 2.4rem 0;
+  padding: 0;
   font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
@@ -323,6 +320,8 @@ ul.menu-ul li:hover a:after{
   background: rgba(0,0,0,0.3);
   z-index: 99;
 }
+
+/*************************/
 
 /* Left Nav Panel */
 .panel-nav-left{
@@ -525,7 +524,7 @@ ul.menu-ul li:hover a:after{
 .btn-block{
   border-radius: 1.6rem;
   background-image: linear-gradient(54deg, #5abeec, #69c8f4);
-  min-height: 4rem;
+  min-height: 4.8rem;
   margin-top: 4.2rem;
 }
 
@@ -591,38 +590,19 @@ ul.menu-ul li:hover a:after{
   -webkit-box-shadow: none;
   border: none;
   box-shadow: none;
-  padding: 0 2rem;
+  padding: 0 2.7rem;
   margin-bottom: 0;
 }
 
 .register-form-panel-inputs{
   width: 100%;
-  padding: 0 2rem;
+  padding: 0 2.7rem;
 }
 
 .register-form{
   border: dotted 0.1rem #626262;
   border-bottom: none;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-}
-
-.container-form-blue{
-  border: dotted 1px #626262;
-  border-bottom: none;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-}
-.container-footer-blue{
-  border: dotted 1px #626262;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-  border-bottom-right-radius: 1.6rem;
-  border-bottom-left-radius: 1.6rem;
-  min-height: 6.6rem;
-}
-
-.container-form-title{
-  font-size: 1.6rem;
-  font-weight: bold;
-  padding: 1rem 1.8rem 1rem 1.8rem;
+  padding: 3.1rem 2.5rem;
 }
 
 .sign-up-wrapper{
@@ -674,7 +654,7 @@ ul.menu-ul li:hover a:after{
 
 .register-btn{
   width: 50%;
-  margin: 0 auto 1rem auto;
+  margin: 0 auto 4rem auto;
 }
 
 .agency-phone-box{
@@ -696,7 +676,7 @@ ul.menu-ul li:hover a:after{
 }
 
 .prev-next-btns{
-  margin-top: 2rem;
+  margin-top: 3rem;
   margin-bottom: 0;
 }
 
@@ -748,9 +728,7 @@ ul.menu-ul li:hover a:after{
 }
 
 .page-title-agency{
-  padding-top: 0;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.6rem;
 }
 
 .control-label.agency-label{
@@ -1073,15 +1051,62 @@ form div.list .list-item:last-child button {
 
 /***************************/
 
+/** Employee List  **/
+
+.table-header-left{
+  font-size: 1.6rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  border-right: 1px solid #ffff;
+  border-top-left-radius: 1.6rem;
+  background-color: #5abeec;
+  color: #ffffff;
+  padding: 1.5rem 0 !important;
+}
+.table-header-mid{
+  font-size: 1.6rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  border-right: 1px solid #ffff;
+  background-color: #5abeec;
+  color: #ffffff;
+  padding: 1.5rem 0 !important;
+}
+.table-header-right{
+  font-size: 1.6rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  border-color: transparent;
+  border-top-right-radius: 1.6rem;
+  background-color: #5abeec;
+  color: #ffffff;
+  padding: 1.5rem 0 !important;
+}
+.table-content{
+  font-size: 1.4rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  border: solid 1px lightgray;
+  padding: 1rem 1.8rem 1rem 1.8rem !important;
+}
+/**********************/
+
 /* Footer */
 .footer{
   width: 100%;
-  min-height: 2.8rem;
+  min-height: 4.8rem;
+  /* overflow: hidden;
+  position: fixed;
+  bottom: 0; */
 }
 
 .footer p{
-  padding: 0.7rem 0 0 0;
-  font-size: 1rem;
+  padding: 1.2rem 0;
+  font-size: 1.4rem;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
@@ -1102,34 +1127,23 @@ form div.list .list-item:last-child button {
 }
 
 .main-form-panel{
-  padding: 2rem 2rem 2rem 2rem;
-  background: #fff;
-  margin: 2rem auto;
-  max-width: 1500px;
-  align-content: center;
-  border-radius: 16px ;
+  padding: 2rem 2rem 0 2rem !important;
+  background: #e9e9e9;
+  margin-bottom: 0;
 }
 
 .main-form-panel-inputs{
   padding: 0;
+  background: #fff;
 }
 
 .main-form{
   border: none;
-  padding: 1rem 1.8rem 1rem 1.8rem;
 }
 
 .main-form-group{
   margin-bottom: 0;
   padding-bottom: 1.5rem;
-}
-
-.form-group.row .col-form-label{
-  padding-top: 0;
-}
-
-.form-group.row .col-form-label.agency-label{
-  padding-top: 8px;
 }
 
 .panel-footer.main-footer{
@@ -1365,4 +1379,3 @@ form div.list .list-item:last-child button {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
 }
-
