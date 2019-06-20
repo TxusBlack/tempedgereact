@@ -45,6 +45,7 @@ class HomePage extends Component{
     let employee = `/employee/${this.props.lang}`;
     let createNewClient = `/createClient/${this.props.lang}`;
 
+
     return(
       <div className="container-fluid">
         <h4>HOMEPAGE!</h4>

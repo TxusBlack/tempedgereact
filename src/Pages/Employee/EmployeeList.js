@@ -23,7 +23,7 @@ class EmployeeList extends Component {
 
     componentDidMount (){
         this.props.tempedgeAPI('/api/person/list',{orgId : 1},  GET_EMPLOYEE_LIST);
-        this.setState({data : this.props.employeeList});
+        this.setState(() => ({data : this.props.employeeList}));
     }
     componentDidUpdate(prevProps, prevState) {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
