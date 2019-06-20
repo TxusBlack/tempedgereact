@@ -4,6 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 import UserDashboard from '../../../Pages/UserDashboard/UserDashboard.js';
 import AdminDashboard from '../../../Pages/AdminDashboard/AdminDashboard.js';
 import EmployeeList from '../../../Pages/Employee/EmployeeList';
+import AgencyList from '../../../Pages/Agencies/AgencySelect/AgencySelectList';
 
 let PrivateRoute = (props) => {
   let { ...rest } = props;
@@ -13,6 +14,8 @@ let PrivateRoute = (props) => {
   //Conditional rendering based on user role
   if(props.userRoleId === 1){     //If user role is Admin
     RouteComponent = <AdminDashboard />
+  }else if(props.portalUserList.length > 1){
+    RouteComponent = <AgencyList agencies={props.portalUserList} />
   }
 
   return (
@@ -24,7 +27,8 @@ let mapStateToProps = (state) => {
   return{
     UserStatus: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].status: null,
     AgencyStatus: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].organizationEntity.status: null,
-    userRoleId: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].userRoleId: null
+    userRoleId: (state.tempEdge.login !== "")? state.tempEdge.login.portalUserList[0].userRoleId: null,
+    portalUserList: (state.tempEdge.login !== "" && state.tempEdge.login.portalUserList.length > 1)? state.tempEdge.login.portalUserList: []
   };
 }
 

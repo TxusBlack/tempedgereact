@@ -4,7 +4,7 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://96.56.31.162:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
@@ -12,6 +12,8 @@ export let doLogin = (url, data) => {
       .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
+
+        console.log("token: ", res.data.access_token);
 
         sessionStorage.setItem('access_token', token);
         Axios({
@@ -32,25 +34,36 @@ export let doLogin = (url, data) => {
 
           let lang = window.location.pathname;
           lang = lang.split("/");
+          let agencyList = response.data.result.portalUserList;
+          console.log("response: ", response);
+          console.log("response.data.result.portalUserList[0].status: ", (response.data.result.portalUserList > 0)? response.data.result.portalUserList[0].status: "");
 
-          console.log("response.data.result.portalUserList[0].status: ", response.data.result.portalUserList[0].status);
-          if(response.data.result.portalUserList[0].status === "A" && response.data.result.portalUserList[0].organizationEntity.status === "A"){
-            history.push(`/protected/${lang[2]}`);
-          }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "A" && response.data.result.portalUserList[0].userRoleId >= 4){
-            history.push(`/pending/user/${lang[2]}`);
-          }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "P" && response.data.result.portalUserList[0].userRoleId >= 4){
-            history.push(`/pending/agency/${lang[2]}`);
-          }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "A" && response.data.result.portalUserList[0].userRoleId >= 4){
-            history.push(`/denied/user/${lang[2]}`);
-            //history.push(`/register/${lang[2]}`);
-          }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "D" && response.data.result.portalUserList[0].userRoleId >= 4){
-            history.push(`/denied/agency/${lang[2]}`);
-            //history.push(`/registerAgency/${lang[2]}`);
-          }else if(response.data.result.portalUserList[0].status === "ERROR"){
+          if(agencyList.length < 1){
             history.push(`/error/${lang[2]}`);
-          }else{
-            history.push(`/auth/${lang[2]}`);
+          }else if(agencyList.length === 1){
+            sessionStorage.setItem('agency', JSON.stringify(response.data.result.portalUserList[0]));
+
+            if(response.data.result.portalUserList[0].status === "A" && response.data.result.portalUserList[0].organizationEntity.status === "A"){
+              history.push(`/protected/${lang[2]}`);
+            }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "A" /*&& response.data.result.portalUserList[0].userRoleId >= 4*/){
+              history.push(`/pending/user/${lang[2]}`);
+            }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "P"){
+              history.push(`/pending/agency/${lang[2]}`);
+            }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "A"){
+              history.push(`/denied/user/${lang[2]}`);
+              //history.push(`/register/${lang[2]}`);
+            }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "D"){
+              history.push(`/denied/agency/${lang[2]}`);
+              //history.push(`/registerAgency/${lang[2]}`);
+            }else if(response.data.result.portalUserList[0].status === "ERROR"){
+              history.push(`/error/${lang[2]}`);
+            }else{
+              history.push(`/auth/${lang[2]}`);
+            }
+          }else if(agencyList.length > 1){
+            history.push(`/protected/${lang[2]}`);
           }
+
         });
       }).catch((error) => {
         let lang = window.location.pathname;

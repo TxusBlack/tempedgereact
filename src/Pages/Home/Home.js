@@ -43,6 +43,7 @@ class HomePage extends Component{
     let protectedRoute = `/protected/${this.props.lang}`;
     let genericDashboard = `/dashboard/${this.props.lang}`;
     let employee = `/employee/${this.props.lang}`;
+    let createNewClient = `/createClient/${this.props.lang}`;
 
     return(
       <div className="container-fluid">

@@ -15,42 +15,8 @@ body {
   margin: 0;
   padding-bottom: 6rem;
   min-height: 100%;
-  font-family: Roboto !important;
+  font-family: Roboto;
   background-color: #e9e9e9;
-<<<<<<< HEAD
-}
-
-.h2, h2 {
-  font-size: 3rem;
-}
-
-.h3, h3{
-  font-size: 2.4rem
-}
-
-::-webkit-input-placeholder {
-   font-size: 14px;
-}
-
-:-moz-placeholder { /* Firefox 18- */
-  font-size: 14px;
-}
-
-::-moz-placeholder {  /* Firefox 19+ */
-  font-size: 14px;
-}
-
-input[type="text"], input[type="textarea"], input[type="email"], input[type="password"]
-{
-    font-size:14px;
-}
-
-.video-capture-container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-=======
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
 }
 
 .contents{
@@ -87,9 +53,8 @@ input[type="text"], input[type="textarea"], input[type="email"], input[type="pas
 .tempEdge-input-box, .rw-widget-container{
   border-radius: 1.6rem !important;
   border: 0.1rem solid #ced4da;
-  min-height: 4rem;
+  min-height: 4.8rem;
   width: -webkit-fill-available;
-  
 }
 
 .tempEdge-dateTimePicker-input-box, .rw-datetime-picker.rw-widget, .rw-widget-picker.rw-widget-container, .tempEdge-dateTimePicker-input-box>div>div>input, .rw-widget-picker.rw-widget-container{
@@ -132,9 +97,7 @@ input[type="text"], input[type="textarea"], input[type="email"], input[type="pas
 }
 
 .page-title{
-  padding-top: 0;
-  margin-top: 1.5rem;
-  margin-bottom: 0;
+  margin-top: 2.3rem;
 }
 
 .page-subtitle{
@@ -147,7 +110,7 @@ input[type="text"], input[type="textarea"], input[type="email"], input[type="pas
   letter-spacing: 0.03rem;
   text-align: center;
   color: #8e8e8e;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .has-error p{
@@ -191,15 +154,6 @@ input[type="text"], input[type="textarea"], input[type="email"], input[type="pas
   display: none;
 }
 
-<<<<<<< HEAD
-.menu, .menu-list{
-  padding-left: 0;
-}
-
-.menu-ul li a , .language span{
-  padding: 4.2rem 0 3.5rem 0;
-  margin: 0 4rem 0 0;
-=======
 .language-container-lg{
   display: block;
 }
@@ -227,7 +181,6 @@ ul.menu-ul li{
 }
 
 ul.menu-ul li a{
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
   font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
@@ -239,23 +192,6 @@ ul.menu-ul li a{
   background: transparent !important;
 }
 
-<<<<<<< HEAD
-.menu-ul li{
-  padding: 3.5rem 0 2.4rem 0;
-  font-size: 1.6rem;
-}
-
-.menu-ul li.active a{
-  background: transparent !important;
-  text-decoration: none;
-}
-
-.menu ul li.active a{
-  position: relative;
-}
-
-.menu ul li.active a:after{
-=======
 ul.menu-ul li.active a{
   background: transparent !important;
 }
@@ -265,7 +201,6 @@ ul.menu-ul li.active a{
 }
 
 ul.menu-ul li.active a:after{
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
   position: absolute;
   content: "";
   height: 0.3rem;
@@ -275,55 +210,30 @@ ul.menu-ul li.active a:after{
   left: 1.5rem;
 }
 
-<<<<<<< HEAD
-.menu ul li:hover a{
-  position: relative;
-}
-
-.menu ul li:hover a:after{
-=======
 ul.menu-ul li:hover a{
   position: relative;
 }
 
 ul.menu-ul li:hover a:after{
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
   position: absolute;
   content: "";
   height: 0.3rem;
   width:calc(100% - 3rem);
   background-color: #0c790ac9;
   top: 75%;
-<<<<<<< HEAD
-  left: 0;
-}
-
-.menu ul li a:hover{
-  text-decoration: none;
-=======
   left: 1.5rem;
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
 }
 
 .company-logo{
   height: 6.5rem;
   width: 19rem;
-<<<<<<< HEAD
-  margin: 0.8rem 0 1.6rem 0;
-=======
   margin: 0.6rem 0 1.4rem 0;
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
 }
 
 .navbar{
   background-color: #ffff !important;
-<<<<<<< HEAD
-  box-shadow: 0px 0.2rem 1.1rem 0.1rem rgba(104, 104, 104, 0.4);
-  max-height: 9rem;
-=======
   box-shadow: 0 0.2rem 1.1rem 0.1rem rgba(104, 104, 104, 0.4);
   max-height: 10.8rem;
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
   margin-bottom: 0;
 }
 
@@ -338,15 +248,11 @@ ul.menu-ul li:hover a:after{
 }
 
 .language{
-<<<<<<< HEAD
-  padding: 3.4rem 0 2.8rem 0;
-=======
   padding: 3.5rem 0 2.4rem 0;
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
 }
 
 .language span{
-  padding: 3.5rem 0 2.4rem 0;
+  padding: 0;
   font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
@@ -404,10 +310,6 @@ ul.menu-ul li:hover a:after{
 }
 /***/
 
-<<<<<<< HEAD
-/*************************/
-=======
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
 /* Background Fade */
 .background-fade{
   position: fixed;
@@ -418,6 +320,8 @@ ul.menu-ul li:hover a:after{
   background: rgba(0,0,0,0.3);
   z-index: 99;
 }
+
+/*************************/
 
 /* Left Nav Panel */
 .panel-nav-left{
@@ -620,7 +524,7 @@ ul.menu-ul li:hover a:after{
 .btn-block{
   border-radius: 1.6rem;
   background-image: linear-gradient(54deg, #5abeec, #69c8f4);
-  min-height: 4rem;
+  min-height: 4.8rem;
   margin-top: 4.2rem;
 }
 
@@ -686,38 +590,19 @@ ul.menu-ul li:hover a:after{
   -webkit-box-shadow: none;
   border: none;
   box-shadow: none;
-  padding: 0 2rem;
+  padding: 0 2.7rem;
   margin-bottom: 0;
 }
 
 .register-form-panel-inputs{
   width: 100%;
-  padding: 0 2rem;
+  padding: 0 2.7rem;
 }
 
 .register-form{
   border: dotted 0.1rem #626262;
   border-bottom: none;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-}
-
-.container-form-blue{
-  border: dotted 1px #626262;
-  border-bottom: none;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-}
-.container-footer-blue{
-  border: dotted 1px #626262;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-  border-bottom-right-radius: 1.6rem;
-  border-bottom-left-radius: 1.6rem;
-  min-height: 6.6rem;
-}
-
-.container-form-title{
-  font-size: 1.6rem;
-  font-weight: bold;
-  padding: 1rem 1.8rem 1rem 1.8rem;
+  padding: 3.1rem 2.5rem;
 }
 
 .sign-up-wrapper{
@@ -769,7 +654,7 @@ ul.menu-ul li:hover a:after{
 
 .register-btn{
   width: 50%;
-  margin: 0 auto 1rem auto;
+  margin: 0 auto 4rem auto;
 }
 
 .agency-phone-box{
@@ -791,7 +676,7 @@ ul.menu-ul li:hover a:after{
 }
 
 .prev-next-btns{
-  margin-top: 2rem;
+  margin-top: 3rem;
   margin-bottom: 0;
 }
 
@@ -802,13 +687,8 @@ ul.menu-ul li:hover a:after{
 .panel-footer.register-footer, .panel-footer.main-footer{
   background-color: #fff;
   padding: 0;
-<<<<<<< HEAD
-  margin: auto 2rem 2rem 2rem;
-  border: dotted 1px #626262;
-=======
   margin: auto 2.7rem 2.4rem 2.7rem;
   border: dotted 0.1rem #626262;
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
   border-bottom-right-radius: 1.6rem;
   border-bottom-left-radius: 1.6rem;
   border-top: 0.1rem solid #ced4da;
@@ -848,9 +728,7 @@ ul.menu-ul li:hover a:after{
 }
 
 .page-title-agency{
-  padding-top: 0;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.6rem;
 }
 
 .control-label.agency-label{
@@ -872,19 +750,11 @@ ul.menu-ul li:hover a:after{
   min-height: 20rem;
 }
 
-<<<<<<< HEAD
-.wizard-wrapper, .sign-up-wrapper{
-  width: 1160px;
-  margin-top: 0.7rem;
-  border-radius: 16px;
-  box-shadow: 0px 2px 14.7px 1.3px rgba(104, 104, 104, 0.4);
-=======
 .wizard-wrapper{
   width: 90%;
   margin-top: 2.3rem;
   border-radius: 1.6rem;
   box-shadow: 0 0.2rem 1.47rem 0.13rem rgba(104, 104, 104, 0.4);
->>>>>>> a52528a46a782e0a77c075298748ab5f7b28c575
   background-color: #ffffff;
 }
 
@@ -1181,74 +1051,7 @@ form div.list .list-item:last-child button {
 
 /***************************/
 
-/* Footer */
-.footer{
-  width: 100%;
-  min-height: 2.8rem;
-}
-
-.footer p{
-  padding: 0.7rem 0 0 0;
-  font-size: 1rem;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: center;
-  color: #ffffff;
-}
-/****************************/
-
-/*** DASHBOARD ***/
-.panel-heading.main-header{
-  background: #ffff;
-}
-
-.main-header h2{
-  color: black;
-}
-
-.main-form-panel{
-  padding: 2rem 2rem 2rem 2rem;
-  background: #fff;
-  margin: 2rem auto;
-  max-width: 1500px;
-  align-content: center;
-  border-radius: 16px ;
-}
-
-.main-form-panel-inputs{
-  padding: 0;
-}
-
-.main-form{
-  border: none;
-  padding: 1rem 1.8rem 1rem 1.8rem;
-}
-
-.main-form-group{
-  margin-bottom: 0;
-  padding-bottom: 1.5rem;
-}
-
-.form-group.row .col-form-label{
-  padding-top: 0;
-}
-
-.form-group.row .col-form-label.agency-label{
-  padding-top: 8px;
-}
-
-.panel-footer.main-footer{
-  margin: auto;
-  border: 0.1rem solid #ffff;
-}
-/*****************************/
-.tempEdge-dateTimePicker-input-box, .rw-datetime-picker.rw-widget, .rw-widget-picker.rw-widget-container, .tempEdge-dateTimePicker-input-box>div>div>input, .rw-widget-picker.rw-widget-container{
-  min-height: 3rem;
-}
-
+/** Employee List  **/
 
 .table-header-left{
   font-size: 1.6rem;
@@ -1290,7 +1093,64 @@ form div.list .list-item:last-child button {
   border: solid 1px lightgray;
   padding: 1rem 1.8rem 1rem 1.8rem !important;
 }
+/**********************/
 
+/* Footer */
+.footer{
+  width: 100%;
+  min-height: 4.8rem;
+  /* overflow: hidden;
+  position: fixed;
+  bottom: 0; */
+}
+
+.footer p{
+  padding: 1.2rem 0;
+  font-size: 1.4rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+/****************************/
+
+/*** DASHBOARD ***/
+.panel-heading.main-header{
+  background: #ffff;
+}
+
+.main-header h2{
+  color: black;
+}
+
+.main-form-panel{
+  padding: 2rem 2rem 0 2rem !important;
+  background: #e9e9e9;
+  margin-bottom: 0;
+}
+
+.main-form-panel-inputs{
+  padding: 0;
+  background: #fff;
+}
+
+.main-form{
+  border: none;
+}
+
+.main-form-group{
+  margin-bottom: 0;
+  padding-bottom: 1.5rem;
+}
+
+.panel-footer.main-footer{
+  margin: auto;
+  border: 0.1rem solid #ffff;
+}
+/*****************************/
 @media screen and (max-width: 1201px){
   .hamburger-btn {
     left: 4rem;
@@ -1471,4 +1331,3 @@ form div.list .list-item:last-child button {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
 }
-

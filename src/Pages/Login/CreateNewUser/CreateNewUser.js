@@ -38,6 +38,7 @@ class CreateNewUser extends Component {
   }
 
   onSubmit = async (formValues) => {
+    console.log("userRoleId: ", formValues.agencyrole.roleId);
     let response = {
       "orgId" : 1,
       "IPAddress" : "10.1.1.1",
@@ -45,13 +46,13 @@ class CreateNewUser extends Component {
           "firstName" : formValues.firstName,
           "lastName" : formValues.lastName,
           "username" : formValues.username,
-          "password" : formValues.password,
+          "password" : (formValues.initialpassword === formValues.confirmpassword)? formValues.initialpassword: null,
           "email" : formValues.email
       },
       "portalUserConfEntity" : {
           "clientId" : "",
           "officeId" : 1,
-          "userRoleId" : formValues.agencyrole.id
+          "userRoleId" : formValues.agencyrole.roleId
       }
     }
 

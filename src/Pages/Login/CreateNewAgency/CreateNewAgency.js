@@ -80,7 +80,7 @@ class CreateNewAgency extends Component {
             "firstName" : formValues.firstName,
             "lastName"  : formValues.lastName,
             "username"  : formValues.username,
-            "password"  : formValues.password,
+            "password"  : (formValues.initialpassword === formValues.confirmpassword)? formValues.initialpassword: null,
             "email"     : formValues.email
         },
         "organizationEntity" : {
@@ -101,6 +101,8 @@ class CreateNewAgency extends Component {
         },
         "phoneList" : phoneList
     }
+
+    console.log("resp: ", response);
 
     httpService.postCreateNew('/api/agency/save', response)
       .then((res) => {
