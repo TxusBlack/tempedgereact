@@ -22,7 +22,6 @@ class TBody extends Component {
     }
     componentDidMount() {
         let data = this.props.data;
-        console.log(data);
     }
 
     render() {

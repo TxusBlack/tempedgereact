@@ -23,7 +23,7 @@ class EmployeeList extends Component {
     }
 
     componentDidMount (){
-        this.props.tempedgeAPI('/api/person/list',{orgId : 1},  GET_EMPLOYEE_LIST);
+        this.props.tempedgeAPI('/api/person/list',{orgId : 1, page : 0},  GET_EMPLOYEE_LIST);
     }
     componentDidUpdate(prevProps, prevState) {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
@@ -33,23 +33,26 @@ class EmployeeList extends Component {
             ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
         }
     }
+    changePage = (myPage) =>{
+        this.props.tempedgeAPI('/api/person/list',{orgId : 1, page : myPage},  GET_EMPLOYEE_LIST);
+    }
+
     render() {
         let data = this.props.employeeList;
-
         return (
             <React.Fragment>
-                <Container title="com.tempedge.msg.label.employeeList" btns ={<TPaginator/>}>
+                <Container title="com.tempedge.msg.label.employeeList" btns ={data && data.data ? (<TPaginator rowInfo ={data.data}  changePage={this.changePage} />):""}>
                 { data ? 
-                    <div >
+                    <div className='col-12'>
                         <Table data={data} />
                     </div> :
                     "NO RECORDS FOUND"
                 }
 
                 </Container>
-                <ContainerBlue title="com.tempedge.msg.label.employeeList" btns ={<TPaginator/>}>
+                <ContainerBlue title="com.tempedge.msg.label.employeeList" btns ={data && data.data ? (<TPaginator rowInfo ={data.data} changePage={()=>this.changePage()}/>) :""}>
                  { data ? 
-                    <div >
+                    <div className='col-12'>
                         <Table data={data} />
                     </div> : 
                     "NO RECORDS FOUND"

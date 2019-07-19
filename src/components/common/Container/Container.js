@@ -27,7 +27,7 @@ class Container extends Component {
                     <div className="container-form-title text-center">
                         <Translate id={this.props.title} />
                     </div>
-                    <div className="">
+                    <div className="row container-form">
                         {this.props.children} 
                     </div>
                     <div className="">
