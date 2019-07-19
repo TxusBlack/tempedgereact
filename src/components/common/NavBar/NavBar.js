@@ -46,9 +46,8 @@ class NavBar extends React.Component{
 
     return(
         <nav className="navbar navbar-expand-sm">
-          {hamburgerBtn}
-          <div className="row" style={{pading: 0, margin: 0}}>
-            <div className="col-lg-1"></div>
+          <div className="row" style={{pading: 0, margin: 0, width: "100%"}}>
+            <div className="col-lg-1">{hamburgerBtn}</div>
             <div className="col-lg-2 col-xs-6 col-sm-6">
               <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Compnay Logo" /></Link>
             </div>

@@ -126,7 +126,7 @@ class WizardCreateNewUserFirstPage extends Component{
             </div>
 
             <div className="form-group prev-next-btns">
-                <div className="col-md-6 col-md-offset-3">
+                <div className="col-md-6 offset-md-3">
                   <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next"></Translate></button>
                 </div>
             </div>

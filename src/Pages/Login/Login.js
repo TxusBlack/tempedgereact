@@ -97,7 +97,7 @@ class Login extends Component{
             <div className="login-form">
               <div className="panel panel-default login-form-panel">
                 <div className="panel-heading login-header">
-                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></h2>
+                  <h2 className="text-center"><Translate id="com.tempedge.msg.label.sign_in"></Translate></h2>
                 </div>
                 <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <div className="form-group">
@@ -105,18 +105,18 @@ class Login extends Component{
                       <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
                     </div>
                     <div className="form-group">
-                      <p className="text-left label-p"><Translate id="com.tempedge.msg.label.password">Password</Translate></p>
+                      <p className="text-left label-p"><Translate id="com.tempedge.msg.label.password"></Translate></p>
                       <Field name="password" type="password" placeholder="Enter password"category="person" component={InputBox} />
                     </div>
                     <div className="clearfix">
                         <label className="pull-left checkbox-inline label-p">
                           <Field name="rememberme" id="rememberme" component="input" type="checkbox"/>
-                          <span style={{marginLeft: 4}}><Translate id="com.tempedge.msg.label.remember_me">Remember me</Translate></span>
+                          <span style={{marginLeft: 4}}><Translate id="com.tempedge.msg.label.remember_me"></Translate></span>
                         </label>
-                        <Link to={forgotPasswordRoute} className="pull-right forgot-password"><Translate id="com.tempedge.msg.label.password_retrieve">Forgot Password?</Translate></Link>
+                        <Link to={forgotPasswordRoute} className="pull-right forgot-password"><Translate id="com.tempedge.msg.label.password_retrieve"></Translate></Link>
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.sign_in">Sign In</Translate></button>
+                        <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.sign_in"></Translate></button>
                     </div>
                 </form>
                 <div className="captcha-container">
@@ -125,8 +125,8 @@ class Login extends Component{
                   </div>
                 </div>
                 <div className="panel-footer login-footer">
-                  <span className="text-right no-account-query"><Translate id="com.tempedge.msg.label.no_account">Don't have an account?</Translate></span>
-                  <span className="text-right register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.create_account">Create Account</Translate></Link></span>
+                  <span className="text-right no-account-query"><Translate id="com.tempedge.msg.label.no_account"></Translate></span>
+                  <span className="text-right register-link"><Link className="create-account" to={registerRoute}><Translate id="com.tempedge.msg.label.create_account"></Translate></Link></span>
                 </div>
               </div>
             </div>
