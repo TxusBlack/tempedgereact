@@ -16,6 +16,7 @@ body {
   padding-bottom: 6rem;
   min-height: 100%;
   font-family: Roboto;
+  font-style: normal;
   background-color: #e9e9e9;
 }
 
@@ -26,8 +27,10 @@ body {
 .form-horizontal .control-label{
   display: flex;
   padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
   font-size: 15px;
+  margin-bottom: 0;
+  font-weight: bold;
 }
 
 .captcha-container{
@@ -749,7 +752,7 @@ ul.menu-ul li:hover a:after{
 }
 
 .control-label.agency-label{
-  padding-top: 1.3rem;
+  padding-top: 0.8rem;
 }
 
 .form-horizontal .control-label.top-label-agency-form{
@@ -789,6 +792,8 @@ ul.menu-ul li:hover a:after{
 .new-agency-captcha{
   width: 30.4rem;
   height: 13rem;
+  margin: auto;
+  margin-top: 4rem;
   margin-bottom: 4rem;
 }
 
@@ -839,12 +844,12 @@ form div.list .list-item:last-child button {
 }
 
 .recruiting-office-phone{
-  margin-bottom: 2rem;
-  padding: 0 3rem;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 #recruitingoffice{
-  margin: 1.2rem 0 0 1.2rem;
+  margin: 0.2rem 0 0 1.2rem;
 }
 
 .gender-radio-group{
@@ -853,6 +858,7 @@ form div.list .list-item:last-child button {
 
 .radio-label{
   padding-left: 1rem;
+  font-size: 1.4rem;
 }
 
 .add-fieldArray-btn{
@@ -874,6 +880,10 @@ form div.list .list-item:last-child button {
 
 .delete-icon-phones{
   padding: 3.5rem 0 0 0;
+}
+
+.delete-icon-phones:hover{
+  cursor: pointer;
 }
 
 .delete-icon-show{
@@ -908,7 +918,8 @@ form div.list .list-item:last-child button {
   text-align: left;
   color: #3eb7e9;
   margin-bottom: 0;
-  padding-bottom: 0;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .confirmation-page-categories{
