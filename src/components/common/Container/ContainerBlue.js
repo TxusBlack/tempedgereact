@@ -29,7 +29,7 @@ class ContainerBlue extends Component {
                     <div className="panel-heading register-header text-center">
                         <h2><Translate id={this.props.title} /></h2>
                     </div>
-                    <div className="row container-form-blue">
+                    <div className="container-form-blue">
                         {this.props.children}
                     </div>
                     <div className="container-footer-blue">

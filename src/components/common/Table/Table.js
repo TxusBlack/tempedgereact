@@ -54,7 +54,7 @@ class Table extends Component {
 
           </div>
           <div className='col-sm-12 col-md-3 col-lg-2'>
-            <DropdownButton id="dropdown-basic-button" className=' btn-dept' title='Change list size'>
+            <DropdownButton id="dropdown-basic-button" style={{backgroundColor : 'red'}} title='Change list size'>
               <Dropdown.Item href="#/action-1">30</Dropdown.Item>
               <Dropdown.Item href="#/action-2">50</Dropdown.Item>
               <Dropdown.Item href="#/action-3">100</Dropdown.Item>
