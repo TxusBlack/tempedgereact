@@ -59,22 +59,18 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   render(){
-    let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
-    let payrollCycle = ["1", "2", "3", "4"];
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
-        <div className="row new-client-form">
           <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
-            <div className="col-lg-8 client-col">
-              <div className="create-client">
-                <div className="new-client-header">
-                  <h2>Create Client</h2>
-                </div>
-
-                <div className="new-clients-contents">
-
+            <div className="row new-client-form">
+              <div className="col-lg-8 client-col">
+                <div className="create-client">
+                  <div className="new-client-header">
+                    <h2>Create Client</h2>
+                  </div>
+                  <div className="new-clients-contents">
                     <div className="client-contents">
                       <div className="form-group row">
                         <div className="col-md-4">
@@ -103,11 +99,11 @@ class WizardCreateNewUserSecondPage extends Component{
                       </div>
 
                     <div className="new-clients-footer">
-                      <div className="prev-next-btns-agency">
-                        <div className="col-md-4 col-md-offset-2">
+                      <div className="prev-next-btns-agency row">
+                        <div className="col-md-5 offset-md-1">
                           <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-5">
                           <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                         </div>
                       </div>
@@ -125,12 +121,12 @@ class WizardCreateNewUserSecondPage extends Component{
 
                 <div className="department-list-contents">
                   <div style={{height: "2.9rem"}}></div>
-                  <button className="department-list-button center-block">Add Departments</button>
+                  <p className="department-list-button center-block">Add Departments</p>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     );
   }

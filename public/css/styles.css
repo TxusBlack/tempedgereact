@@ -347,7 +347,7 @@ ul.menu-ul li:hover a:after{
   top: 0;
   left: 0;
   width: 70%;
-  max-width: 25.1rem;
+  max-width: 28.1rem;
   z-index: 200;
   transform: translateX(-100%);  /* The left side is -90% on the x-axis which means it's hidden */
   transition: transform 0.3s ease-out;
@@ -418,7 +418,7 @@ ul.menu-ul li:hover a:after{
 
 .panel-user-img-name{
   border-bottom: 0.1rem solid rgba(104,104,104, 0.4);
-  max-width: 26.7rem;
+  max-width: 29.7rem;
 }
 
 .panel-user-img-name h4{
@@ -452,7 +452,8 @@ ul.menu-ul li:hover a:after{
 }
 
 .panel-nav-left-close-btn{
-  padding: 1.3rem 1rem 2.2rem 1rem;
+  padding: 0 1rem;
+  font-size: 2.4rem;
   font-weight: 500;
 }
 
@@ -862,8 +863,7 @@ form div.list .list-item:last-child button {
 }
 
 .add-fieldArray-btn{
-  margin-top: 12.8rem;
-  margin-bottom: -1.2rem
+  margin-bottom: 2.8rem
 }
 
 .add-fieldArray-btn:hover{
@@ -966,6 +966,7 @@ form div.list .list-item:last-child button {
   letter-spacing: 0.4px;
   color: #2d2d2d;
   margin-bottom: 0;
+  padding: 2rem 0;
 }
 
 .create-client{
@@ -1014,7 +1015,7 @@ form div.list .list-item:last-child button {
 }
 
 .new-clients-footer>div{
-  padding-bottom: 5rem;
+  padding-bottom: 0;
 }
 
 .bottom-row{
@@ -1024,12 +1025,14 @@ form div.list .list-item:last-child button {
 
 .department-list{
   padding: 0 2.2rem 2.5rem 2.2rem;
+  height: 100%;
 }
 
 .department-list-contents{
   border: dotted 1px #B2B2B2;
   border-top: none;
   border-bottom-right-radius: 1.6rem;
+  height: calc(100% - 53.3px);
 }
 
 .department-list-button{
@@ -1048,6 +1051,7 @@ form div.list .list-item:last-child button {
   text-align: center;
   color: #ffffff;
   width: 70%;
+  margin: auto;
   //margin-bottom: 37.6rem;
 }
 

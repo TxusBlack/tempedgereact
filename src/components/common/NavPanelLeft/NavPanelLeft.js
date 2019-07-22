@@ -34,7 +34,7 @@ class NavPanelLeft extends React.Component{
         <div>
           <div className="row close-btn-row">
             <div className="col-lg-12">
-              <span onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right">x</span>
+              <span onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right">&times;</span>
             </div>
           </div>
           <div className="row panel-user-img-name">

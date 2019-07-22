@@ -45,6 +45,9 @@ class HomePage extends Component{
     let employee = `/employee/${this.props.lang}`;
     let createNewClient = `/createClient/${this.props.lang}`;
 
+    console.log("IN HOMEPAGE ROUTE!");
+
+    console.log("location: ", this.props.pathname);
 
     return(
       <div className="container-fluid">
@@ -63,4 +66,10 @@ class HomePage extends Component{
   }
 };
 
-export default withLocalize(connect(null)(HomePage));
+const mapStateToProps = state => ({
+  pathname: state.router.location.pathname,
+  search: state.router.location.search,
+  hash: state.router.location.hash,
+})
+
+export default withLocalize(connect(mapStateToProps)(HomePage));
