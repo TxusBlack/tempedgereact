@@ -9,8 +9,6 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
-import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
-import addIcon from "./assets/plus.png";
 
 class WizardCreateNewUserFirstPage extends Component{
   constructor(props){
@@ -25,6 +23,8 @@ class WizardCreateNewUserFirstPage extends Component{
     this.setState(() => ({
       mounted: true
     }));
+
+    this.props.setDepartmentList(<FieldArray name="clientdepartments" type="text" component={this.props.renderClientDepartments} />);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -62,42 +62,9 @@ class WizardCreateNewUserFirstPage extends Component{
     }
   }
 
-  renderClientDepartments = (formProps) => {
-    let addDepartmentsBtn = (this.props.clientDepartments === undefined)? <p className="department-list-button center-block" onClick={() => formProps.fields.push({})}>Add Departments</p>: "";
-
-    let block = formProps.fields.map((salesPerson, index) => (
-      <div key={index}>
-        <p>
-          <a className="btn btn-primary btn-dept" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>Department {index+1}</a>
-        </p>
-
-          <div className="collapse multi-collapse" id={`departments${index}`}>
-            <div className="card card-body">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-            </div>
-          </div>
-
-      </div>
-    ));
-
-    let deptsList  = (this.props.clientDepartments !== undefined)? block: "";
-    let addDeptBtn = (this.props.clientDepartments !== undefined)? <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>: "";
-
-    return(
-      <React.Fragment>
-        <div>
-          { addDepartmentsBtn }
-          { deptsList }
-          { addDeptBtn }
-        </div>
-      </React.Fragment>
-    );
-  }
-
   render(){
     let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
     let payrollCycle = ["1", "2", "3", "4"];
-    let departments = <FieldArray name="clientdepartments" type="text" component={this.renderClientDepartments} />;
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
@@ -189,8 +156,10 @@ class WizardCreateNewUserFirstPage extends Component{
                   </div>
 
                   <div className="department-list-contents">
-                    <div style={{height: "2.9rem"}}></div>
-                    { departments }
+                    <div>
+                      <div style={{height: 10}}></div>
+                      { this.props.departmentList }
+                    </div>
                   </div>
                 </div>
               </div>

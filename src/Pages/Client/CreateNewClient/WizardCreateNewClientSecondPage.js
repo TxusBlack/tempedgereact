@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
@@ -31,6 +31,8 @@ class WizardCreateNewUserSecondPage extends Component{
       country_list: list,
       mounted: true
     }));
+
+    //this.props.setDepartmentList(<FieldArray name="clientdepartments" type="text" component={this.renderClientDepartments} />);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -87,7 +89,7 @@ class WizardCreateNewUserSecondPage extends Component{
                         </div>
                       </div>
 
-                      <div className="form-group row">
+                      <div className="form-group row bottom-row">
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
                           <Field name="clientstate" data={this.state.region_list} valueField="regionId" textField="name" category="agency" component={Dropdown} />
@@ -120,8 +122,9 @@ class WizardCreateNewUserSecondPage extends Component{
                 </div>
 
                 <div className="department-list-contents">
-                  <div style={{height: "2.9rem"}}></div>
-                  <p className="department-list-button center-block">Add Departments</p>
+                  <div style={{marginTop: "1rem"}}>
+                    { this.props.departmentList }
+                  </div>
                 </div>
               </div>
             </div>

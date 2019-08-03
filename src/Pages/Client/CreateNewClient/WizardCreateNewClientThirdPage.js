@@ -65,7 +65,7 @@ class WizardCreateNewUserThirdPage extends Component{
                       </div>
                     </div>
 
-                    <div className="form-group row">
+                    <div className="form-group row bottom-row">
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.clientcontactcellphone"></Translate></label>
                         <Field name="clientcontactcellphone" type="text" placeholder="Enter Contact Cell Phone" category="client" component={InputBox} />
@@ -92,8 +92,9 @@ class WizardCreateNewUserThirdPage extends Component{
                     <h2>Department List</h2>
                   </div>
                   <div className="department-list-contents">
-                    <div style={{height: "2.9rem"}}></div>
-                    <p className="department-list-button center-block">Add Departments</p>
+                    <div style={{marginTop: "1rem"}}>
+                      { this.props.departmentList }
+                    </div>
                   </div>
                 </div>
               </div>

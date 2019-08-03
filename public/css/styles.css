@@ -1059,6 +1059,15 @@ form div.list .list-item:last-child button {
   cursor: pointer;
 }
 
+.client-dpt-btn-edit-delete{
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.client-dpt-btn-edit-delete:hover{
+  cursor: pointer;
+}
+
 .btn-dept{
   font-family: Roboto;
   font-size: 1.5rem;
@@ -1071,8 +1080,17 @@ form div.list .list-item:last-child button {
   color: #2d2d2d;
   background-color: #e0e0e0;
   border: none;
-  padding: 1.3rem 14.2rem;
+  padding: 1.3rem 0;
   width: 100%;
+}
+
+.up-down-arrow{
+  background: "#e0e0e0";
+  text-decoration: "none";
+}
+
+.up-down-arrow:hover{
+  background: "#d2d2d2";
 }
 
 .btn-dept:hover, .btn-dept:focus, .btn-dept:active, .btn-dept.active.focus, .btn-dept.active:focus, .btn-dept.active:hover, .btn-dept:active.focus, .btn-dept:active:focus, .btn-dept:active:hover, .open>.dropdown-toggle.btn-dept.focus, .open>.dropdown-toggle.btn-dept:focus, .open>.dropdown-toggle.btn-dept:hover{
