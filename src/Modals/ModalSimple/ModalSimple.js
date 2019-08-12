@@ -7,13 +7,11 @@ class ModalSimple extends React.Component{
       <div onClick={() => this.props.onClose()} className="facemash-modal modal">
         <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
-            <div className="modal-header">
+            <div className="modal-body">
               <h2 className="modal-title text-center">{this.props.title}</h2>
               <button type="button" onClick={() => this.props.onClose()} className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
-            <div className="modal-body">
               {this.props.content}
             </div>
           </div>

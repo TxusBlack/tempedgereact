@@ -24,7 +24,7 @@ body {
   min-height: calc(100vh - 4.8rem);
 }
 
-.form-horizontal .control-label{
+.form-horizontal .control-label, .control-label{
   display: flex;
   padding-top: 0.6rem;
   padding-bottom: 0.4rem;
@@ -68,6 +68,21 @@ body {
 
 .tempEdge-dateTimePicker-input-box, .rw-datetime-picker.rw-widget, .rw-widget-picker.rw-widget-container, .tempEdge-dateTimePicker-input-box>div>div>input, .rw-widget-picker.rw-widget-container{
   min-height: 4rem;
+}
+
+.facemash-modal{
+  background: #565656;
+}
+
+.facemash-modal .modal-dialog {
+  max-width: 90%;
+  margin: 1.75rem auto;
+}
+
+.modal-dialog,
+.modal-content {
+    /* 80% of window height */
+    max-height: 98%;
 }
 
 .rw-popup ul li{

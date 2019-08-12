@@ -25,6 +25,7 @@ class WizardCreateNewUserFirstPage extends Component{
     }));
 
     this.props.setDepartmentList(<FieldArray name="clientdepartments" type="text" component={this.props.renderClientDepartments} />);
+    this.props.setPositionList(<FieldArray name="departmentpositions" type="text" component={this.props.renderDepartmentPositions} />);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -158,7 +159,8 @@ class WizardCreateNewUserFirstPage extends Component{
                   <div className="department-list-contents">
                     <div>
                       <div style={{height: 10}}></div>
-                      { this.props.departmentList }
+                      { this.props.renderAddBtn() }
+                      { /*this.props.departmentList*/ }
                     </div>
                   </div>
                 </div>
