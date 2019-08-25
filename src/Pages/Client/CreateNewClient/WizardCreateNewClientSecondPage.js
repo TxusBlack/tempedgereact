@@ -123,7 +123,7 @@ class WizardCreateNewUserSecondPage extends Component{
 
                 <div className="department-list-contents">
                   <div style={{marginTop: "1rem"}}>
-                    { this.props.departmentList }
+                    { this.props.renderAddBtn() }
                   </div>
                 </div>
               </div>

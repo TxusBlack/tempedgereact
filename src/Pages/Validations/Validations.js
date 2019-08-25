@@ -224,12 +224,12 @@ let validate = (formValues) => {
     errors.attnTo = 'Attn to required.';
   }
 
-  if(!formValues.markup){
-    errors.markup = 'Markup is required.';
+  if(!formValues.markupClient){
+    errors.markupClient = 'Markup is required.';
   }
 
-  if(!formValues.otMarkup){
-    errors.otMarkup = 'Markup is required.';
+  if(!formValues.otMarkupClient){
+    errors.otMarkupClient = 'Markup is required.';
   }
 
   if(!formValues.clientcountry){
@@ -266,6 +266,47 @@ let validate = (formValues) => {
 
   if(!formValues.clientcontactcellphone){
     errors.clientcontactcellphone = "Contact cell phone number required.";
+  }
+
+  //Clients Form
+  if(!formValues.position){
+    errors.position = 'Please enter position';
+  }
+
+  if(!formValues.description){
+    errors.description = 'Please enter description';
+  }
+
+  if(!formValues.markup){
+    errors.markup = 'Please enter markup value';
+  }
+
+  if(!formValues.otmarkup){
+    errors.otmarkup = 'Please enter ot markup value';
+  }
+
+  if(!formValues.payRate){
+    errors.payRate = 'Please enter pay rate';
+  }
+
+  if(!formValues.timeIn){
+    errors.timeIn = 'Please enter time in.';
+  }
+
+  if(!formValues.timeOut){
+    errors.timeOut = 'Please enter time out';
+  }
+
+  if(!formValues.employeeContact){
+    errors.employeeContact = 'Please enter employee contact';
+  }
+
+  if(!formValues.contactPhone){
+    errors.contactPhone = 'Please enter contact phone number';
+  }
+
+  if(!formValues.departmentname){
+    errors.departmentname = "Please enter department name"
   }
 
   return errors;

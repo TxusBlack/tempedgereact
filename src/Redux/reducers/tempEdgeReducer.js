@@ -1,9 +1,11 @@
-import { LOGIN, 
-  GET_COUNTRY_REGION_LIST, 
-  GET_FUNDING_LIST, 
-  GET_ROLE_LIST, 
+import { LOGIN,
+  GET_COUNTRY_REGION_LIST,
+  GET_FUNDING_LIST,
+  GET_ROLE_LIST,
   SAVE_FORM_POSITION,
-  GET_EMPLOYEE_LIST
+  GET_EMPLOYEE_LIST,
+  SAVE_POSITIONS_LIST,
+  REMOVE_FROM_POSITIONS_LIST
 } from '../actions/types';
 
 let initialState = {
@@ -43,6 +45,32 @@ export default function(state = initialState, action){
         ...state,
         [formPosition]: action.payload
       }
+    case SAVE_POSITIONS_LIST:
+      let newState =  (typeof state.deptPosList !== "undefined")? state.deptPosList: [];
+
+      newState.push(action.payload);
+
+      return{
+        ...state,
+        deptPosList: newState
+      }
+      case REMOVE_FROM_POSITIONS_LIST:
+        let newPosListState =  state.deptPosList;
+        let index = action.payload;
+
+        if(newPosListState !== undefined){
+          if(newPosListState[index] !== undefined){
+            //console.log("index --REMOVE_FROM_POSITIONS_LIST--: ", index);
+            //console.log("newPosListState[index]: ", newPosListState[index]);
+            newPosListState.splice(index, 1);
+            //console.log("newPosListState --AFTER--: ", newPosListState);
+          }
+        }
+
+        return{
+          ...state,
+          deptPosList: newPosListState
+        }
     default:
       return state;
   }

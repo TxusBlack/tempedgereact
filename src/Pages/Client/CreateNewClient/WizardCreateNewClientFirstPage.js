@@ -23,9 +23,6 @@ class WizardCreateNewUserFirstPage extends Component{
     this.setState(() => ({
       mounted: true
     }));
-
-    this.props.setDepartmentList(<FieldArray name="clientdepartments" type="text" component={this.props.renderClientDepartments} />);
-    this.props.setPositionList(<FieldArray name="departmentpositions" type="text" component={this.props.renderDepartmentPositions} />);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -127,12 +124,12 @@ class WizardCreateNewUserFirstPage extends Component{
 
                         <div className="form-group row bottom-row">
                           <div className="col-md-4">
-                            <label className="control-label"><Translate id="com.tempedge.msg.label.markup"></Translate></label>
-                            <Field name="markup" type="text" placeholder="Enter Markup" category="client" component={InputBox} />
+                            <label className="control-label"><Translate id="com.tempedge.msg.label.markupClient"></Translate></label>
+                            <Field name="markupClient" type="text" placeholder="Enter Markup" category="client" component={InputBox} />
                           </div>
                           <div className="col-md-4">
-                            <label className="control-label"><Translate id="com.tempedge.msg.label.OtMarkup"></Translate></label>
-                            <Field name="otMarkup" type="text" placeholder="Enter OT Markup" category="client" component={InputBox} />
+                            <label className="control-label"><Translate id="com.tempedge.msg.label.otMarkupClient"></Translate></label>
+                            <Field name="otMarkupClient" type="text" placeholder="Enter OT Markup" category="client" component={InputBox} />
                           </div>
                         </div>
                       </div>
@@ -160,7 +157,6 @@ class WizardCreateNewUserFirstPage extends Component{
                     <div>
                       <div style={{height: 10}}></div>
                       { this.props.renderAddBtn() }
-                      { /*this.props.departmentList*/ }
                     </div>
                   </div>
                 </div>
