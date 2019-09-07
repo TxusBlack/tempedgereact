@@ -12,7 +12,6 @@ class Table extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      originalData: [],
       data: [],
       pageSize: [20, 50, 100],
     }
@@ -27,21 +26,11 @@ class Table extends Component {
     }
   }
 
-  componentDidMount() {
-    let columns = this.props.data.columns;
-
-    this.setState({
-      originalData: this.props.data,
-      data: this.props.data.data
-    });
-  }
-
   onChange = (col, field) => {
 
-    let thisData = this.state.originalData.data;
-    this.setState({ data: thisData.filter(ob => ob[col].toString().toLowerCase().includes(field.toString().toLowerCase())) })
+    this.props.applyFilter(col, field);
+    // this.setState({ data: thisData.filter(ob => ob[col].toString().toLowerCase().includes(field.toString().toLowerCase())) })
   }
-
   render() {
     let columns = this.props.data.columns;
     let content = this.props.data ? this.props.data.data : "";
@@ -56,7 +45,7 @@ class Table extends Component {
           <div className='col-sm-12 col-md-3 col-lg-2'>
             <DropdownButton id="dropdown-basic-button" style={{backgroundColor : 'red'}} title='Change list size'>
               <Dropdown.Item href="#/action-1">30</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">50</Dropdown.Item>
+              <Dropdown.Item href="#/action-2">50</Dropdown.Item> 
               <Dropdown.Item href="#/action-3">100</Dropdown.Item>
             </DropdownButton>
           </div>
@@ -68,18 +57,26 @@ class Table extends Component {
           {
             columns ? columns.map((col, index) => {
               return (
+                
                 <th className={
                   index === 0 ? "table-header-left text-center " :
                     index === (columns.length - 1) ? "table-header-right text-center" :
                       "table-header-mid text-center " + (col.hide !== "undefined" && col.hide != null ? "d-none d-" + col.hide + "-table-cell" : "")
                 } style={col.maxFieldSize > 0 ? { minWidth: col.maxFieldSize } : {}}  >{<Translate id={col.label} />}  {
-                    col.filterType === 'filter' ? <input ref={col.field} onChange={() => this.onChange(col.field, this.refs[col.field].value)} /> :
-                      //col.filterType === 'date' ? <Field name={col.field} type="text" category="person" component={DateTime} validate={date()} /> :
-                      col.filterType === 'number' ? <input ref={col.field} onChange={() => this.onChange(col.field, this.refs[col.field].value)} /> :
-                        //col.filterType instanceof Object ? 
-                        //<Field name={col.field} data={col.filterType} valueField="id" textField="name" category="agency" component={Dropdown} /> :
+                    col.selFilterType === 'filter' ? 
+                      <React.Fragment>
+                          <br></br>
+                          <input ref={col.field} onChange={() => this.onChange(col.field, this.refs[col.field].value)} style={col.filterSize >0 ?  {maxWidth : col.filterSize} : {}}/> 
+                      </React.Fragment>
+                        :
+                      //col.selFilterType === 'date' ? <Field name={col.field} type="text" category="person" component={DateTime} validate={date()} /> :
+                    col.selFilterType === 'number' ? <input ref={col.field} onChange={() => this.onChange(col.field, this.refs[col.field].value)} /> :
+                        //col.selFilterType instanceof Object ? 
+                        //<Field name={col.field} data={col.selFilterType} valueField="id" textField="name" category="agency" component={Dropdown} /> :
                         ""
-                  }</th>
+                  }
+                  
+                  </th>
               )
             }) : "NO COLUMNS"
 

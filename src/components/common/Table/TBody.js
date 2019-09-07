@@ -20,14 +20,11 @@ class TBody extends Component {
             ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
         }
     }
-    componentDidMount() {
-        let data = this.props.data;
-    }
+
 
     render() {
         let data = this.props.data;
         let columns = this.props.columns;
-        console.log(columns);
         return (
             <tbody>
 

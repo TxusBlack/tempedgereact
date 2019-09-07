@@ -37,7 +37,7 @@ export default function(state = initialState, action){
     case GET_EMPLOYEE_LIST:
       return{
         ...state,
-        employee_list: action.payload
+        paginatorList: action.payload
       }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;
@@ -49,8 +49,6 @@ export default function(state = initialState, action){
       let newState =  (typeof state.deptPosList !== "undefined")? state.deptPosList: [];
 
       newState.push(action.payload);
-      console.log("newState: ", newState);
-
       return{
         ...state,
         deptPosList: newState
@@ -61,10 +59,7 @@ export default function(state = initialState, action){
 
       if(newPosListState !== undefined){
         if(newPosListState[index] !== undefined){
-            //console.log("index --REMOVE_FROM_POSITIONS_LIST--: ", index);
-            //console.log("newPosListState[index]: ", newPosListState[index]);
             newPosListState.splice(index, 1);
-            console.log("newPosListState --AFTER--: ", newPosListState);
         }
       }
 
