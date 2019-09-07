@@ -34,6 +34,9 @@ class CreateNewClient extends Component {
        {title: ""}
       ],
       departmentList: "",
+      deptsList: "",
+      addDeptBtn: "",
+      renderAddBtnDirty: false,
       positionList: "",
       departmentContent: "",
       deptPosfields: null,
@@ -123,15 +126,12 @@ class CreateNewClient extends Component {
   //   console.log("showModal: ", this.state.showModal);
   // }
 
-  renderClientDepartments = (formProps) => {
-    let addDepartmentsBtn = (this.props.clientDepartments === undefined)? <p className="department-list-button center-block" onClick={() => this.addToDeptList(formProps) }>Add Departments</p>: "";
-
-    if(this.props.clientDepartments !== undefined && formProps.fields.length < 1){
-      formProps.fields.push({});
-    }
-
-    let block = formProps.fields.map((salesPerson, index) => {
-      let key = `department-${index}`;
+  renderClientDepartments_ = async (formProps) => {
+    let addDepartmentsBtn = (this.props.clientDepartments === undefined)? <p className="department-list-button center-block" onClick={() => this.renderDepartmentModal(formProps) }>Add Departments</p>: "";
+    let addDeptBtn = (this.props.clientDepartments !== undefined)? <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>: "";
+    let deptList = this.props.departmentList;
+    let list = await deptList.map((position, index) => {
+      let key = `departments-${index}`;
 
       return(
         <div id={key} key={key}>
@@ -139,7 +139,7 @@ class CreateNewClient extends Component {
             <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>
               <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
             </a>
-            <span>Department {index+1}</span>
+            <span>{this.props.departmentname}</span>
             <span className="pull-right">
               <img src={editIcon} className="client-dpt-btn-edit-delete" style={{display: "inline"}} onClick={() => this.departmentModalEdit(index)} alt="editIcon" />
               <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => formProps.fields.remove(index)} alt="deleteIcon" />
@@ -155,46 +155,61 @@ class CreateNewClient extends Component {
       )
     });
 
-    let deptsList  = (this.props.clientDepartments !== undefined)? block: "";
-    let addDeptBtn = (this.props.clientDepartments !== undefined)? <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>: "";
+    this.setState(() => ({
+      departmentList: list,
+      addDepartmentsBtn: addDepartmentsBtn,
+      addDeptBtn: addDeptBtn
+    }));
+  }
 
-    return(
-      <React.Fragment>
-        <div>
-          { addDepartmentsBtn }
-          { deptsList }
-          { addDeptBtn }
+  renderClientDepartments = (formProps) => {
+    console.log("IM ALIVE!")
+    this.renderDepartmentModal();
+    let block = (
+      <div id={`afsf`} key={`dasdf`}>
+        <div className="btn-dept" style={{marginTop: 0}}>
+          <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${0}`} role="button" aria-expanded="false" aria-controls={`departments${0}`}>
+            <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
+          </a>
+          <span>Department {0+1}</span>
+          <span className="pull-right">
+            <img src={editIcon} className="client-dpt-btn-edit-delete" style={{display: "inline"}} onClick={() => this.departmentModalEdit(0)} alt="editIcon" />
+            <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => {}} alt="deleteIcon" />
+          </span>
         </div>
-      </React.Fragment>
-    );
+
+          <div className="collapse multi-collapse" id={`departments${0}`}>
+            <div className="card card-body">
+              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+            </div>
+          </div>
+      </div>
+    )
+
+    let deptsList  = block;
+    let addDeptBtn = <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => {}}><img src={addIcon} alt="addIcon" /></span>;
+
+    this.setState(() => ({
+      deptsList: deptsList,
+      addDeptBtn: addDeptBtn
+    }));
   }
 
   addToDeptList = (formProps) => {
     formProps.fields.push({});
   }
 
-  increasePosListSize = () => {
-    //this.state.deptPosfields.push({});
-    this.addPos();
-  }
-
-  // removeFromPosList = (formProps, index) => {
-  //   console.log("index --removeFromPosList--: ", index);
-  //   console.log("formProps.fields: ", formProps.fields);
-  //
-  //   formProps.fields.remove(index);
-  //   this.props.removeFromPositionList(index);
-  // }
-
-  renderAddBtn = (formProps) => {
-    let addDtpBtn = <p className="department-list-button center-block" onClick={() => this.renderDepartmentModal(formProps)}>Add Departments</p>;
+  renderAddBtn = () => {
+    let addDtpBtn = <p className="department-list-button center-block" onClick={() => this.renderClientDepartments()}>Add Departments</p>;
 
     return addDtpBtn;
   }
 
   renderDepartmentModal = async () => {
+    console.log("OPEN MODAL!");
     await this.setState(() => ({
-      departmentContent: <Department closePanel={() => this.toggleModalOnOff()} />
+      departmentContent: <Department closePanel={() => this.toggleModalOnOff()} />,
+      renderAddBtnDirty: true
     }));
 
     this.toggleModalOnOff();   //Open Modal
@@ -208,9 +223,9 @@ class CreateNewClient extends Component {
       <div className="wizard-create-agency">
         <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
-          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderClientDepartments={this.renderClientDepartments} renderDepartmentPositions={this.renderDepartmentPositions} departmentList={this.state.departmentList} {...this.props} />}
-          {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn}  departmentList={this.state.departmentList} {...this.props} />}
-          {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} renderAddBtn={this.renderAddBtn}  departmentList={this.state.departmentList} {...this.props} />}
+          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} deptsList={this.state.deptsList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} deptsList={this.state.deptsList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} deptsList={this.state.deptsList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
           { modal }
         </div>
       </div>
@@ -225,21 +240,16 @@ CreateNewClient.propTypes = {
 }
 
 let mapStateToProps = (state) => {
-  let clientdepartments = "";
-  let departmentpositions = "";
+  let departmentname = "";
 
   if(state.form.CreateNewClient !== undefined){
-    clientdepartments = (state.form.CreateNewClient.values !== undefined)? state.form.CreateNewClient.values.clientdepartments: undefined;
-    departmentpositions = (state.form.CreateNewClient.values !== undefined)? state.form.CreateNewClient.values.departmentpositions: undefined;
-  }else{
-    clientdepartments = undefined;
-    departmentpositions = undefined;
+    if(state.form.CreateNewClient.values !== undefined){
+      departmentname = (typeof state.tempEdge.deptPosList!== 'undefined')? state.tempEdge.deptPosList[0].departmentname: "";
+    }
   }
 
-
   return({
-    clientDepartments: clientdepartments,
-    departmentPositions: departmentpositions
+    departmentname: departmentname
   });
 }
 
