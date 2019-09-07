@@ -35,7 +35,7 @@ export default function(state = initialState, action){
     case GET_EMPLOYEE_LIST:
       return{
         ...state,
-        employee_list: action.payload
+        paginatorList: action.payload
       }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;

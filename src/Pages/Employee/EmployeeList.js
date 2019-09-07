@@ -16,6 +16,8 @@ class EmployeeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            tablePage : 0,
+            filterBy : {},
             data : []
         }
         
@@ -23,7 +25,7 @@ class EmployeeList extends Component {
     }
 
     componentDidMount (){
-        this.props.tempedgeAPI('/api/person/list',{orgId : 1, page : 0},  GET_EMPLOYEE_LIST);
+        this.props.tempedgeAPI('/api/person/list',{orgId : 1, filterBy:{}},  GET_EMPLOYEE_LIST);
     }
     componentDidUpdate(prevProps, prevState) {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
@@ -34,26 +36,52 @@ class EmployeeList extends Component {
         }
     }
     changePage = (myPage) =>{
-        this.props.tempedgeAPI('/api/person/list',{orgId : 1, page : myPage},  GET_EMPLOYEE_LIST);
+        console.log(myPage);
+        this.setState({tablePage : myPage});
+        this.props.tempedgeAPI('/api/person/list',{orgId : 1, page : myPage, filterBy: this.state.filterBy},  GET_EMPLOYEE_LIST);
+    }
+    applyFilter = (sortBy, filterValue) =>{
+        let filter = {
+            ...this.state.filterBy,
+            [sortBy] : filterValue
+        }
+        
+        this.setState({sortBy : sortBy, filterBy : filter});
+
+        this.props.tempedgeAPI('/api/person/list',
+            {
+                orgId : 1, 
+                page : this.state.tablePage, 
+                filterBy : filter 
+            },  GET_EMPLOYEE_LIST);
     }
 
     render() {
         let data = this.props.employeeList;
+        console.log(data);
+
         return (
             <React.Fragment>
-                <Container title="com.tempedge.msg.label.employeeList" btns ={data && data.data ? (<TPaginator rowInfo ={data.data}  changePage={this.changePage} />):""}>
+                <Container title="com.tempedge.msg.label.employeeList" 
+                        btns ={data && data.data ? (
+                                <TPaginator changePage={this.changePage} />
+                        ):""}>
                 { data ? 
                     <div className='col-12'>
-                        <Table data={data} />
+                        <Table data={data} applyFilter={this.applyFilter}/>
                     </div> :
                     "NO RECORDS FOUND"
                 }
 
                 </Container>
-                <ContainerBlue title="com.tempedge.msg.label.employeeList" btns ={data && data.data ? (<TPaginator rowInfo ={data.data} changePage={()=>this.changePage()}/>) :""}>
-                 { data ? 
+                <ContainerBlue title="com.tempedge.msg.label.employeeList" 
+                        btns ={data && data.data ? (
+                                <TPaginator changePage={()=>this.changePage()}/>
+                        ) :""}>
+                 
+                { data ? 
                     <div className='col-12'>
-                        <Table data={data} />
+                        <Table data={data} applyFilter={this.applyFilter}/>
                     </div> : 
                     "NO RECORDS FOUND"
                  }
@@ -70,7 +98,7 @@ EmployeeList.propTypes = {     //Typechecking With PropTypes, will run on its ow
    tempedgeAPI: PropTypes.func.isRequired,     //Action, does the Fetch part from the posts API
 }
 let mapStatetoProps = (state) => ({    //rootReducer calls 'postReducer' which returns an object with previous(current) state and new data(items) onto a prop called 'posts' as we specified below
-    employeeList: state.tempEdge.employee_list,    //'posts', new prop in component 'Posts'. 'state.postReducer', the object where our reducer is saved in the redux state, must have same name as the reference
+    employeeList: state.tempEdge.paginatorList,    //'posts', new prop in component 'Posts'. 'state.postReducer', the object where our reducer is saved in the redux state, must have same name as the reference
 
 })
 
