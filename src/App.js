@@ -40,8 +40,6 @@ class App extends React.Component{
   togglePanelNav = () => {
     this.setState(() => {
       return { panelNavShow: !this.state.panelNavShow };
-    }, () => {
-      console.log("panelNavShow: ", this.state.panelNavShow);
     });
   }
 

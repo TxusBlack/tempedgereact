@@ -80,21 +80,21 @@ class WizardCreateNewAgencySecondPage extends Component{
           </div>
           <div className="register-form-panel-inputs">
             <div className="form-group register-form wizard-register-agency-form row">
-              <div className="register-agency-flex">
+              <div className="register-agency-flex col-md-12">
                 <div className="col-md-6 register-agency-input-left">
                   <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country"></Translate></label>
                   <Field name="agencycountry" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
                 </div>
               </div>
 
-              <div className="register-agency-flex">
+              <div className="register-agency-flex col-md-12">
                 <div className="col-md-12">
                   <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
                   <Field name="agencyaddress" type="textarea" placeholder="Enter Address" category="agency" component={InputBox} />
                 </div>
               </div>
 
-              <div className="register-agency-flex">
+              <div className="register-agency-flex col-md-12">
                 <div className="col-md-6 register-agency-input-left">
                   <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress2"></Translate></label>
                   <Field name="agencyappartment" type="text" placeholder="Enter Apartment" category="agency" component={InputBox} />
@@ -106,7 +106,7 @@ class WizardCreateNewAgencySecondPage extends Component{
                 </div>
               </div>
 
-              <div className="register-agency-flex">
+              <div className="register-agency-flex col-md-12">
                 <div className="col-md-6 register-agency-input-left">
                   <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode"></Translate></label>
                   <Field name="agencyzipcode" type="text" placeholder="Enter Zip Code" category="agency" component={InputBox} />
@@ -121,8 +121,8 @@ class WizardCreateNewAgencySecondPage extends Component{
           </div>
 
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency">
-              <div className="col-md-4 col-md-offset-2">
+            <div className="prev-next-btns-agency row">
+              <div className="col-md-4 offset-md-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
               <div className="col-md-4">

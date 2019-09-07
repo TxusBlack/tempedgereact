@@ -7,18 +7,12 @@ import { createTransform } from 'redux-persist';
 import { createBlacklistFilter } from 'redux-persist-transform-filter';
 import { routerMiddleware } from 'connected-react-router';
 import history from '../history';
-import JSOG from 'jsog';    //Circular JSON Structures
 
                           //For dispatching history actions
 let middleware = [thunk, routerMiddleware(history)];
 
-let JSOGTransform = createTransform(
-  (inboundState,  key) => JSOG.encode(inboundState),
-  (outboundState, key) => JSOG.decode(outboundState),
-);
-
 let saveSubsetBlacklistFilter = createBlacklistFilter(
-  'form',
+  'form'
   ['login'],
   ['CreateNewAgency', 'CreateNewUser', 'CreateNewClient']
 );
@@ -26,12 +20,12 @@ let saveSubsetBlacklistFilter = createBlacklistFilter(
 let config = {
   key: 'root',
   storage: storageSession,
-  //blacklist: ['form'],
-  transforms: [saveSubsetBlacklistFilter, JSOGTransform] //[JSOGTransform]
+  blacklist: ['tempEdge', 'form'],
+  //transforms: [saveSubsetBlacklistFilter] //[JSOGTransform]
 }
 
 let store = createStore(persistReducer(config, createRootReducer(history)), compose(applyMiddleware(...middleware), window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__()));
 
 let persistor = persistStore(store);
 
-export { store, persistor, history, JSOGTransform };
+export { store, persistor, history };

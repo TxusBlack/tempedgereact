@@ -74,38 +74,34 @@ class WizardCreateNewAgencySeventhPage extends Component{
           </div>
           <div className="register-form-panel-inputs">
             <div className="form-group register-form wizard-register-agency-form row">
-              <div className="row">
-                <div className="col-md-12">
-                  <h3 className="confirmation-page-subtitle"><Translate id="com.tempedge.msg.label.confirminformation"></Translate></h3>
-                </div>
-                <div className="col-md-6">
-                  <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.address"></Translate></h3>
-                  <p className="confirmation-page-paragraph">{this.props.address}</p>
-                  <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.city"></Translate></h3>
-                  <p className="confirmation-page-paragraph">{this.props.city}</p>
-                  <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.addrecruitingoffice"></Translate>:</h3>
-                  <p className="confirmation-page-paragraph">{this.props.recruitmentoffice}</p>
-                </div>
-                <div className="col-md-6">
-                  <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.phonesadded"></Translate></h3>
-                  <p className="confirmation-page-paragraph">{this.props.phonenumbers}</p>
-                  <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.salesmenadded"></Translate></h3>
-                  <p className="confirmation-page-paragraph">{this.props.salesmen}</p>
-                </div>
+              <div className="col-md-12">
+                <h3 className="confirmation-page-subtitle"><Translate id="com.tempedge.msg.label.confirminformation"></Translate></h3>
               </div>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="center-block new-agency-captcha">
-                    <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
-                  </div>
+              <div className="col-md-6">
+                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.address"></Translate></h3>
+                <p className="confirmation-page-paragraph">{this.props.address}</p>
+                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.city"></Translate></h3>
+                <p className="confirmation-page-paragraph">{this.props.city}</p>
+                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.addrecruitingoffice"></Translate>:</h3>
+                <p className="confirmation-page-paragraph">{this.props.recruitmentoffice}</p>
+              </div>
+              <div className="col-md-6">
+                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.phonesadded"></Translate></h3>
+                <p className="confirmation-page-paragraph">{this.props.phonenumbers}</p>
+                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.salesmenadded"></Translate></h3>
+                <p className="confirmation-page-paragraph">{this.props.salesmen}</p>
+              </div>
+              <div className="col-md-12">
+                <div className="new-agency-captcha">
+                  <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency">
-              <div className="col-md-4 col-md-offset-2">
+            <div className="prev-next-btns-agency row">
+              <div className="col-md-4 offset-md-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
               <div className="col-md-4">

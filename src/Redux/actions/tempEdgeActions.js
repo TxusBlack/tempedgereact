@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -134,5 +134,21 @@ export let getFilters = (url, data, actionName)=>{
         });
       });
     }
+}
+export let savePositionsList = (newPos) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_POSITIONS_LIST,
+      payload: newPos
+    });
+  }
+}
 
+export let removeFromPositionList = (index) => {
+  return (dispatch) => {
+    dispatch({
+      type: REMOVE_FROM_POSITIONS_LIST,
+      payload: index
+    });
+  }
 }

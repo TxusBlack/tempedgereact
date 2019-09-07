@@ -171,7 +171,7 @@ class FaceMashDesktop extends React.Component {
               />
               <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0}}></canvas>
             </div>
-            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture}>Capture photo</button>
+            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture} style={{marginTop: -4}}>Capture photo</button>
             {tempEdgeSubmitShow}
           </div>
           <div className="col-md-7">

@@ -35,8 +35,8 @@ let renderPhoneNumberInputs = (formProps) => {
         })
       }
 
-      <div className="list-item">
-        <div className="row">
+      <div className="list-item row">
+        <div className="col-md-12">
           <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
         </div>
       </div>

@@ -65,29 +65,27 @@ class WizardCreateNewAgencySixthPage extends Component{
             </div>
           </div>
           <div className="register-form-panel-inputs">
-            <div className="form-group register-form wizard-register-agency-form row">
-              <div className="register-agency-flex payroll-hours-validation">
-                <div className="col-md-4">
-                  <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollhours"></Translate></label>
-                  <Field name="weekdaysdropdown1" data={weekdays} valueField="value" textField="day" category="agency" component={Dropdown} />
-                </div>
+            <div className="form-group register-form wizard-register-agency-form payroll-hours-validation row">
+              <div className="col-md-4">
+                <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollhours"></Translate></label>
+                <Field name="weekdaysdropdown1" data={weekdays} valueField="value" textField="day" category="agency" component={Dropdown} />
+              </div>
 
-                <div className="col-md-4">
-                  <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollvalidation"></Translate></label>
-                  <Field name="weekdaysdropdown2" data={weekdays} valueField="value" textField="day" category="agency" component={Dropdown} />
-                </div>
+              <div className="col-md-4">
+                <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.payrollvalidation"></Translate></label>
+                <Field name="weekdaysdropdown2" data={weekdays} valueField="value" textField="day" category="agency" component={Dropdown} />
+              </div>
 
-                <div className="col-md-4">
-                  <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.fundingcompany"></Translate></label>
-                  <Field name="fundingCompanydropdown" data={this.props.funding_list} valueField="fundingId" textField="name" category="agency" component={Dropdown} />
-                </div>
+              <div className="col-md-4">
+                <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.fundingcompany"></Translate></label>
+                <Field name="fundingCompanydropdown" data={this.props.funding_list} valueField="fundingId" textField="name" category="agency" component={Dropdown} />
               </div>
             </div>
           </div>
 
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency">
-              <div className="col-md-4 col-md-offset-2">
+            <div className="prev-next-btns-agency row">
+              <div className="col-md-4 offset-md-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
               <div className="col-md-4">

@@ -108,8 +108,8 @@ class WizardCreateNewAgencyFourthPage extends Component{
     });
 
     let addBtn = (
-      <div>
-        <div className="row">
+      <div className="row">
+        <div className="col-md-12" style={{padding: 0}}>
           <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
         </div>
       </div>
@@ -118,10 +118,10 @@ class WizardCreateNewAgencyFourthPage extends Component{
     return(
       <React.Fragment>
         <div className="clearfix recruiting-office-phone">
-          <label className="pull-left checkbox-inline">
+          <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
+          <label className="checkbox-inline" style={{padding: 8, fontSize: 13.5}}>
             <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
           </label>
-          <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
         </div>
         <div>
           { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? block: '' }
@@ -184,18 +184,16 @@ class WizardCreateNewAgencyFourthPage extends Component{
           </div>
           <div className="register-form-panel-inputs">
             <div className="form-group register-form wizard-register-agency-form row">
-              <div className="register-agency-flex">
-                <div className="col-md-12">
-                  <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">OfficeName Address City Zip Phone</Translate></span>
-                  <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
-                </div>
+              <div className="col-md-12">
+                <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficephonenumbers">OfficeName Address City Zip Phone</Translate></span>
+                <FieldArray name="recruitmentofficephonenumbers" type="text" placeholder="Phone Number" label={this.state.phonelabels} component={this.renderPhoneNumberInputs} />
               </div>
             </div>
           </div>
 
           <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency">
-              <div className="col-md-4 col-md-offset-2">
+            <div className="prev-next-btns-agency row">
+              <div className="col-md-4 offset-md-2">
                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
               </div>
               <div className="col-md-4">

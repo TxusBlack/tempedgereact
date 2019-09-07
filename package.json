@@ -12,6 +12,7 @@
     "local-storage": "^1.4.2",
     "moment": "^2.24.0",
     "react": "^16.7.0",
+    "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.7.0",
     "react-favicon": "^0.0.14",
     "react-google-recaptcha": "^1.0.5",
