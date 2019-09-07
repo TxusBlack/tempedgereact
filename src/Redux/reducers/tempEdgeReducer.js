@@ -49,28 +49,29 @@ export default function(state = initialState, action){
       let newState =  (typeof state.deptPosList !== "undefined")? state.deptPosList: [];
 
       newState.push(action.payload);
+      console.log("newState: ", newState);
 
       return{
         ...state,
         deptPosList: newState
       }
-      case REMOVE_FROM_POSITIONS_LIST:
-        let newPosListState =  state.deptPosList;
-        let index = action.payload;
+    case REMOVE_FROM_POSITIONS_LIST:
+      let newPosListState =  state.deptPosList;
+      let index = action.payload;
 
-        if(newPosListState !== undefined){
-          if(newPosListState[index] !== undefined){
+      if(newPosListState !== undefined){
+        if(newPosListState[index] !== undefined){
             //console.log("index --REMOVE_FROM_POSITIONS_LIST--: ", index);
             //console.log("newPosListState[index]: ", newPosListState[index]);
             newPosListState.splice(index, 1);
-            //console.log("newPosListState --AFTER--: ", newPosListState);
-          }
+            console.log("newPosListState --AFTER--: ", newPosListState);
         }
+      }
 
-        return{
+      return{
           ...state,
           deptPosList: newPosListState
-        }
+      }
     default:
       return state;
   }

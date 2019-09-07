@@ -12,7 +12,6 @@ import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.j
 import WizardCreateNewClientThirdPage  from './WizardCreateNewClientThirdPage';
 import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
 import Department from './Department.js'
-import PositionsTable from './PositionsTable.js';
 import { FieldArray } from 'redux-form';
 import addIcon from "./assets/plus.png";
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image

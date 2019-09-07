@@ -5,7 +5,6 @@ import { Field, reduxForm, change, initialize } from 'redux-form';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Validate from '../../Validations/Validations';
-import PositionsTable from './PositionsTable.js';
 import addIcon from "./assets/plus.png";
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import editIcon from "./assets/edit.png";
@@ -26,9 +25,7 @@ class Department extends React.Component{
     }));
   }
 
-  increaseListSize = () => {
-    this.addPos();
-
+  increaseListSize = async () => {
     let newDeptPos = {
       departmentname: this.props.departmentname,
       position: this.props.position,
@@ -42,7 +39,7 @@ class Department extends React.Component{
       contactPhone: this.props.contactPhone,
     };
 
-    this.props.savePositionsList(newDeptPos);
+    await this.props.savePositionsList(newDeptPos);
 
     this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
     this.props.dispatch(change('CreateNewClient', 'position', ''));
@@ -54,55 +51,67 @@ class Department extends React.Component{
     this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
     this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
     this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
+
+    this.renderPositions();
   }
 
-  addPos = () => {
-    let posArry = this.state.posArray;
-    let index = this.state.posArray.length;
-    let key = `positions-${index}`;
+  renderPositions = async () => {
+    let deptPosList = this.props.deptPosList;
+    let list = await deptPosList.map((position, index) => {
+      let key = `positions-${index}`;
 
-    posArry.push(
-      <div id={key} key={key}>
-        <div className="btn-dept" style={(index > 0)? {marginTop: "1rem"}: {marginTop: 0}}>
-          <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>
-            <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
-          </a>
-          <span>{this.props.position}</span>
-          <span className="pull-right">
-            <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => this.removeFromPosList(index)} alt="deleteIcon" />
-          </span>
-        </div>
-
-          <div className="collapse multi-collapse show" id={`departments${index}`}>
-            <div className="card card-body">
-              <PositionsTable index={index}/>
-            </div>
+      return(
+        <div id={key} key={key}>
+          <div className="btn-dept" style={(index > 0)? {marginTop: "1rem"}: {marginTop: 0}}>
+            <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>
+              <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
+            </a>
+            <span>{deptPosList[index].position}</span>
+            <span className="pull-right">
+              <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => this.removeFromPosList(index)} alt="deleteIcon" />
+            </span>
           </div>
-      </div>
-    );
+
+            <div className="collapse multi-collapse show" id={`departments${index}`}>
+              <div className="card card-body">
+                <table className="table table-borderless">
+                  <thead>
+                    <tr>
+                      <th>Pay Rate</th>
+                      <th>Markup</th>
+                      <th>OT Markup</th>
+                      <th>Employee Contact</th>
+                      <th>Contact Phone</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].payRate: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].markup: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].otmarkup: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].employeeContact: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].contactPhone: ""}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+      )
+    });
 
     this.setState(() => ({
-      posArray: posArry
+      posArray: list
     }));
   }
 
   removeFromPosList = async (index) => {
-    let posArry = this.state.posArray;
-    if(posArry.length > 1){
-      posArry.splice(index, 1);
-    }else{
-      posArry = [];
-    }
-
-    await this.setState(() => ({
-      posArray: posArry
-    }));
-
-    this.props.removeFromPositionList(index);
+    await this.props.removeFromPositionList(index);
+    this.renderPositions();
   }
 
   render(){
-    console.log("this.state.posArray ---Department.js---: ", this.state.posArray);
+    console.log("this.props.deptPosList ---Department.js---: ", this.props.deptPosList);
     let positionsList = this.state.posArray;
 
     return(
@@ -274,6 +283,7 @@ let mapStateToProps = (state) => {
   }
 
   return({
+    deptPosList: state.tempEdge.deptPosList,
     departmentname: departmentname,
     position: position,
     description: description,
