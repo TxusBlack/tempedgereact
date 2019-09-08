@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -100,7 +100,7 @@ export let tempedgeAPI = (url, data, actionName) => {
 }
 
 export let getList = (url, actionName) => {
-  return (dispatch) => { 
+  return (dispatch) => {
     httpService.getList(url)
       .then((response) => {
         dispatch({
@@ -135,6 +135,16 @@ export let getFilters = (url, data, actionName)=>{
       });
     }
 }
+
+export let saveDepartmentList = (newDept) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_DEPARTMENTS_LIST,
+      payload: newDept
+    })
+  }
+}
+
 export let savePositionsList = (newPos) => {
   return (dispatch) => {
     dispatch({

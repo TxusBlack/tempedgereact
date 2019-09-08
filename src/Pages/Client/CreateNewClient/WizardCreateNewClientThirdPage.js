@@ -92,8 +92,8 @@ class WizardCreateNewUserThirdPage extends Component{
                     <h2>Department List</h2>
                   </div>
                   <div className="department-list-contents">
-                    <div style={{marginTop: "1rem"}}>
-                      { this.props.renderAddBtn() }
+                    <div>
+                      { (!this.props.renderAddBtnDirty)? this.props.renderAddBtn(): <div>{this.props.departmentList}{this.props.addDeptBtn}</div> }
                     </div>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ import { LOGIN,
   GET_ROLE_LIST,
   SAVE_FORM_POSITION,
   GET_EMPLOYEE_LIST,
+  SAVE_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST
 } from '../actions/types';
@@ -45,10 +46,23 @@ export default function(state = initialState, action){
         ...state,
         [formPosition]: action.payload
       }
-    case SAVE_POSITIONS_LIST:
-      let newState =  (typeof state.deptPosList !== "undefined")? state.deptPosList: [];
+    case SAVE_DEPARTMENTS_LIST:
+      let newListState =  (typeof state.deptList !== "undefined")? state.deptList: [];
 
-      newState.push(action.payload);
+      newListState.push(action.payload);
+      return{
+        ...state,
+        deptList: newListState
+      }
+    case SAVE_POSITIONS_LIST:
+      let newState =  (typeof state.deptPosList === "undefined")? []: state.deptPosList;
+
+      if(action.payload === "CLEAR"){
+        newState = []
+      }else{
+        newState.push(action.payload);
+      }
+
       return{
         ...state,
         deptPosList: newState

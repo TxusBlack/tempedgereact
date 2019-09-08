@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
-import { reset } from 'redux-form';
+import { reset, reduxForm, change,  } from 'redux-form';
 import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
@@ -18,7 +18,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
+import { saveDepartmentList, savePositionsList, removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
 
 class CreateNewClient extends Component {
   constructor(props) {
@@ -34,7 +34,6 @@ class CreateNewClient extends Component {
        {title: ""}
       ],
       departmentList: "",
-      deptsList: "",
       addDeptBtn: "",
       renderAddBtnDirty: false,
       positionList: "",
@@ -48,8 +47,6 @@ class CreateNewClient extends Component {
   componentDidMount = async() => {
     this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
     this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
-    await this.setDepartmentList(<FieldArray name="clientdepartments" type="text" component={this.renderClientDepartments} />);
-    //await this.setPositionList(<MyFieldArray name="departmentpositions" component={this.renderDepartmentPositions} />);
   }
 
   nextPage(){
@@ -98,6 +95,8 @@ class CreateNewClient extends Component {
 
   //Set Modal visible or not
   toggleModalOnOff = () => {
+    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+    
     this.setState({
       showModal: !this.state.showModal
     });
@@ -108,108 +107,97 @@ class CreateNewClient extends Component {
     this.toggleModalOnOff();   //Close Modal
   }
 
-  // departmentModalEdit = async (deptIdx) => {
-  //   console.log("departmentModalEdit");
-  //
-  //   let content = (
-  //     <div>{deptIdx}</div>
-  //   );
-  //
-  //   await this.setState(() => ({
-  //     departmentContent: content
-  //   }));
-  //
-  //   console.log("departmentContent: ", this.state.departmentContent);
-  //
-  //   this.toggleModalOnOff();   //Open Modal
-  //
-  //   console.log("showModal: ", this.state.showModal);
-  // }
+  renderClientDepartmentsList = async () => {
+    let departmentname = this.props.departmentname;
+    let positionList = this.props.deptPosList;
 
-  renderClientDepartments_ = async (formProps) => {
-    let addDepartmentsBtn = (this.props.clientDepartments === undefined)? <p className="department-list-button center-block" onClick={() => this.renderDepartmentModal(formProps) }>Add Departments</p>: "";
-    let addDeptBtn = (this.props.clientDepartments !== undefined)? <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>: "";
-    let deptList = this.props.departmentList;
-    let list = await deptList.map((position, index) => {
-      let key = `departments-${index}`;
-
-      return(
-        <div id={key} key={key}>
-          <div className="btn-dept" style={(index > 0)? {marginTop: "1rem"}: {marginTop: 0}}>
-            <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>
-              <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
-            </a>
-            <span>{this.props.departmentname}</span>
-            <span className="pull-right">
-              <img src={editIcon} className="client-dpt-btn-edit-delete" style={{display: "inline"}} onClick={() => this.departmentModalEdit(index)} alt="editIcon" />
-              <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => formProps.fields.remove(index)} alt="deleteIcon" />
-            </span>
-          </div>
-
-            <div className="collapse multi-collapse" id={`departments${index}`}>
-              <div className="card card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-              </div>
-            </div>
-        </div>
-      )
+    await this.props.saveDepartmentList({
+      departmentName: departmentname,
+      positions: positionList
     });
 
-    this.setState(() => ({
-      departmentList: list,
-      addDepartmentsBtn: addDepartmentsBtn,
-      addDeptBtn: addDeptBtn
-    }));
-  }
 
-  renderClientDepartments = (formProps) => {
-    console.log("IM ALIVE!")
-    this.renderDepartmentModal();
-    let block = (
-      <div id={`afsf`} key={`dasdf`}>
-        <div className="btn-dept" style={{marginTop: 0}}>
-          <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${0}`} role="button" aria-expanded="false" aria-controls={`departments${0}`}>
-            <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
-          </a>
-          <span>Department {0+1}</span>
-          <span className="pull-right">
-            <img src={editIcon} className="client-dpt-btn-edit-delete" style={{display: "inline"}} onClick={() => this.departmentModalEdit(0)} alt="editIcon" />
-            <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => {}} alt="deleteIcon" />
-          </span>
-        </div>
+    let departmentList = [];
+    let deptList = this.props.deptList;
 
-          <div className="collapse multi-collapse" id={`departments${0}`}>
-            <div className="card card-body">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+    deptList.map((dept, index) => {
+      let key = `departments-${index}`;
+      let name = dept.departmentName;
+      let tableRows = deptList[index].positions.map((position, index) => {
+        return(
+          <tr>
+            <td>{position.payRate}</td>
+            <td>{position.markup}</td>
+            <td>{position.otmarkup}</td>
+          </tr>
+        );
+      });
+
+      let block = (
+        <React.Fragment>
+          <div style={{height: 10}}></div>
+          <div id={key} key={key}>
+            <div className="btn-dept" style={{marginTop: 0}}>
+              <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>
+                <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
+              </a>
+              <span>{name}</span>
+              <span className="pull-right">
+                <img src={editIcon} className="client-dpt-btn-edit-delete" style={{display: "inline"}} onClick={() => this.departmentModalEdit(index)} alt="editIcon" />
+                <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => {}} alt="deleteIcon" />
+              </span>
             </div>
-          </div>
-      </div>
-    )
 
-    let deptsList  = block;
-    let addDeptBtn = <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => {}}><img src={addIcon} alt="addIcon" /></span>;
+              <div className="collapse multi-collapse show" id={`departments${index}`}>
+                <div className="card card-body">
+                <table className="table table-borderless">
+                  <thead>
+                    <tr>
+                      <th>Position</th>
+                      <th>Markup</th>
+                      <th>OT Markup</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableRows}
+                  </tbody>
+                </table>
+                </div>
+              </div>
+          </div>
+        </React.Fragment>
+      )
+
+      departmentList.push(block);
+    });
+
+    let addDeptBtn = <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => this.renderDepartmentModal()}><img src={addIcon} alt="addIcon" /></span>;
 
     this.setState(() => ({
-      deptsList: deptsList,
-      addDeptBtn: addDeptBtn
+      departmentList: departmentList,
+      addDeptBtn: addDeptBtn,
+      renderAddBtnDirty: true
     }));
-  }
 
-  addToDeptList = (formProps) => {
-    formProps.fields.push({});
+    this.toggleModalOnOff();
+    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+    this.props.savePositionsList("CLEAR");
   }
 
   renderAddBtn = () => {
-    let addDtpBtn = <p className="department-list-button center-block" onClick={() => this.renderClientDepartments()}>Add Departments</p>;
+    let addDtpBtn = (
+      <React.Fragment>
+        <div style={{height: 10}}></div>
+        <p className="department-list-button center-block" onClick={() => this.renderDepartmentModal()}>Add Departments</p>
+      </React.Fragment>
+    );
 
     return addDtpBtn;
   }
 
   renderDepartmentModal = async () => {
-    console.log("OPEN MODAL!");
     await this.setState(() => ({
-      departmentContent: <Department closePanel={() => this.toggleModalOnOff()} />,
-      renderAddBtnDirty: true
+      departmentContent: <Department closePanel={() => this.toggleModalOnOff()} renderClientDepartmentsList={this.renderClientDepartmentsList} />
     }));
 
     this.toggleModalOnOff();   //Open Modal
@@ -223,9 +211,9 @@ class CreateNewClient extends Component {
       <div className="wizard-create-agency">
         <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
-          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} deptsList={this.state.deptsList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
-          {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} deptsList={this.state.deptsList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
-          {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} deptsList={this.state.deptsList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
           { modal }
         </div>
       </div>
@@ -236,21 +224,33 @@ class CreateNewClient extends Component {
 CreateNewClient.propTypes = {
   getList: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  saveDepartmentList: PropTypes.func.isRequired,
+  savePositionsList: PropTypes.func.isRequired,
   removeFromPositionList: PropTypes.func.isRequired
 }
+
+CreateNewClient = reduxForm({
+  form: 'CreateNewClient', //                 <------ form name
+  destroyOnUnmount: false, //        <------ preserve form data
+  // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+})(CreateNewClient);
 
 let mapStateToProps = (state) => {
   let departmentname = "";
 
   if(state.form.CreateNewClient !== undefined){
     if(state.form.CreateNewClient.values !== undefined){
-      departmentname = (typeof state.tempEdge.deptPosList!== 'undefined')? state.tempEdge.deptPosList[0].departmentname: "";
+      let formState = state.form.CreateNewClient.values;
+      departmentname = formState.departmentname;
     }
   }
 
   return({
+    deptList: (state.tempEdge.deptList !== undefined)? state.tempEdge.deptList: [],
+    deptPosList: (state.tempEdge.deptPosList !== undefined)? state.tempEdge.deptPosList: [],
     departmentname: departmentname
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, removeFromPositionList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList  })(CreateNewClient));

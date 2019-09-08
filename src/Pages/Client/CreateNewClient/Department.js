@@ -27,7 +27,6 @@ class Department extends React.Component{
 
   increaseListSize = async () => {
     let newDeptPos = {
-      departmentname: this.props.departmentname,
       position: this.props.position,
       description: this.props.description,
       payRate: this.props.payRate,
@@ -41,7 +40,6 @@ class Department extends React.Component{
 
     await this.props.savePositionsList(newDeptPos);
 
-    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
     this.props.dispatch(change('CreateNewClient', 'position', ''));
     this.props.dispatch(change('CreateNewClient', 'description', ''));
     this.props.dispatch(change('CreateNewClient', 'payRate', ''));
@@ -63,7 +61,7 @@ class Department extends React.Component{
       return(
         <div id={key} key={key}>
           <div className="btn-dept" style={(index > 0)? {marginTop: "1rem"}: {marginTop: 0}}>
-            <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#departments${index}`} role="button" aria-expanded="false" aria-controls={`departments${index}`}>
+            <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#positions${index}`} role="button" aria-expanded="false" aria-controls={`positions${index}`}>
               <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
             </a>
             <span>{deptPosList[index].position}</span>
@@ -72,7 +70,7 @@ class Department extends React.Component{
             </span>
           </div>
 
-            <div className="collapse multi-collapse show" id={`departments${index}`}>
+            <div className="collapse multi-collapse show" id={`positions${index}`}>
               <div className="card card-body">
                 <table className="table table-borderless">
                   <thead>
@@ -205,7 +203,7 @@ class Department extends React.Component{
                             <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            <button type="button" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.addDeptDisabled}><Translate id="com.tempedge.msg.label.addDept" onClick={this.addDept}></Translate></button>
+                            <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.renderClientDepartmentsList}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>
                           </div>
                         </div>
                       </div>

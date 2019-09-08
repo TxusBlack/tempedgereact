@@ -155,8 +155,7 @@ class WizardCreateNewUserFirstPage extends Component{
 
                   <div className="department-list-contents">
                     <div>
-                      <div style={{height: 10}}></div>
-                      { (!this.props.renderAddBtnDirty)? this.props.renderAddBtn(): <div>{this.props.deptsList}{this.props.addDeptBtn}</div> }
+                      { (!this.props.renderAddBtnDirty)? this.props.renderAddBtn(): <div>{this.props.departmentList}{this.props.addDeptBtn}</div> }
                     </div>
                   </div>
                 </div>
