@@ -42,7 +42,8 @@ class HomePage extends Component{
     let inputFileRoute = `/upload/${this.props.lang}`;
     let protectedRoute = `/protected/${this.props.lang}`;
     let genericDashboard = `/dashboard/${this.props.lang}`;
-    let employee = `/employee/${this.props.lang}`;
+    let employeeList = `/employee/${this.props.lang}`;
+    let createEmployee = `/employee/create/${this.props.lang}`;
     let clientList = `/client/${this.props.lang}`;
     let createNewClient = `/createClient/${this.props.lang}`;
 
@@ -60,7 +61,8 @@ class HomePage extends Component{
         <Link to={snapshotRouteDesktop}>Capture Face Snapshot - Desktop View</Link><br />
         <Link to={inputFileRoute}>Upload File</Link><br />
         <Link to={protectedRoute}>Protected Route</Link><br />
-        <Link to={employee}>Employee</Link><br />
+        <Link to={employeeList}>Employee</Link><br />
+        <Link to={createEmployee}>Create Employee</Link><br />
         <Link to={clientList}>Client List</Link><br />
         <Link to={genericDashboard}>Generic Dashboard</Link>
       </div>

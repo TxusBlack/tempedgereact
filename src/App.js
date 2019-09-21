@@ -26,6 +26,7 @@ import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Error from './Pages/Error/Error';
 import EmployeeList from './Pages/Employee/EmployeeList/EmployeeList';
+import CreateEmployee from './Pages/Employee/CreateEmployee/CreateEmployee';
 import ClientList from './Pages/Client/ClientList/ClientList';
 
 window.recaptchaOptions = {
@@ -90,6 +91,7 @@ class App extends React.Component{
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
                   <Route exact path="/employee/:lang" component={EmployeeList} />
+                  <Route exact path="/employee/create/:lang" component={CreateEmployee} />
                   <Route exact path="/client/:lang" component={ClientList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />

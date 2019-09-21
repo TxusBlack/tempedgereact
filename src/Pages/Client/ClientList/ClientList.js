@@ -36,7 +36,7 @@ class ClientList extends Component {
         console.log(data);
 
         return (
-            <PaginatedTable apiUrl = {api_url}/>
+            <PaginatedTable title="com.tempedge.msg.label.clientList" apiUrl = {api_url}/>
         )
     }
 }

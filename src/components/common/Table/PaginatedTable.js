@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { push } from 'connected-react-router';
-import { GET_EMPLOYEE_LIST } from '../../../Redux/actions/types.js'
+import { TEMPEDGE_LIST } from '../../../Redux/actions/types.js'
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
@@ -25,12 +25,12 @@ class PaginatedTable extends Component {
     }
 
     componentDidMount (){
-        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, filterBy:{}},  GET_EMPLOYEE_LIST);
+        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, filterBy:{}},  TEMPEDGE_LIST);
     }
     changePage = (myPage) =>{
         console.log(myPage);
         this.setState({tablePage : myPage});
-        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, page : myPage, filterBy: this.state.filterBy},  GET_EMPLOYEE_LIST);
+        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, page : myPage, filterBy: this.state.filterBy},  TEMPEDGE_LIST);
     }
     applyFilter = (sortBy, filterValue) =>{
         let filter = {
@@ -45,7 +45,7 @@ class PaginatedTable extends Component {
                 orgId : 1, 
                 page : this.state.tablePage, 
                 filterBy : filter 
-            },  GET_EMPLOYEE_LIST);
+            },  TEMPEDGE_LIST);
     }
 
     render() {

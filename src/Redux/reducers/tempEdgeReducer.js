@@ -3,7 +3,7 @@ import { LOGIN,
   GET_FUNDING_LIST,
   GET_ROLE_LIST,
   SAVE_FORM_POSITION,
-  GET_EMPLOYEE_LIST,
+  TEMPEDGE_LIST,
   SAVE_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST
@@ -35,7 +35,7 @@ export default function(state = initialState, action){
         ...state,
         role_list: action.payload
       }
-    case GET_EMPLOYEE_LIST:
+    case TEMPEDGE_LIST:
       return{
         ...state,
         paginatorList: action.payload
