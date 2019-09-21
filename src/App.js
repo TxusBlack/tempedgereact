@@ -25,8 +25,8 @@ import Notifications from './components/common/Notifications/Notifications';
 import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Error from './Pages/Error/Error';
-import GenericDashboard from './Pages/Dashboard/GenericDashboard';
-import EmployeeList from './Pages/Employee/EmployeeList';
+import EmployeeList from './Pages/Employee/EmployeeList/EmployeeList';
+import ClientList from './Pages/Client/ClientList/ClientList';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -90,10 +90,11 @@ class App extends React.Component{
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
                   <Route exact path="/employee/:lang" component={EmployeeList} />
+                  <Route exact path="/client/:lang" component={ClientList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" />
-                  <Route exact path="/dashboard/:lang" component={GenericDashboard} />
+                  <Route exact path="/dashboard/:lang" component={Login} />
                 </Switch>
               </div>
             </ConnectedRouter>

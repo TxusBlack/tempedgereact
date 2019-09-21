@@ -17,7 +17,7 @@ class TPaginator extends Component {
   onClickChangePage = (myPage) =>{
     if(!myPage || myPage < 1) {
       myPage =1;
-    } else if(myPage >= this.props.totalPages) {
+    } else if(myPage > this.props.totalPages) {
       myPage = this.props.totalPages;
     }
 
