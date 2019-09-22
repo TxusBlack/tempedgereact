@@ -70,7 +70,6 @@ export default function(state = initialState, action){
         deptPosList: newState
       }
     case REMOVE_FROM_POSITIONS_LIST:
-      console.log("REMOVE FROM POSITIONS LIST!");
       let newPosListState = state.deptPosList;
       let posIndex = action.payload;
 
@@ -85,7 +84,6 @@ export default function(state = initialState, action){
           deptPosList: newPosListState
       }
     case REMOVE_FROM_DEPARTMENTS_LIST:
-      console.log("REMOVE FROM DEPARTMENT LIST!");
       let newDeptListState = state.deptList;
       let index = action.payload;
 
@@ -94,8 +92,6 @@ export default function(state = initialState, action){
           newDeptListState.splice(index, 1);
         }
       }
-
-      console.log("newDeptListState: ", newDeptListState);
 
       return{
         ...state,
