@@ -163,7 +163,6 @@ export let removeFromPositionList = (index) => {
 }
 
 export let removeFromDepartmentList = (index) => {
-  console.log("Remove Dept Index: ", index);
   return (dispatch) => {
     dispatch({
       type: REMOVE_FROM_DEPARTMENTS_LIST,
