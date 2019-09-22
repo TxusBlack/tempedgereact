@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -123,8 +123,7 @@ export let storeFormPageNumber = (formName, position) => {
   }
 }
 
-export let getFilters = (url, data, actionName)=>{
-
+export let getFilters = (url, data, actionName) => {
   return (dispatch) => {
     httpService.getList(url)
       .then((response) => {
@@ -158,6 +157,16 @@ export let removeFromPositionList = (index) => {
   return (dispatch) => {
     dispatch({
       type: REMOVE_FROM_POSITIONS_LIST,
+      payload: index
+    });
+  }
+}
+
+export let removeFromDepartmentList = (index) => {
+  console.log("Remove Dept Index: ", index);
+  return (dispatch) => {
+    dispatch({
+      type: REMOVE_FROM_DEPARTMENTS_LIST,
       payload: index
     });
   }

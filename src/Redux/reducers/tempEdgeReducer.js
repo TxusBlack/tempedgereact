@@ -6,7 +6,8 @@ import { LOGIN,
   GET_EMPLOYEE_LIST,
   SAVE_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
-  REMOVE_FROM_POSITIONS_LIST
+  REMOVE_FROM_POSITIONS_LIST,
+  REMOVE_FROM_DEPARTMENTS_LIST
 } from '../actions/types';
 
 let initialState = {
@@ -14,6 +15,7 @@ let initialState = {
 }
 
 export default function(state = initialState, action){
+  console.log("action.type: ", action.type);
   switch(action.type){
     case LOGIN:
       return{
@@ -68,18 +70,36 @@ export default function(state = initialState, action){
         deptPosList: newState
       }
     case REMOVE_FROM_POSITIONS_LIST:
-      let newPosListState =  state.deptPosList;
-      let index = action.payload;
+      console.log("REMOVE FROM POSITIONS LIST!");
+      let newPosListState = state.deptPosList;
+      let posIndex = action.payload;
 
       if(newPosListState !== undefined){
-        if(newPosListState[index] !== undefined){
-            newPosListState.splice(index, 1);
+        if(newPosListState[posIndex] !== undefined){
+            newPosListState.splice(posIndex, 1);
         }
       }
 
       return{
           ...state,
           deptPosList: newPosListState
+      }
+    case REMOVE_FROM_DEPARTMENTS_LIST:
+      console.log("REMOVE FROM DEPARTMENT LIST!");
+      let newDeptListState = state.deptList;
+      let index = action.payload;
+
+      if(newDeptListState !== undefined){
+        if(newDeptListState[index] !== undefined){
+          newDeptListState.splice(index, 1);
+        }
+      }
+
+      console.log("newDeptListState: ", newDeptListState);
+
+      return{
+        ...state,
+        deptList: newDeptListState
       }
     default:
       return state;
