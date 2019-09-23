@@ -17,7 +17,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { getList, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
+import { getList, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 class CreateNewClient extends Component {
   constructor(props) {
@@ -39,7 +39,11 @@ class CreateNewClient extends Component {
       departmentContent: "",
       deptPosfields: null,
       addDepartmentPositionsBtn: "",
-      showModal: false
+      showModal: false,
+      editMode: {
+        index: null,
+        edit: false
+      }
     };
   }
 
@@ -94,8 +98,6 @@ class CreateNewClient extends Component {
 
   //Set Modal visible or not
   toggleModalOnOff = () => {
-    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
-
     this.setState({
       showModal: !this.state.showModal
     });
@@ -104,14 +106,27 @@ class CreateNewClient extends Component {
   //Close Modal
   onClose = () => {
     this.toggleModalOnOff();   //Close Modal
+    this.renderClientDepartmentsList({repaint: true});
+    this.props.savePositionsList([]);
+    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+    this.props.dispatch(change('CreateNewClient', 'position', ''));
+    this.props.dispatch(change('CreateNewClient', 'description', ''));
+    this.props.dispatch(change('CreateNewClient', 'payRate', ''));
+    this.props.dispatch(change('CreateNewClient', 'markup', ''));
+    this.props.dispatch(change('CreateNewClient', 'otmarkup', ''));
+    this.props.dispatch(change('CreateNewClient', 'timeIn', ''));
+    this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
+    this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
+    this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
   }
 
   renderClientDepartmentsList = async (flag) => {
     if(!flag.repaint){
+      console.log("repaint: ", flag.repaint);
       let departmentname = this.props.departmentname;
       let positionList = this.props.deptPosList;
 
-      await this.props.saveDepartmentList({
+      await this.props.saveToDepartmentList({
         departmentName: departmentname,
         positions: positionList
       });
@@ -126,7 +141,7 @@ class CreateNewClient extends Component {
       let tableRows = deptList[index].positions.map((position, index) => {
         return(
           <tr>
-            <td>{position.payRate}</td>
+            <td>{position.position}</td>
             <td>{position.markup}</td>
             <td>{position.otmarkup}</td>
           </tr>
@@ -171,7 +186,7 @@ class CreateNewClient extends Component {
       departmentList.push(block);
     });
 
-    let addDeptBtn = <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => this.renderDepartmentModal()}><img src={addIcon} alt="addIcon" /></span>;
+    let addDeptBtn = <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={this.addDept}><img src={addIcon} alt="addIcon" /></span>;
 
     if(!flag.repaint){
       this.setState(() => ({
@@ -182,19 +197,38 @@ class CreateNewClient extends Component {
 
       this.toggleModalOnOff();
       this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
-      this.props.savePositionsList("CLEAR");
+      this.props.saveToPositionsList("CLEAR");
     }else{
       this.setState(() => ({
         departmentList: (deptList.length > 0)? departmentList: [],
         addDeptBtn: addDeptBtn,
         renderAddBtnDirty: (deptList.length > 0)? true: false
       }));
+
+      this.toggleModalOnOff();
     }
   }
 
   removeDepartment = async (index) => {
     await this.props.removeFromDepartmentList(index);
     this.renderClientDepartmentsList({repaint: true});
+  }
+
+  departmentModalEdit= async (index) => {
+    let departmentname = this.props.deptList[index].departmentName;
+    let positionList = this.props.deptList[index].positions;
+
+    this.props.dispatch(change('CreateNewClient', 'departmentname', departmentname));
+
+    await this.setState(() => ({
+      editMode: {
+        index: index,
+        edit: true
+      }
+    }),async () => {
+      await this.props.savePositionsList(positionList);
+      this.renderDepartmentModal();
+    });
   }
 
   renderAddBtn = () => {
@@ -208,12 +242,30 @@ class CreateNewClient extends Component {
     return addDtpBtn;
   }
 
+  addDept = async () => {
+    await this.props.savePositionsList([]);
+
+    this.setState(() => ({
+      editMode: {
+        index: null,
+        edit: false
+      }
+    }), () => {
+      this.renderDepartmentModal();
+      this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+    });
+  }
+
   renderDepartmentModal = async () => {
     await this.setState(() => ({
-      departmentContent: <Department closePanel={() => this.toggleModalOnOff()} renderClientDepartmentsList={this.renderClientDepartmentsList} />
+      departmentContent: <Department editMode={this.state.editMode} closePanel={() => this.toggleModalOnOff()} renderClientDepartmentsList={this.renderClientDepartmentsList} passBackRenderPositions={passBackFunc => this.childRenderPositions = passBackFunc} />
     }));
 
     this.toggleModalOnOff();   //Open Modal
+
+    if(this.state.editMode.edit){
+      this.childRenderPositions();
+    }
   }
 
   render(){
@@ -239,7 +291,9 @@ CreateNewClient.propTypes = {
   reset: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   saveDepartmentList: PropTypes.func.isRequired,
+  saveToDepartmentList: PropTypes.func.isRequired,
   savePositionsList: PropTypes.func.isRequired,
+  saveToPositionsList: PropTypes.func.isRequired,
   removeFromPositionList: PropTypes.func.isRequired,
   removeFromDepartmentList: PropTypes.func.isRequired
 }
@@ -267,4 +321,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));

@@ -85,6 +85,12 @@ body {
     max-height: 98%;
 }
 
+.modal-body{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px;
+}
+
 .rw-popup ul li{
   min-height: 3.5rem;
 }

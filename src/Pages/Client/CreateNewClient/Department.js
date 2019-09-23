@@ -10,7 +10,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { savePositionsList } from "../../../Redux/actions/tempEdgeActions";
+import { saveToPositionsList, savePositionsList, saveDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 import { removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
 
 class Department extends React.Component{
@@ -23,6 +23,8 @@ class Department extends React.Component{
     this.setState(() => ({
       mounted: true
     }));
+
+    this.props.passBackRenderPositions(this.renderPositions);
   }
 
   increaseListSize = async () => {
@@ -38,7 +40,7 @@ class Department extends React.Component{
       contactPhone: this.props.contactPhone,
     };
 
-    await this.props.savePositionsList(newDeptPos);
+    await this.props.saveToPositionsList(newDeptPos);
 
     this.props.dispatch(change('CreateNewClient', 'position', ''));
     this.props.dispatch(change('CreateNewClient', 'description', ''));
@@ -55,6 +57,8 @@ class Department extends React.Component{
 
   renderPositions = async () => {
     let deptPosList = this.props.deptPosList;
+    console.log("deptPosList: ", deptPosList);
+    console.log("this.props.editMode: ", this.props.editMode);
     let list = await deptPosList.map((position, index) => {
       let key = `positions-${index}`;
 
@@ -108,8 +112,35 @@ class Department extends React.Component{
     this.renderPositions();
   }
 
+  renderClientDepts = () => {
+    this.props.dispatch(change('CreateNewClient', 'departmentname', this.props.departmentname));
+
+    if(this.props.editMode.edit){
+      let newList = this.props.deptList;
+
+      newList[this.props.editMode.index].departmentName = this.props.departmentname;
+      this.props.saveDepartmentList(newList);
+      this.props.renderClientDepartmentsList({repaint: true});
+    }else{
+      this.props.renderClientDepartmentsList({repaint: false});
+    }
+  }
+
+  closePanel = () => {
+    this.props.closePanel();
+    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+    this.props.dispatch(change('CreateNewClient', 'position', ''));
+    this.props.dispatch(change('CreateNewClient', 'description', ''));
+    this.props.dispatch(change('CreateNewClient', 'payRate', ''));
+    this.props.dispatch(change('CreateNewClient', 'markup', ''));
+    this.props.dispatch(change('CreateNewClient', 'otmarkup', ''));
+    this.props.dispatch(change('CreateNewClient', 'timeIn', ''));
+    this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
+    this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
+    this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
+  }
+
   render(){
-    console.log("this.props.deptPosList ---Department.js---: ", this.props.deptPosList);
     let positionsList = this.state.posArray;
 
     return(
@@ -200,10 +231,10 @@ class Department extends React.Component{
                             <button type="button" style={{backgroundColor: "#8cb544", backgroundImage: "none", color: "white"}} className="btn btn-default btn-block register-save-btn" onClick={this.increaseListSize} disabled={this.props.addPosDisabled}><Translate id="com.tempedge.msg.label.addPos"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
+                            <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={() => this.props.renderClientDepartmentsList({repaint: false})}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>
+                            {(!this.props.editMode.edit)? <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>: <button className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts}><Translate id="com.tempedge.msg.label.save"></Translate></button>}
                           </div>
                         </div>
                       </div>
@@ -236,9 +267,11 @@ class Department extends React.Component{
 
 Department.propTypes = {
   savePositionsList: PropTypes.func.isRequired,
+  saveToPositionsList: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
-  removeFromPositionList: PropTypes.func.isRequired
+  removeFromPositionList: PropTypes.func.isRequired,
+  saveDepartmentList: PropTypes.func.isRequired
 }
 
 Department = reduxForm({
@@ -281,6 +314,7 @@ let mapStateToProps = (state) => {
   }
 
   return({
+    deptList: (state.tempEdge.deptList !== undefined)? state.tempEdge.deptList: [],
     deptPosList: state.tempEdge.deptPosList,
     departmentname: departmentname,
     position: position,
@@ -297,4 +331,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { savePositionsList, change, initialize, removeFromPositionList })(Department));
+export default withLocalize(connect(mapStateToProps, { savePositionsList, saveToPositionsList, saveDepartmentList, change, initialize, removeFromPositionList })(Department));
