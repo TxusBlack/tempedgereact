@@ -1049,11 +1049,17 @@ form div.list .list-item:last-child button {
   height: 100%;
 }
 
-.department-list-contents{
+.department-list-contents, .position-list-contents{
   border: dotted 1px #B2B2B2;
   border-top: none;
   border-bottom-right-radius: 1.6rem;
   height: calc(100% - 53.3px);
+  overflow-y: scroll;
+  max-height: 441px;
+}
+
+.position-list-contents{
+  max-height: 491px;
 }
 
 .department-list-button{

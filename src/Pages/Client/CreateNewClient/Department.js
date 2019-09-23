@@ -248,7 +248,7 @@ class Department extends React.Component{
                     <h2>Position List</h2>
                   </div>
 
-                  <div className="department-list-contents">
+                  <div className="position-list-contents">
                     <div>
                       <div style={{height: 10}}></div>
                       {positionsList.map((position, index) => {
