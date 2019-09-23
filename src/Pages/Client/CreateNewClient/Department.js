@@ -13,6 +13,19 @@ import downIcon from "./assets/down.png";
 import { saveToPositionsList, savePositionsList, saveDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 import { removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
 
+//Department Modal re-init data
+const reInitData = {
+	position:"",
+	description:"",
+	markup:"",
+	otmarkup:"",
+	payRate:"",
+	timeIn:"",
+	timeOut:"",
+	employeeContact:"",
+	contactPhone:""
+}
+
 class Department extends React.Component{
   state={
     mounted: false,
@@ -28,6 +41,7 @@ class Department extends React.Component{
   }
 
   increaseListSize = async () => {
+    let departmentname = this.props.departmentname;
     let newDeptPos = {
       position: this.props.position,
       description: this.props.description,
@@ -41,16 +55,9 @@ class Department extends React.Component{
     };
 
     await this.props.saveToPositionsList(newDeptPos);
-
-    this.props.dispatch(change('CreateNewClient', 'position', ''));
-    this.props.dispatch(change('CreateNewClient', 'description', ''));
-    this.props.dispatch(change('CreateNewClient', 'payRate', ''));
-    this.props.dispatch(change('CreateNewClient', 'markup', ''));
-    this.props.dispatch(change('CreateNewClient', 'otmarkup', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeIn', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
-    this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
-    this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
+    let reboot = reInitData;
+    reboot.departmentname = departmentname;
+    this.props.dispatch(initialize('CreateNewClient', reboot));
 
     this.renderPositions();
   }
@@ -124,20 +131,13 @@ class Department extends React.Component{
     }else{
       this.props.renderClientDepartmentsList({repaint: false});
     }
+
+    this.closePanel();
   }
 
   closePanel = () => {
     this.props.closePanel();
-    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
-    this.props.dispatch(change('CreateNewClient', 'position', ''));
-    this.props.dispatch(change('CreateNewClient', 'description', ''));
-    this.props.dispatch(change('CreateNewClient', 'payRate', ''));
-    this.props.dispatch(change('CreateNewClient', 'markup', ''));
-    this.props.dispatch(change('CreateNewClient', 'otmarkup', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeIn', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
-    this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
-    this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
+    this.props.dispatch(initialize('CreateNewClient', reInitData));
   }
 
   render(){

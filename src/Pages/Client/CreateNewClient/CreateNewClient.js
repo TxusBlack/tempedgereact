@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
-import { reset, reduxForm, change,  } from 'redux-form';
+import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
@@ -18,6 +18,20 @@ import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
 import { getList, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
+
+//Department Modal re-init data
+const reInitData = {
+	departmentname:"",
+	position:"",
+	description:"",
+	markup:"",
+	otmarkup:"",
+	payRate:"",
+	timeIn:"",
+	timeOut:"",
+	employeeContact:"",
+	contactPhone:""
+}
 
 class CreateNewClient extends Component {
   constructor(props) {
@@ -108,16 +122,7 @@ class CreateNewClient extends Component {
     this.toggleModalOnOff();   //Close Modal
     this.renderClientDepartmentsList({repaint: true});
     this.props.savePositionsList([]);
-    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
-    this.props.dispatch(change('CreateNewClient', 'position', ''));
-    this.props.dispatch(change('CreateNewClient', 'description', ''));
-    this.props.dispatch(change('CreateNewClient', 'payRate', ''));
-    this.props.dispatch(change('CreateNewClient', 'markup', ''));
-    this.props.dispatch(change('CreateNewClient', 'otmarkup', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeIn', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
-    this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
-    this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
+    this.props.dispatch(initialize('CreateNewClient', reInitData));
   }
 
   renderClientDepartmentsList = async (flag) => {
@@ -195,17 +200,14 @@ class CreateNewClient extends Component {
         renderAddBtnDirty: true
       }));
 
-      this.toggleModalOnOff();
-      this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+      this.props.dispatch(initialize('CreateNewClient', {departmentname: ""}));
       this.props.saveToPositionsList("CLEAR");
-    }else{
+    }else {
       this.setState(() => ({
         departmentList: (deptList.length > 0)? departmentList: [],
         addDeptBtn: addDeptBtn,
         renderAddBtnDirty: (deptList.length > 0)? true: false
       }));
-
-      this.toggleModalOnOff();
     }
   }
 
@@ -290,6 +292,7 @@ CreateNewClient.propTypes = {
   getList: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
   saveDepartmentList: PropTypes.func.isRequired,
   saveToDepartmentList: PropTypes.func.isRequired,
   savePositionsList: PropTypes.func.isRequired,
@@ -321,4 +324,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, initialize, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));
