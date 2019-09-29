@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, SAVE_TO_POSITIONS_LIST, SAVE_TO_DEPARTMENTS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, SAVE_TO_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -144,15 +144,6 @@ export let saveDepartmentList = (deptList) => {
   }
 }
 
-export let saveToDepartmentList = (newDept) => {
-  return (dispatch) => {
-    dispatch({
-      type: SAVE_TO_DEPARTMENTS_LIST,
-      payload: newDept
-    })
-  }
-}
-
 export let savePositionsList = (positionsList) => {
   return (dispatch) => {
     dispatch({
@@ -167,15 +158,6 @@ export let saveToPositionsList = (newPos) => {
     dispatch({
       type: SAVE_TO_POSITIONS_LIST,
       payload: newPos
-    });
-  }
-}
-
-export let removeFromPositionList = (index) => {
-  return (dispatch) => {
-    dispatch({
-      type: REMOVE_FROM_POSITIONS_LIST,
-      payload: index
     });
   }
 }

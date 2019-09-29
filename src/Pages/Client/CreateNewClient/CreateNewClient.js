@@ -17,7 +17,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { getList, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
+import { getList, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 //Department Modal re-init data
 const reInitData = {
@@ -66,6 +66,11 @@ class CreateNewClient extends Component {
     this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
   }
 
+  componentWillUnmount = () => {
+    this.props.saveDepartmentList([]);
+    this.props.savePositionsList([]);
+  }
+
   nextPage(){
     console.log("Next Page!");
     this.setState({ page: this.state.page + 1 });
@@ -74,18 +79,6 @@ class CreateNewClient extends Component {
   previousPage(){
     console.log("Previous Page!");
     this.setState({ page: this.state.page - 1 });
-  }
-
-  setDepartmentList = (departments) => {
-    this.setState(() => ({
-      departmentList: departments
-    }));
-  }
-
-  setPositionList = (positions) => {
-    this.setState(() => ({
-      positionList: positions
-    }));
   }
 
   onSubmit = async (formValues) => {
@@ -111,32 +104,22 @@ class CreateNewClient extends Component {
   }
 
   //Set Modal visible or not
-  toggleModalOnOff = () => {
+  toggleModalOnOff = (destroy = null) => {
     this.setState({
-      showModal: !this.state.showModal
+      showModal: !this.state.showModal,
+			departmentContent: (destroy === null)? this.state.departmentContent: ""
     });
   }
 
   //Close Modal
   onClose = () => {
-    this.toggleModalOnOff();   //Close Modal
+    this.toggleModalOnOff(true);   //Close Modal
     this.renderClientDepartmentsList({repaint: true});
     this.props.savePositionsList([]);
     this.props.dispatch(initialize('CreateNewClient', reInitData));
   }
 
   renderClientDepartmentsList = async (flag) => {
-    if(!flag.repaint){
-      console.log("repaint: ", flag.repaint);
-      let departmentname = this.props.departmentname;
-      let positionList = this.props.deptPosList;
-
-      await this.props.saveToDepartmentList({
-        departmentName: departmentname,
-        positions: positionList
-      });
-    }
-
     let departmentList = [];
     let deptList = this.props.deptList;
 
@@ -260,14 +243,10 @@ class CreateNewClient extends Component {
 
   renderDepartmentModal = async () => {
     await this.setState(() => ({
-      departmentContent: <Department editMode={this.state.editMode} closePanel={() => this.toggleModalOnOff()} renderClientDepartmentsList={this.renderClientDepartmentsList} passBackRenderPositions={passBackFunc => this.childRenderPositions = passBackFunc} />
+      departmentContent: <Department editMode={this.state.editMode} closePanel={() => this.onClose()} renderClientDepartmentsList={this.renderClientDepartmentsList} />
     }));
 
     this.toggleModalOnOff();   //Open Modal
-
-    if(this.state.editMode.edit){
-      this.childRenderPositions();
-    }
   }
 
   render(){
@@ -294,10 +273,8 @@ CreateNewClient.propTypes = {
   change: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   saveDepartmentList: PropTypes.func.isRequired,
-  saveToDepartmentList: PropTypes.func.isRequired,
   savePositionsList: PropTypes.func.isRequired,
   saveToPositionsList: PropTypes.func.isRequired,
-  removeFromPositionList: PropTypes.func.isRequired,
   removeFromDepartmentList: PropTypes.func.isRequired
 }
 
@@ -324,4 +301,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, initialize, saveDepartmentList, saveToDepartmentList, savePositionsList, saveToPositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList  })(CreateNewClient));

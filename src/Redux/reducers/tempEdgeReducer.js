@@ -54,17 +54,7 @@ export default function(state = initialState, action){
         ...state,
         deptList: action.payload
       }
-    case SAVE_TO_DEPARTMENTS_LIST:
-      let newListState =  (typeof state.deptList !== "undefined")? state.deptList: [];
-
-      newListState.push(action.payload);
-      return{
-        ...state,
-        deptList: newListState
-      }
     case SAVE_POSITIONS_LIST:
-      console.log("SAVE_POSITION_LIST");
-      console.log("action.payload: ", action.payload);
       return{
         ...state,
         deptPosList: action.payload
@@ -81,20 +71,6 @@ export default function(state = initialState, action){
       return{
         ...state,
         deptPosList: newState
-      }
-    case REMOVE_FROM_POSITIONS_LIST:
-      let newPosListState = state.deptPosList;
-      let posIndex = action.payload;
-
-      if(newPosListState !== undefined){
-        if(newPosListState[posIndex] !== undefined){
-            newPosListState.splice(posIndex, 1);
-        }
-      }
-
-      return{
-          ...state,
-          deptPosList: newPosListState
       }
     case REMOVE_FROM_DEPARTMENTS_LIST:
       let newDeptListState = state.deptList;

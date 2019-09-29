@@ -10,8 +10,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { saveToPositionsList, savePositionsList, saveDepartmentList } from "../../../Redux/actions/tempEdgeActions";
-import { removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
+import { saveDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 //Department Modal re-init data
 const reInitData = {
@@ -23,7 +22,8 @@ const reInitData = {
 	timeIn:"",
 	timeOut:"",
 	employeeContact:"",
-	contactPhone:""
+	contactPhone:"",
+	posList: []
 }
 
 class Department extends React.Component{
@@ -32,12 +32,21 @@ class Department extends React.Component{
     posArray: []
   }
 
-  componentDidMount(){
-    this.setState(() => ({
-      mounted: true
+  componentDidMount = async () => {
+		let positionsList = [];
+
+		if(typeof this.props.deptPosList !== 'undefined'){
+			positionsList = await this.props.deptPosList.map((pos, index) => {
+				return pos;
+			});
+		}
+
+    await this.setState(() => ({
+      mounted: true,
+			posList: positionsList
     }));
 
-    this.props.passBackRenderPositions(this.renderPositions);
+		this.renderPositions();
   }
 
   increaseListSize = async () => {
@@ -54,7 +63,14 @@ class Department extends React.Component{
       contactPhone: this.props.contactPhone,
     };
 
-    await this.props.saveToPositionsList(newDeptPos);
+		let deptPosList = this.state.posList;
+
+		deptPosList.push(newDeptPos);
+
+		this.setState(() => ({
+			posList: deptPosList
+		}));
+
     let reboot = reInitData;
     reboot.departmentname = departmentname;
     this.props.dispatch(initialize('CreateNewClient', reboot));
@@ -63,9 +79,8 @@ class Department extends React.Component{
   }
 
   renderPositions = async () => {
-    let deptPosList = this.props.deptPosList;
-    console.log("deptPosList: ", deptPosList);
-    console.log("this.props.editMode: ", this.props.editMode);
+    let deptPosList = this.state.posList;
+
     let list = await deptPosList.map((position, index) => {
       let key = `positions-${index}`;
 
@@ -115,20 +130,36 @@ class Department extends React.Component{
   }
 
   removeFromPosList = async (index) => {
-    await this.props.removeFromPositionList(index);
+		let deptPosList = this.state.posList;
+		deptPosList.splice(index, 1);
+
+		await this.setState(() => ({
+			posList: deptPosList
+		}));
+
     this.renderPositions();
   }
 
-  renderClientDepts = () => {
+  renderClientDepts = async () => {
     this.props.dispatch(change('CreateNewClient', 'departmentname', this.props.departmentname));
+		let departmentname = this.props.departmentname;
+		let newPosList = this.state.posList;
+		let newDeptList = this.props.deptList;
 
     if(this.props.editMode.edit){
-      let newList = this.props.deptList;
+      newDeptList[this.props.editMode.index].departmentName = this.props.departmentname;
+			newDeptList[this.props.editMode.index].positions = newPosList
 
-      newList[this.props.editMode.index].departmentName = this.props.departmentname;
-      this.props.saveDepartmentList(newList);
+      await this.props.saveDepartmentList(newDeptList);
       this.props.renderClientDepartmentsList({repaint: true});
     }else{
+      newDeptList.push({
+        departmentName: departmentname,
+        positions: newPosList
+      });
+
+      await this.props.saveDepartmentList(newDeptList);
+
       this.props.renderClientDepartmentsList({repaint: false});
     }
 
@@ -266,11 +297,8 @@ class Department extends React.Component{
 }
 
 Department.propTypes = {
-  savePositionsList: PropTypes.func.isRequired,
-  saveToPositionsList: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
-  removeFromPositionList: PropTypes.func.isRequired,
   saveDepartmentList: PropTypes.func.isRequired
 }
 
@@ -331,4 +359,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { savePositionsList, saveToPositionsList, saveDepartmentList, change, initialize, removeFromPositionList })(Department));
+export default withLocalize(connect(mapStateToProps, { saveDepartmentList, change, initialize })(Department));
