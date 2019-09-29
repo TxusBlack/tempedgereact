@@ -23,6 +23,8 @@ class WizardCreateNewUserFirstPage extends Component{
     this.setState(() => ({
       mounted: true
     }));
+
+    this.props.getDispatch(this.props.dispatch);
   }
 
   componentDidUpdate(prevProps, prevState){

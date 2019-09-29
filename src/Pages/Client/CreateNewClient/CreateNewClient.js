@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
+import Validate from '../../Validations/Validations';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
 import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.js';
@@ -57,7 +58,8 @@ class CreateNewClient extends Component {
       editMode: {
         index: null,
         edit: false
-      }
+      },
+			reduxFormDispatch: null
     };
   }
 
@@ -82,7 +84,33 @@ class CreateNewClient extends Component {
   }
 
   onSubmit = async (formValues) => {
-    console.log("Client Form: ", formValues);
+		let response = {
+			values: {
+				attnTo: formValues.attnTo,
+				clientaddress: formValues.clientaddress,
+				clientcity: formValues.clientcity,
+				clientcontactcellphone: formValues.clientcontactcellphone,
+				clientcontactphone: formValues.clientcontactphone,
+				clientcountry: formValues.clientcountry,
+				clientfirstName: formValues.clientfirstName,
+				clientlastName: formValues.clientlastName,
+				clientstate: formValues.clientstate,
+				clientzipcode: formValues.clientzipcode,
+				comments: formValues.comments,
+				company: formValues.company,
+				companyInitials: formValues.companyInitials,
+				email: formValues.email,
+				markupClient: formValues.markupClient,
+				otMarkupClient: formValues.otMarkupClient,
+				payrollCycle: formValues.payrollCycle,
+				salesman: formValues.salesman,
+				workCompCode: formValues.workCompCode,
+				workCompRate: formValues.workCompRate
+			},
+			departments: this.props.deptList
+		};
+
+    console.log("Client Form: ", response);
   }
 
   fireNotification = () => {
@@ -111,13 +139,28 @@ class CreateNewClient extends Component {
     });
   }
 
+	resetInitData = () => {
+		for (var prop in this.props.formValues) {
+			if(prop !== "departmentname" || prop !== "position" || prop !== "description" || prop !== "markup" || prop !== "otmarkup" || prop !== "payRate" || prop !== "timeIn" || prop !== "timeOut" || prop !== "employeeContact" || prop !== "contactPhone"){
+				reInitData[prop] = this.props.formValues[prop];
+			}
+		}
+	}
+
   //Close Modal
-  onClose = () => {
+  onClose = async () => {
     this.toggleModalOnOff(true);   //Close Modal
     this.renderClientDepartmentsList({repaint: true});
     this.props.savePositionsList([]);
-    this.props.dispatch(initialize('CreateNewClient', reInitData));
+		this.resetInitData();
+    this.state.reduxFormDispatch(initialize('CreateNewClient', reInitData));
   }
+
+	getDispatch = (dispatch) => {
+		this.setState(() => ({
+			reduxFormDispatch: dispatch
+		}));
+	}
 
   renderClientDepartmentsList = async (flag) => {
     let departmentList = [];
@@ -182,8 +225,8 @@ class CreateNewClient extends Component {
         addDeptBtn: addDeptBtn,
         renderAddBtnDirty: true
       }));
-
-      this.props.dispatch(initialize('CreateNewClient', {departmentname: ""}));
+			this.resetInitData();
+      this.state.reduxFormDispatch(initialize('CreateNewClient', {departmentname: ""}));
       this.props.saveToPositionsList("CLEAR");
     }else {
       this.setState(() => ({
@@ -202,8 +245,8 @@ class CreateNewClient extends Component {
   departmentModalEdit= async (index) => {
     let departmentname = this.props.deptList[index].departmentName;
     let positionList = this.props.deptList[index].positions;
-
-    this.props.dispatch(change('CreateNewClient', 'departmentname', departmentname));
+		this.resetInitData();
+    this.state.reduxFormDispatch(change('CreateNewClient', 'departmentname', departmentname));
 
     await this.setState(() => ({
       editMode: {
@@ -237,13 +280,13 @@ class CreateNewClient extends Component {
       }
     }), () => {
       this.renderDepartmentModal();
-      this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+      this.state.reduxFormDispatch(change('CreateNewClient', 'departmentname', ''));
     });
   }
 
   renderDepartmentModal = async () => {
     await this.setState(() => ({
-      departmentContent: <Department editMode={this.state.editMode} closePanel={() => this.onClose()} renderClientDepartmentsList={this.renderClientDepartmentsList} />
+      departmentContent: <Department editMode={this.state.editMode} closePanel={() => this.onClose()} renderClientDepartmentsList={this.renderClientDepartmentsList} resetInitData={this.resetInitData} reInitData={reInitData} />
     }));
 
     this.toggleModalOnOff();   //Open Modal
@@ -257,7 +300,7 @@ class CreateNewClient extends Component {
       <div className="wizard-create-agency">
         <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
-          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} getDispatch={(dispatch) => this.getDispatch(dispatch)} {...this.props} />}
           {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
           {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
           { modal }
@@ -278,12 +321,6 @@ CreateNewClient.propTypes = {
   removeFromDepartmentList: PropTypes.func.isRequired
 }
 
-CreateNewClient = reduxForm({
-  form: 'CreateNewClient', //                 <------ form name
-  destroyOnUnmount: false, //        <------ preserve form data
-  // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-})(CreateNewClient);
-
 let mapStateToProps = (state) => {
   let departmentname = "";
 
@@ -294,10 +331,13 @@ let mapStateToProps = (state) => {
     }
   }
 
+	console.log("state.form.CreateNewClient.values: ", (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: "");
+
   return({
     deptList: (state.tempEdge.deptList !== undefined)? state.tempEdge.deptList: [],
     deptPosList: (state.tempEdge.deptPosList !== undefined)? state.tempEdge.deptPosList: [],
-    departmentname: departmentname
+    departmentname: departmentname,
+		formValues: (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: ""
   });
 }
 

@@ -73,9 +73,23 @@ class Department extends React.Component{
 
     let reboot = reInitData;
     reboot.departmentname = departmentname;
-    this.props.dispatch(initialize('CreateNewClient', reboot));
+		let objSize = Object.keys(this.props.formValues).length;
+		let counter = 0;
 
-    this.renderPositions();
+		for (let prop in this.props.formValues) {
+			if(prop === "position" || prop === "description" || prop === "markup" || prop === "otmarkup" || prop === "payRate" || prop === "timeIn" || prop === "timeOut" || prop === "employeeContact" || prop === "contactPhone"){
+				reboot[prop] = "";
+			}else{
+				reboot[prop] = this.props.formValues[prop];
+			}
+
+			if(counter === objSize-1){
+				this.props.dispatch(initialize('CreateNewClient', reboot));
+				this.renderPositions();
+			}
+
+			counter++;
+		}
   }
 
   renderPositions = async () => {
@@ -141,7 +155,8 @@ class Department extends React.Component{
   }
 
   renderClientDepts = async () => {
-    this.props.dispatch(change('CreateNewClient', 'departmentname', this.props.departmentname));
+		this.props.resetInitData();
+    this.props.dispatch(change('CreateNewClient', 'departmentname', this.props.reInitData));
 		let departmentname = this.props.departmentname;
 		let newPosList = this.state.posList;
 		let newDeptList = this.props.deptList;
@@ -168,7 +183,8 @@ class Department extends React.Component{
 
   closePanel = () => {
     this.props.closePanel();
-    this.props.dispatch(initialize('CreateNewClient', reInitData));
+		this.props.resetInitData();
+    this.props.dispatch(initialize('CreateNewClient', this.props.reInitData));
   }
 
   render(){
@@ -355,7 +371,8 @@ let mapStateToProps = (state) => {
     employeeContact: employeeContact,
     contactPhone: contactPhone,
     addDeptDisabled: addDeptDisabled,
-    addPosDisabled: addPosDisabled
+    addPosDisabled: addPosDisabled,
+		formValues: (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: ""
   });
 }
 
