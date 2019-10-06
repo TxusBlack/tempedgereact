@@ -9,6 +9,8 @@ import { GET_ROLE_LIST } from '../../../Redux/actions/types.js'
 import httpService from '../../../utils/services/httpService/httpService.js';
 import WizardCreateNewUserFirstPage from './WizardCreateNewUserFirstPage.js';
 import WizardCreateNewUserSecondPage from './WizardCreateNewUserSecondPage.js';
+import { withLocalize, Translate } from 'react-localize-redux';
+const $ = window.$;
 
 class CreateNewUser extends Component {
   constructor(props){
@@ -21,7 +23,9 @@ class CreateNewUser extends Component {
       steps: [
        {title: ""},
        {title: ""}
-      ]
+     ],
+     message: "",
+     errata: ""
     };
   }
 
@@ -44,10 +48,18 @@ class CreateNewUser extends Component {
       "IPAddress" : "10.1.1.1",
       "user" : {
           "firstName" : formValues.firstName,
-          "lastName" : formValues.lastName,
-          "username" : formValues.username,
-          "password" : (formValues.initialpassword === formValues.confirmpassword)? formValues.initialpassword: null,
-          "email" : formValues.email
+          "middleName": formValues.middleName,
+          "lastName"  : formValues.lastName,
+          "email"     : formValues.email,
+          "gender"    : formValues.gender,
+          "username"  : formValues.username,
+          "password"  : (formValues.initialpassword === formValues.confirmpassword)? formValues.initialpassword: null,
+          "birthday"  : formValues.birthday,
+          "agencyrole": formValues.agencyrole,
+          "agencyorganization": formValues.agencyorganization,
+          "agencyclient"      : formValues.agencyclient,
+          "agencyoffice"      : formValues.agencyoffice,
+          "agencyssnlastfour" : formValues.agencyssnlastfour
       },
       "portalUserConfEntity" : {
           "clientId" : "",
@@ -56,26 +68,51 @@ class CreateNewUser extends Component {
       }
     }
 
+    console.log("response: ", response);
+
     httpService.postCreateNew('/api/user/save', response)
       .then((res) => {
-        console.log('response: ', res);
+        console.log("res: ", res);
+
+        this.setState(() => ({
+          message: <Translate id={res.data.message} />
+        }), () => {
+          this.fireNotification(res.data.status);
+        });
       }).catch((err) => {
         console.log('error: ', err);
+        this.fireNotification()
       });
-
-    //this.fireNotification();
   }
 
-  fireNotification = () => {
+  fireNotification = (status = null) => {
     let { notify } = this.props;
+    let title = "Sign Up Information Submitted";
+    let message = $('#response-translated').text();
+    let errata = <div class="col-md-12"><div class="row"><div class="col-md-4" style={{backgroundColor: "#f2dede", borderColor: "#eed3d7", color: "#b94a48", padding: 20}}><ul><li>{message}</li></ul></div></div></div>;
+    let statusCode = "";
+
+    if(status == 500){
+      statusCode = 'warning';
+      this.setState(() => ({
+        page: 1,
+        errata: errata
+      }));
+    }else if(status === 200){
+      statusCode = 'success';
+      this.props.reset("CreateNewUser");    //Reset form fields all to empty
+      this.setState({ page: 1 });
+    }else{
+      statusCode = 'error';
+    }
 
     notify({
-      title: 'Sign Up Information Submitted',
-      message: 'you clicked on the Submit button',
-      status: 'success',
+      title: title,
+      message: message,
+      status: statusCode,
       position: 'br',
       dismissible: true,
-      dismissAfter: 3000
+      dismissAfter: 6000
     });
   }
 
@@ -90,9 +127,10 @@ class CreateNewUser extends Component {
       <div className="wizard-create-agency">
         <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
-          {page === 1 && <WizardCreateNewUserFirstPage  onSubmit={this.nextPage} {...this.props} />}
+          {page === 1 && <WizardCreateNewUserFirstPage  onSubmit={this.nextPage} errata={this.state.errata} {...this.props} />}
           {page === 2 && <WizardCreateNewUserSecondPage previousPage={this.previousPage} onSubmit={this.onSubmit} {...this.props} />}
         </div>
+        {<div id="response-translated" style={{display: "none"}}>{this.state.message}</div>}
       </div>
     );
   }
@@ -103,4 +141,4 @@ CreateNewUser.propTypes = {
   reset: PropTypes.func.isRequired
 }
 
-export default connect(null, { notify, getList, reset })(CreateNewUser);
+export default withLocalize(connect(null, { notify, getList, reset })(CreateNewUser));

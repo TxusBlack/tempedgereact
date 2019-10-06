@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST, SET_DEFAULT_ROLE } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -12,8 +12,6 @@ export let doLogin = (url, data) => {
       .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
-
-        console.log("token: ", res.data.access_token);
 
         sessionStorage.setItem('access_token', token);
         Axios({

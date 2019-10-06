@@ -5,9 +5,9 @@ let validate = (formValues) => {
     errors.firstName = 'Please enter your first name';
   }
 
-  if(!formValues.middleName){
-    errors.middleName = 'Please enter your middle name or initial';
-  }
+  // if(!formValues.middleName){
+  //   errors.middleName = 'Please enter your middle name or initial';
+  // }
 
   if(!formValues.lastName){
     errors.lastName = 'Please enter your last name';
@@ -40,9 +40,9 @@ let validate = (formValues) => {
       errors.email = 'Invalid email address.'
   }
 
-  if(!formValues.gender){
-    errors.gender = 'Please select a gender.';
-  }
+  // if(!formValues.gender){
+  //   errors.gender = 'Please select a gender.';
+  // }
 
   if(!formValues.birthday){
     errors.birthday = "Please enter your birthday";
