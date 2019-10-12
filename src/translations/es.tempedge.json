@@ -55,6 +55,7 @@
   "com.tempedge.error.person.passwordrequired"                        : "Contraseña es requerida.",
   "com.tempedge.error.person.initialpasswordrequired"                 : "Contraseña es requerida.",
   "com.tempedge.error.person.confirmpasswordrequired"                 : "Contraseña es requerida.",
+  "com.tempedge.error.passwordnotvalid"                               : "Contraseña es invalida (8 caracteres, alfaanumerico).",
   "com.tempedge.msg.label.forgotpassword"                             : "Olvido su contraseña",
   "com.tempedge.msg.label.resetpasswordlink"                          : "Un link para cambiar su contraseña sera enviado a su correo electronico.",
   "com.tempedge.msg.label.send"                                       : "Enviar",
