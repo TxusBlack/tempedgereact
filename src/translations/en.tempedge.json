@@ -61,6 +61,7 @@
   "com.tempedge.error.person.passwordrequired"                        : "Password is required.",
   "com.tempedge.error.person.initialpasswordrequired"                 : "Password is required.",
   "com.tempedge.error.person.confirmpasswordrequired"                 : "Password is required.",
+  "com.tempedge.error.passwordnotvalid"                               : "Please enter a valid password (8 characters, alphanumeric).",
   "com.tempedge.msg.label.forgotpassword"                             : "Forgot Pasword",
   "com.tempedge.msg.label.resetpasswordlink"                          : "Password reset link will be sent to your email.",
   "com.tempedge.msg.label.send"                                       : "Send",

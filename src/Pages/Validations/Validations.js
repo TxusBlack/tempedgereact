@@ -17,17 +17,32 @@ let validate = (formValues) => {
     errors.password = 'Please enter your password.';
   }
 
+  let passwordRegX = new RegExp("^(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
+
   if(!formValues.initialpassword){
     errors.initialpassword = 'Please enter your password.';
+  }else if(formValues.initialpassword){
+    if(!passwordRegX.test(formValues.initialpassword)){
+      errors.initialpassword = 'Please enter a valid password (8 characters, alphanumeric).';
+    }
   }
 
   if(!formValues.confirmpassword){
     errors.confirmpassword = 'Please confirm your password.';
+  }else if(formValues.confirmpassword){
+    if(!passwordRegX.test(formValues.confirmpassword)){
+      errors.confirmpassword = 'Please enter a valid password (8 characters, alphanumeric).';
+    }
   }
 
   if(formValues.initialpassword !==  formValues.confirmpassword){
-    errors.initialpassword = 'Password does not match.';
-    errors.confirmpassword = 'Password does not match.';
+    if(passwordRegX.test(formValues.initialpassword)){
+      errors.initialpassword = 'Password does not match.';
+    }
+
+    if(passwordRegX.test(formValues.confirmpassword)){
+      errors.confirmpassword = 'Password does not match.';
+    }
   }
 
   if (!formValues.email) {
