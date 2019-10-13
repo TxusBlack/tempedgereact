@@ -39,7 +39,7 @@ class WizardCreateNewUserSecondPage extends Component{
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if(hasActiveLanguageChanged){
-      this.props.push(`/createClient/${this.props.activeLanguage.code}`);
+      this.props.push(`/client/new/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }

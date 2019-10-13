@@ -24,7 +24,9 @@ export let doLogin = (url, data) => {
           params: {
             access_token: token
           }
-        }).then((response) => {
+        }).then(async (response) => {
+          sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
+
           dispatch({
             type: LOGIN,
             payload: response.data.result
@@ -40,7 +42,7 @@ export let doLogin = (url, data) => {
             sessionStorage.setItem('agency', JSON.stringify(response.data.result.portalUserList[0]));
 
             if(response.data.result.portalUserList[0].status === "A" && response.data.result.portalUserList[0].organizationEntity.status === "A"){
-              history.push(`/protected/${lang[2]}`);
+              history.push(`/dashboard/${lang[2]}`);
             }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "A" /*&& response.data.result.portalUserList[0].userRoleId >= 4*/){
               history.push(`/pending/user/${lang[2]}`);
             }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "P"){
@@ -57,7 +59,7 @@ export let doLogin = (url, data) => {
               history.push(`/auth/${lang[2]}`);
             }
           }else if(agencyList.length > 1){
-            history.push(`/protected/${lang[2]}`);
+            history.push(`/dashboard/${lang[2]}`);
           }
         });
       }).catch((error) => {

@@ -40,11 +40,11 @@ class HomePage extends Component{
     let registerAgencyRoute = `/registerAgency/${this.props.lang}`;
     let snapshotRouteDesktop = `/snapshot-desktop/${this.props.lang}`;
     let inputFileRoute = `/upload/${this.props.lang}`;
-    let protectedRoute = `/protected/${this.props.lang}`;
     let genericDashboard = `/dashboard/${this.props.lang}`;
-    let employee = `/employee/${this.props.lang}`;
-    let clientList = `/client/${this.props.lang}`;
-    let createNewClient = `/createClient/${this.props.lang}`;
+    let employee = `/employee/new/${this.props.lang}`;
+    let employeeList = `/employee/list/${this.props.lang}`;
+    let clientList = `/client/list/${this.props.lang}`;
+    let createNewClient = `/client/new/${this.props.lang}`;
 
     console.log("IN HOMEPAGE ROUTE!");
 
@@ -59,8 +59,8 @@ class HomePage extends Component{
         <Link to={createNewClient}>Create New Client</Link><br />
         <Link to={snapshotRouteDesktop}>Capture Face Snapshot - Desktop View</Link><br />
         <Link to={inputFileRoute}>Upload File</Link><br />
-        <Link to={protectedRoute}>Protected Route</Link><br />
         <Link to={employee}>Employee</Link><br />
+        <Link to={employeeList}>Employee List</Link><br />
         <Link to={clientList}>Client List</Link><br />
         <Link to={genericDashboard}>Generic Dashboard</Link>
       </div>

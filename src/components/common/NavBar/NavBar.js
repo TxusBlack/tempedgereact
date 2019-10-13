@@ -49,7 +49,7 @@ class NavBar extends React.Component{
           <div className="row" style={{pading: 0, margin: 0, width: "100%"}}>
             <div className="col-lg-1">{hamburgerBtn}</div>
             <div className="col-lg-2 col-xs-6 col-sm-6">
-              <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Compnay Logo" /></Link>
+              <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" /></Link>
             </div>
             <div className="col-xs-4 col-sm-4 language-container-xs">
               <div className="language">

@@ -17,7 +17,7 @@ class EmployeeList extends Component {
             filterBy : {},
             data : []
         }
-        
+
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
 
@@ -25,7 +25,7 @@ class EmployeeList extends Component {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
         if (hasActiveLanguageChanged) {
-            this.props.push(`/employee/${this.props.activeLanguage.code}`);
+            this.props.push(`/employee/list/${this.props.activeLanguage.code}`);
             ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
         }
     }
@@ -44,4 +44,3 @@ EmployeeList.propTypes = {     //Typechecking With PropTypes, will run on its ow
 }
 
 export default withLocalize(connect(null, { push, tempedgeAPI })(EmployeeList));
-
