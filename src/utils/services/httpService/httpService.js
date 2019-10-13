@@ -15,7 +15,7 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 let HttpService = {
-  getList: async (url) => {
+  get: async (url) => {
     let response = await Axios({
       url: baseUrlTempEdge + url,
       method: 'get',
@@ -29,7 +29,7 @@ let HttpService = {
 
     return response;
   },
-  postCreateNew: async (url, data) => {     //Create New User, Agency & others
+  post: async (url, data) => {     //Create New User, Agency & others
     let response = await Axios({
       url: baseUrlTempEdge + url,
       method: 'post',

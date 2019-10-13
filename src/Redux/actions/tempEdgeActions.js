@@ -4,7 +4,7 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://192.168.0.19:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
@@ -59,7 +59,6 @@ export let doLogin = (url, data) => {
           }else if(agencyList.length > 1){
             history.push(`/protected/${lang[2]}`);
           }
-
         });
       }).catch((error) => {
         let lang = window.location.pathname;
@@ -99,9 +98,9 @@ export let tempedgeAPI = (url, data, actionName) => {
   }
 }
 
-export let getList = (url, actionName) => {
+export let get = (url, actionName) => {
   return (dispatch) => {
-    httpService.getList(url)
+    httpService.get(url)
       .then((response) => {
         dispatch({
           type: actionName,
@@ -125,7 +124,7 @@ export let storeFormPageNumber = (formName, position) => {
 
 export let getFilters = (url, data, actionName) => {
   return (dispatch) => {
-    httpService.getList(url)
+    httpService.get(url)
       .then((response) => {
         dispatch({
           type: actionName,
