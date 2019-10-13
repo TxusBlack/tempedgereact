@@ -1,18 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
-import UserDashboard from '../../../Pages/UserDashboard/UserDashboard.js';
-import AdminDashboard from '../../../Pages/AdminDashboard/AdminDashboard.js';
+import Dashboard from '../../../Pages/Dashboard/Dashboard.js';
 import AgencyList from '../../../Pages/Agencies/AgencySelect/AgencySelectList';
 
 let PrivateRoute = (props) => {
   let { ...rest } = props;
-  let RouteComponent = <UserDashboard />;   //UserDashboard component, default
+  let RouteComponent = <Dashboard title="User Dashboard" body={<p>This is the User's dashboard.</p>}/>;   //UserDashboard component, default
   let RedirectComponent = <Redirect to={{ pathname: props.redirectPath, state: { from: props.location }}} />;   //Back to Login if ERROR
 
   //Conditional rendering based on user role
   if(props.userRoleId === 1){     //If user role is Admin
-    RouteComponent = <AdminDashboard />
+    RouteComponent = <Dashboard title="Admin Dashboard" body={<p>This is the Admin's dashboard.</p>} />
   }else if(props.portalUserList.length > 1){
     RouteComponent = <AgencyList agencies={props.portalUserList} />
   }

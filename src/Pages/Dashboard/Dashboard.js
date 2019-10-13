@@ -25,40 +25,20 @@ class GenericDashboard extends React.Component{
   render(){
     return(
       <React.Fragment>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-panel" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block main-panel" style={{paddingBottom: "0px", width: 1600}}>
           <div className="panel main-form-panel">
             <div className="panel-heading main-header">
-              <h2 className="text-center"><Translate id="com.tempedge.msg.label.salesperson">Salesmen</Translate></h2>
+              <h2 className="text-center">{this.props.title}</h2>
             </div>
             <div className="main-form-panel-inputs">
               <div className="panel-body" className="form-horizontal center-block main-form" style={{paddingBottom: "0px"}}>
                 <div className="form-group main-form-group row">
-                  <div className="col-md-4">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.username">Username</Translate></label>
-                    <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />
-                  </div>
-
-                  <div className="col-md-4">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.password">Password</Translate></label>
-                    <Field name="initialpassword" type="password" placeholder="Enter password" category="person" component={InputBox} />
-                  </div>
-
-                  <div className="col-md-4">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.confirmpassword" /></label>
-                    <Field name="confirmpassword" type="password" placeholder="Confirm password" category="person" component={InputBox} />
-                  </div>
+                  {this.props.body}
                 </div>
               </div>
             </div>
             <div className="panel-footer main-footer panel-footer-agency-height-override">
-              <div className="prev-next-btns-agency">
-                <div className="col-md-4 col-md-offset-2">
-                  <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
-                </div>
-                <div className="col-md-4">
-                  <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
-                </div>
-              </div>
+
             </div>
           </div>
         </form>
