@@ -55,6 +55,7 @@
   "com.tempedge.error.person.passwordrequired"                        : "Contraseña es requerida.",
   "com.tempedge.error.person.initialpasswordrequired"                 : "Contraseña es requerida.",
   "com.tempedge.error.person.confirmpasswordrequired"                 : "Contraseña es requerida.",
+  "com.tempedge.error.passwordnotvalid"                               : "Contraseña es invalida (8 caracteres, alfaanumerico).",
   "com.tempedge.msg.label.forgotpassword"                             : "Olvido su contraseña",
   "com.tempedge.msg.label.resetpasswordlink"                          : "Un link para cambiar su contraseña sera enviado a su correo electronico.",
   "com.tempedge.msg.label.send"                                       : "Enviar",
@@ -67,6 +68,8 @@
   "com.tempedge.msg.label.addresstype"                                : "Tipo de direcion",
   "com.tempedge.msg.label.agencyzipcode"                              : "Codigo Postal",
   "com.tempedge.msg.label.officeinformation"                          : "Informacion Sobre Oficina",
+  "com.tempedge.msg.label.office"                                     : "Oficina",
+  "com.tempedge.msg.label.ssnlast4"                                   : "Ultimos 4 digitos del Seguro Social.",
   "com.tempedge.msg.label.payrollhours"                               : "Ultima fecha para añadir horas al rol de pago",
   "com.tempedge.msg.label.payrollvalidation"                          : "Ultimo dia para validacion de rol de pago",
   "com.tempedge.msg.label.fundingcompany"                             : "Seleccione si su empresa usa una financiera",
@@ -145,5 +148,8 @@
   "com.tempedge.error.person.timeOutrequired"                         : "Tiempo de salida requerido.",
   "com.tempedge.error.client.employeeContactrequired"                 : "Contacto de Empleado requerido.",
   "com.tempedge.error.client.contactPhonerequired"                    : "Telefono requerido.",
-  "com.tempedge.error.client.departmentnamerequired"                  : "Departamento requerido."
+  "com.tempedge.error.client.departmentnamerequired"                  : "Departamento requerido.",
+  "com.tempedge.msg.info.msg.success"                                 : "Transacción Exitosa!",
+  "com.tempedge.error.emailalreadyexist"                              : "Email a sido registrado previamente.",
+  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe."
 }

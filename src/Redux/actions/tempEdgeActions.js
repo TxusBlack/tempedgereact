@@ -1,10 +1,10 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST, SET_DEFAULT_ROLE } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://192.168.0.19:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
@@ -12,8 +12,6 @@ export let doLogin = (url, data) => {
       .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
-
-        console.log("token: ", res.data.access_token);
 
         sessionStorage.setItem('access_token', token);
         Axios({
@@ -99,9 +97,9 @@ export let tempedgeAPI = (url, data, actionName) => {
   }
 }
 
-export let getList = (url, actionName) => {
+export let get = (url, actionName) => {
   return (dispatch) => {
-    httpService.getList(url)
+    httpService.get(url)
       .then((response) => {
         dispatch({
           type: actionName,
@@ -125,7 +123,7 @@ export let storeFormPageNumber = (formName, position) => {
 
 export let getFilters = (url, data, actionName) => {
   return (dispatch) => {
-    httpService.getList(url)
+    httpService.get(url)
       .then((response) => {
         dispatch({
           type: actionName,

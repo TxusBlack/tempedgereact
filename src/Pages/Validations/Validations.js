@@ -5,9 +5,9 @@ let validate = (formValues) => {
     errors.firstName = 'Please enter your first name';
   }
 
-  if(!formValues.middleName){
-    errors.middleName = 'Please enter your middle name or initial';
-  }
+  // if(!formValues.middleName){
+  //   errors.middleName = 'Please enter your middle name or initial';
+  // }
 
   if(!formValues.lastName){
     errors.lastName = 'Please enter your last name';
@@ -21,17 +21,32 @@ let validate = (formValues) => {
     errors.password = 'Please enter your password.';
   }
 
+  let passwordRegX = new RegExp("^(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
+
   if(!formValues.initialpassword){
     errors.initialpassword = 'Please enter your password.';
+  }else if(formValues.initialpassword){
+    if(!passwordRegX.test(formValues.initialpassword)){
+      errors.initialpassword = 'Please enter a valid password (8 characters, alphanumeric).';
+    }
   }
 
   if(!formValues.confirmpassword){
     errors.confirmpassword = 'Please confirm your password.';
+  }else if(formValues.confirmpassword){
+    if(!passwordRegX.test(formValues.confirmpassword)){
+      errors.confirmpassword = 'Please enter a valid password (8 characters, alphanumeric).';
+    }
   }
 
   if(formValues.initialpassword !==  formValues.confirmpassword){
-    errors.initialpassword = 'Password does not match.';
-    errors.confirmpassword = 'Password does not match.';
+    if(passwordRegX.test(formValues.initialpassword)){
+      errors.initialpassword = 'Password does not match.';
+    }
+
+    if(passwordRegX.test(formValues.confirmpassword)){
+      errors.confirmpassword = 'Password does not match.';
+    }
   }
 
   if (!formValues.email) {
@@ -40,9 +55,9 @@ let validate = (formValues) => {
       errors.email = 'Invalid email address.'
   }
 
-  if(!formValues.gender){
-    errors.gender = 'Please select a gender.';
-  }
+  // if(!formValues.gender){
+  //   errors.gender = 'Please select a gender.';
+  // }
 
   if(!formValues.birthday){
     errors.birthday = "Please enter your birthday";
