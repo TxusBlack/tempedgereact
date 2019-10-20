@@ -301,6 +301,9 @@ ul.menu-ul li:hover a:after{
   margin-bottom: 1.8rem;
 }
 
+input:invalid {
+  border-color: red;
+}
 .face-tile, .face-tile img{
   width: 100%;
   min-height: 24rem;
@@ -1289,7 +1292,7 @@ form div.list .list-item:last-child button {
 
 /********TAB STYLE*******************************/
 .formPanel{
-  padding: 3rem;
+  padding: 2rem 2rem 0 2rem;
   width: 100%;
   margin: 2rem;
   font-size: 1.6rem;
