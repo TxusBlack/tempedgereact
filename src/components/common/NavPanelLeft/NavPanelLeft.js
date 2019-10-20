@@ -2,6 +2,7 @@ import React from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import { Link } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import user from './assets/user.png';
@@ -26,8 +27,14 @@ class NavPanelLeft extends React.Component{
     this.props.toggleNav();
   }
 
+  signOut = () => {
+    sessionStorage.clear();
+    this.toggleNav();
+  }
+
   render(){
     let panelClass = (this.props.show)? "panel-nav-left show": "panel-nav-left ";
+    let leftNavMenu = (typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null)? JSON.parse(sessionStorage.getItem('leftNavMenu')): "";
 
     return(
       <nav className={panelClass}>
@@ -46,20 +53,12 @@ class NavPanelLeft extends React.Component{
             </div>
           </div>
           <ul>
-            <li><a href="/">My Account</a></li>
-            <li><a href="/">Notifications</a></li>
-            <li><a href="/">New User</a></li>
-            <li><a href="/">New Agency</a></li>
-            <li><a href="/">Employee</a></li>
-            <li><a href="/">Client</a></li>
-            <li><a href="/">Daily List</a></li>
-            <li><a href="/">Time Entry</a></li>
-            <li><a href="/">Payroll</a></li>
-            <li><a href="/">Reports</a></li>
-            <li><a href="/">Administration</a></li>
+            {(leftNavMenu !== '')? leftNavMenu.map((item, index) => {
+              return <li onClick={this.toggleNav}><Link to={`${item.optionPath}/${this.props.activeLanguage.code} `}>{item.optionName}</Link></li>;
+            }): ""}
           </ul>
         </div>
-        <Footer textColor="#2d2d2d" background="#fff" content={<p><a href="/">Sign Out</a></p>} />
+        <Footer textColor="#2d2d2d" background="#fff" content={<p onClick={this.signOut}><Link to="/">Sign Out</Link></p>} />
       </nav>
     );
   }

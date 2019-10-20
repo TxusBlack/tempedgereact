@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import FormData from 'form-data'
+import config from '../../../env/env.js';
 
 //let baseUrlTempEdge = `http://10.1.10.101:9191`;
 let baseUrlTempEdge = `http://192.168.0.19:9191`;     //***Must change this URL in the actions file as well***
@@ -49,12 +50,22 @@ let HttpService = {
 
     return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
       headers: {
-          'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
+          'Authorization': "Basic " + btoa(config.tempedgeUser+":"+config.tempedgePassword)
+      }
+    });
+  },
+  tokenValidation: async (url, token) => {
+    let bodyFormData = new FormData();
+    bodyFormData.set('token', token);
+
+    return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
+      headers: {
+          'Authorization': "Basic " + btoa(config.tempedgeUser+":"+config.tempedgePassword)
       }
     });
   },
   postImages: async (url, data) => {
-    var bodyFormData = new FormData();
+    let bodyFormData = new FormData();
 
     let newArray = await data.map( (img, index) => {   //'newArray' holds the promise returned by await, do not remove
       let file = dataURLtoFile(img, `user-${index}.jpeg`);

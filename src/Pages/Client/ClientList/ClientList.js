@@ -17,7 +17,7 @@ class ClientList extends Component {
             filterBy : {},
             data : []
         }
-        
+
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
 
@@ -25,7 +25,7 @@ class ClientList extends Component {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
         if (hasActiveLanguageChanged) {
-            this.props.push(`/client/${this.props.activeLanguage.code}`);
+            this.props.push(`/client/list/${this.props.activeLanguage.code}`);
 
             ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
         }
@@ -47,4 +47,3 @@ ClientList.propTypes = {     //Typechecking With PropTypes, will run on its own,
 }
 
 export default withLocalize(connect(null, { push, tempedgeAPI })(ClientList));
-
