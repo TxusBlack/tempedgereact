@@ -75,7 +75,7 @@ class WizardCreateNewUserFirstPage extends Component{
           </div>
         </div>
         <div className="register-form-panel-inputs">
-          <form className="panel-body" onSubmit={this.props.handleSubmit(this.props.onSubmit)} className="form-horizontal center-block register-form" style={{paddingBottom: "0px"}}>
+          <form className="panel-body form-horizontal center-block register-form" onSubmit={this.props.handleSubmit(this.props.onSubmit)} style={{paddingBottom: "0px"}}>
             <div className="form-group row">
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.firstname"></Translate></label>
@@ -94,9 +94,9 @@ class WizardCreateNewUserFirstPage extends Component{
             <div className="form-group row">
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.gender" /></label>
-                  <span style={{display: "none"}} ref="maleOption"><Translate id="com.tempedge.msg.label.gender.male" /></span>
-                  <span style={{display: "none"}} ref="femaleOption"><Translate id="com.tempedge.msg.label.gender.female" /></span>
-                  <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={Dropdown} />
+                <span style={{display: "none"}} ref="maleOption"><Translate id="com.tempedge.msg.label.gender.male" /></span>
+                <span style={{display: "none"}} ref="femaleOption"><Translate id="com.tempedge.msg.label.gender.female" /></span>
+                <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={Dropdown} />
               </div>
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.email" /></label>

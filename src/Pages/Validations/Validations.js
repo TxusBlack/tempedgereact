@@ -44,8 +44,60 @@ let validate = (formValues) => {
     errors.gender = 'Please select a gender.';
   }
 
+  if(!formValues.temporarydata){
+    errors.temporarydata = 'Please enter temporary data.';
+  }
+
+  if(!formValues.office){
+    errors.office = 'Please enter office.';
+  }
+
+  if(!formValues.ssn){
+    errors.ssn = 'Please enter social secuirty number.';
+  }
+
+  if(!formValues.employeeid){
+    errors.employeeid = 'Please enter employee id.';
+  }
+
+  if(!formValues.department){
+    errors.department = 'Please enter department.';
+  }
+
   if(!formValues.birthday){
     errors.birthday = "Please enter your birthday";
+  }
+
+  if(!formValues.hireDate){
+    errors.hireDate = "Please enter hire date";
+  }
+
+  if(!formValues.phone){
+    errors.phone = "Please enter phone number";
+  }
+
+  if(!formValues.country){
+    errors.country = "Please enter country";
+  }
+
+  if(!formValues.address){
+    errors.address = "Please enter address";
+  }
+
+  if(!formValues.address2){
+    errors.address2 = "Please enter address 2";
+  }
+
+  if(!formValues.city){
+    errors.city = "Please enter city";
+  }
+
+  if(!formValues.state){
+    errors.state = "Please enter state";
+  }
+
+  if(!formValues.zip){
+    errors.zip = "Please enter zip code";
   }
 
   if(!formValues.agencyrole){
