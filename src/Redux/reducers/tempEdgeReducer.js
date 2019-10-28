@@ -6,7 +6,8 @@ import { LOGIN,
   TEMPEDGE_LIST,
   SAVE_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
-  REMOVE_FROM_POSITIONS_LIST
+  REMOVE_FROM_POSITIONS_LIST,
+  SKILLS_LIST
 } from '../actions/types';
 
 let initialState = {
@@ -39,6 +40,11 @@ export default function(state = initialState, action){
       return{
         ...state,
         paginatorList: action.payload
+      }
+    case SKILLS_LIST:
+      return{
+        ...state,
+        skillsList: action.payload
       }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;

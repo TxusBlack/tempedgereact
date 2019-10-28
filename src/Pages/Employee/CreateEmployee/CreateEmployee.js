@@ -13,8 +13,8 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE 
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
-import { getList } from '../../../Redux/actions/tempEdgeActions';
-import { GET_COUNTRY_REGION_LIST } from '../../../Redux/actions/types.js';
+import { getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
+import { GET_COUNTRY_REGION_LIST, SKILLS_LIST } from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
@@ -33,6 +33,7 @@ class CreateEmployee extends Component {
         this.state = {
             activePage :3,
             country_list: [],
+            regionsList: [],
             steps: [
                 {title: ""},
                 {title: ""},
@@ -42,7 +43,12 @@ class CreateEmployee extends Component {
             genders: [],
             mounted: false,
             getCountryList: false,
-            countryListRendered: 0
+            countryListRendered: 0,
+            drugTest: [],
+            backgroundTest: [],
+            documents: null,
+            resume: null,
+            maritalStatus: []
         }
 
         this.addTranslationsForActiveLanguage();
@@ -52,6 +58,8 @@ class CreateEmployee extends Component {
       await this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
       let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
       parent.closest(".tabs-stepper-wrapper").css("width", "1600px");
+
+      await this.props.getListSafe("/api/person/skillList", { "orgId" : 1 },  SKILLS_LIST);
 
       this.setState(() => ({
         mounted: true
@@ -69,10 +77,15 @@ class CreateEmployee extends Component {
 
       if(this.state.getCountryList && this.state.countryListRendered < 1){
         let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
+        let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
+        let states = await regionsList.map((state, index) => {
+          return state.name;
+        });
 
         this.setState(() => ({
           countryListRendered: this.state.countryListRendered+1,
-          country_list: list
+          country_list: list,
+          regionsList: states
         }));
       }
 
@@ -88,23 +101,80 @@ class CreateEmployee extends Component {
       await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
       let gendersTranslate = [];
+      let drugTest = [];
+      let backgroundTest = [];
+      let maritalStatus = [];
 
-      gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
-      gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
+      await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
+      await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
+
+      await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
+      await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
+
+      await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text());
+      await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestNegativeOption)).text());
+
+      await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusAffirmativeOption)).text());
+      await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusNegativeOption)).text());
 
       if(this.state.mounted && gendersTranslate.length !== 0){
-        this.setState(() => ({
-          genders: gendersTranslate
+        await this.setState(() => ({
+          genders: gendersTranslate,
+          drugTest: drugTest,
+          backgroundTest: backgroundTest,
+          maritalStatus: maritalStatus
         }));
       }
     }
 
+    onChange = (file, ref) => {
+      let readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs[ref]));
+      let fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+
+      readOnlyTextBox.text(fileName);
+
+      let reader = new FileReader();
+
+      reader.readAsBinaryString(file);    //Read Blob as binary
+
+      //Event Listener for when a file is selected to be uploaded
+      reader.onload = (event) => { //(on_file_select_event)
+        let data = event.target.result;   //'result' if not 'null', contains the contents of the file as a binary string
+        let stateName = (ref === "fileInputDocuments")? "documents": "resume";
+
+        /* Update state */
+        this.setState(() => ({
+          [stateName]: data
+        }));
+      };
+    }
+
     onSubmit = async (formValues) => {
       console.log("formValues: ", formValues);
+      console.log("documents: ", this.state.documents);
+      console.log("resume: ", this.state.resume);
     }
 
     render() {
         let key = this.state.key;
+
+        let skillsLeft  = ["1st Shift preferred / Prefiere el Primer Turno", "3rd Shift preferred / Prefiere el Tercer Turno", "About Language: Speak English", "Forklift Driver / Conductor de Montacargas", "Janitor / Cleaning / Limpieza", "Machine Operator / Operador de Maquina", "Mechanic Machine / Mecanico de maquinas", "Microsoft Word", "Pick / Pack", "Shipping / Receiving"];
+        let skillsRight = ["2nd Shift preferred / Prefiere el Segundo Turno", "About language : Habla Español", "Assembly / Ensamblador", "Inventory / Inventario", "Line Supervisor / Supervisor de linea", "Material Handler / Ayudante", "Microsoft Excel", "Office / Clerical / Oficina", "Quick Books", "Work with Cellphones / Trabaja con celulares"];
+
+        let drugTestDate = (
+          <div style={{width: "80%", margin: "auto"}}>
+            <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.date" /></label>
+            <Field name="drugTestDate" type="text" placeholder="Drug Test Date" category="person" component={DateTime} validate={date()}/>
+          </div>
+        );
+
+        let backgroundTestDate = (
+            <div style={{width: "80%", margin: "auto"}}>
+              <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.date" /></label>
+              <Field name="backgroundTestDate" type="text" placeholder="Background Test Date" category="person" component={DateTime} validate={date()}/>
+            </div>
+          );
+
         return (
             <React.Fragment>
               <Stepper steps={ this.state.steps } activeStep={ key } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
@@ -131,30 +201,30 @@ class CreateEmployee extends Component {
                           <div className="tab-pane fade show active" id="tab1" role="tabpanel">
                               <div className="form-group row">
                                   <div className="col-10 col-md-5 col-lg-4">
-                                    <label className="control-label">Temporary Data</label>
+                                    <label className="control-label"><Translate id="com.tempedge.msg.label.tempdata" /></label>
                                     <Field name="temporarydata" type="text" placeholder="Temporary Data" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
-                                  <label className="control-label">Office</label>
-                                      <Field name="office" type="text" placeholder="Office" category="person" component={InputBox} />
+                                    <label className="control-label"><Translate id="com.tempedge.msg.label.office" /></label>
+                                    <Field name="office" type="text" placeholder="Office" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
-                                  <label className="control-label">Deparment</label>
-                                      <Field name="department" type="text" placeholder="Deparment" category="person" component={InputBox} />
+                                    <label className="control-label"><Translate id="com.tempedge.msg.label.department" /></label>
+                                    <Field name="department" type="text" placeholder="Deparment" category="person" component={InputBox} />
                                   </div>
                               </div>
                               <div className="form-group row">
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">SSN</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.ssnonly" /></label>
                                       <Field name="ssn" type="text" placeholder="SSN" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">Employee ID</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.employeeid" /></label>
                                       <Field name="employeeid" type="text" placeholder="Employee ID" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">Hire Date</label>
-                                      <Field name="hireDate" type="text" placeholder="Hire Date" category="person" component={DateTime} validate={date()}/>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.hiredate" /></label>
+                                      <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" component={DateTime} validate={date()}/>
                                   </div>
                               </div>
                               <div className="form-group row">
@@ -164,7 +234,7 @@ class CreateEmployee extends Component {
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.middlename"></Translate></label>
-                                      <Field name="middleName" type="text" placeholder="Middle Name" category="person" component={InputBox} />
+                                      <Field name="middleName_" type="text" placeholder="Middle Name" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.lastname"></Translate></label>
@@ -175,11 +245,11 @@ class CreateEmployee extends Component {
                               <div className="form-group row">
                                   <div className="col-10 col-md-5 col-lg-4">
                                     <label className="control-label"><Translate id="com.tempedge.msg.label.birthday" /></label>
-                                    <Field name="birthday" type="text" category="person" component={DateTime} validate={date()} />
+                                    <Field name="birthday_" type="text" category="person" component={DateTime} validate={date()} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label">Age</label>
-                                      <label className="control-label">18</label>
+                                      <label className="control-label">{(this.props.birthday !== null)? Math.floor((new Date() - new Date(this.props.birthday).getTime()) / 3.15576e+10): ""}</label>
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
                                     <label className="control-label"><Translate id="com.tempedge.msg.label.gender" /></label>
@@ -192,66 +262,154 @@ class CreateEmployee extends Component {
                           <div className="tab-pane fade" id="tab2" role="tabpanel">
                               <div className="form-group row">
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">Phone</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.phone" /></label>
                                       <Field name="phone" type="text" placeholder="Phone" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-8">
-                                      <label className="control-label">Email</label>
-                                      <Field name="email" type="text" placeholder="Email" category="person" component={InputBox} />
-                                  </div>
-                              </div>
-                              <div className="form-group row">
-                                  <div className="col-12">
-                                      <label className="control-label"></label>
-                                      <hr></hr>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.email" /></label>
+                                      <Field name="email_" type="text" placeholder="Email" category="person" component={InputBox} />
                                   </div>
                               </div>
 
                               <div className="form-group row">
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">Country</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.country" /></label>
                                       <Field name="country" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
                                   </div>
                               </div>
                               <div className="form-group row">
                                   <div className="col-10 col-md-8">
-                                      <label className="control-label">Address</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.address" /></label>
                                       <Field name="address" type="text" placeholder="Address" category="person" component={InputBox} />
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">Address 2</label>
-                                      <Field name="address2" type="text" placeholder="Address 2" category="person" component={InputBox} />
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress2" /></label>
+                                      <Field name="address2_" type="text" placeholder="Address 2" category="person" component={InputBox} />
                                   </div>
-
                               </div>
                               <div className="form-group row">
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">City</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.city" /></label>
                                       <Field name="city" type="text" placeholder="City" category="person" component={InputBox} />
-
                                   </div>
                                   <div className="col-10 col-md-5 col-lg-4">
-                                      <label className="control-label">State</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.state" /></label>
                                       <Field name="state" type="text" placeholder="State" category="person" component={InputBox} />
                                   </div>
                                   <div className="col10 col-md-5 col-lg-4">
-                                      <label className="control-label">Zip Code</label>
+                                      <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode" /></label>
                                       <Field name="zip" type="text" placeholder="Zip Code" category="person" component={InputBox} />
                                   </div>
                               </div>
                           </div>
                           <div className="tab-pane fade" id="tab3" role="tabpanel">tab 3 content...</div>
-                          <div className="tab-pane fade" id="tab4" role="tabpanel">tab 3 content...</div>
+                          <div className="tab-pane fade" id="tab4" role="tabpanel">
+                            <div className="row">
+                              <div className="col-md-6">
+                                {skillsLeft.map((skill, index) => (
+                                  <div style={{width: "50%", margin: "auto", marginBottom: 5}}>
+                                    <Field name={`skilsLeft-${index}`} component="input" type="checkbox" />
+                                    <span style={{paddingLeft: 10}}>{skill}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="col-md-6">
+                                {skillsRight.map((skill, index) => (
+                                  <div style={{width: "50%", margin: "auto", marginBottom: 5}}>
+                                    <Field name={`skillsRight-${index}`} component="input" type="checkbox" />
+                                    <span style={{paddingLeft: 10}}>{skill}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
                           <div className="tab-pane fade" id="tab5" role="tabpanel">tab 3 content...</div>
-                          <div className="tab-pane fade" id="tab6" role="tabpanel">tab 3 content...</div>
-                      </div>
-                      <div className="prev-next-btns-agency row" style={{marginTop: 30}}>
-                        <div className="col-md-5 offset-md-1">
-                          <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Cancel</button>
-                        </div>
-                        <div className="col-md-5">
-                          <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}>Save</button>
-                        </div>
+                          <div className="tab-pane fade" id="tab6" role="tabpanel">
+                            <div className="row">
+                              <div className="col-md-8" style={{borderRight: "1px solid #d7d7d7"}}>
+                                <div className="row">
+                                  <div className="col-md-6">
+                                    <div style={{width: "80%", margin: "auto", marginBottom: 10}}>
+                                      <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.drugtest" /></label>
+                                      <span style={{display: "none"}} ref="drugtestAffirmativeOption"><Translate id="com.tempedge.msg.label.affirmative" /></span>
+                                      <span style={{display: "none"}} ref="drugtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
+                                      <Field name="drugTestDropdown" data={this.state.drugTest} valueField="value" textField="Drug Test" category="person" component={Dropdown} />
+                                    </div>
+                                    {(typeof this.props.drugTestDropdown === 'string')? drugTestDate: ""}
+                                  </div>
+
+                                  <div className="col-md-6">
+                                    <div style={{width: "80%", margin: "auto", marginBottom: 10}}>
+                                      <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.backgroundtest" /></label>
+                                      <span style={{display: "none"}} ref="backgroundtestAffirmativeOption"><Translate id="com.tempedge.msg.label.affirmative" /></span>
+                                      <span style={{display: "none"}} ref="backgroundtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
+                                      <Field name="backgroundTestDropdown" data={this.state.backgroundTest} valueField="value" textField="Background Test" category="person" component={Dropdown} />
+                                    </div>
+                                    {(typeof this.props.backgroundTestDropdown === 'string')? backgroundTestDate: ""}
+                                  </div>
+                                </div>
+
+                                <div className="row" style={{marginTop: 20}}>
+                                  <div className="col-md-6">
+                                    <label className="control-label" style={{width: "fit-content", margin: "auto", marginBottom: 10}}><Translate id="com.tempedge.msg.label.documents" /></label>
+                                    <div style={{width: "80%", margin: "auto"}}>
+                                      <div className="input-group">
+                                        <label className="input-group-btn" style={{width: "100%", textAlign: "center"}}>
+                                          <span className="btn department-list-button">
+                                            <Translate id="com.tempedge.msg.label.choosefile" /><input type="file" onChange={(e) => this.onChange(e.target.files[0], "fileInputDocuments")}  style={{display: "none"}} accept=".pdf" />
+                                          </span>
+                                        </label><br />
+                                        <p ref="fileInputDocuments" style={{margin: "20px auto 0 auto", background: "#ffff", border: "none", textAlign: "center"}}></p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="col-md-6">
+                                    <label className="control-label" style={{width: "fit-content", margin: "auto", marginBottom: 10}}><Translate id="com.tempedge.msg.label.resume" /></label>
+                                    <div style={{width: "80%", margin: "auto"}}>
+                                      <div className="input-group">
+                                        <label className="input-group-btn" style={{width: "100%", textAlign: "center"}}>
+                                          <span className="btn department-list-button">
+                                            <Translate id="com.tempedge.msg.label.choosefile" /><input type="file" onChange={(e) => this.onChange(e.target.files[0], "fileInputResume")}  style={{display: "none"}} accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .pdf" />
+                                          </span>
+                                        </label><br />
+                                        <p ref="fileInputResume" style={{margin: "20px auto 0 auto", background: "#ffff", border: "none", textAlign: "center"}}></p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </div>
+                                </div>
+                                <div className="col-md-4">
+                                  <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
+                                    <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.joblocation" /></label>
+                                    <Field name="joblocationDropdown" data={this.state.regionsList} valueField="value" textField="Job Location" category="person" component={Dropdown} />
+                                  </div>
+
+                                  <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
+                                    <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.maritalstatus" /></label>
+                                    <span style={{display: "none"}} ref="maritalstatusAffirmativeOption"><Translate id="com.tempedge.msg.label.single" /></span>
+                                    <span style={{display: "none"}} ref="maritalstatusNegativeOption"><Translate id="com.tempedge.msg.label.married" /></span>
+                                    <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="Marital Status" category="person" component={Dropdown} />
+                                  </div>
+
+                                  <div style={{width: "60%", margin: "auto"}}>
+                                    <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.numberofallowances" /></label>
+                                    <Field name="numberofallowances" type="text" placeholder="Number of allowances" category="person" component={InputBox} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          <div style={{width: "100%", margin: "30px 0"}}></div>
+                          <hr />
+                          <div className="prev-next-btns-agency row" style={{marginTop: 30}}>
+                            <div className="col-md-5 offset-md-1">
+                              <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Cancel</button>
+                            </div>
+                            <div className="col-md-5">
+                              <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}>Save</button>
+                            </div>
+                          </div>
                       </div>
                     </Form>
                 </div>
@@ -265,8 +423,8 @@ class CreateEmployee extends Component {
 CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its own, no need to do anything else, separate library since React 16, wasn't the case before on 14 or 15
    //Action, does the Fetch part from the posts API
    tempedgeAPI: PropTypes.func.isRequired,
-   getList: PropTypes.func.isRequired
-       //Action, does the Fetch part from the posts API
+   getList: PropTypes.func.isRequired,
+   getListSafe: PropTypes.func.isRequired
 }
 
 
@@ -282,8 +440,12 @@ let mapStateToProps = (state) => {
 
     return({
       country_region_list: state.tempEdge.country_region_list,
-      country: selector(state, 'country')
+      country: selector(state, 'country'),
+      skillsList: state.tempEdge.skillsList,
+      backgroundTestDropdown: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTestDropdown: null,
+      drugTestDropdown: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.drugTestDropdown: null,
+      birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null
     });
 }
 
-export default withLocalize(connect(mapStateToProps, { push, getList, tempedgeAPI })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, getList, tempedgeAPI, getListSafe })(CreateEmployee));

@@ -100,6 +100,26 @@ let validate = (formValues) => {
     errors.zip = "Please enter zip code";
   }
 
+  if(!formValues.drugTestDate){
+    errors.drugTestDate = "Drug test date is required.";
+  }
+
+  if(!formValues.backgroundTestDate){
+    errors.backgroundTestDate = "Background check date is required.";
+  }
+
+  if(!formValues.joblocationDropdown){
+    errors.joblocationDropdown = "Job location required."
+  }
+
+  if(!formValues.maritalstatusDropdown){
+    errors.maritalstatusDropdown = "Marital Status required."
+  }
+
+  if(!formValues.numberofallowances){
+    errors.numberofallowances = "Number of allowances required."
+  }
+
   if(!formValues.agencyrole){
     errors.agencyrole = "Please enter role.";
   }

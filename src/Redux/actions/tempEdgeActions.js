@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -96,6 +96,28 @@ export let tempedgeAPI = (url, data, actionName) => {
         payload: response.data.result
       });
     });
+  }
+}
+
+export let getListSafe = (url, data, actionName) => {
+  return (dispatch) => {
+    let token = sessionStorage.getItem('access_token');
+    data.IPAddress = window.location.hostname;
+    console.log("request: " , data);
+
+    let options = {
+      headers: { 'Content-Type': 'application/json' },
+      params: { access_token: token }
+    };
+
+    Axios.get((baseUrlTempEdge + url), {"orgId": 1} ,options)
+      .then((response) => {
+        console.log("response: ", response);
+        // dispatch({
+        //   type: actionName,
+        //   payload: response.data.result
+        // });
+      });
   }
 }
 
