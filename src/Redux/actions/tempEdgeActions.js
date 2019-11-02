@@ -110,13 +110,13 @@ export let getListSafe = (url, data, actionName) => {
       params: { access_token: token }
     };
 
-    Axios.get((baseUrlTempEdge + url), {"orgId": 1} ,options)
+    Axios.post((baseUrlTempEdge + url), {"orgId": 1} ,options)
       .then((response) => {
         console.log("response: ", response);
-        // dispatch({
-        //   type: actionName,
-        //   payload: response.data.result
-        // });
+        dispatch({
+          type: actionName,
+          payload: response.data.result
+        });
       });
   }
 }
