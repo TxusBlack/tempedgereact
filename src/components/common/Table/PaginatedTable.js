@@ -25,12 +25,20 @@ class PaginatedTable extends Component {
     }
 
     componentDidMount (){
-        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, filterBy:{}},  TEMPEDGE_LIST);
+        let payload = {orgId : 1, filterBy:{}};
+        payload.data = this.props.payload;
+        this.props.tempedgeAPI(this.props.apiUrl, payload,  TEMPEDGE_LIST);
     }
     changePage = (myPage) =>{
         console.log(myPage);
         this.setState({tablePage : myPage});
-        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, page : myPage, filterBy: this.state.filterBy},  TEMPEDGE_LIST);
+        let payload = {
+            orgId : 1, 
+            page : myPage, 
+            filterBy: this.state.filterBy
+        };
+
+        this.props.tempedgeAPI(this.props.apiUrl,payload, TEMPEDGE_LIST);
     }
     applyFilter = (sortBy, filterValue) =>{
         let filter = {
