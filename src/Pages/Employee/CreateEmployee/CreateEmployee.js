@@ -57,7 +57,7 @@ class CreateEmployee extends Component {
     componentDidMount = async() => {
       await this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
       let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
-      parent.closest(".tabs-stepper-wrapper").css("width", "1600px");
+      parent.closest(".tabs-stepper-wrapper").css("max-width", "1600px");
 
       await this.props.getListSafe("/api/person/skillList", { "orgId" : 1 },  SKILLS_LIST);
 
@@ -157,9 +157,16 @@ class CreateEmployee extends Component {
 
     render() {
         let key = this.state.key;
+        let sortedSkillList = undefined;
 
-        let skillsLeft  = ["1st Shift preferred / Prefiere el Primer Turno", "3rd Shift preferred / Prefiere el Tercer Turno", "About Language: Speak English", "Forklift Driver / Conductor de Montacargas", "Janitor / Cleaning / Limpieza", "Machine Operator / Operador de Maquina", "Mechanic Machine / Mecanico de maquinas", "Microsoft Word", "Pick / Pack", "Shipping / Receiving"];
-        let skillsRight = ["2nd Shift preferred / Prefiere el Segundo Turno", "About language : Habla Español", "Assembly / Ensamblador", "Inventory / Inventario", "Line Supervisor / Supervisor de linea", "Material Handler / Ayudante", "Microsoft Excel", "Office / Clerical / Oficina", "Quick Books", "Work with Cellphones / Trabaja con celulares"];
+        if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
+          sortedSkillList = this.props.skillsList.sort((a, b) => {
+            let x = a.skill;
+            let y = b.skill;
+
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+          });
+        }
 
         let drugTestDate = (
           <div style={{width: "80%", margin: "auto"}}>
@@ -306,20 +313,34 @@ class CreateEmployee extends Component {
                           <div className="tab-pane fade" id="tab4" role="tabpanel">
                             <div className="row">
                               <div className="col-md-6">
-                                {skillsLeft.map((skill, index) => (
-                                  <div style={{width: "50%", margin: "auto", marginBottom: 5}}>
-                                    <Field name={`skilsLeft-${index}`} component="input" type="checkbox" />
-                                    <span style={{paddingLeft: 10}}>{skill}</span>
-                                  </div>
-                                ))}
+                                {(typeof sortedSkillList !== 'undefined')?
+                                  sortedSkillList.map((item, index) => {
+                                    let listLen = this.props.skillsList.length;
+
+                                    if(index < ((listLen-1)/2)){
+                                      return (
+                                        <div style={{width: "60%", margin: "auto", marginBottom: 5}}>
+                                          <Field name={`skill-left-col-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                          <span style={{paddingLeft: 10}}>{item.skill}</span>
+                                        </div>
+                                      );
+                                    }
+                                  }): ""}
                               </div>
                               <div className="col-md-6">
-                                {skillsRight.map((skill, index) => (
-                                  <div style={{width: "50%", margin: "auto", marginBottom: 5}}>
-                                    <Field name={`skillsRight-${index}`} component="input" type="checkbox" />
-                                    <span style={{paddingLeft: 10}}>{skill}</span>
-                                  </div>
-                                ))}
+                                {(typeof sortedSkillList !== 'undefined')?
+                                  sortedSkillList.map((item, index) => {
+                                    let listLen = this.props.skillsList.length;
+
+                                    if(index > ((listLen-1)/2)){
+                                      return (
+                                        <div style={{width: "60%", margin: "auto", marginBottom: 5}}>
+                                          <Field name={`skill-right-col-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                          <span style={{paddingLeft: 10}}>{item.skill}</span>
+                                        </div>
+                                      );
+                                    }
+                                  }): ""}
                               </div>
                             </div>
                           </div>
@@ -439,6 +460,7 @@ let mapStateToProps = (state) => {
     let selector = formValueSelector('NewEmployee'); // <-- same as form name
 
     return({
+      skillsList: state.tempEdge.skillList,
       country_region_list: state.tempEdge.country_region_list,
       country: selector(state, 'country'),
       skillsList: state.tempEdge.skillsList,
