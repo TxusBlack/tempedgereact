@@ -5,6 +5,7 @@
   "com.tempedge.msg.label.sign_up.subtitle"                           : "Regístrese a una nueva cuenta",
   "com.tempedge.msg.label.accountinformation"                         : "Información sobre cuenta",
   "com.tempedge.msg.label.login"                                      : "Iniciar Sesion",
+  "com.tempedge.msg.label.dashboard"                                  : "Panel de Control",
   "com.tempedge.msg.label.username"                                   : "Usuario",
   "com.tempedge.msg.label.password"                                   : "Contraseña",
   "com.tempedge.msg.label.confirmpassword"                            : "Confirmar Contraseña",

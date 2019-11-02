@@ -12,6 +12,7 @@ import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguage
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
 import { doLogin } from '../../Redux/actions/tempEdgeActions';
+import httpService from '../../utils/services/httpService/httpService.js';
 
 
 class Login extends Component{
@@ -23,8 +24,16 @@ class Login extends Component{
 
   state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
-  componentDidMount(){
+  componentDidMount = () => {
     document.title = "ProStaff";
+    let token = sessionStorage.getItem('access_token');
+    
+    httpService.tokenValidation("/oauth/check_token", token)
+    .then(response => {
+      if(typeof response !== 'undefined' && response.error !== "invalid_token"){
+        this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -37,7 +46,7 @@ class Login extends Component{
   }
 
   componentWillUnmount(){
-    //Username gets "remembered", not erase but password gets overwritten to empty string
+    //Username gets "remembered", not erased but password gets overwritten to empty string
     if(this.props.rememberme === true){
       this.props.change("password", "");
       this.props.untouch("Login", "password");

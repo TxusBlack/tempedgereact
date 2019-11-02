@@ -37,7 +37,7 @@ class NavBar extends React.Component{
     let activeMenuItem = ['active', '', ''];
     let hamburgerBtn = "";
 
-    if(this.props.pathname.includes("protected")){
+    if(this.props.pathname.includes("dashboard")){
       console.log("this.props.pathname: ",this.props.pathname );
       hamburgerBtn = <HamburgerButton toggleNav={this.props.toggleNav} />;
     }

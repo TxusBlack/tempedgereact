@@ -5,6 +5,7 @@
   "com.tempedge.msg.label.sign_up.subtitle"                           : "Sign up to your new account",
   "com.tempedge.msg.label.accountinformation"                         : "Account Information",
   "com.tempedge.msg.label.login"                                      : "Log In",
+  "com.tempedge.msg.label.dashboard"                                  : "Dashboard",
   "com.tempedge.msg.label.username"                                   : "Username",
   "com.tempedge.msg.label.password"                                   : "Password",
   "com.tempedge.msg.label.confirmpassword"                            : "Confirm Password",
