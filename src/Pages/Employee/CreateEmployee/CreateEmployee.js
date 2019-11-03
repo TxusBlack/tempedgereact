@@ -13,10 +13,11 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE 
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
-import { getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
+import { getList, getListSafe, validatePerson } from '../../../Redux/actions/tempEdgeActions';
 import { GET_COUNTRY_REGION_LIST, SKILLS_LIST } from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
+import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
 import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
 import Container from '../../../components/common/Container/Container';
 import Form from 'react-bootstrap/Form';
@@ -153,6 +154,40 @@ class CreateEmployee extends Component {
       console.log("formValues: ", formValues);
       console.log("documents: ", this.state.documents);
       console.log("resume: ", this.state.resume);
+
+      let data = {
+              "orgId" : 1,
+             "address" : "22",
+             "address2" : "",
+             "backgroundTestDate" : "2019-06-06",
+             "backgroundtest" : true,
+             "birthDay" : "1919-06-06",
+             "cellPhone" : "12345678",
+             "city" : "CITY",
+             "country" : 19,
+             "drugTest" : false,
+             "drugTestDate" : "2019-01-01",
+             "email" : "test1@test.com",
+             "empDepartment" : 249,
+             "firstName" : "LOREN",
+             "gender" : "M",
+             "hireDate" : "2019-01-02",
+             "identification" : "123-30-2333",
+             "lastName" : "WOODSON",
+             "maritalStatus" : 0,
+             "middleName" : "A",
+             "phone" : "",
+             "region" : "" ,
+             "temporalInfo" : false,
+             "usrCreatedBy" : 2,
+             "zipcode" : "07095",
+             "personType" : {
+              "personTypeId" : 2
+             }
+           };
+
+      let paginatedTable = <PaginatedTable apiUrl="/api/person/validate" payload={data} title="com.tempedge.msg.label.validatedpersonlist"/>
+
     }
 
     render() {
@@ -445,7 +480,8 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
    //Action, does the Fetch part from the posts API
    tempedgeAPI: PropTypes.func.isRequired,
    getList: PropTypes.func.isRequired,
-   getListSafe: PropTypes.func.isRequired
+   getListSafe: PropTypes.func.isRequired,
+   validatePerson: PropTypes.func.isRequired
 }
 
 
@@ -470,4 +506,4 @@ let mapStateToProps = (state) => {
     });
 }
 
-export default withLocalize(connect(mapStateToProps, { push, getList, tempedgeAPI, getListSafe })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, getList, tempedgeAPI, getListSafe, validatePerson })(CreateEmployee));

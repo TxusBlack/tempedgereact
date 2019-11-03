@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST, VALIDATE_PERSON } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -77,7 +77,7 @@ export let doLogin = (url, data) => {
 export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
-    data.IPAddress = window.location.hostname;
+
     console.log("request :" , data);
     Axios({
       url: baseUrlTempEdge + url,
@@ -102,8 +102,26 @@ export let tempedgeAPI = (url, data, actionName) => {
 export let getListSafe = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
-    data.IPAddress = window.location.hostname;
-    console.log("request: " , data);
+
+    let options = {
+      headers: { 'Content-Type': 'application/json' },
+      params: { access_token: token }
+    };
+
+    Axios.post((baseUrlTempEdge + url), data ,options)
+      .then((response) => {
+        dispatch({
+          type: actionName,
+          payload: response.data.result
+        });
+      });
+  }
+}
+
+export let validatePerson = (data) => {
+  return (dispatch) => {
+    let url = "/api/person/validate";
+    let token = sessionStorage.getItem('access_token');
 
     let options = {
       headers: { 'Content-Type': 'application/json' },
@@ -112,13 +130,10 @@ export let getListSafe = (url, data, actionName) => {
 
     console.log("Calling Axios!");
 
-    Axios.post((baseUrlTempEdge + url), {"orgId": 1} ,options)
+    Axios.post((baseUrlTempEdge + url), data ,options)
       .then((response) => {
         console.log("response: ", response);
-        dispatch({
-          type: actionName,
-          payload: response.data.result
-        });
+
       });
   }
 }
