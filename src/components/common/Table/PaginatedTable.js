@@ -20,7 +20,7 @@ class PaginatedTable extends Component {
             filterBy : {},
             data : []
         }
-        
+
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
 
@@ -33,8 +33,8 @@ class PaginatedTable extends Component {
         console.log(myPage);
         this.setState({tablePage : myPage});
         let payload = {
-            orgId : 1, 
-            page : myPage, 
+            orgId : 1,
+            page : myPage,
             filterBy: this.state.filterBy
         };
 
@@ -45,30 +45,30 @@ class PaginatedTable extends Component {
             ...this.state.filterBy,
             [sortBy] : filterValue
         }
-        
+
         this.setState({sortBy : sortBy, filterBy : filter});
 
         this.props.tempedgeAPI(this.props.apiUrl,
             {
-                orgId : 1, 
-                page : this.state.tablePage, 
-                filterBy : filter 
+                orgId : 1,
+                page : this.state.tablePage,
+                filterBy : filter
             },  TEMPEDGE_LIST);
     }
 
     render() {
         let data = this.props.paginatorList;
         let title = this.props.title;
-        
-        console.log(data);
+
+        console.log("data: ", data);
 
         return (
             <React.Fragment>
-                <Container title={title} 
+                <Container title={title}
                         btns ={data && data.data ? (
                                 <TPaginator changePage={this.changePage} />
                         ):""}>
-                { data ? 
+                { data ?
                     <div className='col-12'>
                         <Table data={data} applyFilter={this.applyFilter}/>
                     </div> :
@@ -76,15 +76,15 @@ class PaginatedTable extends Component {
                 }
 
                 </Container>
-                <ContainerBlue title={title} 
+                <ContainerBlue title={title}
                         btns ={data && data.data ? (
                                 <TPaginator changePage={()=>this.changePage()}/>
                         ) :""}>
-                 
-                { data ? 
+
+                { data ?
                     <div className='col-12'>
                         <Table data={data} applyFilter={this.applyFilter}/>
-                    </div> : 
+                    </div> :
                     "NO RECORDS FOUND"
                  }
 
@@ -105,4 +105,3 @@ paginatorList: state.tempEdge.paginatorList,    //'posts', new prop in component
 })
 
 export default withLocalize(connect(mapStatetoProps, { push, tempedgeAPI })(PaginatedTable));
-

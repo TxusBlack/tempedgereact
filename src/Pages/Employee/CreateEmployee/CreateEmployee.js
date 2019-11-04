@@ -13,7 +13,7 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE 
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
-import { getList, getListSafe, validatePerson } from '../../../Redux/actions/tempEdgeActions';
+import { getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
 import { GET_COUNTRY_REGION_LIST, SKILLS_LIST } from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
@@ -23,6 +23,7 @@ import Container from '../../../components/common/Container/Container';
 import Form from 'react-bootstrap/Form';
 import Stepper from 'react-stepper-horizontal';
 import Validate from '../../Validations/Validations';
+import Modal from '../../../Modals/Modal/Modal.js';
 
 const $ = window.$;
 
@@ -49,7 +50,11 @@ class CreateEmployee extends Component {
             backgroundTest: [],
             documents: null,
             resume: null,
-            maritalStatus: []
+            maritalStatus: [],
+            modal: "",
+            paginatedTable: "",
+            btn: "",
+            showModal: false
         }
 
         this.addTranslationsForActiveLanguage();
@@ -157,37 +162,74 @@ class CreateEmployee extends Component {
 
       let data = {
               "orgId" : 1,
-             "address" : "22",
-             "address2" : "",
-             "backgroundTestDate" : "2019-06-06",
-             "backgroundtest" : true,
-             "birthDay" : "1919-06-06",
-             "cellPhone" : "12345678",
-             "city" : "CITY",
-             "country" : 19,
-             "drugTest" : false,
-             "drugTestDate" : "2019-01-01",
-             "email" : "test1@test.com",
+             "address" : formValues.address,
+             "address2" : formValues.address2_,
+             "backgroundTestDate" : formValues.backgroundTestDate,
+             "backgroundtest" : (formValues.backgroundTestDropdown === "Yes")? true: false,
+             "birthDay" : formValues.birthday_,
+             "cellPhone" : formValues.phone,
+             "city" : formValues.city,
+             "country" : formValues.country.countryId,
+             "drugTest" : (formValues.drugTestDropdown === "Yes")? true: false,
+             "drugTestDate" : formValues.drugTestDate,
+             "email" : formValues.drugTestDate,
              "empDepartment" : 249,
-             "firstName" : "LOREN",
-             "gender" : "M",
-             "hireDate" : "2019-01-02",
-             "identification" : "123-30-2333",
-             "lastName" : "WOODSON",
-             "maritalStatus" : 0,
-             "middleName" : "A",
-             "phone" : "",
-             "region" : "" ,
+             "firstName" : formValues.firstName,
+             "gender" : formValues.gender,
+             "hireDate" : formValues.hireDate_,
+             "identification" : formValues.employeeid,
+             "lastName" : formValues.lastName,
+             "maritalStatus" : (formValues.maritalstatusDropdown)? 0: 1,
+             "middleName" : formValues.middleName_,
+             "phone" : formValues.phone,
+             "region" : formValues.state ,
              "temporalInfo" : false,
              "usrCreatedBy" : 2,
-             "zipcode" : "07095",
+             "zipcode" : formValues.zip,
              "personType" : {
               "personTypeId" : 2
              }
            };
 
-      let paginatedTable = <PaginatedTable apiUrl="/api/person/validate" payload={data} title="com.tempedge.msg.label.validatedpersonlist"/>
+      let paginatedTable = <PaginatedTable apiUrl="/api/person/list" payload={data} title="com.tempedge.msg.label.validatedpersonlist"/>;
+      let btns = (
+        <div className="prev-next-btns-agency row" style={{width: "-webkit-fill-available"}}>
+          <div className="col-md-5 offset-md-1">
+            <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.onClose}>Cancel</button>
+          </div>
+          <div className="col-md-5">
+            <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={this.onSave}>Save</button>
+          </div>
+        </div>
+      );
 
+      this.setState(() => ({
+        paginatedTable: paginatedTable,
+        btns: btns
+      }), () => {
+        this.toggleModalOnOff();
+      });
+    }
+
+    onSave = () => {
+      console.log("SAVED!!");
+    }
+
+    //Set Modal visible or not
+    toggleModalOnOff = () => {
+      this.setState({
+        showModal: !this.state.showModal
+      }, () => {
+        this.setState(() => ({
+          modal: <Modal content={this.state.paginatedTable} buttons={this.state.btns} open={this.state.showModal} onClose={this.onClose} />
+        }));
+      });
+    }
+
+    //Close Modal
+    onClose = () => {
+      console.log("CLOSE MODAL!");
+      this.toggleModalOnOff();   //Close Modal
     }
 
     render() {
@@ -355,7 +397,7 @@ class CreateEmployee extends Component {
                                     if(index < ((listLen-1)/2)){
                                       return (
                                         <div style={{width: "60%", margin: "auto", marginBottom: 5}}>
-                                          <Field name={`skill-left-col-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                          <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
                                           <span style={{paddingLeft: 10}}>{item.skill}</span>
                                         </div>
                                       );
@@ -370,7 +412,7 @@ class CreateEmployee extends Component {
                                     if(index > ((listLen-1)/2)){
                                       return (
                                         <div style={{width: "60%", margin: "auto", marginBottom: 5}}>
-                                          <Field name={`skill-right-col-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                          <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
                                           <span style={{paddingLeft: 10}}>{item.skill}</span>
                                         </div>
                                       );
@@ -391,7 +433,7 @@ class CreateEmployee extends Component {
                                       <span style={{display: "none"}} ref="drugtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
                                       <Field name="drugTestDropdown" data={this.state.drugTest} valueField="value" textField="Drug Test" category="person" component={Dropdown} />
                                     </div>
-                                    {(typeof this.props.drugTestDropdown === 'string')? drugTestDate: ""}
+                                    {(typeof this.props.drugTestDropdown === 'string')? (this.props.drugTestDropdown === 'Yes'  || this.props.drugTestDropdown === 'Si')? drugTestDate: "": ""}
                                   </div>
 
                                   <div className="col-md-6">
@@ -401,7 +443,7 @@ class CreateEmployee extends Component {
                                       <span style={{display: "none"}} ref="backgroundtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
                                       <Field name="backgroundTestDropdown" data={this.state.backgroundTest} valueField="value" textField="Background Test" category="person" component={Dropdown} />
                                     </div>
-                                    {(typeof this.props.backgroundTestDropdown === 'string')? backgroundTestDate: ""}
+                                    {(typeof this.props.backgroundTestDropdown === 'string')? (this.props.backgroundTestDropdown === 'Yes' || this.props.backgroundTestDropdown === 'Si')? backgroundTestDate: "" : ""}
                                   </div>
                                 </div>
 
@@ -470,8 +512,8 @@ class CreateEmployee extends Component {
                     </Form>
                 </div>
               </div>
+              {this.state.modal}
             </React.Fragment>
-
         )
     }
 }
@@ -480,8 +522,7 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
    //Action, does the Fetch part from the posts API
    tempedgeAPI: PropTypes.func.isRequired,
    getList: PropTypes.func.isRequired,
-   getListSafe: PropTypes.func.isRequired,
-   validatePerson: PropTypes.func.isRequired
+   getListSafe: PropTypes.func.isRequired
 }
 
 
@@ -506,4 +547,4 @@ let mapStateToProps = (state) => {
     });
 }
 
-export default withLocalize(connect(mapStateToProps, { push, getList, tempedgeAPI, getListSafe, validatePerson })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, getList, tempedgeAPI, getListSafe })(CreateEmployee));

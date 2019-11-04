@@ -62,6 +62,7 @@
   "com.tempedge.msg.label.documents"                                  : "Documents",
   "com.tempedge.msg.label.resume"                                     : "Resume",
   "com.tempedge.msg.label.choosefile"                                 : "Choose File",
+  "com.tempedge.msg.label.validatedpersonlist"                        : "Employee Validation",
   "com.tempedge.error.passwordnomatch"                                : "Password does not match.",
   "com.tempedge.error.phonenumberrequired"                            : "Phone number is required.",
   "com.tempedge.error.officeNamerequired"                             : "Name is required.",

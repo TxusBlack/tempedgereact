@@ -60,6 +60,7 @@
   "com.tempedge.msg.label.clientList"                                 : "Lista de Clientes",
   "com.tempedge.msg.label.documents"                                  : "Documentos",
   "com.tempedge.msg.label.choosefile"                                 : "Escoger Archivo",
+  "com.tempedge.msg.label.validatedpersonlist"                        : "Validacion de Empleado",
   "com.tempedge.msg.label.resume"                                     : "Curriculum Vitae",
   "com.tempedge.error.passwordnomatch"                                : "Contraseña no es igual.",
   "com.tempedge.error.phonenumberrequired"                            : "Teléfono es requerido.",
