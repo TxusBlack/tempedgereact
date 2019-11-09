@@ -23,9 +23,7 @@ let HttpService = {
       headers: {
         'Content-Type': 'application/json'
       },
-      data: {
-        "IPAddress" : "10.1.1.1"
-      }
+      data: {}
     });
 
     return response;
