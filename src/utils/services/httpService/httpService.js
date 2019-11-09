@@ -3,7 +3,7 @@ import FormData from 'form-data'
 import config from '../../../env/env.js';
 
 //let baseUrlTempEdge = `http://10.1.10.101:9191`;
-let baseUrlTempEdge = `http://192.168.0.19:9191`;     //***Must change this URL in the actions file as well***
+let baseUrlTempEdge = `http://localhost:9191`;     //***Must change this URL in the actions file as well***
 let baseUrlFaceRecognition = `http://localhost:9191`;
 
 function dataURLtoFile(dataurl, filename) {
