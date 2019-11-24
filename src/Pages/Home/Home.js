@@ -45,6 +45,7 @@ class HomePage extends Component{
     let employeeList = `/employee/list/${this.props.lang}`;
     let clientList = `/client/list/${this.props.lang}`;
     let createNewClient = `/client/new/${this.props.lang}`;
+    let internalPayroll = `/intpayroll/new/${this.props.lang}`;
 
     console.log("IN HOMEPAGE ROUTE!");
 
@@ -63,6 +64,7 @@ class HomePage extends Component{
         <Link to={employeeList}>Employee List</Link><br />
         <Link to={clientList}>Client List</Link><br />
         <Link to={genericDashboard}>Generic Dashboard</Link>
+        <Link to={internalPayroll}>Internal Payroll</Link>
       </div>
     );
   }

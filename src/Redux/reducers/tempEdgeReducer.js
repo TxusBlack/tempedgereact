@@ -13,6 +13,7 @@ import { LOGIN,
   REMOVE_FROM_DEPARTMENTS_LIST,
   SAVE_BILL_RATE,
   SAVE_OT_BILL_RATE
+  GET_ACTIVITY_LIST
 } from '../actions/types';
 
 let initialState = {
@@ -118,6 +119,10 @@ export default function(state = initialState, action){
       return{
         ...state,
         otBillRate: action.payload
+    case GET_ACTIVITY_LIST:
+      return{
+        ...state,
+        activityList: action.payload
       }
     default:
       return state;
