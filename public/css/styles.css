@@ -32,6 +32,13 @@ body {
   margin-bottom: 0;
   font-weight: bold;
 }
+.tempedge-control-label{
+  padding-top: 0.6rem;
+  padding-bottom: 0.4rem;
+  font-size: 15px;
+  margin-bottom: 0;
+  font-weight: bold;
+}
 
 .captcha-container{
   width: 100%;
@@ -1160,6 +1167,14 @@ form div.list .list-item:last-child button {
 }
 /**********************/
 
+/* PAYROLL */
+.payroll-input{
+  width: 90px;
+  margin: auto;
+}
+
+/**********************/
+
 /* Footer */
 .footer{
   width: 100%;
@@ -1222,6 +1237,22 @@ form div.list .list-item:last-child button {
   border: 0.1rem solid #ffff;
 }
 /*****************************/
+
+.tempedge-dropdown button{
+  opacity: 0.9;
+  background-color: #8cb544 !important;
+  border-color: #8cb544 !important;
+}
+.tempedge-dropdown button:hover, .tempedge-dropdown button:active, .tempedge-dropdown button:focus{
+  opacity: 1;
+  border-color: #8cb544 !important;
+  box-shadow: 0 0 0 .2rem #8cb544 !important;
+}
+.tempedge-dropdown .dropdown-menu{
+  font-size: 1.4rem;
+  font-weight: bold;
+  min-width: 150px;
+}
 
 .container-form-title{
   font-size: 1.6rem;

@@ -7,7 +7,8 @@ import { LOGIN,
   SAVE_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST,
-  REMOVE_FROM_DEPARTMENTS_LIST
+  REMOVE_FROM_DEPARTMENTS_LIST,
+  GET_ACTIVITY_LIST
 } from '../actions/types';
 
 let initialState = {
@@ -95,6 +96,11 @@ export default function(state = initialState, action){
       return{
         ...state,
         deptList: newDeptListState
+      }
+    case GET_ACTIVITY_LIST:
+      return{
+        ...state,
+        activityList: action.payload
       }
     default:
       return state;
