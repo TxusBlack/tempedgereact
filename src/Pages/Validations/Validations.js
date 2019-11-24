@@ -64,13 +64,9 @@ let validate = (formValues) => {
     errors.department = 'Please enter department.';
   }
 
-  if(!formValues.birthday){
-    errors.birthday = "Please enter your birthday";
-  }
-
-  if(!formValues.hireDate){
-    errors.hireDate = "Please enter hire date";
-  }
+  // if(!formValues.birthday){
+  //   errors.birthday = "Please enter your birthday";
+  // }
 
   if(!formValues.phone){
     errors.phone = "Please enter phone number";
