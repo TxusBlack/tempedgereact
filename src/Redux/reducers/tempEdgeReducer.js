@@ -7,7 +7,9 @@ import { LOGIN,
   SAVE_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST,
-  SKILLS_LIST
+  SKILLS_LIST,
+  GET_ORG_DEPARTMENT_LIST,
+  GET_OFFICE_LIST
 } from '../actions/types';
 
 let initialState = {
@@ -45,6 +47,16 @@ export default function(state = initialState, action){
       return{
         ...state,
         skillsList: action.payload
+      }
+    case GET_ORG_DEPARTMENT_LIST:
+      return{
+        ...state,
+        orgDepartmentList: action.payload
+      }
+    case GET_OFFICE_LIST:
+      return{
+        ...state,
+        officeList: action.payload
       }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;

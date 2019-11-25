@@ -14,7 +14,7 @@ import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
 import { getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
-import { GET_COUNTRY_REGION_LIST, SKILLS_LIST } from '../../../Redux/actions/types.js';
+import { GET_COUNTRY_REGION_LIST, SKILLS_LIST, GET_ORG_DEPARTMENT_LIST, GET_OFFICE_LIST } from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
@@ -36,6 +36,8 @@ class CreateEmployee extends Component {
             activePage :3,
             country_list: [],
             regionsList: [],
+            orgDepartmentList: [],
+            officeList: [],
             steps: [
                 {title: ""},
                 {title: ""},
@@ -62,13 +64,15 @@ class CreateEmployee extends Component {
 
     componentDidMount = async() => {
       await this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
+      await this.props.getListSafe('/api/orgdepartment/findAll', { "orgId" : 1 }, GET_ORG_DEPARTMENT_LIST);
+      await this.props.getListSafe('/api/office/findAll', { "orgId" : 1 }, GET_OFFICE_LIST);
       let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
       parent.closest(".tabs-stepper-wrapper").css("max-width", "1600px");
 
       await this.props.getListSafe("/api/person/skillList", { "orgId" : 1 },  SKILLS_LIST);
 
       this.setState(() => ({
-        mounted: true
+        mounted: true,
       }));
     }
 
@@ -77,6 +81,23 @@ class CreateEmployee extends Component {
         if(typeof this.props.country_region_list !== 'undefined'){
           this.setState(() => ({
             getCountryList: true
+          }));
+        }
+      }
+
+      if(this.state.orgDepartmentList.length === 0 && Array.isArray(this.props.orgDepartmentList)){
+        if(this.props.orgDepartmentList.length > 0){
+          this.setState(() => ({
+            orgDepartmentList: this.props.orgDepartmentList
+          }));
+        }
+      }
+
+      console.log("this.props.officeList: ", this.props.officeList);
+      if(this.state.officeList.length === 0 && Array.isArray(this.props.officeList)){
+        if(this.props.officeList.length > 0){
+          this.setState(() => ({
+            officeList: this.props.officeList
           }));
         }
       }
@@ -106,15 +127,12 @@ class CreateEmployee extends Component {
     componentWillReceiveProps = async(nextProps) => {
       if(typeof nextProps.country !== 'undefined'){
         let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
-        let states = await regionsList.map((state, index) => {
-          return state.name;
-        });
-
+        console.log("regionsList: ", regionsList);
         this.props.dispatch(change('NewEmployee', 'state', ''));
         this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
 
         this.setState({
-          region_list: states
+          region_list: regionsList
         });
       }
     }
@@ -253,9 +271,9 @@ class CreateEmployee extends Component {
         let sortedSkillList = undefined;
         let todaysDate = new Date();
         let backDate = todaysDate.setFullYear(todaysDate.getFullYear()-18);
-        console.log("todaysDate: ", todaysDate);
-        console.log("backDate: ", backDate);
-        console.log("Default Date: ", new Date(backDate));
+        // console.log("todaysDate: ", todaysDate);
+        // console.log("backDate: ", backDate);
+        // console.log("Default Date: ", new Date(backDate));
 
         if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
           sortedSkillList = this.props.skillsList.sort((a, b) => {
@@ -312,11 +330,11 @@ class CreateEmployee extends Component {
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.office" /></label>
-                                      <Field name="office" type="text" placeholder="Office" category="person" component={InputBox} />
+                                      <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={Dropdown} />
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.department" /></label>
-                                      <Field name="department" type="text" placeholder="Deparment" category="person" component={InputBox} />
+                                      <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={Dropdown} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -502,7 +520,7 @@ class CreateEmployee extends Component {
                                   <div className="col-md-4">
                                     <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
                                       <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.joblocation" /></label>
-                                      <Field name="joblocationDropdown" data={this.state.region_list} valueField="value" textField="Job Location" category="person" component={Dropdown} />
+                                      <Field name="joblocationDropdown" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
                                     </div>
 
                                     <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
@@ -563,6 +581,8 @@ let mapStateToProps = (state) => {
     return({
       skillsList: state.tempEdge.skillList,
       country_region_list: state.tempEdge.country_region_list,
+      orgDepartmentList: (typeof state.tempEdge.orgDepartmentList !== 'undefined')? state.tempEdge.orgDepartmentList: [],
+      officeList: (typeof state.tempEdge.officeList !== 'undefined')? state.tempEdge.officeList: [],
       country: selector(state, 'country'),
       skillsList: state.tempEdge.skillsList,
       backgroundTestDropdown: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTestDropdown: null,
