@@ -125,6 +125,7 @@
   "com.tempedge.msg.label.addDept"                                    : "Añadir Este Departamento",
   "com.tempedge.msg.label.deptName"                                   : "Nombre del departamento",
   "com.tempedge.msg.label.addPos"                                     : "Añadir Posicion",
+  "com.tempedge.msg.label.mytimesheet"                                : "Horas Semanales",
   "com.tempedge.error.client.companyrequired"                         : "Compañia es requerida.",
   "com.tempedge.error.client.salesmanrequired"                        : "Vendedor es requerido.",
   "com.tempedge.error.client.payrollCyclerequired"                    : "Ciclo de rol de pago es requerido." ,
