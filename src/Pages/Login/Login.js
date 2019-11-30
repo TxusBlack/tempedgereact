@@ -27,7 +27,7 @@ class Login extends Component{
   componentDidMount = () => {
     document.title = "ProStaff";
     let token = sessionStorage.getItem('access_token');
-    
+
     httpService.tokenValidation("/oauth/check_token", token)
     .then(response => {
       if(typeof response !== 'undefined' && response.error !== "invalid_token"){
@@ -164,7 +164,6 @@ let mapStateToProps = (state) => {
     }
   }
 
-  console.log("state.tempEdge.login.portalUserList: ", state.tempEdge.login.portalUserList);
   return({
     status: (state.tempEdge.login !== "" && state.tempEdge.login.portalUserList.length > 0)? state.tempEdge.login.portalUserList[0].status: null,
     rememberme: rememberUser

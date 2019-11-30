@@ -33,7 +33,7 @@ class NavPanelLeft extends React.Component{
   }
 
   render(){
-    let panelClass = (this.props.show)? "panel-nav-left show": "panel-nav-left ";
+    let panelClass = (this.props.show)? "panel-nav-left show": "panel-nav-left";
     let leftNavMenu = (typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null)? JSON.parse(sessionStorage.getItem('leftNavMenu')): "";
 
     return(
@@ -45,16 +45,16 @@ class NavPanelLeft extends React.Component{
             </div>
           </div>
           <div className="row panel-user-img-name">
-            <div className="col-lg-5">
+            <div className="col-lg-4">
               <img src={user} className="usr-img" alt="user" />
             </div>
-            <div className="col-lg-7">
-              <h4>Joe Schmoe</h4>
+            <div className="col-lg-8">
+              <h4>{this.props.firstName + " " + this.props.lastName}</h4>
             </div>
           </div>
           <ul>
             {(leftNavMenu !== '')? leftNavMenu.map((item, index) => {
-              return <li onClick={this.toggleNav}><Link to={`${item.optionPath}/${this.props.activeLanguage.code} `}>{item.optionName}</Link></li>;
+              return <li onClick={this.toggleNav}><Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} style={{marginLeft: 40}}>{item.optionName}</Link></li>;
             }): ""}
           </ul>
         </div>
@@ -64,4 +64,11 @@ class NavPanelLeft extends React.Component{
   }
 }
 
-export default withLocalize(connect(null, { push })(NavPanelLeft));
+let mapStateToProps = (state) => {
+  return({
+    firstName: (typeof state.tempEdge.login.portalUserList !== 'undefined')? state.tempEdge.login.portalUserList[0].user.firstName:  "",
+    lastName: (typeof state.tempEdge.login.portalUserList !== 'undefined')? state.tempEdge.login.portalUserList[0].user.lastName:  ""
+  });
+}
+
+export default withLocalize(connect(mapStateToProps, { push })(NavPanelLeft));
