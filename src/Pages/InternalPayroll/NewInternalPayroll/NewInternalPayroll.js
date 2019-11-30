@@ -8,7 +8,9 @@ import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
 import { SAVE_INTERNAL_PAYROLL, GET_ACTIVITY_LIST } from '../../../Redux/actions/types.js'
 import moment from 'moment';
 import Container from '../../../components/common/Container/Container';
-import SaveBtn from '../../../components/common/Buttons/SaveBtn.js';
+import SaveBtn from '../../../components/common/Buttons/SaveBtn';
+import SubmitBtn from '../../../components/common/Buttons/SubmitBtn';
+import CancelBtn from '../../../components/common/Buttons/CancelBtn';
 
 let activityListURL = '/api/intpayroll/activityList';
 let saveIntPayrollURL = '/api/intpayroll/save';
@@ -177,7 +179,7 @@ class NewInternalPayroll extends Component {
         
     // }
 
-    save = () =>{
+    createPayload=(payrollState) =>{
         let payload = [];
         let activityList = this.props.activityList;
         activityList.map(act =>{
@@ -187,7 +189,7 @@ class NewInternalPayroll extends Component {
                 intPayrollMon.weekEnd = this.state.weekEnd;
                 intPayrollMon.date = this.state.mon;
                 intPayrollMon.totalRegHour = this.state["mon"+act.payrollActivityId];
-                intPayrollMon.payrollState = 'P';
+                intPayrollMon.payrollState = payrollState;
                 intPayrollMon.comment = 'Test from REACT';
 
                 activityMon.payrollActivityId = act.payrollActivityId;
@@ -200,7 +202,7 @@ class NewInternalPayroll extends Component {
                 intPayrollTue.weekEnd = this.state.weekEnd;
                 intPayrollTue.date = this.state.tue;
                 intPayrollTue.totalRegHour = this.state["tue"+act.payrollActivityId];
-                intPayrollTue.payrollState = 'P';
+                intPayrollTue.payrollState = payrollState;
                 intPayrollTue.comment = 'Test from REACT';
 
                 activityTue.payrollActivityId = act.payrollActivityId;
@@ -213,7 +215,7 @@ class NewInternalPayroll extends Component {
                 intPayrollWed.weekEnd = this.state.weekEnd;
                 intPayrollWed.date = this.state.wed;
                 intPayrollWed.totalRegHour = this.state["wed"+act.payrollActivityId];
-                intPayrollWed.payrollState = 'P';
+                intPayrollWed.payrollState = payrollState;
                 intPayrollWed.comment = 'Test from REACT';
 
                 activityWed.payrollActivityId = act.payrollActivityId;
@@ -226,7 +228,7 @@ class NewInternalPayroll extends Component {
                 intPayrollThu.weekEnd = this.state.weekEnd;
                 intPayrollThu.date = this.state.thu;
                 intPayrollThu.totalRegHour = this.state["thu"+act.payrollActivityId];
-                intPayrollThu.payrollState = 'P';
+                intPayrollThu.payrollState = payrollState;
                 intPayrollThu.comment = 'Test from REACT';
 
                 activityThu.payrollActivityId = act.payrollActivityId;
@@ -240,7 +242,7 @@ class NewInternalPayroll extends Component {
                 intPayrollFri.weekEnd = this.state.weekEnd;
                 intPayrollFri.date = this.state.fri;
                 intPayrollFri.totalRegHour = this.state["fri"+act.payrollActivityId];
-                intPayrollFri.payrollState = 'P';
+                intPayrollFri.payrollState = payrollState;
                 intPayrollFri.comment = 'Test from REACT';
 
                 activityFri.payrollActivityId = act.payrollActivityId;
@@ -254,7 +256,7 @@ class NewInternalPayroll extends Component {
                 intPayrollSat.weekEnd = this.state.weekEnd;
                 intPayrollSat.date = this.state.sat;
                 intPayrollSat.totalRegHour = this.state["sat"+act.payrollActivityId];
-                intPayrollSat.payrollState = 'P';
+                intPayrollSat.payrollState = payrollState;
                 intPayrollSat.comment = 'Test from REACT';
 
                 activitySat.payrollActivityId = act.payrollActivityId;
@@ -268,7 +270,7 @@ class NewInternalPayroll extends Component {
                 intPayrollSun.weekEnd = this.state.weekEnd;
                 intPayrollSun.date = this.state.sun;
                 intPayrollSun.totalRegHour = this.state["sun"+act.payrollActivityId];
-                intPayrollSun.payrollState = 'P';
+                intPayrollSun.payrollState = payrollState;
                 intPayrollSun.comment = 'Test from REACT';
 
                 activitySun.payrollActivityId = act.payrollActivityId;
@@ -276,7 +278,24 @@ class NewInternalPayroll extends Component {
                 payload.push(intPayrollSun);
             }
         });
+
+        return payload;
+
+    }
+
+    save = () =>{
         
+        let payload = this.createPayload("P");
+
+        payload.map(act =>{
+            act.orgId = orgId;
+            this.props.tempedgeAPI(saveIntPayrollURL, act, SAVE_INTERNAL_PAYROLL);    
+        });
+      
+    }
+
+    submit = () =>{
+        let payload = this.createPayload("S");
 
         payload.map(act =>{
             act.orgId = orgId;
@@ -284,27 +303,31 @@ class NewInternalPayroll extends Component {
         });
         this.setState(initialState);
         this.initialData();
+        //TODO when save, go to internal payroll list
+        this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
+        
     }
-
 
     render() {
 
         let activityList = this.props.activityList;
         let btns = <div className="row">
 
-                    <div className="col-md-4">
-                        <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Cancel</button>
-                    </div>
-                    
-                    <div className="col-md-4">
-                        <button type="button" className="btn btn-primary btn-block register-save-btn " onClick={this.props.previousPage}>Submit</button>
-                    </div>
-                        <SaveBtn onClick={()=>this.save()}/>
+                        <div className="col-md-4">
+                            <CancelBtn/>
+                        </div>
+                        
+                        <div className="col-md-4">
+                            <SubmitBtn onClick={()=>this.submit()}/>
+                        </div>
+                        <div className="col-md-4">
+                            <SaveBtn onClick={()=>this.save()}/>
+                        </div>
                     </div>
         return (
 
 
-            <Container btns={btns}>
+            <Container title="com.tempedge.msg.label.mytimesheet" btns={btns}>
                 <div className='col-12'>
                     <div className="row">
                         
