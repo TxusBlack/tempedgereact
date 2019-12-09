@@ -64,9 +64,13 @@ let validate = (formValues) => {
     errors.department = 'Please enter department.';
   }
 
-  // if(!formValues.birthday){
-  //   errors.birthday = "Please enter your birthday";
-  // }
+  if(!formValues.birthday_){
+    errors.birthday_ = "Please enter your birthday";
+  }
+
+  if(!formValues.hireDate_){
+    errors.hireDate_ = "Hire date required.";
+  }
 
   if(!formValues.phone){
     errors.phone = "Please enter phone number";
@@ -104,8 +108,8 @@ let validate = (formValues) => {
     errors.backgroundTestDate = "Background check date is required.";
   }
 
-  if(!formValues.joblocationDropdown){
-    errors.joblocationDropdown = "Job location required."
+  if(!formValues.joblocation){
+    errors.joblocation = "Job location required."
   }
 
   if(!formValues.maritalstatusDropdown){

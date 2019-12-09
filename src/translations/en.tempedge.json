@@ -1,6 +1,7 @@
 {
   "com.tempedge.msg.label.sign_in"                                    : "Sign In",
   "com.tempedge.msg.label.sign_up"                                    : "Sign Up",
+  "com.tempedge.msg.person.newperson"                                 : "You have successfully created a new employee.",
   "com.tempedge.msg.label.joblocation"                                : "Job Location",
   "com.tempedge.msg.label.maritalstatus"                              : "Marital Status",
   "com.tempedge.msg.label.single"                                     : "Single",
@@ -71,6 +72,7 @@
   "com.tempedge.error.zipcoderequired"                                : "Zip code is required.",
   "com.tempedge.error.staterequired"                                  : "State is required",
   "com.tempedge.error.countryrequired"                                : "Country is required.",
+  "com.tempedge.error.invaliduser"                                    : "Employee exists already.",
   "com.tempedge.error.person.genderrequired"                          : "Please select a gender.",
   "com.tempedge.error.person.lastNamerequired"                        : "Lastname is required.",
   "com.tempedge.error.person.middleNamerequired"                      : "Middlename or initial is required.",
@@ -185,8 +187,10 @@
   "com.tempedge.error.person.backgroundTestDropdownrequired"          : "Background check status required.",
   "com.tempedge.error.person.drugTestDaterequired"                    : "Drug test date required.",
   "com.tempedge.error.person.backgroundTestDaterequired"              : "Background check date required.",
-  "com.tempedge.error.person.joblocationDropdownrequired"             : "Job location required.",
+  "com.tempedge.error.person.joblocationrequired"                     : "Job location required.",
   "com.tempedge.error.person.maritalstatusDropdownrequired"           : "Marital status required.",
-  "com.tempedge.error.person.numberofallowancesrequired"              : "Number of allowances required."
+  "com.tempedge.error.person.numberofallowancesrequired"              : "Number of allowances required.",
+  "com.tempedge.error.person.birthday_required"                       : "Birthday required.",
+  "com.tempedge.error.person.hireDate_required"                       : "Hire date required."
 
 }

@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST, VALIDATE_PERSON } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST, VALIDATE_PERSON, PERSON_SAVE, CLEAR_PROP } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -78,7 +78,6 @@ export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
-    console.log("request :" , data);
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -90,12 +89,20 @@ export let tempedgeAPI = (url, data, actionName) => {
         access_token: token
       }
     }).then((response) => {
-      console.log("response: ", response);
       dispatch({
         type: actionName,
-        payload: response.data.result
+        payload: (actionName !== VALIDATE_PERSON && actionName !== PERSON_SAVE)? response.data.result: response
       });
     });
+  }
+}
+
+export let clearTempedgeStoreProp = (actionProp) => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_PROP,
+      payload: actionProp
+    })
   }
 }
 
@@ -142,8 +149,7 @@ export let storeFormPageNumber = (formName, position) => {
   }
 }
 
-export let getFilters = (url, data, actionName)=>{
-
+export let getFilters = (url, data, actionName) => {
   return (dispatch) => {
     httpService.getList(url)
       .then((response) => {

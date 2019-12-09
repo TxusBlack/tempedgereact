@@ -24,11 +24,15 @@ class PaginatedTable extends Component {
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
 
-    componentDidMount (){
+    componentWillMount (){
         let payload = {orgId : 1, filterBy:{}};
-        payload.data = this.props.payload;
-        this.props.tempedgeAPI(this.props.apiUrl, payload,  TEMPEDGE_LIST);
+
+        if(typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined' ){
+          payload.data = this.props.payload;
+          this.props.tempedgeAPI(this.props.apiUrl, payload, TEMPEDGE_LIST);
+        }
     }
+
     changePage = (myPage) =>{
         console.log(myPage);
         this.setState({tablePage : myPage});
@@ -40,6 +44,7 @@ class PaginatedTable extends Component {
 
         this.props.tempedgeAPI(this.props.apiUrl,payload, TEMPEDGE_LIST);
     }
+
     applyFilter = (sortBy, filterValue) =>{
         let filter = {
             ...this.state.filterBy,
@@ -57,7 +62,7 @@ class PaginatedTable extends Component {
     }
 
     render() {
-        let data = this.props.paginatorList;
+        let data = (typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined' ) ? this.props.paginatorList: this.props.payload;
         let title = this.props.title;
 
         console.log("data: ", data);

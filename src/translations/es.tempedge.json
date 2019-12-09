@@ -1,6 +1,7 @@
 {
   "com.tempedge.msg.label.sign_in"                                    : "Iniciar Sesion",
   "com.tempedge.msg.label.joblocation"                                : "Lugar de trabajo",
+  "com.tempedge.msg.person.newperson"                                 : "Ha creado un empleado.",
   "com.tempedge.msg.label.maritalstatus"                              : "Status Marital",
   "com.tempedge.msg.label.single"                                     : "Soltero",
   "com.tempedge.msg.label.married"                                    : "Casado",
@@ -70,6 +71,7 @@
   "com.tempedge.error.zipcoderequired"                                : "Codigo postal es requerido.",
   "com.tempedge.error.staterequired"                                  : "Estado/Provincia es requerido.",
   "com.tempedge.error.countryrequired"                                : "Pais es requerido.",
+  "com.tempedge.error.invaliduser"                                    : "El empleado ya existe en el sistema.",
   "com.tempedge.error.person.genderrequired"                          : "Por favor seleccione el genero.",
   "com.tempedge.error.person.lastNamerequired"                        : "Apellido es requerido.",
   "com.tempedge.error.person.middleNamerequired"                      : "Segundo nombre o inicial es requerida.",
@@ -185,7 +187,9 @@
   "com.tempedge.error.person.backgroundTestDropdownrequired"          : "Chequeo de antecedentes requerido.",
   "com.tempedge.error.person.drugTestDaterequired"                    : "Fecha de prueba de drogas requerida.",
   "com.tempedge.error.person.backgroundTestDaterequired"              : "Fecha de chequeo de antecedentes requerida.",
-  "com.tempedge.error.person.joblocationDropdownrequired"             : "Lugar de trabajo requerido.",
+  "com.tempedge.error.person.joblocationrequired"                     : "Lugar de trabajo requerido.",
   "com.tempedge.error.person.maritalstatusDropdownrequired"           : "Status marital requerido.",
-  "com.tempedge.error.person.numberofallowancesrequired"              : "Numero de exenciones requerido."
+  "com.tempedge.error.person.numberofallowancesrequired"              : "Numero de exenciones requerido.",
+  "com.tempedge.error.person.birthday_required"                       : "Fecha de nacimiento requerida.",
+  "com.tempedge.error.person.hireDate_required"                       : "Hire date required."
 }

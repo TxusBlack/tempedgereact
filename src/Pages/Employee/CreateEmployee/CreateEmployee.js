@@ -14,11 +14,11 @@ import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
 import { getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
-import { GET_COUNTRY_REGION_LIST, SKILLS_LIST, GET_ORG_DEPARTMENT_LIST, GET_OFFICE_LIST } from '../../../Redux/actions/types.js';
+import { GET_COUNTRY_REGION_LIST, SKILLS_LIST, GET_ORG_DEPARTMENT_LIST, GET_OFFICE_LIST, TEMPEDGE_LIST, VALIDATE_PERSON, PERSON_SAVE } from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
-import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import Container from '../../../components/common/Container/Container';
 import Form from 'react-bootstrap/Form';
 import Stepper from 'react-stepper-horizontal';
@@ -34,6 +34,7 @@ class CreateEmployee extends Component {
         super(props);
         this.state = {
             activePage :3,
+            prevCountry : "",
             country_list: [],
             regionsList: [],
             orgDepartmentList: [],
@@ -56,7 +57,9 @@ class CreateEmployee extends Component {
             modal: "",
             paginatedTable: "",
             btn: "",
-            showModal: false
+            showModal: false,
+            formData: {},
+            announcementBar: ""
         }
 
         this.addTranslationsForActiveLanguage();
@@ -70,6 +73,12 @@ class CreateEmployee extends Component {
       parent.closest(".tabs-stepper-wrapper").css("max-width", "1600px");
 
       await this.props.getListSafe("/api/person/skillList", { "orgId" : 1 },  SKILLS_LIST);
+
+      let todaysDate = new Date();
+      let backDate = todaysDate.setFullYear(todaysDate.getFullYear()-18);
+      let defaultDate = new Date(backDate);
+      this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
+      // this.props.dispatch(change('NewEmployee', 'hireDate_', new Date()));
 
       this.setState(() => ({
         mounted: true,
@@ -93,7 +102,6 @@ class CreateEmployee extends Component {
         }
       }
 
-      console.log("this.props.officeList: ", this.props.officeList);
       if(this.state.officeList.length === 0 && Array.isArray(this.props.officeList)){
         if(this.props.officeList.length > 0){
           this.setState(() => ({
@@ -125,15 +133,53 @@ class CreateEmployee extends Component {
     }
 
     componentWillReceiveProps = async(nextProps) => {
-      if(typeof nextProps.country !== 'undefined'){
+      if(typeof nextProps.country !== 'undefined' && (this.state.prevCountry !== nextProps.country.name)){
         let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
-        console.log("regionsList: ", regionsList);
+
         this.props.dispatch(change('NewEmployee', 'state', ''));
         this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
-
         this.setState({
+          prevCountry: nextProps.country.name,
           region_list: regionsList
         });
+      }
+
+      if(nextProps.validatePerson !== null){
+        if(nextProps.validatePerson.data.status === 200){
+          if(nextProps.validatePerson.data.code === "TE00"){
+            //Validation Succeeded
+            if(nextProps.validatePerson.data.result !== null){
+              //Other people with the same name exist in the db, display popup with their list.
+              let paginatedTable = <div style={{maxHeight: 500, overflowY: "scroll"}}><PaginatedTable payload={nextProps.validatePerson.data.result} title="com.tempedge.msg.label.validatedpersonlist"/></div>;
+              let btns = (
+                <div className="prev-next-btns-agency row" style={{width: "-webkit-fill-available"}}>
+                  <div className="col-md-5 offset-md-1">
+                    <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.onClose}>Cancel</button>
+                  </div>
+                  <div className="col-md-5">
+                    <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={this.onSave}>Save</button>
+                  </div>
+                </div>
+              );
+
+              this.setState(() => ({
+                paginatedTable: paginatedTable,
+                btns: btns
+              }), () => {
+                this.toggleModalOnOff();
+              });
+            }else if(nextProps.validatePerson.data.result === null){
+              // null means the person doesn't exist in the db, no other people with the same name exist
+              //Create New Person
+              this.onSave();
+            }
+          }
+        }else{
+          //Validation Failed
+          this.setState(() => ({
+            announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
+          }));
+        }
       }
     }
 
@@ -190,63 +236,91 @@ class CreateEmployee extends Component {
     }
 
     onSubmit = async (formValues) => {
-      console.log("formValues: ", formValues);
-      console.log("documents: ", this.state.documents);
-      console.log("resume: ", this.state.resume);
+      let skills = [];
+      let counter = 0;
+      let fomrValueLen = Object.keys(formValues).length;
 
-      let data = {
-              "orgId" : 1,
-             "address" : formValues.address,
-             "address2" : formValues.address2_,
-             "backgroundTestDate" : formValues.backgroundTestDate,
-             "backgroundtest" : (formValues.backgroundTestDropdown === "Yes")? true: false,
-             "birthDay" : formValues.birthday_,
-             "cellPhone" : formValues.phone,
-             "city" : formValues.city,
-             "country" : formValues.country.countryId,
-             "drugTest" : (formValues.drugTestDropdown === "Yes")? true: false,
-             "drugTestDate" : formValues.drugTestDate,
-             "email" : formValues.drugTestDate,
-             "empDepartment" : 249,
-             "firstName" : formValues.firstName,
-             "gender" : formValues.gender,
-             "hireDate" : formValues.hireDate_,
-             "identification" : formValues.employeeid,
-             "lastName" : formValues.lastName,
-             "maritalStatus" : (formValues.maritalstatusDropdown)? 0: 1,
-             "middleName" : formValues.middleName_,
-             "phone" : formValues.phone,
-             "region" : formValues.state ,
-             "temporalInfo" : false,
-             "usrCreatedBy" : 2,
-             "zipcode" : formValues.zip,
-             "personType" : {
-              "personTypeId" : 2
-             }
-           };
+      let agency = sessionStorage.getItem('agency');
+      agency = JSON.parse(agency);
 
-      let paginatedTable = <PaginatedTable apiUrl="/api/person/list" payload={data} title="com.tempedge.msg.label.validatedpersonlist"/>;
-      let btns = (
-        <div className="prev-next-btns-agency row" style={{width: "-webkit-fill-available"}}>
-          <div className="col-md-5 offset-md-1">
-            <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.onClose}>Cancel</button>
-          </div>
-          <div className="col-md-5">
-            <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={this.onSave}>Save</button>
-          </div>
-        </div>
-      );
+      return new Promise((resolve, reject) => {
+        for(let prop in formValues) {
+          let id = null;
 
-      this.setState(() => ({
-        paginatedTable: paginatedTable,
-        btns: btns
-      }), () => {
-        this.toggleModalOnOff();
+          if(prop.indexOf("data-skill-id-") > -1){
+            id = prop.match(/(\d+)/);
+            skills.push({
+              skillId: parseInt(id[0])
+            });
+          }
+
+          if(counter === fomrValueLen-1){
+            resolve(skills);
+          }
+
+          counter++;
+        }
+      }).then((skills) => {
+        let data = {
+               "temporalInfo": true,
+               "skills": skills,
+               "orgId" : agency.organizationEntity.orgId,
+               "address" : formValues.address,
+               "address2" : formValues.address2_,
+               "backgroundTestDate" : moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
+               "backgroundtest" : (formValues.backgroundTestDropdown === "Yes")? true: false,
+               "birthDay" : moment(formValues.birthday_, 'YYYY-MM-DD'),
+               "cellPhone" : formValues.phone,
+               "city" : formValues.city,
+               "country" : formValues.country.countryId,
+               "drugTest" : (formValues.drugTestDropdown === "Yes")? true: false,
+               "drugTestDate" : moment(formValues.drugTestDate, 'YYYY-MM-DD'),
+               "email" : formValues.drugTestDate,
+               "empDepartment" : formValues.department.orgDepartmentCode,
+               "firstName" : formValues.firstName,
+               "gender" : (formValues.gender === "Male")? 'M': 'F',
+               "hireDate" : moment(formValues.hireDate_, 'YYYY-MM-DD'),
+               "identification" : formValues.employeeid,
+               "lastName" : formValues.lastName,
+               "maritalStatus" : (formValues.maritalstatusDropdown)? 0: 1,
+               "middleName" : formValues.middleName_,
+               "phone" : formValues.phone,
+               "region" : formValues.state.regionId,
+               "taxRegion": formValues.joblocation.regionId,
+               "temporalInfo" : false,
+               "usrCreatedBy" : agency.portalUserConfId,
+               "zipcode" : formValues.zip,
+               "personType" : {
+                "personTypeId" : 1    // ** TODO **
+              },
+                "office" : {
+                  "officeId" : formValues.office.officeId
+                }
+             };
+
+        if(this.state.documents !== null){
+
+        }else if(this.state.resume !== null){
+
+        }
+
+        this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
+
+        console.log("data: ", data);
+
+        this.setState(() => ({
+          formData: data
+        }));
       });
     }
 
     onSave = () => {
-      console.log("SAVED!!");
+      this.props.tempedgeAPI("/api/person/save", this.state.formData, PERSON_SAVE);
+      this.props.clearTempedgeStoreProp('validatePerson');
+
+      this.setState(() => ({
+        announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
+      }));
     }
 
     //Set Modal visible or not
@@ -262,18 +336,14 @@ class CreateEmployee extends Component {
 
     //Close Modal
     onClose = () => {
-      console.log("CLOSE MODAL!");
+      //this.onSave();
       this.toggleModalOnOff();   //Close Modal
     }
 
     render() {
         let key = this.state.key;
         let sortedSkillList = undefined;
-        let todaysDate = new Date();
-        let backDate = todaysDate.setFullYear(todaysDate.getFullYear()-18);
-        // console.log("todaysDate: ", todaysDate);
-        // console.log("backDate: ", backDate);
-        // console.log("Default Date: ", new Date(backDate));
+        let birthDay = (this.props.birthday !== null)? Math.floor((new Date() - new Date(this.props.birthday).getTime()) / 3.15576e+10): "";
 
         if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
           sortedSkillList = this.props.skillsList.sort((a, b) => {
@@ -301,8 +371,8 @@ class CreateEmployee extends Component {
         return (
             <div style={{marginBottom: 20}}>
               <Stepper steps={ this.state.steps } activeStep={ key } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
-
               <div style={{padding: "3rem", width: "90%", border: "dotted 1px #888888", borderTopLeftRadius: "1.6rem", borderTopRightRadius: "1.6rem", borderBottomLeftRadius: "1.6rem", borderBottomRightRadius: "1.6rem", backgroundColor: "#ffff", margin: "auto" }}>
+                {this.state.announcementBar}
                 <div className="tabs-stepper-wrapper register-form-panel-inputs" ref="createNewEmployee1" style={{margin: "auto", padding: 0}}>
                   <div className="formPanel" style={{padding: 0, margin: 0}}>
                       <Form className="panel-body form-horizontal center-block" onSubmit={this.props.handleSubmit(this.onSubmit)}>
@@ -348,7 +418,7 @@ class CreateEmployee extends Component {
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.hiredate" /></label>
-                                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" component={DateTime} validate={date()}/>
+                                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" component={DateTime} validate={date()} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -369,11 +439,11 @@ class CreateEmployee extends Component {
                                 <div className="form-group row">
                                     <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.birthday" /></label>
-                                      <Field name="birthday_" type="text" category="person" dateType="bday" component={DateTime} validate={date()} />
+                                      <Field name="birthday_" type="text" category="person" component={DateTime} validate={date()} />
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label">Age</label>
-                                        <label className="control-label">{(this.props.birthday !== null)? Math.floor((new Date() - new Date(this.props.birthday).getTime()) / 3.15576e+10): Math.floor((new Date() - new Date(backDate).getTime()) / 3.15576e+10)+1}</label>
+                                        <label className="control-label">{birthDay}</label>
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.gender" /></label>
@@ -471,9 +541,9 @@ class CreateEmployee extends Component {
                                         <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.drugtest" /></label>
                                         <span style={{display: "none"}} ref="drugtestAffirmativeOption"><Translate id="com.tempedge.msg.label.affirmative" /></span>
                                         <span style={{display: "none"}} ref="drugtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
-                                        <Field name="drugTestDropdown" data={this.state.drugTest} valueField="value" textField="Drug Test" category="person" component={Dropdown} />
+                                        <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="Drug Test" category="person" component={Dropdown} />
                                       </div>
-                                      {(typeof this.props.drugTestDropdown === 'string')? (this.props.drugTestDropdown === 'Yes'  || this.props.drugTestDropdown === 'Si')? drugTestDate: <div style={{height: 77}}></div>: <div style={{height: 77}}></div>}
+                                      {(typeof this.props.drugTest === 'string')? (this.props.drugTest === 'Yes'  || this.props.drugTest === 'Si')? drugTestDate: <div style={{height: 77}}></div>: <div style={{height: 77}}></div>}
                                     </div>
 
                                     <div className="col-md-6">
@@ -481,9 +551,9 @@ class CreateEmployee extends Component {
                                         <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.backgroundtest" /></label>
                                         <span style={{display: "none"}} ref="backgroundtestAffirmativeOption"><Translate id="com.tempedge.msg.label.affirmative" /></span>
                                         <span style={{display: "none"}} ref="backgroundtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
-                                        <Field name="backgroundTestDropdown" data={this.state.backgroundTest} valueField="value" textField="Background Test" category="person" component={Dropdown} />
+                                        <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="Background Test" category="person" component={Dropdown} />
                                       </div>
-                                      {(typeof this.props.backgroundTestDropdown === 'string')? (this.props.backgroundTestDropdown === 'Yes' || this.props.backgroundTestDropdown === 'Si')? backgroundTestDate: <div style={{height: 77}}></div> : <div style={{height: 77}}></div>}
+                                      {(typeof this.props.backgroundTest === 'string')? (this.props.backgroundTest === 'Yes' || this.props.backgroundTest === 'Si')? backgroundTestDate: <div style={{height: 77}}></div> : <div style={{height: 77}}></div>}
                                     </div>
                                   </div>
                                   <hr style={{margin: "40px 0 25px 0"}}/>
@@ -520,7 +590,7 @@ class CreateEmployee extends Component {
                                   <div className="col-md-4">
                                     <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
                                       <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.joblocation" /></label>
-                                      <Field name="joblocationDropdown" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
+                                      <Field name="joblocation" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
                                     </div>
 
                                     <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
@@ -564,7 +634,8 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
    tempedgeAPI: PropTypes.func.isRequired,
    getList: PropTypes.func.isRequired,
    getListSafe: PropTypes.func.isRequired,
-   change: PropTypes.func.isRequired
+   change: PropTypes.func.isRequired,
+   clearTempedgeStoreProp: PropTypes.func.isRequired
 }
 
 
@@ -577,7 +648,7 @@ CreateEmployee = reduxForm({
 
 let mapStateToProps = (state) => {
     let selector = formValueSelector('NewEmployee'); // <-- same as form name
-
+    console.log("state.form.NewEmployee: ", state.form.NewEmployee);
     return({
       skillsList: state.tempEdge.skillList,
       country_region_list: state.tempEdge.country_region_list,
@@ -585,10 +656,13 @@ let mapStateToProps = (state) => {
       officeList: (typeof state.tempEdge.officeList !== 'undefined')? state.tempEdge.officeList: [],
       country: selector(state, 'country'),
       skillsList: state.tempEdge.skillsList,
-      backgroundTestDropdown: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTestDropdown: null,
-      drugTestDropdown: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.drugTestDropdown: null,
-      birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null
+      backgroundTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTest: null,
+      drugTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.drugTest: null,
+      birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null,
+      hiredate: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.hireDate_: null,
+      validatePerson: (typeof state.tempEdge.validatePerson !== 'undefined')? state.tempEdge.validatePerson: null,
+      savePerson: (typeof state.tempEdge.savePerson !== 'undefined')? state.tempEdge.savePerson: null
     });
 }
 
-export default withLocalize(connect(mapStateToProps, { push, change, getList, tempedgeAPI, getListSafe })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, change, getList, tempedgeAPI, getListSafe, clearTempedgeStoreProp })(CreateEmployee));

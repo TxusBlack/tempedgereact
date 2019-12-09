@@ -9,7 +9,10 @@ import { LOGIN,
   REMOVE_FROM_POSITIONS_LIST,
   SKILLS_LIST,
   GET_ORG_DEPARTMENT_LIST,
-  GET_OFFICE_LIST
+  GET_OFFICE_LIST,
+  VALIDATE_PERSON,
+  PERSON_SAVE,
+  CLEAR_PROP
 } from '../actions/types';
 
 let initialState = {
@@ -47,6 +50,16 @@ export default function(state = initialState, action){
       return{
         ...state,
         skillsList: action.payload
+      }
+    case VALIDATE_PERSON:
+      return{
+        ...state,
+        validatePerson: action.payload
+      }
+    case PERSON_SAVE:
+      return{
+        ...state,
+        savePerson: action.payload
       }
     case GET_ORG_DEPARTMENT_LIST:
       return{
@@ -98,6 +111,11 @@ export default function(state = initialState, action){
       return{
           ...state,
           deptPosList: newPosListState
+      }
+    case CLEAR_PROP:
+      return{
+        ...state,
+        [action.payload]: undefined
       }
     default:
       return state;
