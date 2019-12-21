@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
-import { Field, reduxForm, change, formValueSelector } from 'redux-form';
+import { Field, reduxForm, change, formValueSelector, reset } from 'redux-form';
 import { date } from 'redux-form-validators';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
@@ -290,6 +290,8 @@ class CreateEmployee extends Component {
                "temporalInfo" : false,
                "usrCreatedBy" : agency.portalUserConfId,
                "zipcode" : formValues.zip,
+               "documents": null,
+               "resume": null,
                "personType" : {
                 "personTypeId" : 1    // ** TODO **
               },
@@ -299,14 +301,38 @@ class CreateEmployee extends Component {
              };
 
         if(this.state.documents !== null){
+          let reader = new FileReader();
+          let blob = new Blob([this.state.documents], {type: 'application/pdf'});
 
-        }else if(this.state.resume !== null){
+          reader.readAsDataURL(blob);
 
+          reader.onload = e => {
+            var pdf = {
+              name: "documents",
+              data: reader.result.split('base64,')[1]
+            };
+
+            data.documents = pdf;
+          };
+        }
+
+        if(this.state.resume !== null){
+          let reader = new FileReader();
+          let blob = new Blob([this.state.resume], {type: 'application/pdf'});
+
+          reader.readAsDataURL(blob);
+
+          reader.onload = e => {
+            var pdf = {
+              name: "resume",
+              data: reader.result.split('base64,')[1]
+            };
+
+            data.resume = pdf;
+          };
         }
 
         this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
-
-        console.log("data: ", data);
 
         this.setState(() => ({
           formData: data
@@ -330,13 +356,15 @@ class CreateEmployee extends Component {
       }, () => {
         this.setState(() => ({
           modal: <Modal content={this.state.paginatedTable} buttons={this.state.btns} open={this.state.showModal} onClose={this.onClose} />
-        }));
+      }), () => {
+        console.log("modal: ", this.state.modal);
+      });
       });
     }
 
     //Close Modal
     onClose = () => {
-      //this.onSave();
+      this.props.dispatch(reset('NewEmployee'));
       this.toggleModalOnOff();   //Close Modal
     }
 
@@ -648,7 +676,7 @@ CreateEmployee = reduxForm({
 
 let mapStateToProps = (state) => {
     let selector = formValueSelector('NewEmployee'); // <-- same as form name
-    console.log("state.form.NewEmployee: ", state.form.NewEmployee);
+
     return({
       skillsList: state.tempEdge.skillList,
       country_region_list: state.tempEdge.country_region_list,

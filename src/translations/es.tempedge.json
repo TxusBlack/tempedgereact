@@ -73,6 +73,7 @@
   "com.tempedge.error.countryrequired"                                : "Pais es requerido.",
   "com.tempedge.error.invaliduser"                                    : "El empleado ya existe en el sistema.",
   "com.tempedge.error.person.genderrequired"                          : "Por favor seleccione el genero.",
+  "com.tempedge.error.invaliddata"                                    : "Datos invalidos.",
   "com.tempedge.error.person.lastNamerequired"                        : "Apellido es requerido.",
   "com.tempedge.error.person.middleNamerequired"                      : "Segundo nombre o inicial es requerida.",
   "com.tempedge.error.person.firstNamerequired"                       : "Nombre es requerido.",

@@ -73,6 +73,7 @@
   "com.tempedge.error.staterequired"                                  : "State is required",
   "com.tempedge.error.countryrequired"                                : "Country is required.",
   "com.tempedge.error.invaliduser"                                    : "Employee exists already.",
+  "com.tempedge.error.invaliddata"                                    : "Data is invalid.",
   "com.tempedge.error.person.genderrequired"                          : "Please select a gender.",
   "com.tempedge.error.person.lastNamerequired"                        : "Lastname is required.",
   "com.tempedge.error.person.middleNamerequired"                      : "Middlename or initial is required.",

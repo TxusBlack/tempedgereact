@@ -4,6 +4,7 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
+//let baseUrlTempEdge = `http://10.1.10.74:9191`;
 let baseUrlTempEdge = `http://localhost:9191`;
 
 export let doLogin = (url, data) => {
@@ -12,8 +13,6 @@ export let doLogin = (url, data) => {
       .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
-
-        console.log("token: ", res.data.access_token);
 
         sessionStorage.setItem('access_token', token);
         Axios({
@@ -35,8 +34,6 @@ export let doLogin = (url, data) => {
           let lang = window.location.pathname;
           lang = lang.split("/");
           let agencyList = response.data.result.portalUserList;
-          console.log("response: ", response);
-          console.log("response.data.result.portalUserList[0].status: ", (response.data.result.portalUserList > 0)? response.data.result.portalUserList[0].status: "");
 
           if(agencyList.length < 1){
             history.push(`/error/${lang[2]}`);
