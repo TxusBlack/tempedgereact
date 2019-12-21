@@ -13,8 +13,6 @@ export let doLogin = (url, data) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
 
-        console.log("token: ", res.data.access_token);
-
         sessionStorage.setItem('access_token', token);
         Axios({
           url: baseUrlTempEdge + url,
@@ -35,8 +33,6 @@ export let doLogin = (url, data) => {
           let lang = window.location.pathname;
           lang = lang.split("/");
           let agencyList = response.data.result.portalUserList;
-          console.log("response: ", response);
-          console.log("response.data.result.portalUserList[0].status: ", (response.data.result.portalUserList > 0)? response.data.result.portalUserList[0].status: "");
 
           if(agencyList.length < 1){
             history.push(`/error/${lang[2]}`);

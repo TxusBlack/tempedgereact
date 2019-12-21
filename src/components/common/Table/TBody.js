@@ -12,6 +12,7 @@ class TBody extends Component {
 
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
+
     componentDidUpdate(prevProps, prevState) {
         const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
@@ -25,9 +26,12 @@ class TBody extends Component {
     render() {
         let data = this.props.data;
         let columns = this.props.columns;
+
+        console.log("columns: ", columns);
+        console.log("data: ", data);
+
         return (
             <tbody>
-
                 {
                     data && data.length>0 ? data.map(row => {
                         return (
@@ -35,10 +39,10 @@ class TBody extends Component {
                                 {columns ? columns.map((col , index) => {
                                     return (
                                         <td className={
-                                            index===0 ? "table-content ": 
-                                            index===(columns.length-1) ? "table-content" : 
-                                            "table-content " + (col.hide !== "undefined" && col.hide != null ? " d-none d-"+col.hide+"-table-cell" : "") 
-                                        }style={col.maxFieldSize>0 ? {maxWidth: col.maxFieldSize}:{}}>{row[col.field]}  </td> 
+                                            index===0 ? "table-content ":
+                                            index===(columns.length-1) ? "table-content" :
+                                            "table-content " + (col.hide !== "undefined" && col.hide != null ? " d-none d-"+col.hide+"-table-cell" : "")
+                                        }style={col.maxFieldSize>0 ? {maxWidth: col.maxFieldSize}:{}}>{row[col.field]}  </td>
                                     )
                                 }) : "NO RECORDS FOUND!"
                                 }

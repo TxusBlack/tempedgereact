@@ -145,9 +145,9 @@ class CreateEmployee extends Component {
       }
 
       if(nextProps.validatePerson !== null){
-        if(nextProps.validatePerson.data.status === 200){
-          if(nextProps.validatePerson.data.code === "TE00"){
-            //Validation Succeeded
+        if(nextProps.validatePerson.data.status === 409){
+          if(nextProps.validatePerson.data.code === "TE-E07"){
+            //Validation Found multiple records with similar fields
             if(nextProps.validatePerson.data.result !== null){
               //Other people with the same name exist in the db, display popup with their list.
               let paginatedTable = <div style={{maxHeight: 500, overflowY: "scroll"}}><PaginatedTable payload={nextProps.validatePerson.data.result} title="com.tempedge.msg.label.validatedpersonlist"/></div>;
@@ -168,17 +168,21 @@ class CreateEmployee extends Component {
               }), () => {
                 this.toggleModalOnOff();
               });
-            }else if(nextProps.validatePerson.data.result === null){
+            }
+          }else{
+            //Validation Failed
+            this.setState(() => ({
+              announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
+            }));
+          }
+        }else if(nextProps.validatePerson.data.status === 200){
+          if(nextProps.validatePerson.data.code === "TE00"){
+            if(nextProps.validatePerson.data.result === null){
               // null means the person doesn't exist in the db, no other people with the same name exist
-              //Create New Person
+              // Create New Person
               this.onSave();
             }
           }
-        }else{
-          //Validation Failed
-          this.setState(() => ({
-            announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
-          }));
         }
       }
     }
@@ -260,30 +264,30 @@ class CreateEmployee extends Component {
 
           counter++;
         }
-      }).then((skills) => {
+      }).then(skills => {
         let data = {
                "temporalInfo": true,
                "skills": skills,
                "orgId" : agency.organizationEntity.orgId,
-               "address" : formValues.address,
-               "address2" : formValues.address2_,
+               "address" : formValues.address.toUpperCase(),
+               "address2" : (typeof formValues.address2_ !== 'undefined')? formValues.address2_.toUpperCase(): "",
                "backgroundTestDate" : moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
                "backgroundtest" : (formValues.backgroundTestDropdown === "Yes")? true: false,
                "birthDay" : moment(formValues.birthday_, 'YYYY-MM-DD'),
                "cellPhone" : formValues.phone,
-               "city" : formValues.city,
+               "city" : formValues.city.toUpperCase(),
                "country" : formValues.country.countryId,
                "drugTest" : (formValues.drugTestDropdown === "Yes")? true: false,
                "drugTestDate" : moment(formValues.drugTestDate, 'YYYY-MM-DD'),
-               "email" : formValues.drugTestDate,
+               "email" : formValues.email,
                "empDepartment" : formValues.department.orgDepartmentCode,
-               "firstName" : formValues.firstName,
+               "firstName" : formValues.firstName.toUpperCase(),
                "gender" : (formValues.gender === "Male")? 'M': 'F',
                "hireDate" : moment(formValues.hireDate_, 'YYYY-MM-DD'),
                "identification" : formValues.employeeid,
-               "lastName" : formValues.lastName,
+               "lastName" : formValues.lastName.toUpperCase(),
                "maritalStatus" : (formValues.maritalstatusDropdown)? 0: 1,
-               "middleName" : formValues.middleName_,
+               "middleName" : formValues.middleName_.toUpperCase(),
                "phone" : formValues.phone,
                "region" : formValues.state.regionId,
                "taxRegion": formValues.joblocation.regionId,
@@ -306,8 +310,6 @@ class CreateEmployee extends Component {
 
         this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
 
-        console.log("data: ", data);
-
         this.setState(() => ({
           formData: data
         }));
@@ -321,6 +323,8 @@ class CreateEmployee extends Component {
       this.setState(() => ({
         announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
       }));
+
+      this.toggleModalOnOff();   //Close Modal
     }
 
     //Set Modal visible or not
@@ -336,7 +340,6 @@ class CreateEmployee extends Component {
 
     //Close Modal
     onClose = () => {
-      //this.onSave();
       this.toggleModalOnOff();   //Close Modal
     }
 
@@ -636,7 +639,7 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
    getListSafe: PropTypes.func.isRequired,
    change: PropTypes.func.isRequired,
    clearTempedgeStoreProp: PropTypes.func.isRequired
-}
+};
 
 
 CreateEmployee = reduxForm({
@@ -648,7 +651,7 @@ CreateEmployee = reduxForm({
 
 let mapStateToProps = (state) => {
     let selector = formValueSelector('NewEmployee'); // <-- same as form name
-    console.log("state.form.NewEmployee: ", state.form.NewEmployee);
+
     return({
       skillsList: state.tempEdge.skillList,
       country_region_list: state.tempEdge.country_region_list,
@@ -663,6 +666,6 @@ let mapStateToProps = (state) => {
       validatePerson: (typeof state.tempEdge.validatePerson !== 'undefined')? state.tempEdge.validatePerson: null,
       savePerson: (typeof state.tempEdge.savePerson !== 'undefined')? state.tempEdge.savePerson: null
     });
-}
+};
 
 export default withLocalize(connect(mapStateToProps, { push, change, getList, tempedgeAPI, getListSafe, clearTempedgeStoreProp })(CreateEmployee));
