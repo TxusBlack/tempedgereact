@@ -34,7 +34,6 @@ class PaginatedTable extends Component {
     }
 
     changePage = (myPage) =>{
-        console.log(myPage);
         this.setState({tablePage : myPage});
         let payload = {
             orgId : 1,
@@ -62,10 +61,8 @@ class PaginatedTable extends Component {
     }
 
     render() {
-        let data = (typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined' ) ? this.props.paginatorList: this.props.payload;
+        let data = (typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined') ? this.props.paginatorList: this.props.payload;
         let title = this.props.title;
-
-        console.log("data: ", data);
 
         return (
             <React.Fragment>
@@ -85,7 +82,6 @@ class PaginatedTable extends Component {
                         btns ={data && data.data ? (
                                 <TPaginator changePage={()=>this.changePage()}/>
                         ) :""}>
-
                 { data ?
                     <div className='col-12'>
                         <Table data={data} applyFilter={this.applyFilter}/>
