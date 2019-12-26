@@ -149,6 +149,17 @@ class CreateEmployee extends Component {
           if(nextProps.validatePerson.data.code === "TE-E07"){
             //Validation Found multiple records with similar fields
             if(nextProps.validatePerson.data.result !== null){
+              let save = () => {
+                this.props.tempedgeAPI("/api/person/save", this.state.formData, PERSON_SAVE);
+                this.props.clearTempedgeStoreProp('validatePerson');
+
+                this.setState(() => ({
+                  announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
+                }), () => {
+                  this.toggleModalOnOff();
+                });
+              }
+
               //Other people with the same name exist in the db, display popup with their list.
               let paginatedTable = <div style={{maxHeight: 500, overflowY: "scroll"}}><PaginatedTable payload={nextProps.validatePerson.data.result} title="com.tempedge.msg.label.validatedpersonlist"/></div>;
               let btns = (
@@ -157,7 +168,7 @@ class CreateEmployee extends Component {
                     <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={() => this.onClose()}>Cancel</button>
                   </div>
                   <div className="col-md-5">
-                    <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={() => this.onSave()}>Save</button>
+                    <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={() => save()}>Save</button>
                   </div>
                 </div>
               );
@@ -320,37 +331,78 @@ class CreateEmployee extends Component {
                 }
              };
 
-        if(this.state.documents !== null){
-          let reader = new FileReader();
-          let blob = new Blob([this.state.documents.data], {type: 'application/pdf'});
-          let ext = this.state.documents.name.split('.').pop();
+        return new Promise((resolve, reject) => {
+          if(this.state.documents !== null && this.state.resume !== null){
+            let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
+            let docExt = this.state.documents.name.split('.').pop();
+            data.docExt = docExt;
 
-          reader.readAsDataURL(blob);
+            this.convertToBase64(docBlob)
+              .then(docBase64 => {
+                data.base64Dco = docBase64;
 
-          reader.onload = e => {
-            data.docExt = ext;
-            data.base64Dco = reader.result.split('base64,')[1];
-          };
-        }
+                let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
+                let resumeExt = this.state.resume.name.split('.').pop();
+                data.resumExt = resumeExt;
 
-        if(this.state.resume !== null){
-          let reader = new FileReader();
-          let blob = new Blob([this.state.resume.data], {type: 'application/pdf'});
-          let ext = this.state.resume.name.split('.').pop();
+                this.convertToBase64(resumeBlob)
+              .then((resumeBase64) => {
+                data.base64Resume = resumeBase64;
 
-          reader.readAsDataURL(blob);
+                resolve(data);
+              });
+            });
+          }else if(this.state.documents !== null && this.state.resume === null){
+            let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
+            let docExt = this.state.documents.name.split('.').pop();
+            data.docExt = docExt;
 
-          reader.onload = e => {
-            data.resumExt = ext;
-            data.base64Resume = reader.result.split('base64,')[1];
-          };
-        }
+            this.convertToBase64(docBlob)
+              .then(docBase64 => {
+                data.base64Dco = docBase64;
+                resolve(data);
+            });
+          }else if(this.state.documents === null && this.state.resume !== null){
+            let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
+            let resumeExt = this.state.resume.name.split('.').pop();
+            data.resumExt = resumeExt;
 
-        this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
+            this.convertToBase64(resumeBlob)
+              .then((resumeBase64) => {
+                data.base64Resume = resumeBase64;
 
-        this.setState(() => ({
-          formData: data
-        }));
+                resolve(data);
+              });
+          }
+        }).then(data => {
+          this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
+
+          this.setState(() => ({
+            formData: data
+          }));
+        });
+      });
+    }
+
+    convertToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        // Select the very first file from list
+        let fileToLoad = file;
+        // FileReader function for read the file.
+        let fileReader = new FileReader();
+        let base64;
+
+        // Convert data to base64
+        fileReader.readAsDataURL(fileToLoad);
+
+        // Onload of file read the file content
+        fileReader.onload = function(fileLoadedEvent) {
+          base64 = fileLoadedEvent.target.result;
+          base64 = base64.replace("data:application/pdf;base64,", "");
+          
+          // return base 64 data
+          resolve(base64);
+        };
       });
     }
 
@@ -360,9 +412,7 @@ class CreateEmployee extends Component {
 
       this.setState(() => ({
         announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
-      }), () => {
-        this.toggleModalOnOff();
-      });
+      }));
     }
 
     //Set Modal visible or not
