@@ -154,10 +154,10 @@ class CreateEmployee extends Component {
               let btns = (
                 <div className="prev-next-btns-agency row" style={{width: "-webkit-fill-available"}}>
                   <div className="col-md-5 offset-md-1">
-                    <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.onClose}>Cancel</button>
+                    <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={() => this.onClose()}>Cancel</button>
                   </div>
                   <div className="col-md-5">
-                    <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={this.onSave}>Save</button>
+                    <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={() => this.onSave()}>Save</button>
                   </div>
                 </div>
               );
@@ -166,7 +166,7 @@ class CreateEmployee extends Component {
                 showModal: !this.state.showModal
               }), () => {
                 this.setState(() => ({
-                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} onClose={this.onClose} />
+                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />
                 }));
               });
 
@@ -360,9 +360,9 @@ class CreateEmployee extends Component {
 
       this.setState(() => ({
         announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
-      }));
-
-      this.toggleModalOnOff();
+      }), () => {
+        this.toggleModalOnOff();
+      });
     }
 
     //Set Modal visible or not
