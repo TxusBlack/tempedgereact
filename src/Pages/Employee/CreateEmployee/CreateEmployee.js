@@ -163,11 +163,22 @@ class CreateEmployee extends Component {
               );
 
               this.setState(() => ({
+                showModal: !this.state.showModal
+              }), () => {
+                this.setState(() => ({
+                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} onClose={this.onClose} />
+                }));
+              });
+
+              this.setState(() => ({
                 paginatedTable: paginatedTable,
                 btns: btns
-              }), () => {
-                this.toggleModalOnOff();
-              });
+              }));
+            }else{
+              //Validation Failed
+              this.setState(() => ({
+                announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
+              }));
             }
           }else{
             //Validation Failed
@@ -234,7 +245,10 @@ class CreateEmployee extends Component {
 
         /* Update state */
         this.setState(() => ({
-          [stateName]: data
+          [stateName]: {
+            name: file.name,
+            data: data
+          }
         }));
       };
     }
@@ -294,8 +308,10 @@ class CreateEmployee extends Component {
                "temporalInfo" : false,
                "usrCreatedBy" : agency.portalUserConfId,
                "zipcode" : formValues.zip,
-               "documents": null,
-               "resume": null,
+               "docExt": null,
+               "resumExt": null,
+               "base64Dco": null,
+               "base64Resume": null,
                "personType" : {
                 "personTypeId" : 1    // ** TODO **
               },
@@ -306,33 +322,27 @@ class CreateEmployee extends Component {
 
         if(this.state.documents !== null){
           let reader = new FileReader();
-          let blob = new Blob([this.state.documents], {type: 'application/pdf'});
+          let blob = new Blob([this.state.documents.data], {type: 'application/pdf'});
+          let ext = this.state.documents.name.split('.').pop();
 
           reader.readAsDataURL(blob);
 
           reader.onload = e => {
-            var pdf = {
-              name: "documents",
-              data: reader.result.split('base64,')[1]
-            };
-
-            data.documents = pdf;
+            data.docExt = ext;
+            data.base64Dco = reader.result.split('base64,')[1];
           };
         }
 
         if(this.state.resume !== null){
           let reader = new FileReader();
-          let blob = new Blob([this.state.resume], {type: 'application/pdf'});
+          let blob = new Blob([this.state.resume.data], {type: 'application/pdf'});
+          let ext = this.state.resume.name.split('.').pop();
 
           reader.readAsDataURL(blob);
 
           reader.onload = e => {
-            var pdf = {
-              name: "resume",
-              data: reader.result.split('base64,')[1]
-            };
-
-            data.resume = pdf;
+            data.resumExt = ext;
+            data.base64Resume = reader.result.split('base64,')[1];
           };
         }
 
@@ -352,25 +362,21 @@ class CreateEmployee extends Component {
         announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
       }));
 
-      this.toggleModalOnOff();   //Close Modal
+      this.toggleModalOnOff();
     }
 
     //Set Modal visible or not
     toggleModalOnOff = () => {
+      console.log("TOGGLEMODAL!!");
       this.setState({
-        showModal: !this.state.showModal
-      }, () => {
-        this.setState(() => ({
-          modal: <Modal content={this.state.paginatedTable} buttons={this.state.btns} open={this.state.showModal} onClose={this.onClose} />
-      }), () => {
-        console.log("modal: ", this.state.modal);
-      });
+        showModal: !this.state.showModal,
+        modal: ""
       });
     }
 
     //Close Modal
     onClose = () => {
-      this.props.dispatch(reset('NewEmployee'));
+      //this.props.dispatch(reset('NewEmployee'));
       this.toggleModalOnOff();   //Close Modal
     }
 
