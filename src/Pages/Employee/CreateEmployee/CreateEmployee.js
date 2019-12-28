@@ -18,7 +18,7 @@ import { GET_COUNTRY_REGION_LIST, SKILLS_LIST, GET_ORG_DEPARTMENT_LIST, GET_OFFI
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
-import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, tempedgeMultiPartApi, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import Container from '../../../components/common/Container/Container';
 import Form from 'react-bootstrap/Form';
 import Stepper from 'react-stepper-horizontal';
@@ -59,7 +59,8 @@ class CreateEmployee extends Component {
             btn: "",
             showModal: false,
             formData: {},
-            announcementBar: ""
+            announcementBar: "",
+            validateMsg: ""
         }
 
         this.addTranslationsForActiveLanguage();
@@ -144,17 +145,30 @@ class CreateEmployee extends Component {
         });
       }
 
+      if(nextProps.savePerson !== null){
+        if(nextProps.savePerson.data.status === 200){
+          this.setState(() => ({
+            announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
+          }));
+        }else{
+          //Validation Failed
+          this.setState(() => ({
+            announcementBar: <div className="announcement-bar fail"><p><Translate id={this.state.validateMsg} /></p></div>
+          }));
+        }
+      }
+
       if(nextProps.validatePerson !== null){
         if(nextProps.validatePerson.data.status === 409){
           if(nextProps.validatePerson.data.code === "TE-E07"){
             //Validation Found multiple records with similar fields
             if(nextProps.validatePerson.data.result !== null){
               let save = () => {
-                this.props.tempedgeAPI("/api/person/save", this.state.formData, PERSON_SAVE);
+                this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, PERSON_SAVE);
                 this.props.clearTempedgeStoreProp('validatePerson');
 
                 this.setState(() => ({
-                  announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
+                  validateMsg: nextProps.validatePerson.data.message
                 }), () => {
                   this.toggleModalOnOff();
                 });
@@ -331,56 +345,75 @@ class CreateEmployee extends Component {
                 }
              };
 
-        return new Promise((resolve, reject) => {
-          if(this.state.documents !== null && this.state.resume !== null){
-            let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
-            let docExt = this.state.documents.name.split('.').pop();
-            data.docExt = docExt;
+             if(this.state.documents !== null){
+               data.base64Dco = new Blob([this.state.documents.data], {type: 'application/pdf'});
+               data.docExt = this.state.documents.name.split('.').pop();
+             }
 
-            this.convertToBase64(docBlob)
-              .then(docBase64 => {
-                data.base64Dco = docBase64;
+             if(this.state.resume !== null){
+               data.base64Resume = new Blob([this.state.resume.data], {type: 'application/pdf'});
+               data.resumExt = this.state.resume.name.split('.').pop();
+             }
 
-                let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
-                let resumeExt = this.state.resume.name.split('.').pop();
-                data.resumExt = resumeExt;
-
-                this.convertToBase64(resumeBlob)
-              .then((resumeBase64) => {
-                data.base64Resume = resumeBase64;
-
-                resolve(data);
+             this.setState(() => ({
+                formData: {...data}
+              }), () => {
+                data.base64Dco = "";
+                data.base64Resume = "";
+                this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
               });
-            });
-          }else if(this.state.documents !== null && this.state.resume === null){
-            let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
-            let docExt = this.state.documents.name.split('.').pop();
-            data.docExt = docExt;
 
-            this.convertToBase64(docBlob)
-              .then(docBase64 => {
-                data.base64Dco = docBase64;
-                resolve(data);
-            });
-          }else if(this.state.documents === null && this.state.resume !== null){
-            let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
-            let resumeExt = this.state.resume.name.split('.').pop();
-            data.resumExt = resumeExt;
-
-            this.convertToBase64(resumeBlob)
-              .then((resumeBase64) => {
-                data.base64Resume = resumeBase64;
-
-                resolve(data);
-              });
-          }
-        }).then(data => {
-          this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
-
-          this.setState(() => ({
-            formData: data
-          }));
-        });
+        // return new Promise((resolve, reject) => {
+        //   if(this.state.documents !== null && this.state.resume !== null){
+        //     let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
+        //     let docExt = this.state.documents.name.split('.').pop();
+        //     data.docExt = docExt;
+        //
+        //     this.convertToBase64(docBlob)
+        //       .then(docBase64 => {
+        //         data.base64Dco = docBase64;
+        //
+        //         let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
+        //         let resumeExt = this.state.resume.name.split('.').pop();
+        //         data.resumExt = resumeExt;
+        //
+        //         this.convertToBase64(resumeBlob)
+        //       .then((resumeBase64) => {
+        //         data.base64Resume = resumeBase64;
+        //
+        //         resolve(data);
+        //       });
+        //     });
+        //   }else if(this.state.documents !== null && this.state.resume === null){
+        //     let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
+        //     console.log("docBlob: ", docBlob);
+        //     let docExt = this.state.documents.name.split('.').pop();
+        //     data.docExt = docExt;
+        //
+        //     this.convertToBase64(docBlob)
+        //       .then(docBase64 => {
+        //         data.base64Dco = docBase64;
+        //         resolve(data);
+        //     });
+        //   }else if(this.state.documents === null && this.state.resume !== null){
+        //     let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
+        //     let resumeExt = this.state.resume.name.split('.').pop();
+        //     data.resumExt = resumeExt;
+        //
+        //     this.convertToBase64(resumeBlob)
+        //       .then((resumeBase64) => {
+        //         data.base64Resume = resumeBase64;
+        //
+        //         resolve(data);
+        //       });
+        //   }
+        // }).then(data => {
+        //   this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
+        //
+        //   this.setState(() => ({
+        //     formData: data
+        //   }));
+        // });
       });
     }
 
@@ -399,7 +432,7 @@ class CreateEmployee extends Component {
         fileReader.onload = function(fileLoadedEvent) {
           base64 = fileLoadedEvent.target.result;
           base64 = base64.replace("data:application/pdf;base64,", "");
-          
+
           // return base 64 data
           resolve(base64);
         };
@@ -407,12 +440,8 @@ class CreateEmployee extends Component {
     }
 
     onSave = () => {
-      this.props.tempedgeAPI("/api/person/save", this.state.formData, PERSON_SAVE);
+      this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, PERSON_SAVE);
       this.props.clearTempedgeStoreProp('validatePerson');
-
-      this.setState(() => ({
-        announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
-      }));
     }
 
     //Set Modal visible or not
@@ -722,6 +751,7 @@ class CreateEmployee extends Component {
 CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its own, no need to do anything else, separate library since React 16, wasn't the case before on 14 or 15
    //Action, does the Fetch part from the posts API
    tempedgeAPI: PropTypes.func.isRequired,
+   tempedgeMultiPartApi: PropTypes.func.isRequired,
    getList: PropTypes.func.isRequired,
    getListSafe: PropTypes.func.isRequired,
    change: PropTypes.func.isRequired,
@@ -755,4 +785,4 @@ let mapStateToProps = (state) => {
     });
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change, getList, tempedgeAPI, getListSafe, clearTempedgeStoreProp })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, change, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp })(CreateEmployee));
