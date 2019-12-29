@@ -6,7 +6,7 @@ import { notify } from 'reapop';
 import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Validate from '../../Validations/Validations';
-import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
+import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST, CREATE_CLIENT } from '../../../Redux/actions/types.js';
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
 import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.js';
 import WizardCreateNewClientThirdPage  from './WizardCreateNewClientThirdPage';
@@ -18,7 +18,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { getList, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
+import { getList, tempedgeAPI, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 //Department Modal re-init data
 const reInitData = {
@@ -84,33 +84,54 @@ class CreateNewClient extends Component {
   }
 
   onSubmit = async (formValues) => {
-		let response = {
-			values: {
-				attnTo: formValues.attnTo,
-				clientaddress: formValues.clientaddress,
-				clientcity: formValues.clientcity,
-				clientcontactcellphone: formValues.clientcontactcellphone,
-				clientcontactphone: formValues.clientcontactphone,
-				clientcountry: formValues.clientcountry,
-				clientfirstName: formValues.clientfirstName,
-				clientlastName: formValues.clientlastName,
-				clientstate: formValues.clientstate,
-				clientzipcode: formValues.clientzipcode,
-				comments: formValues.comments,
-				company: formValues.company,
-				companyInitials: formValues.companyInitials,
-				email: formValues.email,
-				markupClient: formValues.markupClient,
-				otMarkupClient: formValues.otMarkupClient,
-				payrollCycle: formValues.payrollCycle,
-				salesman: formValues.salesman,
-				workCompCode: formValues.workCompCode,
-				workCompRate: formValues.workCompRate
-			},
-			departments: this.props.deptList
-		};
+    let phone = (typeof formValues.clientcontactphone !== null)? formValues.clientcontactphone: formValues.clientcontactcellphone;
+    let depList = this.props.deptList;
+    let bill = this.props.billRate;
+
+    let response = {
+      orgId : 1,
+      address: formValues.clientaddress,
+      attn: formValues.attnTo,
+      city: formValues.clientcity,
+      clientInitials: formValues.companyInitials,
+      clientName: formValues.company,
+      commonMarkup: formValues.markupClient,
+      commonOtMarkup: formValues.otMarkupClient,
+      country: formValues.clientcountry.countryId,
+      email: formValues.email,
+      notes: formValues.comments,
+      payrollSchedule: formValues.payrollCycle,
+      phone: phone,
+      region: formValues.clientstate.regionId,
+      wcCode: formValues.workCompCode,
+      wcRate: formValues.workCompRate,
+      zipcode: formValues.clientzipcode,
+      contact : {
+        firstName: formValues.clientfirstName,
+        lastName: formValues.clientlastName,
+        phone: phone,
+        personType : {
+         personTypeId : 2
+        }
+      },
+      departments: depList,
+      clientSellers: [
+        {
+           person : {
+            personId : 1
+           }
+        },
+        {
+           person : {
+            personId : 2
+           }
+         }
+      ]
+    }
 
     console.log("Client Form: ", response);
+
+    this.props.tempedgeAPI('/api/client/save', response, CREATE_CLIENT);
   }
 
   fireNotification = () => {
@@ -168,13 +189,13 @@ class CreateNewClient extends Component {
 
     deptList.map((dept, index) => {
       let key = `departments-${index}`;
-      let name = dept.departmentName;
+      let name = dept.name;
       let tableRows = deptList[index].positions.map((position, index) => {
         return(
           <tr>
-            <td>{position.position}</td>
-            <td>{position.markup}</td>
-            <td>{position.otmarkup}</td>
+            <td>{position.name}</td>
+            <td>{position.markUp}</td>
+            <td>{position.otMarkUp}</td>
           </tr>
         );
       });
@@ -242,7 +263,7 @@ class CreateNewClient extends Component {
     this.renderClientDepartmentsList({repaint: true});
   }
 
-  departmentModalEdit= async (index) => {
+  departmentModalEdit = async (index) => {
     let departmentname = this.props.deptList[index].departmentName;
     let positionList = this.props.deptList[index].positions;
 		this.resetInitData();
@@ -318,7 +339,8 @@ CreateNewClient.propTypes = {
   saveDepartmentList: PropTypes.func.isRequired,
   savePositionsList: PropTypes.func.isRequired,
   saveToPositionsList: PropTypes.func.isRequired,
-  removeFromDepartmentList: PropTypes.func.isRequired
+  removeFromDepartmentList: PropTypes.func.isRequired,
+  tempedgeAPI: PropTypes.func.isRequired
 }
 
 let mapStateToProps = (state) => {
@@ -331,14 +353,14 @@ let mapStateToProps = (state) => {
     }
   }
 
-	console.log("state.form.CreateNewClient.values: ", (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: "");
-
   return({
-    deptList: (state.tempEdge.deptList !== undefined)? state.tempEdge.deptList: [],
-    deptPosList: (state.tempEdge.deptPosList !== undefined)? state.tempEdge.deptPosList: [],
+    deptList: (typeof state.tempEdge.deptList !== 'undefined')? state.tempEdge.deptList: [],
+    deptPosList: (typeof state.tempEdge.deptPosList !== 'undefined')? state.tempEdge.deptPosList: [],
     departmentname: departmentname,
-		formValues: (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: ""
+		formValues: (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: "",
+    billRate: (typeof state.tempEdge.billRate !== 'undefined')? state.tempEdge.billRate: 0,
+    otBillRate: (typeof state.tempEdge.otBillRate !== 'undefined')? state.tempEdge.otBillRate: 0,
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI })(CreateNewClient));

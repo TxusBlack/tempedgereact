@@ -10,7 +10,8 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { saveDepartmentList } from "../../../Redux/actions/tempEdgeActions";
+import { saveDepartmentList, saveBillRates } from "../../../Redux/actions/tempEdgeActions";
+import { SAVE_BILL_RATE, SAVE_OT_BILL_RATE } from '../../../Redux/actions/types.js';
 
 //Department Modal re-init data
 const reInitData = {
@@ -23,7 +24,9 @@ const reInitData = {
 	timeOut:"",
 	employeeContact:"",
 	contactPhone:"",
-	posList: []
+	posList: [],
+	billRate: 0,
+	otBillRate: 0
 }
 
 class Department extends React.Component{
@@ -49,24 +52,39 @@ class Department extends React.Component{
 		this.renderPositions();
   }
 
+	componentWillReceiveProps = (nextProps) => {
+		if(!Number.isNaN(nextProps.markup) && !Number.isNaN(nextProps.otmarkup) && !Number.isNaN(nextProps.payRate)){
+			let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
+			let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
+
+			this.props.saveBillRates(billRate, SAVE_BILL_RATE);
+			this.props.saveBillRates(otBillRate, SAVE_OT_BILL_RATE);
+
+			this.setState(() => ({
+				billRate: billRate,
+				otBillRate: otBillRate
+			}));
+		}
+	}
+
   increaseListSize = async () => {
     let departmentname = this.props.departmentname;
     let newDeptPos = {
-      position: this.props.position,
+			bill: this.state.billRate.toFixed(2),
+      name: this.props.position,
       description: this.props.description,
-      payRate: this.props.payRate,
-      markup: this.props.markup,
-      otmarkup: this.props.otmarkup,
+      pay: this.props.payRate,
+      markUp: this.props.markup,
+      otMarkUp: this.props.otmarkup,
       timeIn: this.props.timeIn,
       timeOut: this.props.timeOut,
-      employeeContact: this.props.employeeContact,
+      contactName: this.props.employeeContact,
       contactPhone: this.props.contactPhone,
     };
 
 		let deptPosList = this.state.posList;
 
 		deptPosList.push(newDeptPos);
-
 		this.setState(() => ({
 			posList: deptPosList
 		}));
@@ -104,7 +122,7 @@ class Department extends React.Component{
             <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#positions${index}`} role="button" aria-expanded="false" aria-controls={`positions${index}`}>
               <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
             </a>
-            <span>{deptPosList[index].position}</span>
+            <span>{deptPosList[index].name}</span>
             <span className="pull-right">
               <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => this.removeFromPosList(index)} alt="deleteIcon" />
             </span>
@@ -124,10 +142,10 @@ class Department extends React.Component{
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].payRate: ""}</td>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].markup: ""}</td>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].otmarkup: ""}</td>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].employeeContact: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].pay: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].markUp: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].otMarkUp: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].contactName: ""}</td>
                       <td>{(deptPosList[index] !== undefined)? deptPosList[index].contactPhone: ""}</td>
                     </tr>
                   </tbody>
@@ -169,7 +187,8 @@ class Department extends React.Component{
       this.props.renderClientDepartmentsList({repaint: true});
     }else{
       newDeptList.push({
-        departmentName: departmentname,
+        name: departmentname,
+				orgId: 1,
         positions: newPosList
       });
 
@@ -187,8 +206,18 @@ class Department extends React.Component{
     this.props.dispatch(initialize('CreateNewClient', this.props.reInitData));
   }
 
+	calculateBillRates = (payRate, markup, op) => {
+		if(op === 'billRate'){
+			return (payRate*((markup/100) + 1));
+		}else{
+			return ((payRate*((markup/100) + 1)) * 1.5);
+		}
+	}
+
   render(){
     let positionsList = this.state.posArray;
+		let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
+		let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}}>
@@ -242,11 +271,11 @@ class Department extends React.Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.billRate"></Translate></label>
-                            <p>30</p>
+                            <p style={{fontSize: 13}}>{(Number.isNaN(billRate))? "": billRate.toFixed(2)}</p>
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.otBillRate"></Translate></label>
-                            <p>15</p>
+                            <p style={{fontSize: 13}}>{(Number.isNaN(otBillRate))? "": otBillRate.toFixed(2)}</p>
                           </div>
                         </div>
 
@@ -315,7 +344,8 @@ class Department extends React.Component{
 Department.propTypes = {
   change: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
-  saveDepartmentList: PropTypes.func.isRequired
+  saveDepartmentList: PropTypes.func.isRequired,
+	saveBillRates: PropTypes.func.isRequired
 }
 
 Department = reduxForm({
@@ -376,4 +406,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { saveDepartmentList, change, initialize })(Department));
+export default withLocalize(connect(mapStateToProps, { saveDepartmentList, change, initialize, saveBillRates })(Department));

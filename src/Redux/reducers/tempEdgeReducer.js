@@ -2,6 +2,7 @@ import { LOGIN,
   GET_COUNTRY_REGION_LIST,
   GET_FUNDING_LIST,
   GET_ROLE_LIST,
+  CREATE_CLIENT,
   SAVE_FORM_POSITION,
   GET_EMPLOYEE_LIST,
   SAVE_DEPARTMENTS_LIST,
@@ -9,7 +10,9 @@ import { LOGIN,
   SAVE_POSITIONS_LIST,
   SAVE_TO_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST,
-  REMOVE_FROM_DEPARTMENTS_LIST
+  REMOVE_FROM_DEPARTMENTS_LIST,
+  SAVE_BILL_RATE,
+  SAVE_OT_BILL_RATE
 } from '../actions/types';
 
 let initialState = {
@@ -42,6 +45,11 @@ export default function(state = initialState, action){
       return{
         ...state,
         paginatorList: action.payload
+      }
+    case CREATE_CLIENT:
+      return{
+        ...state,
+        client: action.payload
       }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;
@@ -85,6 +93,16 @@ export default function(state = initialState, action){
       return{
         ...state,
         deptList: newDeptListState
+      }
+    case SAVE_BILL_RATE:
+      return{
+        ...state,
+        billRate: action.payload
+      }
+    case SAVE_OT_BILL_RATE:
+      return{
+        ...state,
+        otBillRate: action.payload
       }
     default:
       return state;
