@@ -157,14 +157,14 @@ class CreateEmployee extends Component {
           }));
         }
       }
-
+      console.log(nextProps.validatePerson);
       if(nextProps.validatePerson !== null){
         if(nextProps.validatePerson.data.status === 409){
           if(nextProps.validatePerson.data.code === "TE-E07"){
             //Validation Found multiple records with similar fields
             if(nextProps.validatePerson.data.result !== null){
               let save = () => {
-                this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, PERSON_SAVE);
+                this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, this.state.fileArray, PERSON_SAVE);
                 this.props.clearTempedgeStoreProp('validatePerson');
 
                 this.setState(() => ({
@@ -213,6 +213,7 @@ class CreateEmployee extends Component {
           }
         }else if(nextProps.validatePerson.data.status === 200){
           if(nextProps.validatePerson.data.code === "TE00"){
+            
             if(nextProps.validatePerson.data.result === null){
               // null means the person doesn't exist in the db, no other people with the same name exist
               // Create New Person
@@ -326,7 +327,7 @@ class CreateEmployee extends Component {
                "identification" : formValues.employeeid,
                "lastName" : formValues.lastName.toUpperCase(),
                "maritalStatus" : (formValues.maritalstatusDropdown)? 0: 1,
-               "middleName" : formValues.middleName_.toUpperCase(),
+               "middleName" : formValues.middleName_ ? formValues.middleName_.toUpperCase() : "",
                "phone" : formValues.phone,
                "region" : formValues.state.regionId,
                "taxRegion": formValues.joblocation.regionId,
@@ -335,8 +336,6 @@ class CreateEmployee extends Component {
                "zipcode" : formValues.zip,
                "docExt": null,
                "resumExt": null,
-               "base64Dco": null,
-               "base64Resume": null,
                "personType" : {
                 "personTypeId" : 1    // ** TODO **
               },
@@ -345,75 +344,23 @@ class CreateEmployee extends Component {
                 }
              };
 
+             var fileArray = {};
              if(this.state.documents !== null){
-               data.base64Dco = new Blob([this.state.documents.data], {type: 'application/pdf'});
+               fileArray.documents = new Blob([this.state.documents.data], {type: 'application/pdf'});
                data.docExt = this.state.documents.name.split('.').pop();
              }
 
              if(this.state.resume !== null){
-               data.base64Resume = new Blob([this.state.resume.data], {type: 'application/pdf'});
+               fileArray.resume = new Blob([this.state.resume.data], {type: 'application/pdf'});
                data.resumExt = this.state.resume.name.split('.').pop();
              }
 
              this.setState(() => ({
-                formData: {...data}
+                formData: {...data}, 
+                fileArray
               }), () => {
-                data.base64Dco = "";
-                data.base64Resume = "";
                 this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
               });
-
-        // return new Promise((resolve, reject) => {
-        //   if(this.state.documents !== null && this.state.resume !== null){
-        //     let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
-        //     let docExt = this.state.documents.name.split('.').pop();
-        //     data.docExt = docExt;
-        //
-        //     this.convertToBase64(docBlob)
-        //       .then(docBase64 => {
-        //         data.base64Dco = docBase64;
-        //
-        //         let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
-        //         let resumeExt = this.state.resume.name.split('.').pop();
-        //         data.resumExt = resumeExt;
-        //
-        //         this.convertToBase64(resumeBlob)
-        //       .then((resumeBase64) => {
-        //         data.base64Resume = resumeBase64;
-        //
-        //         resolve(data);
-        //       });
-        //     });
-        //   }else if(this.state.documents !== null && this.state.resume === null){
-        //     let docBlob = new Blob([this.state.documents.data], {type: 'application/pdf'});
-        //     console.log("docBlob: ", docBlob);
-        //     let docExt = this.state.documents.name.split('.').pop();
-        //     data.docExt = docExt;
-        //
-        //     this.convertToBase64(docBlob)
-        //       .then(docBase64 => {
-        //         data.base64Dco = docBase64;
-        //         resolve(data);
-        //     });
-        //   }else if(this.state.documents === null && this.state.resume !== null){
-        //     let resumeBlob = new Blob([this.state.resume.data], {type: 'application/pdf'});
-        //     let resumeExt = this.state.resume.name.split('.').pop();
-        //     data.resumExt = resumeExt;
-        //
-        //     this.convertToBase64(resumeBlob)
-        //       .then((resumeBase64) => {
-        //         data.base64Resume = resumeBase64;
-        //
-        //         resolve(data);
-        //       });
-        //   }
-        // }).then(data => {
-        //   this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
-        //
-        //   this.setState(() => ({
-        //     formData: data
-        //   }));
-        // });
       });
     }
 
@@ -440,7 +387,7 @@ class CreateEmployee extends Component {
     }
 
     onSave = () => {
-      this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, PERSON_SAVE);
+      this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, this.state.fileArray, PERSON_SAVE);
       this.props.clearTempedgeStoreProp('validatePerson');
     }
 

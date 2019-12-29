@@ -94,15 +94,16 @@ export let tempedgeAPI = (url, data, actionName) => {
   }
 }
 
-export let tempedgeMultiPartApi = (url, data, actionName) => {
+export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     let formData = new FormData();
 
-    formData.append('document', data.base64Dco);
-    formData.append('resume', data.base64Resume);
+    formData.append('personString', JSON.stringify(data));
+    formData.append('document', fileArray.documents);
+    formData.append('resume', fileArray.resume);
     data.base64Dco = data.base64Resume = null;
-    formData.append('personEntity', data);
+    
 
 
     let options = {
