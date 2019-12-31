@@ -302,7 +302,11 @@ let validate = (formValues) => {
   }
 
   if(!formValues.contactPhone){
-    errors.contactPhone = 'Please enter contact phone number';
+    let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
+
+    if (!regX.test(formValues.contactPhone)){
+      errors.contactPhone = 'Phone number is required.';
+    }
   }
 
   if(!formValues.departmentname){

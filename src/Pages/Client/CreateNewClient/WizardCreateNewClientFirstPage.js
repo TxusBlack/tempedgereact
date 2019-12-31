@@ -64,7 +64,7 @@ class WizardCreateNewUserFirstPage extends Component{
 
   render(){
     let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
-    let payrollCycle = ["1", "2", "3", "4"];
+    let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
@@ -90,7 +90,7 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payrollCycle"></Translate></label>
-                            <Field name="payrollCycle" data={payrollCycle} valueField="value" textField="payrollCycle" category="client" component={Dropdown} />
+                            <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={Dropdown} />
                           </div>
                         </div>
 
@@ -141,7 +141,7 @@ class WizardCreateNewUserFirstPage extends Component{
                             <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                           </div>
                           <div className="col-md-5">
-                            <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                            <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                           </div>
                         </div>
                       </div>

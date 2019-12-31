@@ -100,7 +100,7 @@ class CreateNewClient extends Component {
       country: formValues.clientcountry.countryId,
       email: formValues.email,
       notes: formValues.comments,
-      payrollSchedule: formValues.payrollCycle,
+      payrollSchedule: formValues.payrollCycle.payrollId,
       phone: phone,
       region: formValues.clientstate.regionId,
       wcCode: formValues.workCompCode,

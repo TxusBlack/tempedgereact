@@ -218,6 +218,8 @@ class Department extends React.Component{
     let positionsList = this.state.posArray;
 		let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
 		let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
+		let addPosBtnDisabled = (this.props.departmentname === '' || this.props.payRate === '' || this.props.markup === '' || this.props.otmarkup === '' || this.props.employeeContact === '' || this.props.contactPhone === '')? true: false;
+		let addDeptDisabled = (positionsList.length > 0)? false: true;
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}}>
@@ -304,13 +306,13 @@ class Department extends React.Component{
                       <div className="new-clients-footer">
                         <div className="prev-next-btns-agency row">
                           <div className="col-md-4">
-                            <button type="button" style={{backgroundColor: "#8cb544", backgroundImage: "none", color: "white"}} className="btn btn-default btn-block register-save-btn" onClick={this.increaseListSize} disabled={this.props.addPosDisabled}><Translate id="com.tempedge.msg.label.addPos"></Translate></button>
+                            <button type="button" style={{backgroundColor: "#8cb544", backgroundImage: "none", color: "white"}} className="btn btn-default btn-block register-save-btn" onClick={this.increaseListSize} disabled={addPosBtnDisabled}><Translate id="com.tempedge.msg.label.addPos"></Translate></button>
                           </div>
                           <div className="col-md-4">
                             <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            {(!this.props.editMode.edit)? <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>: <button className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts}><Translate id="com.tempedge.msg.label.save"></Translate></button>}
+                            {(!this.props.editMode.edit)? <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts} disabled={addDeptDisabled}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>: <button className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts} disabled={addDeptDisabled}><Translate id="com.tempedge.msg.label.save"></Translate></button>}
                           </div>
                         </div>
                       </div>
@@ -372,18 +374,16 @@ let mapStateToProps = (state) => {
   if(state.form.CreateNewClient !== undefined){
     if(state.form.CreateNewClient.values !== undefined){
       let formState = state.form.CreateNewClient.values;
-      addDeptDisabled = (formState.departmentname === "" || formState.payRate === "" || formState.markup === "" || formState.otmarkup === "" || formState.employeeContact === "" || formState.contactPhone === "")? true: false;
-      addPosDisabled = (formState.departmentname === "" || formState.payRate === "" || formState.markup === "" || formState.otmarkup === "" || formState.employeeContact === "" || formState.contactPhone === "")? true: false;
-      departmentname = formState.departmentname;
-      position = formState.position;
-      description = formState.description;
-      payRate = formState.payRate;
-      markup = formState.markup;
-      otmarkup = formState.otmarkup;
-      timeIn = formState.timeIn;
-      timeOut = formState.timeOut;
-      employeeContact = formState.employeeContact;
-      contactPhone = formState.contactPhone;
+      departmentname = (typeof formState.departmentname === 'undefined')? "":  formState.departmentname;
+      position = (typeof formState.position === 'undefined')? "": formState.position;
+      description = (typeof formState.description === 'undefined')? "": formState.description;
+      payRate = (typeof formState.payRate === 'undefined')? "": formState.payRate;
+      markup = (typeof formState.markup === 'undefined')? "": formState.markup;
+      otmarkup = (typeof formState.otmarkup === 'undefined')? "": formState.otmarkup;
+      timeIn = (typeof formState.timeIn === 'undefined')? "" : formState.timeIn;
+      timeOut = (typeof formState.timeOut === 'undefined')? "": formState.timeOut;
+      employeeContact = (typeof formState.employeeContact === 'undefined')? "": formState.employeeContact;
+      contactPhone = (typeof formState.contactPhone === 'undefined')? "": formState.contactPhone;
     }
   }
 

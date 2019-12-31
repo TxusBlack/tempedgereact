@@ -78,7 +78,7 @@ class WizardCreateNewUserThirdPage extends Component{
                           <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                         </div>
                         <div className="col-md-5">
-                          <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.submit"></Translate></button>
+                          <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.submit"></Translate></button>
                         </div>
                       </div>
                     </div>
