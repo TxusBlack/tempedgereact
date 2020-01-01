@@ -9,6 +9,8 @@ import { LOGIN,
   REMOVE_FROM_POSITIONS_LIST,
   SKILLS_LIST,
   GET_ORG_DEPARTMENT_LIST,
+  REMOVE_FROM_DEPARTMENTS_LIST,
+  GET_ACTIVITY_LIST,
   GET_OFFICE_LIST,
   VALIDATE_PERSON,
   PERSON_SAVE,
@@ -99,12 +101,12 @@ export default function(state = initialState, action){
         deptPosList: newState
       }
     case REMOVE_FROM_POSITIONS_LIST:
-      let newPosListState =  state.deptPosList;
-      let index = action.payload;
+      let newPosListState = state.deptPosList;
+      let posIndex = action.payload;
 
       if(newPosListState !== undefined){
-        if(newPosListState[index] !== undefined){
-            newPosListState.splice(index, 1);
+        if(newPosListState[posIndex] !== undefined){
+            newPosListState.splice(posIndex, 1);
         }
       }
 
@@ -117,6 +119,25 @@ export default function(state = initialState, action){
         ...state,
         [action.payload]: undefined
       }
+    case REMOVE_FROM_DEPARTMENTS_LIST:
+        let newDeptListState = state.deptList;
+        let index = action.payload;
+  
+        if(newDeptListState !== undefined){
+          if(newDeptListState[index] !== undefined){
+            newDeptListState.splice(index, 1);
+          }
+        }
+  
+        return{
+          ...state,
+          deptList: newDeptListState
+        }
+    case GET_ACTIVITY_LIST:
+        return{
+          ...state,
+          activityList: action.payload
+        }
     default:
       return state;
   }

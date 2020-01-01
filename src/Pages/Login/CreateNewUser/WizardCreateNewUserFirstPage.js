@@ -77,6 +77,7 @@ class WizardCreateNewUserFirstPage extends Component{
         <div className="register-form-panel-inputs">
           <form className="panel-body form-horizontal center-block register-form" onSubmit={this.props.handleSubmit(this.props.onSubmit)} style={{paddingBottom: "0px"}}>
             <div className="form-group row">
+              {this.props.errata}
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.firstname"></Translate></label>
                 <Field name="firstName" type="text" placeholder="First Name" category="person" component={InputBox} />

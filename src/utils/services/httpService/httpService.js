@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import FormData from 'form-data'
+import config from '../../../env/env.js';
 
 //let baseUrlTempEdge = `http://192.168.0.19:9191`;
 let baseUrlTempEdge = `http://localhost:9191`;     //***Must change this URL in the actions file as well***
@@ -15,21 +16,19 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 let HttpService = {
-  getList: async (url) => {
+  get: async (url) => {
     let response = await Axios({
       url: baseUrlTempEdge + url,
       method: 'get',
       headers: {
         'Content-Type': 'application/json'
       },
-      data: {
-        "IPAddress" : "10.1.1.1"
-      }
+      data: {}
     });
 
     return response;
   },
-  postCreateNew: async (url, data) => {     //Create New User, Agency & others
+  post: async (url, data) => {     //Create New User, Agency & others
     let response = await Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -49,12 +48,22 @@ let HttpService = {
 
     return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
       headers: {
-          'Authorization': "Basic " + btoa("Luis-client"+":"+"Luis-password")
+          'Authorization': "Basic " + btoa(config.tempedgeUser+":"+config.tempedgePassword)
+      }
+    });
+  },
+  tokenValidation: async (url, token) => {
+    let bodyFormData = new FormData();
+    bodyFormData.set('token', token);
+
+    return Axios.post( (baseUrlTempEdge + url), bodyFormData, {
+      headers: {
+          'Authorization': "Basic " + btoa(config.tempedgeUser+":"+config.tempedgePassword)
       }
     });
   },
   postImages: async (url, data) => {
-    var bodyFormData = new FormData();
+    let bodyFormData = new FormData();
 
     let newArray = await data.map( (img, index) => {   //'newArray' holds the promise returned by await, do not remove
       let file = dataURLtoFile(img, `user-${index}.jpeg`);

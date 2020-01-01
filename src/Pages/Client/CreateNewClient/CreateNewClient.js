@@ -4,7 +4,6 @@ import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset, reduxForm, change,  } from 'redux-form';
-import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
@@ -18,7 +17,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { saveDepartmentList, savePositionsList, removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
+import { get, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 class CreateNewClient extends Component {
   constructor(props) {
@@ -45,8 +44,8 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async() => {
-    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.get('/api/country/listAll', GET_COUNTRY_REGION_LIST);
+    this.props.get('/api/funding/listAll', GET_FUNDING_LIST);
   }
 
   nextPage(){
@@ -96,7 +95,7 @@ class CreateNewClient extends Component {
   //Set Modal visible or not
   toggleModalOnOff = () => {
     this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
-    
+
     this.setState({
       showModal: !this.state.showModal
     });
@@ -107,15 +106,16 @@ class CreateNewClient extends Component {
     this.toggleModalOnOff();   //Close Modal
   }
 
-  renderClientDepartmentsList = async () => {
-    let departmentname = this.props.departmentname;
-    let positionList = this.props.deptPosList;
+  renderClientDepartmentsList = async (flag) => {
+    if(!flag.repaint){
+      let departmentname = this.props.departmentname;
+      let positionList = this.props.deptPosList;
 
-    await this.props.saveDepartmentList({
-      departmentName: departmentname,
-      positions: positionList
-    });
-
+      await this.props.saveDepartmentList({
+        departmentName: departmentname,
+        positions: positionList
+      });
+    }
 
     let departmentList = [];
     let deptList = this.props.deptList;
@@ -144,7 +144,7 @@ class CreateNewClient extends Component {
               <span>{name}</span>
               <span className="pull-right">
                 <img src={editIcon} className="client-dpt-btn-edit-delete" style={{display: "inline"}} onClick={() => this.departmentModalEdit(index)} alt="editIcon" />
-                <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => {}} alt="deleteIcon" />
+                <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => this.removeDepartment(index)} alt="deleteIcon" />
               </span>
             </div>
 
@@ -173,15 +173,28 @@ class CreateNewClient extends Component {
 
     let addDeptBtn = <span style={{marginTop: "3.2rem"}} className="center-block pull-right add-fieldArray-btn" onClick={() => this.renderDepartmentModal()}><img src={addIcon} alt="addIcon" /></span>;
 
-    this.setState(() => ({
-      departmentList: departmentList,
-      addDeptBtn: addDeptBtn,
-      renderAddBtnDirty: true
-    }));
+    if(!flag.repaint){
+      this.setState(() => ({
+        departmentList: departmentList,
+        addDeptBtn: addDeptBtn,
+        renderAddBtnDirty: true
+      }));
 
-    this.toggleModalOnOff();
-    this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
-    this.props.savePositionsList("CLEAR");
+      this.toggleModalOnOff();
+      this.props.dispatch(change('CreateNewClient', 'departmentname', ''));
+      this.props.savePositionsList("CLEAR");
+    }else{
+      this.setState(() => ({
+        departmentList: (deptList.length > 0)? departmentList: [],
+        addDeptBtn: addDeptBtn,
+        renderAddBtnDirty: (deptList.length > 0)? true: false
+      }));
+    }
+  }
+
+  removeDepartment = async (index) => {
+    await this.props.removeFromDepartmentList(index);
+    this.renderClientDepartmentsList({repaint: true});
   }
 
   renderAddBtn = () => {
@@ -222,12 +235,13 @@ class CreateNewClient extends Component {
 }
 
 CreateNewClient.propTypes = {
-  getList: PropTypes.func.isRequired,
+  get: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   saveDepartmentList: PropTypes.func.isRequired,
   savePositionsList: PropTypes.func.isRequired,
-  removeFromPositionList: PropTypes.func.isRequired
+  removeFromPositionList: PropTypes.func.isRequired,
+  removeFromDepartmentList: PropTypes.func.isRequired
 }
 
 CreateNewClient = reduxForm({
@@ -253,4 +267,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, get, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));

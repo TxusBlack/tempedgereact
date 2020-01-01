@@ -78,19 +78,6 @@ class PaginatedTable extends Component {
                 }
 
                 </Container>
-                <ContainerBlue title={title}
-                        btns ={data && data.data ? (
-                                <TPaginator changePage={()=>this.changePage()}/>
-                        ) :""}>
-                { data ?
-                    <div className='col-12'>
-                        <Table data={data} applyFilter={this.applyFilter}/>
-                    </div> :
-                    "NO RECORDS FOUND"
-                 }
-
-                </ContainerBlue>
-
             </React.Fragment>
         )
     }

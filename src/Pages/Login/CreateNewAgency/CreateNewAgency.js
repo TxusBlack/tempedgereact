@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset } from 'redux-form';
 import httpService from '../../../utils/services/httpService/httpService.js';
-import { getList } from '../../../Redux/actions/tempEdgeActions';
+import { get } from '../../../Redux/actions/tempEdgeActions';
 import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
 import WizardCreateNewAgencyrFirstPage  from './WizardCreateNewAgencyFirstPage.js';
 import WizardCreateNewAgencySecondPage  from './WizardCreateNewAgencySecondPage.js';
@@ -36,8 +36,8 @@ class CreateNewAgency extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.get('/api/country/listAll', GET_COUNTRY_REGION_LIST);
+    this.props.get('/api/funding/listAll', GET_FUNDING_LIST);
   }
 
   nextPage(){
@@ -104,7 +104,7 @@ class CreateNewAgency extends Component {
 
     console.log("resp: ", response);
 
-    httpService.postCreateNew('/api/agency/save', response)
+    httpService.post('/api/agency/save', response)
       .then((res) => {
         console.log('response: ', res);
       }).catch((err) => {
@@ -152,8 +152,8 @@ class CreateNewAgency extends Component {
 }
 
 CreateNewAgency.propTypes = {
-  getList: PropTypes.func.isRequired,
+  get: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired
 }
 
-export default connect(null, { notify, getList, reset  })(CreateNewAgency);
+export default connect(null, { notify, get, reset  })(CreateNewAgency);
