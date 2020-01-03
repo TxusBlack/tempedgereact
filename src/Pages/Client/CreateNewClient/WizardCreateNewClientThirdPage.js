@@ -17,7 +17,7 @@ class WizardCreateNewUserThirdPage extends Component{
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  state= { mounted: false }
+  state= { mounted: false, resultBar: "" }
 
   componentDidMount(){
     this.setState(() => ({
@@ -34,13 +34,19 @@ class WizardCreateNewUserThirdPage extends Component{
     }
   }
 
-  render(){
-    let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
-    let payrollCycle = ["1", "2", "3", "4"];
+  componentWillReceiveProps = () => {
+    if(this.props.resultBar !== ""){
+      this.setState(() => ({
+        resultBar: this.props.resultBar
+      }));
+    }
+  }
 
+  render(){
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
+        {this.props.resultBar}
         <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
           <div className="row new-client-form">
             <div className="col-lg-8 client-col">

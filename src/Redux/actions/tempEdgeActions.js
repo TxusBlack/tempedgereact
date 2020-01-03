@@ -78,7 +78,7 @@ export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     data.IPAddress = window.location.hostname;
-    console.log("request :" , data);
+    
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -90,10 +90,14 @@ export let tempedgeAPI = (url, data, actionName) => {
         access_token: token
       }
     }).then((response) => {
-      console.log("response: ", response);
       dispatch({
         type: actionName,
-        payload: response.data.result
+        payload: (actionName !== 'CREATE_CLIENT')? response.data.result: response
+      });
+    }).catch((err) => {
+      dispatch({
+        type: actionName,
+        payload: err
       });
     });
   }

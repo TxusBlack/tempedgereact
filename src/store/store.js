@@ -20,7 +20,7 @@ let saveSubsetBlacklistFilter = createBlacklistFilter(
 let config = {
   key: 'root',
   storage: storageSession,
-  blacklist: ['tempEdge', 'form'],
+  blacklist: ['tempEdge', 'form', 'CreateNewClient'],
   //transforms: [saveSubsetBlacklistFilter] //[JSOGTransform]
 }
 

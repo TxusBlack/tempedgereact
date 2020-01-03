@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm } from 'redux-form';
+import { Field, FieldArray, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
@@ -17,7 +17,7 @@ class WizardCreateNewUserFirstPage extends Component{
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  state= { mounted: false }
+  state = { mounted: false }
 
   componentDidMount(){
     this.setState(() => ({
@@ -35,6 +35,10 @@ class WizardCreateNewUserFirstPage extends Component{
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
+
+  resetAllData = () => {
+		this.props.dispatch(reset('CreateNewClient'));
+	}
 
   renderError(formProps){
     let fieldId='';
@@ -66,9 +70,11 @@ class WizardCreateNewUserFirstPage extends Component{
     let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
+    console.log("this.props.renderAddBtnDirty: ", this.props.renderAddBtnDirty);
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
+        {this.props.resultBar}
           <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
             <div className="row new-client-form">
               <div className="col-lg-8 client-col">

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
-import { notify } from 'reapop';
 import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Validate from '../../Validations/Validations';
@@ -11,7 +10,8 @@ import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js'
 import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.js';
 import WizardCreateNewClientThirdPage  from './WizardCreateNewClientThirdPage';
 import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
-import Department from './Department.js'
+import Department from './Department.js';
+import OutcomeBar from '../../../components/common/OutcomeBar';
 import { FieldArray } from 'redux-form';
 import addIcon from "./assets/plus.png";
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
@@ -32,6 +32,40 @@ const reInitData = {
 	timeOut:"",
 	employeeContact:"",
 	contactPhone:""
+}
+
+//Form re-init data
+const reInitFormData = {
+	departmentname:"",
+	position:"",
+	description:"",
+	markup:"",
+	otmarkup:"",
+	payRate:"",
+	timeIn:"",
+	timeOut:"",
+	employeeContact:"",
+	contactPhone:"",
+	company: "",
+	salesman: "",
+	payrollCycle: "",
+	workCompCode: "",
+	workCompRate: "",
+	companyInitials: "",
+	attnTo: "",
+	email: "",
+	comments: "",
+	markupClient: "",
+	otMarkupClient: "",
+	clientcountry: "",
+	clientaddress: "",
+	clientcity: "",
+	clientstate: "",
+	clientzipcode: "",
+	clientlastName: "",
+	clientfirstName: "",
+	clientcontactphone: "",
+	clientcontactcellphone: ""
 }
 
 class CreateNewClient extends Component {
@@ -59,7 +93,9 @@ class CreateNewClient extends Component {
         index: null,
         edit: false
       },
-			reduxFormDispatch: null
+			reduxFormDispatch: null,
+			resultBar: "",
+			submitted: 0
     };
   }
 
@@ -71,7 +107,50 @@ class CreateNewClient extends Component {
   componentWillUnmount = () => {
     this.props.saveDepartmentList([]);
     this.props.savePositionsList([]);
+		this.state.reduxFormDispatch(initialize('CreateNewClient', reInitFormData));
   }
+
+	componentWillReceiveProps = (nextprops) => {
+		if(typeof nextprops.client !== 'undefined' && this.state.submitted === 1){
+			if(nextprops.client.status === 200){
+				if(nextprops.client.data.status === 200){
+					if(nextprops.client.data.code === "TE00"){
+						this.setState(() => ({
+							resultBar: <OutcomeBar classApplied="announcement-bar success" translateId="com.tempedge.msg.person.newclient" />,
+							submitted: 0
+						}));
+
+						this.props.saveDepartmentList([]);
+				    this.props.savePositionsList([]);
+						this.state.reduxFormDispatch(initialize('CreateNewClient', reInitFormData));
+						this.setState(() => ({
+							page: 1,
+							renderAddBtnDirty: false
+						}));
+					}
+				}else if(nextprops.client.data.status === 401){
+					if(nextprops.client.data.code === "TE-E02"){
+						this.setState(() => ({
+							resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId="com.tempedge.msg.person.tokeninvalid" />,
+							submitted: 0
+						}));
+					}
+				}else{
+					if(nextprops.client.data.code === "TE-E07"){
+					 this.setState(() => ({
+						 resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId={nextprops.client.data.message} />,
+						 submitted: 0
+					 }));
+				 }
+				}
+			}else{
+				this.setState(() => ({
+					resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId="com.tempedge.msg.person.tokeninvalid" />,
+					submitted: 0
+				}));
+			}
+		}
+	}
 
   nextPage(){
     console.log("Next Page!");
@@ -129,27 +208,11 @@ class CreateNewClient extends Component {
       ]
     }
 
-    console.log("Client Form: ", response);
-
-    this.props.tempedgeAPI('/api/client/save', response, CREATE_CLIENT);
-  }
-
-  fireNotification = () => {
-    console.log("NOTIFY RAN!");
-    let { notify } = this.props;
-
-    notify({
-      title: 'Client Creation Information Submitted',
-      message: 'you clicked on the Submit button',
-      status: 'success',
-      position: 'br',
-      dismissible: true,
-      dismissAfter: 3000
-    });
-  }
-
-  componentWillUnmount(){
-    this.props.reset("CreateNewClient");    //Reset form fields all to empty
+		this.setState(() => ({
+			submitted: 1
+		}), () => {
+			this.props.tempedgeAPI('/api/client/save', response, CREATE_CLIENT);
+		});
   }
 
   //Set Modal visible or not
@@ -161,7 +224,7 @@ class CreateNewClient extends Component {
   }
 
 	resetInitData = () => {
-		for (var prop in this.props.formValues) {
+		for(let prop in this.props.formValues){
 			if(prop !== "departmentname" || prop !== "position" || prop !== "description" || prop !== "markup" || prop !== "otmarkup" || prop !== "payRate" || prop !== "timeIn" || prop !== "timeOut" || prop !== "employeeContact" || prop !== "contactPhone"){
 				reInitData[prop] = this.props.formValues[prop];
 			}
@@ -233,7 +296,7 @@ class CreateNewClient extends Component {
               </div>
           </div>
         </React.Fragment>
-      )
+      );
 
       departmentList.push(block);
     });
@@ -321,9 +384,9 @@ class CreateNewClient extends Component {
       <div className="wizard-create-agency">
         <Stepper steps={ steps } activeStep={ page-1 } activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
-          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} getDispatch={(dispatch) => this.getDispatch(dispatch)} {...this.props} />}
-          {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
-          {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 1 && <WizardCreateNewClientFirstPage  onSubmit={this.nextPage} resultBar={this.state.resultBar} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} getDispatch={(dispatch) => this.getDispatch(dispatch)} {...this.props} />}
+          {page === 2 && <WizardCreateNewClientSecondPage  previousPage={this.previousPage} onSubmit={this.nextPage} resultBar={this.state.resultBar} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
+          {page === 3 && <WizardCreateNewClientThirdPage   previousPage={this.previousPage} onSubmit={this.onSubmit} resultBar={this.state.resultBar} renderAddBtn={this.renderAddBtn} renderAddBtnDirty={this.state.renderAddBtnDirty} departmentList={this.state.departmentList} addDeptBtn={this.state.addDeptBtn} {...this.props} />}
           { modal }
         </div>
       </div>
@@ -345,6 +408,7 @@ CreateNewClient.propTypes = {
 
 let mapStateToProps = (state) => {
   let departmentname = "";
+	let client = state.tempEdge.client;
 
   if(state.form.CreateNewClient !== undefined){
     if(state.form.CreateNewClient.values !== undefined){
@@ -360,7 +424,8 @@ let mapStateToProps = (state) => {
 		formValues: (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: "",
     billRate: (typeof state.tempEdge.billRate !== 'undefined')? state.tempEdge.billRate: 0,
     otBillRate: (typeof state.tempEdge.otBillRate !== 'undefined')? state.tempEdge.otBillRate: 0,
+		client: client
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI })(CreateNewClient));

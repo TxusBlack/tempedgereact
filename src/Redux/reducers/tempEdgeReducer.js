@@ -47,6 +47,7 @@ export default function(state = initialState, action){
         paginatorList: action.payload
       }
     case CREATE_CLIENT:
+      console.log("action.payload: ", action.payload);
       return{
         ...state,
         client: action.payload

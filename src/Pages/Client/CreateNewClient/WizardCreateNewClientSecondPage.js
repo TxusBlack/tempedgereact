@@ -45,7 +45,8 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   componentWillReceiveProps = async(nextProps) => {
-    if(typeof nextProps.country === 'undefined'){
+    console.log("nextProps: ", nextProps);
+    if(typeof nextProps.country === 'undefined' || nextProps.country === ''){
       let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
 
       this.setState({
@@ -61,10 +62,13 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   render(){
+    let countryList = this.state.country_list;
+    let regionList = this.state.region_list;
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
+        {this.props.resultBar}
           <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
             <div className="row new-client-form">
               <div className="col-lg-8 client-col">
@@ -77,7 +81,7 @@ class WizardCreateNewUserSecondPage extends Component{
                       <div className="form-group row">
                         <div className="col-md-4">
                           <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country"></Translate></label>
-                          <Field name="clientcountry" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
+                          <Field name="clientcountry" data={countryList} valueField="countryId" textField="name" category="agency" component={Dropdown} />
                         </div>
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
@@ -92,7 +96,7 @@ class WizardCreateNewUserSecondPage extends Component{
                       <div className="form-group row bottom-row">
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
-                          <Field name="clientstate" data={this.state.region_list} valueField="regionId" textField="name" category="agency" component={Dropdown} />
+                          <Field name="clientstate" data={regionList} valueField="regionId" textField="name" category="agency" component={Dropdown} />
                         </div>
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode"></Translate></label>
