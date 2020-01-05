@@ -38,10 +38,12 @@ class Department extends React.Component{
   componentDidMount = async () => {
 		let positionsList = [];
 
-		if(typeof this.props.deptPosList !== 'undefined'){
+		if(typeof this.props.deptPosList !== 'undefined' && this.props.deptPosList.length > 0){
 			positionsList = await this.props.deptPosList.map((pos, index) => {
 				return pos;
 			});
+		}else{
+			this.props.change("CreateNewClient", "departmentname", "");
 		}
 
     await this.setState(() => ({
@@ -174,12 +176,13 @@ class Department extends React.Component{
 
   renderClientDepts = async () => {
 		this.props.resetInitData();
-    this.props.dispatch(change('CreateNewClient', 'departmentname', this.props.reInitData));
+    this.props.dispatch(change('CreateNewClient', this.props.reInitData));
 		let departmentname = this.props.departmentname;
 		let newPosList = this.state.posList;
 		let newDeptList = this.props.deptList;
 
     if(this.props.editMode.edit){
+			console.log("this.props --renderClientDepts--: ", this.props);
       newDeptList[this.props.editMode.index].departmentName = this.props.departmentname;
 			newDeptList[this.props.editMode.index].positions = newPosList
 

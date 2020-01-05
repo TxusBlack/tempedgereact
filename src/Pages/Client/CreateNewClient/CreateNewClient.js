@@ -22,7 +22,6 @@ import { getList, tempedgeAPI, saveDepartmentList, savePositionsList, saveToPosi
 
 //Department Modal re-init data
 const reInitData = {
-	departmentname:"",
 	position:"",
 	description:"",
 	markup:"",
@@ -169,31 +168,31 @@ class CreateNewClient extends Component {
 
     let response = {
       orgId : 1,
-      address: formValues.clientaddress,
-      attn: formValues.attnTo,
-      city: formValues.clientcity,
-      clientInitials: formValues.companyInitials,
-      clientName: formValues.company,
-      commonMarkup: formValues.markupClient,
-      commonOtMarkup: formValues.otMarkupClient,
-      country: formValues.clientcountry.countryId,
-      email: formValues.email,
-      notes: formValues.comments,
-      payrollSchedule: formValues.payrollCycle.payrollId,
-      phone: phone,
-      region: formValues.clientstate.regionId,
-      wcCode: formValues.workCompCode,
-      wcRate: formValues.workCompRate,
-      zipcode: formValues.clientzipcode,
+      address: (typeof formValues.clientaddress !== 'undefined')? formValues.clientaddress: "",
+      attn: (typeof formValues.attnTo !== 'undefined')? formValues.attnTo: "",
+      city: (typeof formValues.clientcity !== 'undefined')? formValues.clientcity: "",
+      clientInitials: (typeof formValues.companyInitials !== 'undefined')? formValues.companyInitials: "",
+      clientName: (typeof formValues.company !== 'undefined')? formValues.company: "",
+      commonMarkup: (typeof formValues.markupClient !== 'undefined')? formValues.markupClient: "",
+      commonOtMarkup: (typeof formValues.otMarkupClient !== 'undefined')? formValues.otMarkupClient: "",
+      country: (typeof formValues.clientcountry !== 'undefined')? formValues.clientcountry.countryId: "",
+      email: (typeof formValues.email !== 'undefined')? formValues.email: "",
+      notes: (typeof formValues.comments !== 'undefined')? formValues.comments: "",
+      payrollSchedule: (typeof formValues.payrollCycle !== 'undefined')? formValues.payrollCycle.payrollId: "",
+      phone: (typeof phone !== 'undefined')? phone: "",
+      region: (typeof formValues.clientstate !== 'undefined')? formValues.clientstate.regionId: "",
+      wcCode: (typeof formValues.workCompCode !== 'undefined')? formValues.workCompCode: "",
+      wcRate: (typeof formValues.workCompRate !== 'undefined')? formValues.workCompRate: "",
+      zipcode: (typeof formValues.clientzipcode !== 'undefined')? formValues.clientzipcode: "",
       contact : {
-        firstName: formValues.clientfirstName,
-        lastName: formValues.clientlastName,
-        phone: phone,
+        firstName: (typeof formValues.clientfirstName !== 'undefined')? formValues.clientfirstName: "",
+        lastName: (typeof formValues.clientlastName !== 'undefined')? formValues.clientlastName: "",
+        phone: (typeof phone !== 'undefined')? phone: "",
         personType : {
          personTypeId : 2
         }
       },
-      departments: depList,
+      departments: (typeof depList !== 'undefined')? depList: [],
       clientSellers: [
         {
            person : {
@@ -233,7 +232,7 @@ class CreateNewClient extends Component {
 
   //Close Modal
   onClose = async () => {
-    this.toggleModalOnOff(true);   //Close Modal
+    this.toggleModalOnOff(true);
     this.renderClientDepartmentsList({repaint: true});
     this.props.savePositionsList([]);
 		this.resetInitData();
@@ -310,7 +309,6 @@ class CreateNewClient extends Component {
         renderAddBtnDirty: true
       }));
 			this.resetInitData();
-      this.state.reduxFormDispatch(initialize('CreateNewClient', {departmentname: ""}));
       this.props.saveToPositionsList("CLEAR");
     }else {
       this.setState(() => ({
@@ -327,7 +325,7 @@ class CreateNewClient extends Component {
   }
 
   departmentModalEdit = async (index) => {
-    let departmentname = this.props.deptList[index].departmentName;
+    let departmentname = this.props.deptList[index].name;
     let positionList = this.props.deptList[index].positions;
 		this.resetInitData();
     this.state.reduxFormDispatch(change('CreateNewClient', 'departmentname', departmentname));

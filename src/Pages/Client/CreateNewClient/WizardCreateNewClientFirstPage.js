@@ -70,7 +70,6 @@ class WizardCreateNewUserFirstPage extends Component{
     let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
-    console.log("this.props.renderAddBtnDirty: ", this.props.renderAddBtnDirty);
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>

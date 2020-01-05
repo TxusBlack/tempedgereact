@@ -45,7 +45,6 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   componentWillReceiveProps = async(nextProps) => {
-    console.log("nextProps: ", nextProps);
     if(typeof nextProps.country === 'undefined' || nextProps.country === ''){
       let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
 
