@@ -81,6 +81,20 @@ export default function(state = initialState, action){
         ...state,
         deptPosList: newState
       }
+    case REMOVE_FROM_POSITIONS_LIST:
+      let newPosListState = state.deptPosList;
+      let posIndex = action.payload;
+
+      if(newPosListState !== undefined){
+        if(newPosListState[posIndex] !== undefined){
+            newPosListState.splice(posIndex, 1);
+        }
+      }
+
+      return{
+          ...state,
+          deptPosList: newPosListState
+      }
     case REMOVE_FROM_DEPARTMENTS_LIST:
       let newDeptListState = state.deptList;
       let index = action.payload;

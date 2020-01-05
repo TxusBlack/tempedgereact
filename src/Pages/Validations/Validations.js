@@ -5,10 +5,6 @@ let validate = (formValues) => {
     errors.firstName = 'Please enter your first name';
   }
 
-  if(!formValues.middleName){
-    errors.middleName = 'Please enter your middle name or initial';
-  }
-
   if(!formValues.lastName){
     errors.lastName = 'Please enter your last name';
   }
@@ -38,10 +34,6 @@ let validate = (formValues) => {
       errors.email = 'Email field is required.'
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)) {
       errors.email = 'Invalid email address.'
-  }
-
-  if(!formValues.gender){
-    errors.gender = 'Please select a gender.';
   }
 
   if(!formValues.birthday){

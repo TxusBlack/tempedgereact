@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, change } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
@@ -26,6 +27,17 @@ class WizardCreateNewUserSecondPage extends Component{
     let parent = $(ReactDOM.findDOMNode(this.refs.userConfigContainer));
     parent.closest(".wizard-wrapper").css("width", "409px");
     parent.closest(".wizard-create-agency").css("width", "409px");
+
+    let defaultRoleName = {
+      createdOn: null,
+      description: "CLIENT",
+      menu: [],
+      modifiedOn: null,
+      name: "CLIENT",
+      roleId: 4,
+    }
+
+    this.props.dispatch(change('CreateNewUser', 'agencyrole', defaultRoleName));
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -55,6 +67,15 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 
   render(){
+    let roleName = (typeof this.props.role.name !== 'undefined')? this.props.role.name: "";
+
+    if(roleName.indexOf("CLIENT") > -1){
+      this.props.dispatch(change('CreateNewUser', 'agencyoffice', ''));
+      this.props.dispatch(change('CreateNewUser', 'agencyssnlastfour', ''));
+    }else{
+      this.props.dispatch(change('CreateNewUser', 'agencyclient', ''));
+    }
+
     return(
       <div ref="userConfigContainer">
         <h2 className="text-center page-title-agency" style={{marginBottom: "0.7rem"}}><Translate id="com.tempedge.msg.label.userconfiguration"></Translate></h2>
@@ -82,10 +103,16 @@ class WizardCreateNewUserSecondPage extends Component{
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <label className="control-label"><Translate id="com.tempedge.msg.label.client"></Translate></label>
-                    <Field name="agencyclient" type="textarea" placeholder="Enter Client" category="agency" component={InputBox} />
+                    {(roleName.indexOf("CLIENT") > -1)? <label className="control-label"><Translate id="com.tempedge.msg.label.client"></Translate></label>: <label className="control-label"><Translate id="com.tempedge.msg.label.office"></Translate></label>}
+                    {(roleName.indexOf("CLIENT") > -1)? <Field name="agencyclient" type="textarea" placeholder="Enter Client" category="agency" component={InputBox} />: <Field name="agencyoffice" type="textarea" placeholder="Enter Office" category="agency" component={InputBox} /> }
                   </div>
                 </div>
+                {(roleName.indexOf("CLIENT") < 0)? <div className="row">
+                  <div className="col-md-12">
+                    <label className="control-label"><Translate id="com.tempedge.msg.label.ssnlast4"></Translate></label>
+                    <Field name="agencyssnlastfour" type="textarea" placeholder="Enter Last 4 of Social Security Number" category="agency" component={InputBox} />
+                  </div>
+                </div>: ""}
                 <div className="row">
                   <div className="captcha-container" style={{marginTop:40, marginLeft: "1.5rem"}}>
                     <div className="center-block captcha-panel" style={{width: "304px"}}>
@@ -114,6 +141,10 @@ class WizardCreateNewUserSecondPage extends Component{
   }
 }
 
+WizardCreateNewUserSecondPage.propTypes = {
+  change: PropTypes.func.isRequired,
+}
+
 WizardCreateNewUserSecondPage = reduxForm({
   form: 'CreateNewUser', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
@@ -124,7 +155,8 @@ WizardCreateNewUserSecondPage = reduxForm({
 let mapStateToProps = (state) => {
   return{
     role_list: state.tempEdge.role_list,
+    role: (typeof state.form.CreateNewUser.values === 'undefined')? "": (typeof state.form.CreateNewUser.values.agencyrole !== 'undefined')? state.form.CreateNewUser.values.agencyrole: ""
   };
 }
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewUserSecondPage));
+export default withLocalize(connect(mapStateToProps, { push, change })(WizardCreateNewUserSecondPage));
