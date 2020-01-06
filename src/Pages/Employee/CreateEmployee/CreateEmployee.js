@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
-import { Field, reduxForm, change, formValueSelector, reset } from 'redux-form';
+import { Field, reduxForm, change, formValueSelector, reset, initialize } from 'redux-form';
 import { date } from 'redux-form-validators';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
@@ -24,6 +24,8 @@ import Form from 'react-bootstrap/Form';
 import Stepper from 'react-stepper-horizontal';
 import Validate from '../../Validations/Validations';
 import Modal from '../../../Modals/Modal/Modal.js';
+import normalizePhone from '../../Normalizers/normalizePhone.js';
+import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 
 const $ = window.$;
 
@@ -79,10 +81,9 @@ class CreateEmployee extends Component {
       let backDate = todaysDate.setFullYear(todaysDate.getFullYear()-18);
       let defaultDate = new Date(backDate);
       this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
-      // this.props.dispatch(change('NewEmployee', 'hireDate_', new Date()));
 
       this.setState(() => ({
-        mounted: true,
+        mounted: true
       }));
     }
 
@@ -135,14 +136,20 @@ class CreateEmployee extends Component {
 
     componentWillReceiveProps = async(nextProps) => {
       if(typeof nextProps.country !== 'undefined' && (this.state.prevCountry !== nextProps.country.name)){
-        let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
+        if(typeof this.props.country_region_list !== 'undefined' && this.props.country_region_list.length > 0){
+          let regionsList = [];
 
-        this.props.dispatch(change('NewEmployee', 'state', ''));
-        this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
-        this.setState({
-          prevCountry: nextProps.country.name,
-          region_list: regionsList
-        });
+          regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
+
+          this.props.dispatch(change('NewEmployee', 'state', ''));
+          this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
+          this.setState({
+            prevCountry: nextProps.country.name,
+            region_list: regionsList
+          });
+        }
+      }else{
+        this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
       }
 
       if(nextProps.savePerson !== null){
@@ -529,7 +536,7 @@ class CreateEmployee extends Component {
                                 <div className="form-group row">
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.ssnonly" /></label>
-                                        <Field name="ssn" type="text" placeholder="SSN" category="person" component={InputBox} />
+                                        <Field name="ssn" type="text" placeholder="SSN" category="person" component={InputBox} normalize={normalizeSSN}/>
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.employeeid" /></label>
@@ -576,7 +583,7 @@ class CreateEmployee extends Component {
                                 <div className="form-group row">
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.phone" /></label>
-                                        <Field name="phone" type="text" placeholder="Phone" category="person" component={InputBox} />
+                                        <Field name="phone" type="text" placeholder="Phone" category="person" component={InputBox} normalize={normalizePhone}/>
                                     </div>
                                     <div className="col-10 col-md-8">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.email" /></label>
@@ -762,7 +769,9 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
 CreateEmployee = reduxForm({
     form: 'NewEmployee', //                 <------ form name
     destroyOnUnmount: false, //        <------ preserve form data
-    // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+    // initialValues: {
+    //     'country': { name: 'United States', countryId: 234 }
+    // },
     validate: Validate
 })(CreateEmployee);
 
@@ -785,4 +794,4 @@ let mapStateToProps = (state) => {
     });
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp })(CreateEmployee));

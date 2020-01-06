@@ -1,6 +1,6 @@
 let getCountryList = (countryList) => {
   let country_list = [];
-  
+
   countryList.map((country) => {
     country_list.push({
       name: country.name,
