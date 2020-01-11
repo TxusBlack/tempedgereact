@@ -182,7 +182,6 @@ class Department extends React.Component{
 		let newDeptList = this.props.deptList;
 
     if(this.props.editMode.edit){
-			console.log("this.props --renderClientDepts--: ", this.props);
       newDeptList[this.props.editMode.index].departmentName = this.props.departmentname;
 			newDeptList[this.props.editMode.index].positions = newPosList
 

@@ -128,9 +128,16 @@ class CreateNewClient extends Component {
 						}));
 					}
 				}else if(nextprops.client.data.status === 401){
-					if(nextprops.client.data.code === "TE-E02"){
+					if(nextprops.client.data.code === "TE-E00"){
 						this.setState(() => ({
-							resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId="com.tempedge.msg.person.tokeninvalid" />,
+							resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId={nextprops.client.data.message} />,
+							submitted: 0
+						}));
+					}
+				}else if(nextprops.client.data.status === 500){
+					if(nextprops.client.data.code === "TE-E00"){
+						this.setState(() => ({
+							resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId={nextprops.client.data.message} />,
 							submitted: 0
 						}));
 					}
@@ -144,7 +151,7 @@ class CreateNewClient extends Component {
 				}
 			}else{
 				this.setState(() => ({
-					resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId="com.tempedge.msg.person.tokeninvalid" />,
+					resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId="com.tempedge.error.undefine" />,
 					submitted: 0
 				}));
 			}

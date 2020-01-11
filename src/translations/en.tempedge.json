@@ -43,6 +43,7 @@
   "com.tempedge.msg.label.dept"                                       : "Dept",
   "com.tempedge.msg.label.phone"                                      : "Phone",
   "com.tempedge.msg.label.hiredate"                                   : "Hiredate",
+  "com.tempedge.error.undefine"                                       : "Server Error",
   "com.tempedge.msg.person.newclient"                                 : "New client created.",
   "com.tempedge.error.passwordnomatch"                                : "Password does not match.",
   "com.tempedge.error.phonenumberrequired"                            : "Phone number is required.",

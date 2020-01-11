@@ -39,6 +39,7 @@
   "com.tempedge.msg.label.phone"                                      : "Teléfono",
   "com.tempedge.msg.person.newclient"                                 : "Nuevo cliente creado.",
   "com.tempedge.msg.label.hiredate"                                   : "Fecha de contrato",
+  "com.tempedge.error.undefine"                                       : "Error de Servidor",
   "com.tempedge.error.passwordnomatch"                                : "Contraseña no es igual.",
   "com.tempedge.error.phonenumberrequired"                            : "Teléfono es requerido.",
   "com.tempedge.error.officeNamerequired"                             : "Nombre es requerido.",
