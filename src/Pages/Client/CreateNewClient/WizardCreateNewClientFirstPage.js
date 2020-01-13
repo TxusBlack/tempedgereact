@@ -125,7 +125,7 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.comments"></Translate></label>
-                            <Field name="comments" type="text" placeholder="Enter Comments" category="client" component={InputBox} />
+                            <Field name="comments" type="textarea" placeholder="Enter Comments" category="client" component={InputBox} />
                           </div>
                         </div>
 

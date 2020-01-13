@@ -57,22 +57,22 @@ class WizardCreateNewUserThirdPage extends Component{
                 <div className="new-clients-contents">
                   <div className="client-contents">
                     <div className="form-group row">
-                      <div className="col-md-4">
+                      <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.lastname"></Translate></label>
                         <Field name="clientlastName" type="text" placeholder="Enter Last Name" category="client" component={InputBox} />
                       </div>
-                      <div className="col-md-4">
+                      <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.firstname"></Translate></label>
                         <Field name="clientfirstName" type="text" placeholder="Enter First Name" category="client" component={InputBox} />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="control-label"><Translate id="com.tempedge.msg.label.clientcontactphone"></Translate></label>
-                        <Field name="clientcontactphone" type="text" placeholder="Enter Contact Phone" category="client" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="form-group row bottom-row">
-                      <div className="col-md-4">
+                      <div className="col-md-6">
+                        <label className="control-label"><Translate id="com.tempedge.msg.label.clientcontactphone"></Translate></label>
+                        <Field name="clientcontactphone" type="text" placeholder="Enter Contact Phone" category="client" component={InputBox} />
+                      </div>
+                      <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.clientcontactcellphone"></Translate></label>
                         <Field name="clientcontactcellphone" type="text" placeholder="Enter Contact Cell Phone" category="client" component={InputBox} />
                       </div>

@@ -220,8 +220,8 @@ class Department extends React.Component{
     let positionsList = this.state.posArray;
 		let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
 		let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
-		let addPosBtnDisabled = (this.props.departmentname === '' || this.props.payRate === '' || this.props.markup === '' || this.props.otmarkup === '' || this.props.employeeContact === '' || this.props.contactPhone === '')? true: false;
-		let addDeptDisabled = (positionsList.length > 0)? false: true;
+		let addPosBtnDisabled = (this.props.payRate === '' || this.props.markup === '' || this.props.otmarkup === '' || this.props.employeeContact === '' || this.props.contactPhone === '')? true: false;
+		let addDeptDisabled = (positionsList.length > 0 && this.props.departmentname !== '')? false: true;
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}}>

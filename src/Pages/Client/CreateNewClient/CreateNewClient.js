@@ -130,6 +130,13 @@ class CreateNewClient extends Component {
 				}else if(nextprops.client.data.status === 401){
 					if(nextprops.client.data.code === "TE-E00"){
 						this.setState(() => ({
+							resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId="com.tempedge.error.recordexists" />,
+							submitted: 0
+						}));
+					}
+				}else if(nextprops.client.data.status === 405){
+					if(nextprops.client.data.code === "TE-E09"){
+						this.setState(() => ({
 							resultBar: <OutcomeBar classApplied="announcement-bar fail" translateId={nextprops.client.data.message} />,
 							submitted: 0
 						}));
@@ -159,12 +166,10 @@ class CreateNewClient extends Component {
 	}
 
   nextPage(){
-    console.log("Next Page!");
     this.setState({ page: this.state.page + 1 });
   }
 
   previousPage(){
-    console.log("Previous Page!");
     this.setState({ page: this.state.page - 1 });
   }
 

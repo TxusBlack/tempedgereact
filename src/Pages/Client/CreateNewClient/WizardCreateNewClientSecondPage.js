@@ -82,17 +82,17 @@ class WizardCreateNewUserSecondPage extends Component{
                           <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country"></Translate></label>
                           <Field name="clientcountry" data={countryList} valueField="countryId" textField="name" category="agency" component={Dropdown} />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-8">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
-                          <Field name="clientaddress" type="textarea" placeholder="Enter Address" category="agency" component={InputBox} />
-                        </div>
-                        <div className="col-md-4">
-                          <label className="control-label"><Translate id="com.tempedge.msg.label.city"></Translate></label>
-                          <Field name="clientcity" type="text" placeholder="Enter City" category="agency" component={InputBox} />
+                          <Field name="clientaddress" type="text" placeholder="Enter Address" category="agency" component={InputBox} />
                         </div>
                       </div>
 
                       <div className="form-group row bottom-row">
+                        <div className="col-md-4">
+                          <label className="control-label"><Translate id="com.tempedge.msg.label.city"></Translate></label>
+                          <Field name="clientcity" type="text" placeholder="Enter City" category="agency" component={InputBox} />
+                        </div>
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
                           <Field name="clientstate" data={regionList} valueField="regionId" textField="name" category="agency" component={Dropdown} />
