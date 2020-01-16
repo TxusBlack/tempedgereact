@@ -20,6 +20,10 @@ body {
   background-color: #e9e9e9;
 }
 
+.has-error .form-control.tempEdge-input-box{
+  border-color: #a94442 !important;
+}
+
 .contents{
   min-height: calc(100vh - 6.8rem);
 }
@@ -1084,7 +1088,7 @@ form div.list .list-item:last-child button {
   border-bottom-right-radius: 1.6rem;
   height: calc(100% - 53.3px);
   overflow-y: scroll;
-  max-height: 441px;
+  max-height: 508px;
 }
 
 .position-list-contents{

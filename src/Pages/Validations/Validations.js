@@ -223,10 +223,6 @@ let validate = (formValues) => {
     errors.workCompRate = 'Work compensation rate is required.';
   }
 
-  if(!formValues.companyInitials){
-    errors.companyInitials = 'Company initials required.';
-  }
-
   if(!formValues.attnTo){
     errors.attnTo = 'Attn to required.';
   }
@@ -237,26 +233,6 @@ let validate = (formValues) => {
 
   if(!formValues.otMarkupClient){
     errors.otMarkupClient = 'Markup is required.';
-  }
-
-  if(!formValues.clientcountry){
-    errors.clientcountry = 'Country is required.';
-  }
-
-  if(!formValues.clientstate){
-    errors.clientstate = 'State is required.';
-  }
-
-  if(!formValues.clientaddress){
-    errors.clientaddress = 'Address is required.';
-  }
-
-  if(!formValues.clientcity){
-    errors.clientcity = "City is required.";
-  }
-
-  if(!formValues.clientzipcode){
-    errors.clientzipcode = "Zip code is required.";
   }
 
   if(!formValues.clientlastName){
