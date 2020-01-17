@@ -11,7 +11,7 @@ let renderInput = (formProps) => {
 
   if(formProps.input.name === 'username'){
     value = formProps.input.value;
-  }else if(typeof formProps.input.value === 'undefined'){
+  }else if(typeof formProps.input.value !== 'undefined'){
     value = formProps.input.value.toUpperCase();
   }else if(timeRegX.test(value)){
     value = value.toString();
