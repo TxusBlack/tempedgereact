@@ -99,8 +99,8 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async() => {
-    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.get('/api/country/listAll', GET_COUNTRY_REGION_LIST);
+    this.props.get('/api/funding/listAll', GET_FUNDING_LIST);
   }
 
   componentWillUnmount = () => {
@@ -405,7 +405,7 @@ class CreateNewClient extends Component {
 }
 
 CreateNewClient.propTypes = {
-  getList: PropTypes.func.isRequired,
+  get: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
