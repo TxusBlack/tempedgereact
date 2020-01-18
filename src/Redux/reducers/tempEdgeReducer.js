@@ -2,12 +2,17 @@ import { LOGIN,
   GET_COUNTRY_REGION_LIST,
   GET_FUNDING_LIST,
   GET_ROLE_LIST,
+  CREATE_CLIENT,
   SAVE_FORM_POSITION,
   GET_EMPLOYEE_LIST,
   SAVE_DEPARTMENTS_LIST,
+  SAVE_TO_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
+  SAVE_TO_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST,
   REMOVE_FROM_DEPARTMENTS_LIST,
+  SAVE_BILL_RATE,
+  SAVE_OT_BILL_RATE,
   GET_ACTIVITY_LIST
 } from '../actions/types';
 
@@ -42,6 +47,12 @@ export default function(state = initialState, action){
         ...state,
         paginatorList: action.payload
       }
+    case CREATE_CLIENT:
+      console.log("action.payload: ", action.payload);
+      return{
+        ...state,
+        client: action.payload
+      }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;
       return{
@@ -49,14 +60,16 @@ export default function(state = initialState, action){
         [formPosition]: action.payload
       }
     case SAVE_DEPARTMENTS_LIST:
-      let newListState =  (typeof state.deptList !== "undefined")? state.deptList: [];
-
-      newListState.push(action.payload);
       return{
         ...state,
-        deptList: newListState
+        deptList: action.payload
       }
     case SAVE_POSITIONS_LIST:
+      return{
+        ...state,
+        deptPosList: action.payload
+      }
+    case SAVE_TO_POSITIONS_LIST:
       let newState =  (typeof state.deptPosList === "undefined")? []: state.deptPosList;
 
       if(action.payload === "CLEAR"){
@@ -96,6 +109,16 @@ export default function(state = initialState, action){
       return{
         ...state,
         deptList: newDeptListState
+      }
+    case SAVE_BILL_RATE:
+      return{
+        ...state,
+        billRate: action.payload
+      }
+    case SAVE_OT_BILL_RATE:
+      return{
+        ...state,
+        otBillRate: action.payload
       }
     case GET_ACTIVITY_LIST:
       return{

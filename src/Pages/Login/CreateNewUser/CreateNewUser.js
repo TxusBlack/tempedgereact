@@ -141,4 +141,4 @@ CreateNewUser.propTypes = {
   reset: PropTypes.func.isRequired
 }
 
-export default withLocalize(connect(null, { notify, get, reset })(CreateNewUser));
+export default withLocalize(connect(null, { notify, getList, reset })(CreateNewUser));

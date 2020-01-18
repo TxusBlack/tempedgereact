@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST, SET_DEFAULT_ROLE } from './types';
+import { LOGIN, CREATE_CLIENT, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, SAVE_TO_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST, SAVE_BILL_RATE, SAVE_OT_BILL_RATE } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -35,8 +35,6 @@ export let doLogin = (url, data) => {
           let lang = window.location.pathname;
           lang = lang.split("/");
           let agencyList = response.data.result.portalUserList;
-          console.log("response: ", response);
-          console.log("response.data.result.portalUserList[0].status: ", (response.data.result.portalUserList > 0)? response.data.result.portalUserList[0].status: "");
 
           if(agencyList.length < 1){
             history.push(`/error/${lang[2]}`);
@@ -63,7 +61,6 @@ export let doLogin = (url, data) => {
           }else if(agencyList.length > 1){
             history.push(`/dashboard/${lang[2]}`);
           }
-
         });
       }).catch((error) => {
         let lang = window.location.pathname;
@@ -78,7 +75,7 @@ export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     data.IPAddress = window.location.hostname;
-    console.log("request :" , data);
+
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -90,10 +87,14 @@ export let tempedgeAPI = (url, data, actionName) => {
         access_token: token
       }
     }).then((response) => {
-      console.log("response: ", response);
       dispatch({
         type: actionName,
-        payload: response.data.result
+        payload: (actionName !== 'CREATE_CLIENT')? response.data.result: response
+      });
+    }).catch((err) => {
+      dispatch({
+        type: actionName,
+        payload: err
       });
     });
   }
@@ -135,29 +136,29 @@ export let getFilters = (url, data, actionName) => {
     }
 }
 
-export let saveDepartmentList = (newDept) => {
+export let saveDepartmentList = (deptList) => {
   return (dispatch) => {
     dispatch({
       type: SAVE_DEPARTMENTS_LIST,
-      payload: newDept
-    })
-  }
-}
-
-export let savePositionsList = (newPos) => {
-  return (dispatch) => {
-    dispatch({
-      type: SAVE_POSITIONS_LIST,
-      payload: newPos
+      payload: deptList
     });
   }
 }
 
-export let removeFromPositionList = (index) => {
+export let savePositionsList = (positionsList) => {
   return (dispatch) => {
     dispatch({
-      type: REMOVE_FROM_POSITIONS_LIST,
-      payload: index
+      type: SAVE_POSITIONS_LIST,
+      payload: positionsList
+    });
+  }
+}
+
+export let saveToPositionsList = (newPos) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_TO_POSITIONS_LIST,
+      payload: newPos
     });
   }
 }
@@ -167,6 +168,15 @@ export let removeFromDepartmentList = (index) => {
     dispatch({
       type: REMOVE_FROM_DEPARTMENTS_LIST,
       payload: index
+    });
+  }
+}
+
+export let saveBillRates = (rate, type) => {
+  return (dispatch) => {
+    dispatch({
+      type: type,
+      payload: rate
     });
   }
 }
