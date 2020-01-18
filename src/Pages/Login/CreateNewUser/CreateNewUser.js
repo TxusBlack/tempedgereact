@@ -4,7 +4,7 @@ import Stepper from 'react-stepper-horizontal';
 import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset } from 'redux-form';
-import { get } from '../../../Redux/actions/tempEdgeActions';
+import { getList } from '../../../Redux/actions/tempEdgeActions';
 import { GET_ROLE_LIST } from '../../../Redux/actions/types.js'
 import httpService from '../../../utils/services/httpService/httpService.js';
 import WizardCreateNewUserFirstPage from './WizardCreateNewUserFirstPage.js';
@@ -30,7 +30,7 @@ class CreateNewUser extends Component {
   }
 
   componentDidMount = () => {
-    this.props.get('/api/role/listAll', GET_ROLE_LIST);
+    this.props.getList('/api/role/listAll', GET_ROLE_LIST);
   }
 
   nextPage(){
@@ -137,7 +137,7 @@ class CreateNewUser extends Component {
 }
 
 CreateNewUser.propTypes = {
-  get: PropTypes.func.isRequired,
+  getList: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired
 }
 

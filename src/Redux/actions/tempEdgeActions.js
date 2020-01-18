@@ -100,7 +100,7 @@ export let tempedgeAPI = (url, data, actionName) => {
   }
 }
 
-export let get = (url, actionName) => {
+export let getList = (url, actionName) => {
   return (dispatch) => {
     httpService.get(url)
       .then((response) => {
