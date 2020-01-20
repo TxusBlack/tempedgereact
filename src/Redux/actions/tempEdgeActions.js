@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST, VALIDATE_PERSON, PERSON_SAVE, CLEAR_PROP } from './types';
+import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST, VALIDATE_PERSON, PERSON_SAVE, CLEAR_PROP, SET_ERROR_FIELD, REMOVE_ERROR_FIELD } from './types';
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -214,6 +214,24 @@ export let removeFromPositionList = (index) => {
     dispatch({
       type: REMOVE_FROM_POSITIONS_LIST,
       payload: index
+    });
+  }
+}
+
+export let setErrorField = (fieldName) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_ERROR_FIELD,
+      payload: fieldName
+    });
+  }
+}
+
+export let removeErrorField = (fieldName) => {
+  return (dispatch) => {
+    dispatch({
+      type: REMOVE_ERROR_FIELD,
+      payload: fieldName
     });
   }
 }

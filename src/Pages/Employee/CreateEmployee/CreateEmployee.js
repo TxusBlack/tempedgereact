@@ -62,7 +62,10 @@ class CreateEmployee extends Component {
             showModal: false,
             formData: {},
             announcementBar: "",
-            validateMsg: ""
+            validateMsg: "",
+            chkResult: [[],[],[],[]],
+            errorPanel: [{},{},{},{}],
+            tabRequiredFields: [["temporarydata", "office", "department", "ssn", "employeeid", "hireDate_", "firstName", "lastName", "birthday_", "gender"], ["phone", "country", "address", "city", "state", "zip"], [], ["drugTestDate", "backgroundTestDate", "joblocation", "maritalstatusDropdown", "numberofallowances"]]
         }
 
         this.addTranslationsForActiveLanguage();
@@ -135,6 +138,56 @@ class CreateEmployee extends Component {
     }
 
     componentWillReceiveProps = async(nextProps) => {
+      if(typeof nextProps.errorFields !== 'undefined'){
+        let chkResult = [...this.state.chkResult];
+        let errorPanel = [...this.state.errorPanel];
+
+        this.state.tabRequiredFields[0].map(field => {
+          let found = nextProps.errorFields.indexOf(field);
+
+          if(found > -1 && this.state.chkResult[0].indexOf(field) === -1){
+            chkResult[0].push(field);
+          }else if(field === nextProps.lastRemoved){
+            let idx = chkResult[0].indexOf(field);
+            chkResult[0].splice(idx, 1);
+            errorPanel[0] = {};
+          }
+        });
+
+        this.state.tabRequiredFields[1].map(field => {
+          let found = nextProps.errorFields.indexOf(field);
+
+          if(found > -1 && this.state.chkResult[1].indexOf(field) === -1){
+            chkResult[1].push(field);
+          }else if(field === nextProps.lastRemoved){
+            let idx = chkResult[1].indexOf(field);
+            chkResult[1].splice(idx, 1);
+            errorPanel[1] = {};
+          }
+        });
+
+        this.state.tabRequiredFields[3].map(field => {
+          let found = nextProps.errorFields.indexOf(field);
+
+          if(found > -1 && this.state.chkResult[3].indexOf(field) === -1){
+            chkResult[3].push(field);
+          }else if(field === nextProps.lastRemoved){
+            let idx = chkResult[3].indexOf(field);
+            chkResult[3].splice(idx, 1);
+            errorPanel[3] = {};
+          }
+        });
+
+        errorPanel[0] = (chkResult[0].length > 0)? {border: "2px solid red", borderTopLeftRadius: "1.6rem"}: {};
+        errorPanel[1] = (chkResult[1].length > 0)? {border: "2px solid red"}: {};
+        errorPanel[3] = (chkResult[3].length > 0)? {border: "2px solid red", borderTopRightRadius: "1.6rem"}: {};
+
+        this.setState(() => ({
+          chkResult: chkResult,
+          errorPanel: errorPanel
+        }));
+      }
+
       if(typeof nextProps.country !== 'undefined' && (this.state.prevCountry !== nextProps.country.name)){
         if(typeof this.props.country_region_list !== 'undefined' && this.props.country_region_list.length > 0){
           let regionsList = [];
@@ -453,7 +506,6 @@ class CreateEmployee extends Component {
 
     //Set Modal visible or not
     toggleModalOnOff = () => {
-      console.log("TOGGLEMODAL!!");
       this.setState({
         showModal: !this.state.showModal,
         modal: ""
@@ -504,16 +556,16 @@ class CreateEmployee extends Component {
                       <Form className="panel-body form-horizontal center-block" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                         <ul className="nav nav-panel">
                             <li className="nav-item first-panel " onClick={()=>this.setState({key:0})}>
-                                <a className="nav-link active" data-toggle="tab" href="#tab1">Info</a>
+                                <a className="nav-link active" style={this.state.errorPanel[0]} data-toggle="tab" href="#tab1">Info</a>
                             </li>
                             <li className="nav-item panel" onClick={()=>this.setState({key:1})}>
-                                <a className="nav-link" data-toggle="tab" href="#tab2">Contact</a>
+                                <a className="nav-link" style={this.state.errorPanel[1]} data-toggle="tab" href="#tab2">Contact</a>
                             </li>
                             <li className="nav-item panel" onClick={()=>this.setState({key:2})}>
                                 <a className="nav-link" data-toggle="tab" href="#tab4">Skills</a>
                             </li>
                             <li className="nav-item last-panel" onClick={()=>this.setState({key:3})}>
-                                <a className="nav-link" data-toggle="tab" href="#tab6">Misc</a>
+                                <a className="nav-link" style={this.state.errorPanel[3]} data-toggle="tab" href="#tab6">Misc</a>
                             </li>
                         </ul>
 
@@ -790,7 +842,9 @@ let mapStateToProps = (state) => {
       birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null,
       hiredate: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.hireDate_: null,
       validatePerson: (typeof state.tempEdge.validatePerson !== 'undefined')? state.tempEdge.validatePerson: null,
-      savePerson: (typeof state.tempEdge.savePerson !== 'undefined')? state.tempEdge.savePerson: null
+      savePerson: (typeof state.tempEdge.savePerson !== 'undefined')? state.tempEdge.savePerson: null,
+      errorFields: state.tempEdge.errorFields,
+      lastRemoved: state.tempEdge.lastRemoved
     });
 };
 

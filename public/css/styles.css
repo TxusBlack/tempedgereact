@@ -1332,12 +1332,14 @@ form div.list .list-item:last-child button {
   padding: 15px 30px;
   color: white;
   margin: 0px 2px 0px 2px;
+  border: 2px solid #5abeec;
 }
 .nav-panel .panel .nav-link:not(.active) {
   background-color: #888888;
   padding: 15px 30px;
   color: white;
   margin: 0px 2px 0px 2px;
+  border: 2px solid #888888;
 }
 .nav-panel .first-panel .nav-link {
   background-color: #5abeec;
@@ -1345,6 +1347,7 @@ form div.list .list-item:last-child button {
   color: white;
   margin: 0px 2px 0px 0px;
   border-top-left-radius: 1.6rem;
+  border: 2px solid #5abeec;
 }
 .nav-panel .first-panel .nav-link:not(.active) {
   background-color: #888888;
@@ -1352,6 +1355,7 @@ form div.list .list-item:last-child button {
   color: white;
   margin: 0px 2px 0px 2px;
   border-top-left-radius: 1.6rem;
+  border: 2px solid #888888;
 }
 .nav-panel .last-panel .nav-link {
   background-color: #5abeec;
@@ -1359,6 +1363,7 @@ form div.list .list-item:last-child button {
   color: white;
   margin: 0px 2px 0px 2px;
   border-top-right-radius: 1.6rem;
+  border: 2px solid #5abeec;
 }
 .nav-panel .last-panel .nav-link:not(.active) {
   background-color: #888888;
@@ -1366,6 +1371,7 @@ form div.list .list-item:last-child button {
   color: white;
   margin: 0px 2px 0px 2px;
   border-top-right-radius: 1.6rem;
+  border: 2px solid #888888;
 }
 /**********************************************/
 @media screen and (max-width: 1201px){

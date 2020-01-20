@@ -12,11 +12,15 @@ import { LOGIN,
   GET_OFFICE_LIST,
   VALIDATE_PERSON,
   PERSON_SAVE,
-  CLEAR_PROP
+  CLEAR_PROP,
+  SET_ERROR_FIELD,
+  REMOVE_ERROR_FIELD
 } from '../actions/types';
 
 let initialState = {
-  login: ''
+  login: '',
+  errorFields: [],
+  lastRemoved: ''
 }
 
 export default function(state = initialState, action){
@@ -116,6 +120,41 @@ export default function(state = initialState, action){
       return{
         ...state,
         [action.payload]: undefined
+      }
+    case SET_ERROR_FIELD:
+      let errorFields = (typeof state.errorFields === 'undefined')? []: [...state.errorFields];
+      let error = action.payload;
+
+      if(errorFields.indexOf(error) < 0){
+        errorFields.push(error);
+      }
+
+      return{
+        ...state,
+        errorFields: errorFields,
+        lastRemoved: ''
+      }
+    case REMOVE_ERROR_FIELD:
+      let errorFieldsArray = (typeof state.errorFields === 'undefined')? []: [...state.errorFields];
+      let error_ = action.payload;
+      let foundIndex = -1;
+
+      if(Array.isArray(errorFieldsArray)){
+        errorFieldsArray.map((errorField, index) => {
+          if(errorField === error_){
+            foundIndex = index;
+          }
+        });
+      }
+
+      if(foundIndex > -1){
+        errorFieldsArray.splice(foundIndex, 1);
+      }
+
+      return{
+        ...state,
+        errorFields: errorFieldsArray,
+        lastRemoved: action.payload
       }
     default:
       return state;

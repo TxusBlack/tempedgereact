@@ -27,6 +27,7 @@
     "react-select": "^2.4.1",
     "react-stepper-horizontal": "^1.0.11",
     "react-tabs": "^3.0.0",
+    "react-tooltip": "^3.11.2",
     "react-webcam": "^1.1.0",
     "react-widgets": "^4.4.9",
     "react-widgets-moment": "^4.0.25",
