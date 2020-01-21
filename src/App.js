@@ -94,6 +94,7 @@ class App extends React.Component{
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
                   <PrivateRoute exact path="/employee/list/:lang" component={EmployeeList} />
+                  <PrivateRoute exact path="/employee/new/:lang" component={CreateEmployee} />
                   <PrivateRoute exact path="/client/list/:lang" component={ClientList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
