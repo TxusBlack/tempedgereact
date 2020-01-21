@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+
+import DropdownList from '../../../components/common/Dropdown/DropdownList.js';
+//import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
@@ -79,8 +81,8 @@ class WizardCreateNewUserSecondPage extends Component{
                     <div className="client-contents">
                       <div className="form-group row">
                         <div className="col-md-4">
-                          <label className="control-label top-label-agency-form"><Translate id="com.tempedge.msg.label.country"></Translate></label>
-                          <Field name="clientcountry" data={countryList} valueField="countryId" textField="name" category="agency" component={Dropdown} />
+                          <label className="control-label"><Translate id="com.tempedge.msg.label.country"></Translate></label>
+                          <Field name="clientcountry" data={countryList} valueField="countryId" textField="name" category="agency" component={DropdownList} />
                         </div>
                         <div className="col-md-8">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
@@ -95,7 +97,7 @@ class WizardCreateNewUserSecondPage extends Component{
                         </div>
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
-                          <Field name="clientstate" data={regionList} valueField="regionId" textField="name" category="agency" component={Dropdown} />
+                          <Field name="clientstate" data={regionList} valueField="regionId" textField="name" category="agency" component={DropdownList} />
                         </div>
                         <div className="col-md-4">
                           <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode"></Translate></label>

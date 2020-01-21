@@ -1,45 +1,49 @@
-import React from "react";
-import Select from "react-select";
-import ErrorRender from "../ErrorRender/ErrorRender.js";
-import "../../../assets/styles/Vars.css";
+import React from 'react';
+import Select from 'react-select';
+import ErrorRender from '../ErrorRender/ErrorRender';
+import '../../../assets/styles/Vars.css';
 
-const DropdownList = formProps => {
+const DropdownList = (formProps) => {
   console.log(formProps);
 
   const errorClass = `${
     formProps.meta.error && formProps.meta.touched
-      ? "tempEdge-dropdown-input-box has-error-dropdown"
-      : "tempEdge-dropdown-input-box"
+      ? 'tempEdge-dropdown-input-box has-error-dropdown'
+      : 'tempEdge-dropdown-input-box'
   }`;
-
-  function handleChange(value) {
-    this.props.onClick(value[this.props.displayField], value[this.props.id]);
-  }
 
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      borderRadius: "15px",
-      boxShadow: state.isFocused ? "0 0 0 0.2rem rgba(0,123,255,.25)" : "none",
-      borderColor: state.isFocused ? "#3eb7e9b3" : "#ced4da",
-      fontSize: "14px",
-      color: "#565657",
-      "&:hover": {
-        borderColor: "none"
-      }
+      borderRadius: '15px',
+      boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(0,123,255,.25)' : 'none',
+      borderColor: state.isFocused ? '#3eb7e9b3' : '#ced4da',
+      fontSize: '14px',
+      color: '#6c757d',
+      '&:hover': {
+        borderColor: 'none',
+      },
     }),
     option: (provided, state) => ({
       ...provided,
-      color: state.isSelected ? "white" : "gray",
-      background: state.isSelected && "var(--normal-blue)"
+      color: state.isSelected ? 'white' : 'gray',
+      background: state.isSelected && 'var(--normal-blue)'
     }),
-    menu:(provided, state) =>({
-      ...provided
+    menu: (provided) => ({
+      ...provided,
     }),
-    indicatorSeparator: () => null
+    indicatorSeparator: () => null,
+    singleValue: () => ({
+      color: '#495057',
+      fontFamily: 'Roboto',
+      fontSize: '12px',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      fontSize: '13px',
+    }),
   };
-  // const props = this.props;
-  // const data = props.data || [];
+
   return (
     <div className={errorClass}>
       <Select
@@ -53,7 +57,7 @@ const DropdownList = formProps => {
         // className={errorClass}
         clearable
         styles={customStyles}
-        placeholder="Select"
+        placeholder='Select'
       />
       <ErrorRender {...formProps} />
     </div>
