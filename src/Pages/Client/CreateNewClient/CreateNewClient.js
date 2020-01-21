@@ -17,7 +17,7 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { get, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
+import { getList, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 class CreateNewClient extends Component {
   constructor(props) {
@@ -44,8 +44,8 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async() => {
-    this.props.get('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.get('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
+    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
   }
 
   nextPage(){
@@ -235,7 +235,7 @@ class CreateNewClient extends Component {
 }
 
 CreateNewClient.propTypes = {
-  get: PropTypes.func.isRequired,
+  getList: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   saveDepartmentList: PropTypes.func.isRequired,
@@ -267,4 +267,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { notify, get, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));

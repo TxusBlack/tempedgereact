@@ -217,7 +217,7 @@ class CreateEmployee extends Component {
           }));
         }
       }
-      console.log(nextProps.validatePerson);
+      
       if(nextProps.validatePerson !== null){
         if(nextProps.validatePerson.data.status === 409){
           if(nextProps.validatePerson.data.code === "TE-E07"){
@@ -273,7 +273,7 @@ class CreateEmployee extends Component {
           }
         }else if(nextProps.validatePerson.data.status === 200){
           if(nextProps.validatePerson.data.code === "TE00"){
-            
+
             if(nextProps.validatePerson.data.result === null){
               // null means the person doesn't exist in the db, no other people with the same name exist
               // Create New Person
@@ -416,7 +416,7 @@ class CreateEmployee extends Component {
              }
 
              this.setState(() => ({
-                formData: {...data}, 
+                formData: {...data},
                 fileArray
               }), () => {
                 this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
