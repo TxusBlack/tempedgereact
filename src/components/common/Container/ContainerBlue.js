@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
 class ContainerBlue extends Component {
-
     constructor(props) {
         super(props);
         this.state = {

@@ -1,4 +1,5 @@
-import { LOGIN,
+import {
+  LOGIN,
   GET_COUNTRY_REGION_LIST,
   GET_FUNDING_LIST,
   GET_ROLE_LIST,
@@ -9,6 +10,8 @@ import { LOGIN,
   REMOVE_FROM_POSITIONS_LIST,
   SKILLS_LIST,
   GET_ORG_DEPARTMENT_LIST,
+  REMOVE_FROM_DEPARTMENTS_LIST,
+  GET_ACTIVITY_LIST,
   GET_OFFICE_LIST,
   VALIDATE_PERSON,
   PERSON_SAVE,
@@ -103,12 +106,12 @@ export default function(state = initialState, action){
         deptPosList: newState
       }
     case REMOVE_FROM_POSITIONS_LIST:
-      let newPosListState =  state.deptPosList;
-      let index = action.payload;
+      let newPosListState = state.deptPosList;
+      let posIndex = action.payload;
 
       if(newPosListState !== undefined){
-        if(newPosListState[index] !== undefined){
-            newPosListState.splice(index, 1);
+        if(newPosListState[posIndex] !== undefined){
+            newPosListState.splice(posIndex, 1);
         }
       }
 

@@ -18,6 +18,11 @@ let renderError = (props) => {
           fieldId = "com.tempedge.error.passwordnomatch";
         }
         break;
+      case "Please enter a valid password (8 characters, alphanumeric).":
+        if(props.input.name === "initialpassword" || props.input.name === "confirmpassword"){
+          fieldId = "com.tempedge.error.passwordnotvalid";
+        }
+        break;
       case "Please enter a phone number.":
         fieldId = "com.tempedge.error.phonenumberrequired";
         break;

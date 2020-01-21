@@ -28,6 +28,9 @@ import Error from './Pages/Error/Error';
 import EmployeeList from './Pages/Employee/EmployeeList/EmployeeList';
 import CreateEmployee from './Pages/Employee/CreateEmployee/CreateEmployee';
 import ClientList from './Pages/Client/ClientList/ClientList';
+import Dashboard from './Pages/Dashboard/Dashboard.js';
+import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
+import AgencyList from './Pages/Agencies/AgencySelect/AgencySelectList';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -83,20 +86,19 @@ class App extends React.Component{
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
-                  <Route exact path="/createClient/:lang" component={CreateNewClient} />
-                  <Route exact path="/resetpassword/:lang" component={ForgotPassword} />
-                  <Route exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
-                  <Route exact path="/upload/:lang" component={UploadFile} />
+                  <PrivateRoute exact path="/client/new/:lang" component={CreateNewClient} />
+                  <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
+                  <PrivateRoute exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
+                  <PrivateRoute exact path="/upload/:lang" component={UploadFile} />
                   <Route exact path="/pending/user/:lang" component={Error} />
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
-                  <Route exact path="/employee/:lang" component={EmployeeList} />
-                  <Route exact path="/employee/create/:lang" component={CreateEmployee} />
-                  <Route exact path="/client/:lang" component={ClientList} />
+                  <PrivateRoute exact path="/employee/list/:lang" component={EmployeeList} />
+                  <PrivateRoute exact path="/client/list/:lang" component={ClientList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
-                  <PrivateRoute exact path="/protected/:lang" redirectPath="/auth/:lang" />
-                  <Route exact path="/dashboard/:lang" component={Login} />
+                  <PrivateRoute exact path="/dashboard/:lang" component={Dashboard} />
+                  <PrivateRoute exact path="/intpayroll/new/:lang" component={NewInternalPayroll} />
                 </Switch>
               </div>
             </ConnectedRouter>

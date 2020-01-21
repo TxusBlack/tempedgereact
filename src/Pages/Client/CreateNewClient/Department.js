@@ -203,7 +203,7 @@ class Department extends React.Component{
                             <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.props.renderClientDepartmentsList}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>
+                            <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={() => this.props.renderClientDepartmentsList({repaint: false})}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>
                           </div>
                         </div>
                       </div>

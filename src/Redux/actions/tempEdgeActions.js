@@ -1,4 +1,6 @@
+
 import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, SKILLS_LIST, VALIDATE_PERSON, PERSON_SAVE, CLEAR_PROP, SET_ERROR_FIELD, REMOVE_ERROR_FIELD } from './types';
+
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
@@ -25,7 +27,9 @@ export let doLogin = (url, data) => {
           params: {
             access_token: token
           }
-        }).then((response) => {
+        }).then(async (response) => {
+          sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
+
           dispatch({
             type: LOGIN,
             payload: response.data.result
@@ -41,7 +45,7 @@ export let doLogin = (url, data) => {
             sessionStorage.setItem('agency', JSON.stringify(response.data.result.portalUserList[0]));
 
             if(response.data.result.portalUserList[0].status === "A" && response.data.result.portalUserList[0].organizationEntity.status === "A"){
-              history.push(`/protected/${lang[2]}`);
+              history.push(`/dashboard/${lang[2]}`);
             }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "A" /*&& response.data.result.portalUserList[0].userRoleId >= 4*/){
               history.push(`/pending/user/${lang[2]}`);
             }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "P"){
@@ -58,7 +62,7 @@ export let doLogin = (url, data) => {
               history.push(`/auth/${lang[2]}`);
             }
           }else if(agencyList.length > 1){
-            history.push(`/protected/${lang[2]}`);
+            history.push(`/dashboard/${lang[2]}`);
           }
 
         });
@@ -94,15 +98,16 @@ export let tempedgeAPI = (url, data, actionName) => {
   }
 }
 
-export let tempedgeMultiPartApi = (url, data, actionName) => {
+export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     let formData = new FormData();
 
-    formData.append('document', data.base64Dco);
-    formData.append('resume', data.base64Resume);
+    formData.append('personString', JSON.stringify(data));
+    formData.append('document', fileArray.documents);
+    formData.append('resume', fileArray.resume);
     data.base64Dco = data.base64Resume = null;
-    formData.append('personEntity', data);
+
 
 
     let options = {
@@ -157,7 +162,7 @@ export let getListSafe = (url, data, actionName) => {
 
 export let getList = (url, actionName) => {
   return (dispatch) => {
-    httpService.getList(url)
+    httpService.get(url)
       .then((response) => {
         dispatch({
           type: actionName,
@@ -181,7 +186,7 @@ export let storeFormPageNumber = (formName, position) => {
 
 export let getFilters = (url, data, actionName) => {
   return (dispatch) => {
-    httpService.getList(url)
+    httpService.get(url)
       .then((response) => {
         dispatch({
           type: actionName,

@@ -12,16 +12,16 @@ import history from '../history';
 let middleware = [thunk, routerMiddleware(history)];
 
 let saveSubsetBlacklistFilter = createBlacklistFilter(
-  'form'
-  ['login'],
-  ['CreateNewAgency', 'CreateNewUser', 'CreateNewClient']
+  'form',
+  ['tempEdge'],
+  ['CreateNewAgency', 'CreateNewUser', 'CreateNewClient', 'CreateNewClient']
 );
 
 let config = {
   key: 'root',
   storage: storageSession,
-  blacklist: ['tempEdge', 'form'],
-  //transforms: [saveSubsetBlacklistFilter] //[JSOGTransform]
+  //blacklist: ['tempEdge', 'form']
+  transforms: [saveSubsetBlacklistFilter]
 }
 
 let store = createStore(persistReducer(config, createRootReducer(history)), compose(applyMiddleware(...middleware), window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__()));
