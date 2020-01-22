@@ -13,12 +13,11 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE 
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
-import { getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
 import { GET_COUNTRY_REGION_LIST, SKILLS_LIST, GET_ORG_DEPARTMENT_LIST, GET_OFFICE_LIST, TEMPEDGE_LIST, VALIDATE_PERSON, PERSON_SAVE } from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
-import { tempedgeAPI, tempedgeMultiPartApi, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, tempedgeMultiPartApi, clearTempedgeStoreProp, clearErrorField, getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
 import Container from '../../../components/common/Container/Container';
 import Form from 'react-bootstrap/Form';
 import Stepper from 'react-stepper-horizontal';
@@ -88,6 +87,11 @@ class CreateEmployee extends Component {
       this.setState(() => ({
         mounted: true
       }));
+    }
+
+    componentWillUnmount = () => {
+      this.props.reset();
+      this.props.clearErrorField();
     }
 
     componentDidUpdate = async (prevProps, prevState) => {
@@ -217,7 +221,7 @@ class CreateEmployee extends Component {
           }));
         }
       }
-      
+
       if(nextProps.validatePerson !== null){
         if(nextProps.validatePerson.data.status === 409){
           if(nextProps.validatePerson.data.code === "TE-E07"){
@@ -761,7 +765,8 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
    getList: PropTypes.func.isRequired,
    getListSafe: PropTypes.func.isRequired,
    change: PropTypes.func.isRequired,
-   clearTempedgeStoreProp: PropTypes.func.isRequired
+   clearTempedgeStoreProp: PropTypes.func.isRequired,
+   clearErrorField: PropTypes.func.isRequired
 };
 
 
@@ -795,4 +800,4 @@ let mapStateToProps = (state) => {
     });
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee));

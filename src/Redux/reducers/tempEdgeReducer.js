@@ -16,6 +16,7 @@ import {
   VALIDATE_PERSON,
   PERSON_SAVE,
   CLEAR_PROP,
+  CLEAR_ERROR_FIELD,
   SET_ERROR_FIELD,
   REMOVE_ERROR_FIELD
 } from '../actions/types';
@@ -137,6 +138,12 @@ export default function(state = initialState, action){
       return{
         ...state,
         [action.payload]: undefined
+      }
+    case CLEAR_ERROR_FIELD:
+      return{
+        ...state,
+        errorFields: action.payload.errorFields,
+        lastRemoved: action.payload.lastRemoved
       }
     case SET_ERROR_FIELD:
       let errorFields = (typeof state.errorFields === 'undefined')? []: [...state.errorFields];
