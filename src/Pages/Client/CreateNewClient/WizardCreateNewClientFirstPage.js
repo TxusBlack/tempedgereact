@@ -69,7 +69,7 @@ class WizardCreateNewUserFirstPage extends Component{
 
   render(){
     // let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
-    let salesmen = [{id:1, name: "Paco"}, {id:2, name: "JOAQUIN"}, {id:3, name: "Alvaro"}, {id:4, name: "Tom"}];
+    let salesmen = [{id:1, name: "Paco"}, {id:2, name: "Joaquin"}, {id:3, name: "Alvaro"}, {id:4, name: "Tom"}];
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
     return(

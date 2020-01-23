@@ -4,7 +4,6 @@ import ErrorRender from '../ErrorRender/ErrorRender';
 import '../../../assets/styles/Vars.css';
 
 const DropdownList = (formProps) => {
-  console.log(formProps);
 
   const errorClass = `${
     formProps.meta.error && formProps.meta.touched
@@ -26,16 +25,21 @@ const DropdownList = (formProps) => {
     }),
     option: (provided, state) => ({
       ...provided,
-      color: state.isSelected ? 'white' : 'gray',
-      background: state.isSelected && 'var(--normal-blue)'
+      color: state.isSelected ? 'var(--normal-blue)' : 'gray',
+      fontWeight: state.isSelected && 'bold',
+      background: 'white',
+      '&:hover': {
+        backgroundColor: 'var(--normal-blue)',
+        color: 'white',
+        fontWeight: 'bold',
+      },
     }),
     menu: (provided) => ({
-      ...provided,
+      ...provided
     }),
     indicatorSeparator: () => null,
     singleValue: () => ({
       color: '#495057',
-      fontFamily: 'Roboto',
       fontSize: '12px',
     }),
     placeholder: (provided) => ({
