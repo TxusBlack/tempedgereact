@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
-
+import {GET_SALESMAN_LIST } from '../../../Redux/actions/types.js';
 
 class WizardCreateNewUserFirstPage extends Component{
   constructor(props){
@@ -22,7 +22,6 @@ class WizardCreateNewUserFirstPage extends Component{
   componentDidMount(){
     this.setState(() => ({
       mounted: true,
-      salesman: this.props.salesmanList
     }));
   
     this.props.getDispatch(this.props.dispatch);
@@ -68,7 +67,7 @@ class WizardCreateNewUserFirstPage extends Component{
   }
 
   render(){
-    let salesman = this.state.salesman;
+    let salesman = this.props.salesmanList;
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">

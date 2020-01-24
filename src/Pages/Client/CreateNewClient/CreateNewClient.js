@@ -102,10 +102,10 @@ class CreateNewClient extends Component {
     this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
     this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
     this.props.tempedgeAPI('/api/person/salesmanList', {
-        "orgId" : 1,
-       "page" : 0,
-       "size" : 5
-      }, GET_SALESMAN_LIST)
+      "orgId" : 1,
+     "page" : 0,
+     "size" : 5
+    }, GET_SALESMAN_LIST)
   }
 
   componentWillUnmount = () => {
@@ -185,7 +185,6 @@ class CreateNewClient extends Component {
 
     let response = {
       orgId : 1,
-      salesmanId: (typeof formValues.personId !== 'undefined')? formValues.personId: "",
       address: (typeof formValues.clientaddress !== 'undefined')? formValues.clientaddress: "",
       attn: (typeof formValues.attnTo !== 'undefined')? formValues.attnTo: "",
       city: (typeof formValues.clientcity !== 'undefined')? formValues.clientcity: "",
@@ -214,7 +213,8 @@ class CreateNewClient extends Component {
       clientSellers: [
         {
            person : {
-            personId : 1
+            personId : (typeof formValues.salesman  !== 'undefined' && formValues.salesman.personId !== 'undefined')? formValues.salesman.personId: 0,
+
            }
         },
         {
