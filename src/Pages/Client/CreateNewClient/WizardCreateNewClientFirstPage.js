@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
@@ -9,6 +8,7 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+
 
 class WizardCreateNewUserFirstPage extends Component{
   constructor(props){
@@ -21,9 +21,10 @@ class WizardCreateNewUserFirstPage extends Component{
 
   componentDidMount(){
     this.setState(() => ({
-      mounted: true
+      mounted: true,
+      salesman: this.props.salesmanList
     }));
-
+  
     this.props.getDispatch(this.props.dispatch);
   }
 
@@ -67,9 +68,8 @@ class WizardCreateNewUserFirstPage extends Component{
   }
 
   render(){
-    let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
+    let salesman = this.state.salesman;
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
-
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
@@ -91,7 +91,7 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.salesman"></Translate></label>
-                            <Field name="salesman" data={salesmen} valueField="value" textField="salesman" category="client" component={Dropdown} />
+                            <Field name="salesman" data={salesman} valueField="personId" textField='firstName' category="client" component={Dropdown} />
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payrollCycle"></Translate></label>
@@ -191,7 +191,8 @@ let mapStateToProps = (state) => {
   }
 
   return({
-    clientDepartments: clientdepartments
+    clientDepartments: clientdepartments,
+    salesmanList: (typeof state.tempEdge.salesmanList !== 'undefined' && state.tempEdge.salesmanList.content !== 'undefined')? state.tempEdge.salesmanList.content: [],
   });
 }
 
