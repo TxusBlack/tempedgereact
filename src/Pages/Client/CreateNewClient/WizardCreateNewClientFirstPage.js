@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
-import {GET_SALESMAN_LIST } from '../../../Redux/actions/types.js';
 
 class WizardCreateNewUserFirstPage extends Component{
   constructor(props){
@@ -89,7 +88,7 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.salesman"></Translate></label>
-                            <Field name="salesman" data={salesman} valueField="personId" textField='firstName' category="client" component={Dropdown} />
+                            <Field name="salesman" data={salesman} valueField="personId" textField='firstName' category="client" component={DropdownList} />
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payrollCycle"></Translate></label>
