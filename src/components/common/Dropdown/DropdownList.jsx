@@ -25,12 +25,16 @@ const DropdownList = (formProps) => {
     option: (provided, state) => ({
       ...provided,
       color: state.isSelected ? 'var(--normal-blue)' : 'gray',
-      fontWeight: state.isSelected && 'bold',
-      background: 'white',
+      fontWeight: (state.isSelected || state.isFocused) && 'bold',
+      backgroundColor: state.isFocused ? 'var(--normal-blue)' : 'inherit',
+      color: state.isFocused ? 'white' : state.isSelected ? 'var(--normal-blue)' : 'gray',
       '&:hover': {
         backgroundColor: 'var(--normal-blue)',
         color: 'white',
         fontWeight: 'bold',
+      },'&:active': {
+        backgroundColor: 'var(--normal-blue)',
+        color: 'white',
       },
     }),
     menu: (provided) => ({
