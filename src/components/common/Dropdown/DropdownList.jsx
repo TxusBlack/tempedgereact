@@ -4,7 +4,6 @@ import ErrorRender from '../ErrorRender/ErrorRender';
 import '../../../assets/styles/Vars.css';
 
 const DropdownList = (formProps) => {
-
   const errorClass = `${
     formProps.meta.error && formProps.meta.touched
       ? 'tempEdge-dropdown-input-box has-error-dropdown'
@@ -35,7 +34,7 @@ const DropdownList = (formProps) => {
       },
     }),
     menu: (provided) => ({
-      ...provided
+      ...provided,
     }),
     indicatorSeparator: () => null,
     singleValue: () => ({
@@ -53,15 +52,15 @@ const DropdownList = (formProps) => {
       <Select
         {...formProps.input}
         options={formProps.data}
-        onChange={value => formProps.input.onChange(value)}
+        onChange={(value) => formProps.input.onChange(value)}
         onBlur={() => formProps.input.onBlur(formProps.input.value)}
         // onChange={value => this.handleChange(value)}
-        getOptionLabel={option => `${option[formProps.textField]} `}
-        getOptionValue={option => `${option[formProps.valueField]} `}
+        getOptionLabel={(option) => `${option[formProps.textField]} `}
+        getOptionValue={(option) => `${option[formProps.valueField]} `}
         // className={errorClass}
         clearable
         styles={customStyles}
-        placeholder='Select'
+        placeholder="Select"
       />
       <ErrorRender {...formProps} />
     </div>

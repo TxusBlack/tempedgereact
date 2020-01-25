@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 
-import DropdownList from '../../../components/common/Dropdown/DropdownList.js';
-//import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';

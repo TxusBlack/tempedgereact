@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from '../../../components/common/Dropdown/DropdownList.js';
-// import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -68,7 +66,6 @@ class WizardCreateNewUserFirstPage extends Component{
   }
 
   render(){
-    // let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
     let salesmen = [{id:1, name: "Paco"}, {id:2, name: "Joaquin"}, {id:3, name: "Alvaro"}, {id:4, name: "Tom"}];
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
