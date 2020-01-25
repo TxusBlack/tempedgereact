@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -67,7 +66,7 @@ class WizardCreateNewUserFirstPage extends Component{
   }
 
   render(){
-    let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
+    let salesmen = [{id:1, name: "Paco"}, {id:2, name: "Joaquin"}, {id:3, name: "Alvaro"}, {id:4, name: "Tom"}];
     let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
     return(
@@ -91,11 +90,11 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.salesman"></Translate></label>
-                            <Field name="salesman" data={salesmen} valueField="value" textField="salesman" category="client" component={Dropdown} />
+                            <Field name="salesman" data={salesmen} valueField="id" textField="name" category="client" component={DropdownList} />
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payrollCycle"></Translate></label>
-                            <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={Dropdown} />
+                            <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={DropdownList} />
                           </div>
                         </div>
 
