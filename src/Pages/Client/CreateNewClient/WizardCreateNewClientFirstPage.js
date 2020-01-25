@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Field, FieldArray, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -94,7 +93,7 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payrollCycle"></Translate></label>
-                            <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={Dropdown} />
+                            <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={DropdownList} />
                           </div>
                         </div>
 

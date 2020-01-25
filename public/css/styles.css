@@ -1,3 +1,5 @@
+@import '../../src/assets/styles/Vars.css';
+
 html {
   height: 100%;
   box-sizing: border-box;
@@ -158,8 +160,8 @@ body {
 }
 
 .tempEdge-dropdown-input-box.has-error-dropdown div{
-  -webkit-box-shadow: none;
-  box-shadow: none;
+  /* -webkit-box-shadow: none; */
+  /* box-shadow: none; */
   border-color: #a94442 !important;
 }
 
@@ -1028,7 +1030,7 @@ form div.list .list-item:last-child button {
 }
 
 .new-client-header, .department-list-header{
-  background-color: #3eb7e9;
+  background-color: var(--normal-blue);
 }
 
 .new-client-header{
