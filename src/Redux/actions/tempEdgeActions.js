@@ -6,7 +6,7 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://100.1.147.42:9191`;
+let baseUrlTempEdge = `http://10.1.10.52:9191`;
 //let baseUrlTempEdge = `http://localhost:9191`;
 
 export let doLogin = (url, data) => {
@@ -102,13 +102,13 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     let formData = new FormData();
+    let jsonse = JSON.stringify(data);
+    let blob = new Blob([jsonse], {type: "application/json"});
 
-    formData.append('personString', JSON.stringify(data));
+    formData.append('personEntity', blob);
     formData.append('document', fileArray.documents);
     formData.append('resume', fileArray.resume);
     data.base64Dco = data.base64Resume = null;
-
-
 
     let options = {
       headers: {

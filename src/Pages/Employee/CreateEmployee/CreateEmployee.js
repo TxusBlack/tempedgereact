@@ -144,7 +144,6 @@ class CreateEmployee extends Component {
     }
 
     componentWillReceiveProps = async(nextProps) => {
-      console.log("nextProps: ", nextProps);
       if(typeof nextProps.errorFields !== 'undefined'){
         let chkResult = [...this.state.chkResult];
         let errorPanel = [...this.state.errorPanel];
@@ -217,9 +216,8 @@ class CreateEmployee extends Component {
         if(nextProps.savePerson.data.status === 200){
           this.setState(() => ({
             announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
-          }));
+        }), () => this.props.reset());
         }else{
-          console.log("VALIDATION FAILED!!!");
           //Validation Failed
           this.setState(() => ({
             announcementBar: <div className="announcement-bar fail"><p><Translate id={this.state.validateMsg} /></p></div>
@@ -275,7 +273,6 @@ class CreateEmployee extends Component {
               }));
             }
           }else{
-            console.log("nextProps.validatePerson.data.result  --409--: ", nextProps.validatePerson.data.result);
             //Validation Failed
             this.setState(() => ({
               announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
@@ -283,14 +280,12 @@ class CreateEmployee extends Component {
           }
         }else if(nextProps.validatePerson.data.status === 500){
           if(nextProps.validatePerson.data.code === "TE-E00"){
-            console.log("nextProps.validatePerson.data.result --500-: ", nextProps.validatePerson.data.result);
             this.setState(() => ({
               announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
             }));
           }
         }else if(nextProps.validatePerson.data.status === 200){
           if(nextProps.validatePerson.data.code === "TE00"){
-
             if(nextProps.validatePerson.data.result === null){
               // null means the person doesn't exist in the db, no other people with the same name exist
               // Create New Person
@@ -495,10 +490,6 @@ class CreateEmployee extends Component {
             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
           });
         }
-
-        console.log("this.props: ", this.props);
-        console.log("this.props.invalid: ", this.props.invalid);
-        console.log("this.props.pristine: ", this.props.pristine);
 
         let drugTestDate = (
           <div style={{width: "80%", margin: "auto"}}>
