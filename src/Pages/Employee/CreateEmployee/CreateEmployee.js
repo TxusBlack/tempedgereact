@@ -84,14 +84,30 @@ class CreateEmployee extends Component {
       let defaultDate = new Date(backDate);
       this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
 
+      let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
+      let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
+      let states = await regionsList.map((state, index) => {
+        return state.name;
+      });
+
+      this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
+
       this.setState(() => ({
-        mounted: true
+        mounted: true,
+        countryListRendered: this.state.countryListRendered+1,
+        country_list: list,
+        regionsList: states
       }));
     }
 
     componentWillUnmount = () => {
       this.props.reset();
       this.props.clearErrorField();
+      this.props.clearTempedgeStoreProp("savePerson");
+
+      this.setState(() => ({
+        announcementBar: ""
+      }));
     }
 
     componentDidUpdate = async (prevProps, prevState) => {
@@ -119,20 +135,6 @@ class CreateEmployee extends Component {
         }
       }
 
-      if(this.state.getCountryList && this.state.countryListRendered < 1){
-        let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
-        let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
-        let states = await regionsList.map((state, index) => {
-          return state.name;
-        });
-
-        this.setState(() => ({
-          countryListRendered: this.state.countryListRendered+1,
-          country_list: list,
-          regionsList: states
-        }));
-      }
-
       let hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
       if(hasActiveLanguageChanged){
@@ -142,6 +144,7 @@ class CreateEmployee extends Component {
     }
 
     componentWillReceiveProps = async(nextProps) => {
+      console.log("nextProps: ", nextProps);
       if(typeof nextProps.errorFields !== 'undefined'){
         let chkResult = [...this.state.chkResult];
         let errorPanel = [...this.state.errorPanel];
@@ -192,21 +195,22 @@ class CreateEmployee extends Component {
         }));
       }
 
-      if(typeof nextProps.country !== 'undefined' && (this.state.prevCountry !== nextProps.country.name)){
-        if(typeof this.props.country_region_list !== 'undefined' && this.props.country_region_list.length > 0){
-          let regionsList = [];
+      if(typeof nextProps.country !== 'undefined'){
+        if(this.state.prevCountry !== nextProps.country.name){
+          if(typeof this.props.country_region_list !== 'undefined' && this.props.country_region_list.length > 0){
+            let regionsList = [];
 
-          regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
+            regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, (typeof nextProps.country.name === 'undefined')? "United States": nextProps.country.name);
 
-          this.props.dispatch(change('NewEmployee', 'state', ''));
-          this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
-          this.setState({
-            prevCountry: nextProps.country.name,
-            region_list: regionsList
-          });
+            //this.props.dispatch(change('NewEmployee', 'state', ''));
+            this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
+            this.setState({
+              countryListRendered: this.state.countryListRendered+1,
+              prevCountry: nextProps.country.name,
+              region_list: regionsList
+            });
+          }
         }
-      }else{
-        this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
       }
 
       if(nextProps.savePerson !== null){
@@ -215,6 +219,7 @@ class CreateEmployee extends Component {
             announcementBar: <div className="announcement-bar success"><p><Translate id="com.tempedge.msg.person.newperson" /></p></div>
           }));
         }else{
+          console.log("VALIDATION FAILED!!!");
           //Validation Failed
           this.setState(() => ({
             announcementBar: <div className="announcement-bar fail"><p><Translate id={this.state.validateMsg} /></p></div>
@@ -270,7 +275,15 @@ class CreateEmployee extends Component {
               }));
             }
           }else{
+            console.log("nextProps.validatePerson.data.result  --409--: ", nextProps.validatePerson.data.result);
             //Validation Failed
+            this.setState(() => ({
+              announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
+            }));
+          }
+        }else if(nextProps.validatePerson.data.status === 500){
+          if(nextProps.validatePerson.data.code === "TE-E00"){
+            console.log("nextProps.validatePerson.data.result --500-: ", nextProps.validatePerson.data.result);
             this.setState(() => ({
               announcementBar: <div className="announcement-bar fail"><p><Translate id={nextProps.validatePerson.data.message} /></p></div>
             }));
@@ -472,7 +485,7 @@ class CreateEmployee extends Component {
     render() {
         let key = this.state.key;
         let sortedSkillList = undefined;
-        let birthDay = (this.props.birthday !== null)? Math.floor((new Date() - new Date(this.props.birthday).getTime()) / 3.15576e+10): "";
+        let birthDay = (this.props.birthday !== null)? moment().diff(this.props.birthday, 'years',false): "";
 
         if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
           sortedSkillList = this.props.skillsList.sort((a, b) => {
@@ -482,6 +495,10 @@ class CreateEmployee extends Component {
             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
           });
         }
+
+        console.log("this.props: ", this.props);
+        console.log("this.props.invalid: ", this.props.invalid);
+        console.log("this.props.pristine: ", this.props.pristine);
 
         let drugTestDate = (
           <div style={{width: "80%", margin: "auto"}}>
@@ -744,7 +761,7 @@ class CreateEmployee extends Component {
                                 <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Cancel</button>
                               </div>
                               <div className="col-md-5">
-                                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}>Save</button>
+                                <button type="submit" className="btn btn-primary btn-block register-save-btn next">Save</button>
                               </div>
                             </div>
                         </div>
@@ -766,16 +783,13 @@ CreateEmployee.propTypes = {     //Typechecking With PropTypes, will run on its 
    getListSafe: PropTypes.func.isRequired,
    change: PropTypes.func.isRequired,
    clearTempedgeStoreProp: PropTypes.func.isRequired,
-   clearErrorField: PropTypes.func.isRequired
+   clearErrorField: PropTypes.func.isRequired,
 };
 
 
 CreateEmployee = reduxForm({
     form: 'NewEmployee', //                 <------ form name
     destroyOnUnmount: false, //        <------ preserve form data
-    // initialValues: {
-    //     'country': { name: 'United States', countryId: 234 }
-    // },
     validate: Validate
 })(CreateEmployee);
 

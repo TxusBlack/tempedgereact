@@ -6,8 +6,8 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-//let baseUrlTempEdge = `http://192.168.0.19:9191`;
-let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://100.1.147.42:9191`;
+//let baseUrlTempEdge = `http://localhost:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly

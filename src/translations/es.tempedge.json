@@ -115,6 +115,7 @@
   "com.tempedge.msg.label.fundingcompany"                             : "Seleccione si su empresa usa una financiera",
   "com.tempedge.msg.label.information"                                : "Información",
   "com.tempedge.error.agency.agencyrolerequired"                      : "Por favor ingrese rol.",
+  "com.tempedge.error.undefine"                                       : "Error de Sistema.",
   "com.tempedge.error.agency.agencyorganizationrequired"              : "Por favor ingrese nombre de organizacion.",
   "com.tempedge.error.agency.agencyclientrequired"                    : "Por favor ingrese nombre de cliente.",
   "com.tempedge.error.agency.agencydropdownrequired"                  : "Opcion de agencia es requerida.",
