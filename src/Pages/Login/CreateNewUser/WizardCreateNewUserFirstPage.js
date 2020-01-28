@@ -8,6 +8,9 @@ import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
 import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE or it will break
+
+import Datepicker from '../../../components/common/Datepicker/Datepicker';
+
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
@@ -105,7 +108,7 @@ class WizardCreateNewUserFirstPage extends Component{
               </div>
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.birthday" /></label>
-                <Field name="birthday" type="text" category="person" component={DateTime} validate={date()} />
+                <Field name="birthday" type="text" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} /*validate={date()}*/ />
               </div>
             </div>
 
