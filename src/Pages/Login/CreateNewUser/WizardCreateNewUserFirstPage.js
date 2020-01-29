@@ -108,7 +108,7 @@ class WizardCreateNewUserFirstPage extends Component{
               </div>
               <div className="col-md-4">
                 <label className="control-label"><Translate id="com.tempedge.msg.label.birthday" /></label>
-                <Field name="birthday" type="text" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} /*validate={date()}*/ />
+                <Field name="birthday" type="text" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
               </div>
             </div>
 

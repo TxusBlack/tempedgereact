@@ -12,7 +12,7 @@ const Datepicker = (formProps) => {
     <div className={errorClass}>
       <DatePicker
         onChange={(date) => input.onChange(moment(date).toDate())}
-        selected={input.value ? new Date(input.value) : null}
+        selected={moment(input.value).isValid() ? new Date(input.value) : null}
         onBlur={input.onBlur}
         className={formProps.customClass}
         showMonthDropdown
