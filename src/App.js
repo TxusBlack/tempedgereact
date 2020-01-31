@@ -30,6 +30,7 @@ import ClientList from './Pages/Client/ClientList/ClientList';
 import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
 import AgencyList from './Pages/Agencies/AgencySelect/AgencySelectList';
+import ChangePassword from './Pages/ChangePassword/ChangePassword';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -85,6 +86,9 @@ class App extends React.Component{
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
+
+                  <PrivateRoute exact path="/profile/:lang" component={ChangePassword} />
+                  
                   <PrivateRoute exact path="/client/new/:lang" component={CreateNewClient} />
                   <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <PrivateRoute exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
