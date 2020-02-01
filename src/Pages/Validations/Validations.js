@@ -5,10 +5,6 @@ let validate = (formValues) => {
     errors.firstName = 'Please enter your first name';
   }
 
-  // if(!formValues.middleName){
-  //   errors.middleName = 'Please enter your middle name or initial';
-  // }
-
   if(!formValues.lastName){
     errors.lastName = 'Please enter your last name';
   }
@@ -55,6 +51,7 @@ let validate = (formValues) => {
       errors.email = 'Invalid email address.'
   }
 
+<<<<<<< HEAD
   // if(!formValues.gender){
   //   errors.gender = 'Please select a gender.';
   // }
@@ -133,6 +130,10 @@ let validate = (formValues) => {
 
   if(!formValues.numberofallowances){
     errors.numberofallowances = "Number of allowances required."
+=======
+  if(!formValues.birthday){
+    errors.birthday = "Please enter your birthday";
+>>>>>>> firstversion
   }
 
   if(!formValues.agencyrole){
@@ -303,10 +304,6 @@ let validate = (formValues) => {
     errors.workCompRate = 'Work compensation rate is required.';
   }
 
-  if(!formValues.companyInitials){
-    errors.companyInitials = 'Company initials required.';
-  }
-
   if(!formValues.attnTo){
     errors.attnTo = 'Attn to required.';
   }
@@ -319,26 +316,6 @@ let validate = (formValues) => {
     errors.otMarkupClient = 'Markup is required.';
   }
 
-  if(!formValues.clientcountry){
-    errors.clientcountry = 'Country is required.';
-  }
-
-  if(!formValues.clientstate){
-    errors.clientstate = 'State is required.';
-  }
-
-  if(!formValues.clientaddress){
-    errors.clientaddress = 'Address is required.';
-  }
-
-  if(!formValues.clientcity){
-    errors.clientcity = "City is required.";
-  }
-
-  if(!formValues.clientzipcode){
-    errors.clientzipcode = "Zip code is required.";
-  }
-
   if(!formValues.clientlastName){
     errors.clientlastName = "Last name required.";
   }
@@ -348,11 +325,11 @@ let validate = (formValues) => {
   }
 
   if(!formValues.clientcontactphone){
-    errors.clientcontactphone = "Contact phone number required.";
-  }
+    let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
 
-  if(!formValues.clientcontactcellphone){
-    errors.clientcontactcellphone = "Contact cell phone number required.";
+    if (!regX.test(formValues.clientcontactphone)){
+      errors.clientcontactphone = "Contact phone number required.";
+    }
   }
 
   //Clients Form
@@ -376,21 +353,17 @@ let validate = (formValues) => {
     errors.payRate = 'Please enter pay rate';
   }
 
-  if(!formValues.timeIn){
-    errors.timeIn = 'Please enter time in.';
-  }
-
-  if(!formValues.timeOut){
-    errors.timeOut = 'Please enter time out';
-  }
-
-  if(!formValues.employeeContact){
-    errors.employeeContact = 'Please enter employee contact';
-  }
-
-  if(!formValues.contactPhone){
-    errors.contactPhone = 'Please enter contact phone number';
-  }
+  // if(!formValues.employeeContact){
+  //   errors.employeeContact = 'Please enter employee contact';
+  // }
+  //
+  // if(!formValues.contactPhone){
+  //   let regX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
+  //
+  //   if (!regX.test(formValues.contactPhone)){
+  //     errors.contactPhone = 'Phone number is required.';
+  //   }
+  // }
 
   if(!formValues.departmentname){
     errors.departmentname = "Please enter department name"

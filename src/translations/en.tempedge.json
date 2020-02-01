@@ -56,6 +56,7 @@
   "com.tempedge.msg.label.ssnonly"                                    : "SSN",
   "com.tempedge.msg.label.dept"                                       : "Dept",
   "com.tempedge.msg.label.phone"                                      : "Phone",
+<<<<<<< HEAD
   "com.tempedge.msg.label.drugtest"                                   : "Drug Test",
   "com.tempedge.msg.label.backgroundtest"                             : "Background Check",
   "com.tempedge.msg.label.affirmative"                                : "Yes",
@@ -64,6 +65,12 @@
   "com.tempedge.msg.label.resume"                                     : "Resume",
   "com.tempedge.msg.label.choosefile"                                 : "Choose File",
   "com.tempedge.msg.label.validatedpersonlist"                        : "Employee Validation",
+=======
+  "com.tempedge.msg.label.hiredate"                                   : "Hiredate",
+  "com.tempedge.error.invaliddata"                                    : "Invalid Data",
+  "com.tempedge.error.undefine"                                       : "Server Error",
+  "com.tempedge.msg.person.newclient"                                 : "New client created.",
+>>>>>>> firstversion
   "com.tempedge.error.passwordnomatch"                                : "Password does not match.",
   "com.tempedge.error.phonenumberrequired"                            : "Phone number is required.",
   "com.tempedge.error.officeNamerequired"                             : "Name is required.",
@@ -115,7 +122,11 @@
   "com.tempedge.msg.label.payrollvalidation"                          : "Last day for payroll validation",
   "com.tempedge.msg.label.fundingcompany"                             : "Select if your company uses a funding company",
   "com.tempedge.msg.label.information"                                : "Information",
+<<<<<<< HEAD
   "com.tempedge.error.undefine"                                       : "Server Error",
+=======
+  "com.tempedge.msg.person.tokeninvalid"                              : "Your session has expired.",
+>>>>>>> firstversion
   "com.tempedge.error.agency.agencyrolerequired"                      : "Please enter role.",
   "com.tempedge.error.agency.agencyorganizationrequired"              : "Please enter the organization name.",
   "com.tempedge.error.agency.agencyclientrequired"                    : "Please enter the client name.",
@@ -160,7 +171,11 @@
   "com.tempedge.msg.label.addDept"                                    : "Add This Department",
   "com.tempedge.msg.label.deptName"                                   : "Department Name",
   "com.tempedge.msg.label.addPos"                                     : "Add Position",
+<<<<<<< HEAD
   "com.tempedge.msg.label.clientList"                                 : "Client List",
+=======
+  "com.tempedge.error.recordexists"                                    : "Record exists already.",
+>>>>>>> firstversion
   "com.tempedge.msg.label.mytimesheet"                                : "My Timesheet",
   "com.tempedge.error.client.companyrequired"                         : "Company is required.",
   "com.tempedge.error.client.salesmanrequired"                        : "Salesman is required.",

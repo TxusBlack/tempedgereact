@@ -3,14 +3,18 @@ import {
   GET_COUNTRY_REGION_LIST,
   GET_FUNDING_LIST,
   GET_ROLE_LIST,
+  CREATE_CLIENT,
   SAVE_FORM_POSITION,
   TEMPEDGE_LIST,
   SAVE_DEPARTMENTS_LIST,
+  SAVE_TO_DEPARTMENTS_LIST,
   SAVE_POSITIONS_LIST,
+  SAVE_TO_POSITIONS_LIST,
   REMOVE_FROM_POSITIONS_LIST,
   SKILLS_LIST,
   GET_ORG_DEPARTMENT_LIST,
   REMOVE_FROM_DEPARTMENTS_LIST,
+<<<<<<< HEAD
   GET_ACTIVITY_LIST,
   GET_OFFICE_LIST,
   VALIDATE_PERSON,
@@ -19,6 +23,11 @@ import {
   CLEAR_ERROR_FIELD,
   SET_ERROR_FIELD,
   REMOVE_ERROR_FIELD
+=======
+  SAVE_BILL_RATE,
+  SAVE_OT_BILL_RATE,
+  GET_ACTIVITY_LIST
+>>>>>>> firstversion
 } from '../actions/types';
 
 let initialState = {
@@ -54,6 +63,7 @@ export default function(state = initialState, action){
         ...state,
         paginatorList: action.payload
       }
+<<<<<<< HEAD
     case SKILLS_LIST:
       return{
         ...state,
@@ -78,6 +88,13 @@ export default function(state = initialState, action){
       return{
         ...state,
         officeList: action.payload
+=======
+    case CREATE_CLIENT:
+      console.log("action.payload: ", action.payload);
+      return{
+        ...state,
+        client: action.payload
+>>>>>>> firstversion
       }
     case SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;
@@ -86,14 +103,16 @@ export default function(state = initialState, action){
         [formPosition]: action.payload
       }
     case SAVE_DEPARTMENTS_LIST:
-      let newListState =  (typeof state.deptList !== "undefined")? state.deptList: [];
-
-      newListState.push(action.payload);
       return{
         ...state,
-        deptList: newListState
+        deptList: action.payload
       }
     case SAVE_POSITIONS_LIST:
+      return{
+        ...state,
+        deptPosList: action.payload
+      }
+    case SAVE_TO_POSITIONS_LIST:
       let newState =  (typeof state.deptPosList === "undefined")? []: state.deptPosList;
 
       if(action.payload === "CLEAR"){
@@ -134,6 +153,7 @@ export default function(state = initialState, action){
         ...state,
         deptList: newDeptListState
       }
+<<<<<<< HEAD
     case CLEAR_PROP:
       return{
         ...state,
@@ -175,6 +195,19 @@ export default function(state = initialState, action){
         errorFieldsArray.splice(foundIndex, 1);
       }
 
+=======
+    case SAVE_BILL_RATE:
+      return{
+        ...state,
+        billRate: action.payload
+      }
+    case SAVE_OT_BILL_RATE:
+      return{
+        ...state,
+        otBillRate: action.payload
+      }
+    case GET_ACTIVITY_LIST:
+>>>>>>> firstversion
       return{
         ...state,
         errorFields: errorFieldsArray,

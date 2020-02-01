@@ -98,19 +98,19 @@ class WizardCreateNewUserSecondPage extends Component{
                 <div className="row">
                   <div className="col-md-12">
                     <label className="control-label"><Translate id="com.tempedge.msg.label.organization"></Translate></label>
-                    <Field name="agencyorganization" type="textarea" placeholder="Enter Organization Name" category="agency" component={InputBox} />
+                    <Field name="agencyorganization" type="text" placeholder="Enter Organization Name" category="agency" component={InputBox} />
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-12">
                     {(roleName.indexOf("CLIENT") > -1)? <label className="control-label"><Translate id="com.tempedge.msg.label.client"></Translate></label>: <label className="control-label"><Translate id="com.tempedge.msg.label.office"></Translate></label>}
-                    {(roleName.indexOf("CLIENT") > -1)? <Field name="agencyclient" type="textarea" placeholder="Enter Client" category="agency" component={InputBox} />: <Field name="agencyoffice" type="textarea" placeholder="Enter Office" category="agency" component={InputBox} /> }
+                    {(roleName.indexOf("CLIENT") > -1)? <Field name="agencyclient" type="text" placeholder="Enter Client" category="agency" component={InputBox} />: <Field name="agencyoffice" type="text" placeholder="Enter Office" category="agency" component={InputBox} /> }
                   </div>
                 </div>
                 {(roleName.indexOf("CLIENT") < 0)? <div className="row">
                   <div className="col-md-12">
                     <label className="control-label"><Translate id="com.tempedge.msg.label.ssnlast4"></Translate></label>
-                    <Field name="agencyssnlastfour" type="textarea" placeholder="Enter Last 4 of Social Security Number" category="agency" component={InputBox} />
+                    <Field name="agencyssnlastfour" type="text" placeholder="Enter Last 4 of Social Security Number" category="agency" component={InputBox} />
                   </div>
                 </div>: ""}
                 <div className="row">

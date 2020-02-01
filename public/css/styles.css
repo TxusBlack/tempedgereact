@@ -1,3 +1,5 @@
+@import '../../src/assets/styles/Vars.css';
+
 html {
   height: 100%;
   box-sizing: border-box;
@@ -18,6 +20,10 @@ body {
   font-family: Roboto;
   font-style: normal;
   background-color: #e9e9e9;
+}
+
+.has-error .form-control.tempEdge-input-box{
+  border-color: #a94442 !important;
 }
 
 .contents{
@@ -66,14 +72,26 @@ body {
   width: 100%;
   min-height: 40px;
   font-size: 1.5rem;
+<<<<<<< HEAD
+=======
+  margin-bottom: 1rem;
+>>>>>>> firstversion
 }
 
 .announcement-bar p{
   padding: 11.5px 10px;
+<<<<<<< HEAD
 }
 
 .success{
   background-color: #98FB98;
+=======
+  margin-bottom: 0;
+}
+
+.success{
+  background-color: #98FBB2;
+>>>>>>> firstversion
   color: #008000
 }
 
@@ -112,6 +130,12 @@ body {
     max-height: 98%;
 }
 
+.modal-body{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px;
+}
+
 .rw-popup ul li{
   min-height: 3.5rem;
 }
@@ -146,8 +170,8 @@ body {
 }
 
 .tempEdge-dropdown-input-box.has-error-dropdown div{
-  -webkit-box-shadow: none;
-  box-shadow: none;
+  /* -webkit-box-shadow: none; */
+  /* box-shadow: none; */
   border-color: #a94442 !important;
 }
 
@@ -1019,7 +1043,7 @@ form div.list .list-item:last-child button {
 }
 
 .new-client-header, .department-list-header{
-  background-color: #3eb7e9;
+  background-color: var(--normal-blue);
 }
 
 .new-client-header{
@@ -1073,11 +1097,17 @@ form div.list .list-item:last-child button {
   height: 100%;
 }
 
-.department-list-contents{
+.department-list-contents, .position-list-contents{
   border: dotted 1px #B2B2B2;
   border-top: none;
   border-bottom-right-radius: 1.6rem;
   height: calc(100% - 53.3px);
+  overflow-y: scroll;
+  max-height: 508px;
+}
+
+.position-list-contents{
+  max-height: 491px;
 }
 
 .department-list-button{

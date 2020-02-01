@@ -1,5 +1,19 @@
 
-import { LOGIN, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, REMOVE_FROM_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST, SKILLS_LIST, VALIDATE_PERSON, PERSON_SAVE, CLEAR_PROP, CLEAR_ERROR_FIELD, SET_ERROR_FIELD, REMOVE_ERROR_FIELD } from './types';
+import { LOGIN, 
+  SAVE_FORM_POSITION, 
+  SAVE_FILTER_LIST, 
+  SAVE_DEPARTMENTS_LIST, 
+  SAVE_POSITIONS_LIST, 
+  REMOVE_FROM_POSITIONS_LIST, 
+  REMOVE_FROM_DEPARTMENTS_LIST, 
+  SKILLS_LIST, VALIDATE_PERSON, 
+  PERSON_SAVE, CLEAR_PROP, 
+  CLEAR_ERROR_FIELD, 
+  SET_ERROR_FIELD, 
+  REMOVE_ERROR_FIELD ,
+  CREATE_CLIENT, 
+  SAVE_BILL_RATE, 
+  SAVE_OT_BILL_RATE } from './types';
 
 import history from '../../history.js';
 import Axios from 'axios';
@@ -64,7 +78,6 @@ export let doLogin = (url, data) => {
           }else if(agencyList.length > 1){
             history.push(`/dashboard/${lang[2]}`);
           }
-
         });
       }).catch((error) => {
         let lang = window.location.pathname;
@@ -92,7 +105,7 @@ export let tempedgeAPI = (url, data, actionName) => {
     }).then((response) => {
       dispatch({
         type: actionName,
-        payload: (actionName !== VALIDATE_PERSON && actionName !== PERSON_SAVE)? response.data.result: response
+        payload: err
       });
     });
   }
@@ -208,29 +221,29 @@ export let getFilters = (url, data, actionName) => {
     }
 }
 
-export let saveDepartmentList = (newDept) => {
+export let saveDepartmentList = (deptList) => {
   return (dispatch) => {
     dispatch({
       type: SAVE_DEPARTMENTS_LIST,
-      payload: newDept
-    })
-  }
-}
-
-export let savePositionsList = (newPos) => {
-  return (dispatch) => {
-    dispatch({
-      type: SAVE_POSITIONS_LIST,
-      payload: newPos
+      payload: deptList
     });
   }
 }
 
-export let removeFromPositionList = (index) => {
+export let savePositionsList = (positionsList) => {
   return (dispatch) => {
     dispatch({
-      type: REMOVE_FROM_POSITIONS_LIST,
-      payload: index
+      type: SAVE_POSITIONS_LIST,
+      payload: positionsList
+    });
+  }
+}
+
+export let saveToPositionsList = (newPos) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_TO_POSITIONS_LIST,
+      payload: newPos
     });
   }
 }
@@ -259,6 +272,15 @@ export let removeErrorField = (fieldName) => {
     dispatch({
       type: REMOVE_ERROR_FIELD,
       payload: fieldName
+    });
+  }
+}
+
+export let saveBillRates = (rate, type) => {
+  return (dispatch) => {
+    dispatch({
+      type: type,
+      payload: rate
     });
   }
 }

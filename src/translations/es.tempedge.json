@@ -54,6 +54,7 @@
   "com.tempedge.msg.label.ssnonly"                                    : "Numero de Seguro Social",
   "com.tempedge.msg.label.dept"                                       : "Dept",
   "com.tempedge.msg.label.phone"                                      : "Teléfono",
+<<<<<<< HEAD
   "com.tempedge.msg.label.drugtest"                                   : "Prueba de Drogas",
   "com.tempedge.msg.label.backgroundtest"                             : "Chequeo de Antecedentes",
   "com.tempedge.msg.label.affirmative"                                : "Si",
@@ -63,6 +64,12 @@
   "com.tempedge.msg.label.choosefile"                                 : "Escoger Archivo",
   "com.tempedge.msg.label.validatedpersonlist"                        : "Validacion de Empleado",
   "com.tempedge.msg.label.resume"                                     : "Curriculum Vitae",
+=======
+  "com.tempedge.msg.person.newclient"                                 : "Nuevo cliente creado.",
+  "com.tempedge.msg.label.hiredate"                                   : "Fecha de contrato",
+  "com.tempedge.error.invaliddata"                                    : "Datos Invalidos.",
+  "com.tempedge.error.undefine"                                       : "Error de Servidor",
+>>>>>>> firstversion
   "com.tempedge.error.passwordnomatch"                                : "Contraseña no es igual.",
   "com.tempedge.error.phonenumberrequired"                            : "Teléfono es requerido.",
   "com.tempedge.error.officeNamerequired"                             : "Nombre es requerido.",
@@ -114,6 +121,7 @@
   "com.tempedge.msg.label.payrollvalidation"                          : "Ultimo dia para validacion de rol de pago",
   "com.tempedge.msg.label.fundingcompany"                             : "Seleccione si su empresa usa una financiera",
   "com.tempedge.msg.label.information"                                : "Información",
+  "com.tempedge.msg.person.tokeninvalid"                              : "La sesión a expirado.",
   "com.tempedge.error.agency.agencyrolerequired"                      : "Por favor ingrese rol.",
   "com.tempedge.error.undefine"                                       : "Error de Sistema.",
   "com.tempedge.error.agency.agencyorganizationrequired"              : "Por favor ingrese nombre de organizacion.",
@@ -161,6 +169,7 @@
   "com.tempedge.msg.label.addDept"                                    : "Añadir Este Departamento",
   "com.tempedge.msg.label.deptName"                                   : "Nombre del departamento",
   "com.tempedge.msg.label.addPos"                                     : "Añadir Posicion",
+  "com.tempedge.error.recordexists"                                   : "La informacion ya existe en el sistema.",
   "com.tempedge.msg.label.mytimesheet"                                : "Horas Semanales",
   "com.tempedge.error.client.companyrequired"                         : "Compañia es requerida.",
   "com.tempedge.error.client.salesmanrequired"                        : "Vendedor es requerido.",

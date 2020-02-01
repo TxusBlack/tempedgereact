@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Field, FieldArray, reduxForm } from 'redux-form';
+import { Field, FieldArray, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -17,12 +16,14 @@ class WizardCreateNewUserFirstPage extends Component{
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  state= { mounted: false }
+  state = { mounted: false }
 
   componentDidMount(){
     this.setState(() => ({
       mounted: true
     }));
+
+    this.props.getDispatch(this.props.dispatch);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -33,6 +34,10 @@ class WizardCreateNewUserFirstPage extends Component{
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
+
+  resetAllData = () => {
+		this.props.dispatch(reset('CreateNewClient'));
+	}
 
   renderError(formProps){
     let fieldId='';
@@ -61,12 +66,13 @@ class WizardCreateNewUserFirstPage extends Component{
   }
 
   render(){
-    let salesmen = ["Paco", "Joaquin", "Alvaro", "Tom"];
-    let payrollCycle = ["1", "2", "3", "4"];
+    let salesmen = [{id:1, name: "Paco"}, {id:2, name: "Joaquin"}, {id:3, name: "Alvaro"}, {id:4, name: "Tom"}];
+    let payrollCycle = [{payrollCycle: "Monday - Sunday", payrollId: 1}, {payrollCycle: "Sunday - Saturday", payrollId: 0}, {payrollCycle: "Saturday - Friday", payrollId: -1}];
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
+        {this.props.resultBar}
           <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
             <div className="row new-client-form">
               <div className="col-lg-8 client-col">
@@ -84,11 +90,11 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.salesman"></Translate></label>
-                            <Field name="salesman" data={salesmen} valueField="value" textField="salesman" category="client" component={Dropdown} />
+                            <Field name="salesman" data={salesmen} valueField="id" textField="name" category="client" component={DropdownList} />
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payrollCycle"></Translate></label>
-                            <Field name="payrollCycle" data={payrollCycle} valueField="value" textField="payrollCycle" category="client" component={Dropdown} />
+                            <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={DropdownList} />
                           </div>
                         </div>
 
@@ -118,7 +124,7 @@ class WizardCreateNewUserFirstPage extends Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.comments"></Translate></label>
-                            <Field name="comments" type="text" placeholder="Enter Comments" category="client" component={InputBox} />
+                            <Field name="comments" type="textarea" placeholder="Enter Comments" category="client" component={InputBox} />
                           </div>
                         </div>
 
@@ -139,7 +145,7 @@ class WizardCreateNewUserFirstPage extends Component{
                             <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
                           </div>
                           <div className="col-md-5">
-                            <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.pristine}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                            <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
                           </div>
                         </div>
                       </div>

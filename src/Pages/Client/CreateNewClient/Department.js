@@ -10,8 +10,24 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-import { savePositionsList } from "../../../Redux/actions/tempEdgeActions";
-import { removeFromPositionList } from "../../../Redux/actions/tempEdgeActions";
+import { saveDepartmentList, saveBillRates } from "../../../Redux/actions/tempEdgeActions";
+import { SAVE_BILL_RATE, SAVE_OT_BILL_RATE } from '../../../Redux/actions/types.js';
+
+//Department Modal re-init data
+const reInitData = {
+	position:"",
+	description:"",
+	markup:"",
+	otmarkup:"",
+	payRate:"",
+	timeIn:"",
+	timeOut:"",
+	employeeContact:"",
+	contactPhone:"",
+	posList: [],
+	billRate: 0,
+	otBillRate: 0
+}
 
 class Department extends React.Component{
   state={
@@ -19,42 +35,86 @@ class Department extends React.Component{
     posArray: []
   }
 
-  componentDidMount(){
-    this.setState(() => ({
-      mounted: true
+  componentDidMount = async () => {
+		let positionsList = [];
+
+		if(typeof this.props.deptPosList !== 'undefined' && this.props.deptPosList.length > 0){
+			positionsList = await this.props.deptPosList.map((pos, index) => {
+				return pos;
+			});
+		}else{
+			this.props.change("CreateNewClient", "departmentname", "");
+		}
+
+    await this.setState(() => ({
+      mounted: true,
+			posList: positionsList
     }));
+
+		this.renderPositions();
   }
 
+	componentWillReceiveProps = (nextProps) => {
+		if(!Number.isNaN(nextProps.markup) && !Number.isNaN(nextProps.otmarkup) && !Number.isNaN(nextProps.payRate)){
+			let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
+			let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
+
+			this.props.saveBillRates(billRate, SAVE_BILL_RATE);
+			this.props.saveBillRates(otBillRate, SAVE_OT_BILL_RATE);
+
+			this.setState(() => ({
+				billRate: billRate,
+				otBillRate: otBillRate
+			}));
+		}
+	}
+
   increaseListSize = async () => {
+    let departmentname = this.props.departmentname;
     let newDeptPos = {
-      position: this.props.position,
+			bill: this.state.billRate.toFixed(2),
+      name: this.props.position,
       description: this.props.description,
-      payRate: this.props.payRate,
-      markup: this.props.markup,
-      otmarkup: this.props.otmarkup,
+      pay: this.props.payRate,
+      markUp: this.props.markup,
+      otMarkUp: this.props.otmarkup,
       timeIn: this.props.timeIn,
       timeOut: this.props.timeOut,
-      employeeContact: this.props.employeeContact,
+      contactName: this.props.employeeContact,
       contactPhone: this.props.contactPhone,
     };
 
-    await this.props.savePositionsList(newDeptPos);
+		let deptPosList = this.state.posList;
 
-    this.props.dispatch(change('CreateNewClient', 'position', ''));
-    this.props.dispatch(change('CreateNewClient', 'description', ''));
-    this.props.dispatch(change('CreateNewClient', 'payRate', ''));
-    this.props.dispatch(change('CreateNewClient', 'markup', ''));
-    this.props.dispatch(change('CreateNewClient', 'otmarkup', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeIn', ''));
-    this.props.dispatch(change('CreateNewClient', 'timeOut', ''));
-    this.props.dispatch(change('CreateNewClient', 'employeeContact', ''));
-    this.props.dispatch(change('CreateNewClient', 'contactPhone', ''));
+		deptPosList.push(newDeptPos);
+		this.setState(() => ({
+			posList: deptPosList
+		}));
 
-    this.renderPositions();
+    let reboot = reInitData;
+    reboot.departmentname = departmentname;
+		let objSize = Object.keys(this.props.formValues).length;
+		let counter = 0;
+
+		for (let prop in this.props.formValues) {
+			if(prop === "position" || prop === "description" || prop === "markup" || prop === "otmarkup" || prop === "payRate" || prop === "timeIn" || prop === "timeOut" || prop === "employeeContact" || prop === "contactPhone"){
+				reboot[prop] = "";
+			}else{
+				reboot[prop] = this.props.formValues[prop];
+			}
+
+			if(counter === objSize-1){
+				this.props.dispatch(initialize('CreateNewClient', reboot));
+				this.renderPositions();
+			}
+
+			counter++;
+		}
   }
 
   renderPositions = async () => {
-    let deptPosList = this.props.deptPosList;
+    let deptPosList = this.state.posList;
+
     let list = await deptPosList.map((position, index) => {
       let key = `positions-${index}`;
 
@@ -64,7 +124,7 @@ class Department extends React.Component{
             <a className="up-down-arrow pull-left" data-toggle="collapse" href={`#positions${index}`} role="button" aria-expanded="false" aria-controls={`positions${index}`}>
               <img src={downIcon} style={{width: 14, height: 11, display: "inline", marginLeft: 19}} alt="downIcon" />
             </a>
-            <span>{deptPosList[index].position}</span>
+            <span>{deptPosList[index].name}</span>
             <span className="pull-right">
               <img src={deleteIcon} className="client-dpt-btn-edit-delete" style={{marginLeft:17 , marginRight: 29, display: "inline"}} onClick={() => this.removeFromPosList(index)} alt="deleteIcon" />
             </span>
@@ -84,10 +144,10 @@ class Department extends React.Component{
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].payRate: ""}</td>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].markup: ""}</td>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].otmarkup: ""}</td>
-                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].employeeContact: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].pay: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].markUp: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].otMarkUp: ""}</td>
+                      <td>{(deptPosList[index] !== undefined)? deptPosList[index].contactName: ""}</td>
                       <td>{(deptPosList[index] !== undefined)? deptPosList[index].contactPhone: ""}</td>
                     </tr>
                   </tbody>
@@ -104,13 +164,64 @@ class Department extends React.Component{
   }
 
   removeFromPosList = async (index) => {
-    await this.props.removeFromPositionList(index);
+		let deptPosList = this.state.posList;
+		deptPosList.splice(index, 1);
+
+		await this.setState(() => ({
+			posList: deptPosList
+		}));
+
     this.renderPositions();
   }
 
+  renderClientDepts = async () => {
+		this.props.resetInitData();
+    this.props.dispatch(change('CreateNewClient', this.props.reInitData));
+		let departmentname = this.props.departmentname;
+		let newPosList = this.state.posList;
+		let newDeptList = this.props.deptList;
+
+    if(this.props.editMode.edit){
+      newDeptList[this.props.editMode.index].departmentName = this.props.departmentname;
+			newDeptList[this.props.editMode.index].positions = newPosList
+
+      await this.props.saveDepartmentList(newDeptList);
+      this.props.renderClientDepartmentsList({repaint: true});
+    }else{
+      newDeptList.push({
+        name: departmentname,
+				orgId: 1,
+        positions: newPosList
+      });
+
+      await this.props.saveDepartmentList(newDeptList);
+
+      this.props.renderClientDepartmentsList({repaint: false});
+    }
+
+    this.closePanel();
+  }
+
+  closePanel = () => {
+    this.props.closePanel();
+		this.props.resetInitData();
+    this.props.dispatch(initialize('CreateNewClient', this.props.reInitData));
+  }
+
+	calculateBillRates = (payRate, markup, op) => {
+		if(op === 'billRate'){
+			return (payRate*((markup/100) + 1));
+		}else{
+			return ((payRate*((markup/100) + 1)) * 1.5);
+		}
+	}
+
   render(){
-    console.log("this.props.deptPosList ---Department.js---: ", this.props.deptPosList);
     let positionsList = this.state.posArray;
+		let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
+		let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
+		let addPosBtnDisabled = (this.props.payRate === '' || this.props.markup === '' || this.props.otmarkup === '')? true: false;
+		let addDeptDisabled = (positionsList.length > 0 && this.props.departmentname !== '')? false: true;
 
     return(
       <div className="sign-up-wrapper" style={{margin: 0}}>
@@ -164,11 +275,11 @@ class Department extends React.Component{
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.billRate"></Translate></label>
-                            <p>30</p>
+                            <p style={{fontSize: 13}}>{(Number.isNaN(billRate))? "": billRate.toFixed(2)}</p>
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.otBillRate"></Translate></label>
-                            <p>15</p>
+                            <p style={{fontSize: 13}}>{(Number.isNaN(otBillRate))? "": otBillRate.toFixed(2)}</p>
                           </div>
                         </div>
 
@@ -197,13 +308,13 @@ class Department extends React.Component{
                       <div className="new-clients-footer">
                         <div className="prev-next-btns-agency row">
                           <div className="col-md-4">
-                            <button type="button" style={{backgroundColor: "#8cb544", backgroundImage: "none", color: "white"}} className="btn btn-default btn-block register-save-btn" onClick={this.increaseListSize} disabled={this.props.addPosDisabled}><Translate id="com.tempedge.msg.label.addPos"></Translate></button>
+                            <button type="button" style={{backgroundColor: "#8cb544", backgroundImage: "none", color: "white"}} className="btn btn-default btn-block register-save-btn" onClick={this.increaseListSize} disabled={addPosBtnDisabled}><Translate id="com.tempedge.msg.label.addPos"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
+                            <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.closePanel}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
                           </div>
                           <div className="col-md-4">
-                            <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={() => this.props.renderClientDepartmentsList({repaint: false})}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>
+                            {(!this.props.editMode.edit)? <button type="button" className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts} disabled={addDeptDisabled}><Translate id="com.tempedge.msg.label.addDept"></Translate></button>: <button className="btn btn-primary btn-block register-save-btn next" onClick={this.renderClientDepts} disabled={addDeptDisabled}><Translate id="com.tempedge.msg.label.save"></Translate></button>}
                           </div>
                         </div>
                       </div>
@@ -217,7 +328,7 @@ class Department extends React.Component{
                     <h2>Position List</h2>
                   </div>
 
-                  <div className="department-list-contents">
+                  <div className="position-list-contents">
                     <div>
                       <div style={{height: 10}}></div>
                       {positionsList.map((position, index) => {
@@ -235,10 +346,10 @@ class Department extends React.Component{
 }
 
 Department.propTypes = {
-  savePositionsList: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
-  removeFromPositionList: PropTypes.func.isRequired
+  saveDepartmentList: PropTypes.func.isRequired,
+	saveBillRates: PropTypes.func.isRequired
 }
 
 Department = reduxForm({
@@ -265,22 +376,21 @@ let mapStateToProps = (state) => {
   if(state.form.CreateNewClient !== undefined){
     if(state.form.CreateNewClient.values !== undefined){
       let formState = state.form.CreateNewClient.values;
-      addDeptDisabled = (formState.departmentname === "" || formState.payRate === "" || formState.markup === "" || formState.otmarkup === "" || formState.employeeContact === "" || formState.contactPhone === "")? true: false;
-      addPosDisabled = (formState.departmentname === "" || formState.payRate === "" || formState.markup === "" || formState.otmarkup === "" || formState.employeeContact === "" || formState.contactPhone === "")? true: false;
-      departmentname = formState.departmentname;
-      position = formState.position;
-      description = formState.description;
-      payRate = formState.payRate;
-      markup = formState.markup;
-      otmarkup = formState.otmarkup;
-      timeIn = formState.timeIn;
-      timeOut = formState.timeOut;
-      employeeContact = formState.employeeContact;
-      contactPhone = formState.contactPhone;
+      departmentname = (typeof formState.departmentname === 'undefined')? "":  formState.departmentname;
+      position = (typeof formState.position === 'undefined')? "": formState.position;
+      description = (typeof formState.description === 'undefined')? "": formState.description;
+      payRate = (typeof formState.payRate === 'undefined')? "": formState.payRate;
+      markup = (typeof formState.markup === 'undefined')? "": formState.markup;
+      otmarkup = (typeof formState.otmarkup === 'undefined')? "": formState.otmarkup;
+      timeIn = (typeof formState.timeIn === 'undefined')? "" : formState.timeIn;
+      timeOut = (typeof formState.timeOut === 'undefined')? "": formState.timeOut;
+      employeeContact = (typeof formState.employeeContact === 'undefined')? "": formState.employeeContact;
+      contactPhone = (typeof formState.contactPhone === 'undefined')? "": formState.contactPhone;
     }
   }
 
   return({
+    deptList: (state.tempEdge.deptList !== undefined)? state.tempEdge.deptList: [],
     deptPosList: state.tempEdge.deptPosList,
     departmentname: departmentname,
     position: position,
@@ -293,8 +403,9 @@ let mapStateToProps = (state) => {
     employeeContact: employeeContact,
     contactPhone: contactPhone,
     addDeptDisabled: addDeptDisabled,
-    addPosDisabled: addPosDisabled
+    addPosDisabled: addPosDisabled,
+		formValues: (typeof state.form.CreateNewClient !== 'undefined')? state.form.CreateNewClient.values: ""
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { savePositionsList, change, initialize, removeFromPositionList })(Department));
+export default withLocalize(connect(mapStateToProps, { saveDepartmentList, change, initialize, saveBillRates })(Department));
