@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Validate from '../../Validations/Validations';
+<<<<<<< HEAD
 import types from '../../../Redux/actions/types.js';
+=======
+import {GET_SALESMAN_LIST, GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST, CREATE_CLIENT } from '../../../Redux/actions/types.js';
+>>>>>>> firstversion
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
 import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.js';
 import WizardCreateNewClientThirdPage  from './WizardCreateNewClientThirdPage';
@@ -99,8 +103,18 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async() => {
+<<<<<<< HEAD
     this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
     this.props.getList('/api/funding/listAll', types.GET_FUNDING_LIST);
+=======
+    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
+    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.tempedgeAPI('/api/person/salesmanList', {
+      "orgId" : 1,
+     "page" : 0,
+     "size" : 5
+    }, GET_SALESMAN_LIST)
+>>>>>>> firstversion
   }
 
   componentWillUnmount = () => {
@@ -208,7 +222,8 @@ class CreateNewClient extends Component {
       clientSellers: [
         {
            person : {
-            personId : 1
+            personId : (typeof formValues.salesman  !== 'undefined' && formValues.salesman.personId !== 'undefined')? formValues.salesman.personId: 0,
+
            }
         },
         {

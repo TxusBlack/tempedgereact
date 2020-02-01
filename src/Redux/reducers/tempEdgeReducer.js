@@ -182,6 +182,11 @@ export default function(state = initialState, action){
         errorFields: errorFieldsArray,
         lastRemoved: action.payload
       }
+    case types.GET_SALESMAN_LIST:
+      return{
+        ...state,
+        salesmanList: action.payload
+      }
     default:
       return state;
   }
