@@ -65,7 +65,7 @@ let HttpService = {
   postImages: async (url, data) => {
     let bodyFormData = new FormData();
 
-    let newArray = await data.map( (img, index) => {   //'newArray' holds the promise returned by await, do not remove
+    await data.map( (img, index) => {   //'newArray' holds the promise returned by await, do not remove
       let file = dataURLtoFile(img, `user-${index}.jpeg`);
       bodyFormData.append('file', file);
     });

@@ -51,7 +51,6 @@ let validate = (formValues) => {
       errors.email = 'Invalid email address.'
   }
 
-<<<<<<< HEAD
   // if(!formValues.gender){
   //   errors.gender = 'Please select a gender.';
   // }
@@ -130,10 +129,6 @@ let validate = (formValues) => {
 
   if(!formValues.numberofallowances){
     errors.numberofallowances = "Number of allowances required."
-=======
-  if(!formValues.birthday){
-    errors.birthday = "Please enter your birthday";
->>>>>>> firstversion
   }
 
   if(!formValues.agencyrole){

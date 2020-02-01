@@ -13,7 +13,7 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE 
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
-import { GET_COUNTRY_REGION_LIST, SKILLS_LIST, GET_ORG_DEPARTMENT_LIST, GET_OFFICE_LIST, TEMPEDGE_LIST, VALIDATE_PERSON, PERSON_SAVE } from '../../../Redux/actions/types.js';
+import types from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
@@ -71,13 +71,13 @@ class CreateEmployee extends Component {
     }
 
     componentDidMount = async() => {
-      await this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-      await this.props.getListSafe('/api/orgdepartment/findAll', { "orgId" : 1 }, GET_ORG_DEPARTMENT_LIST);
-      await this.props.getListSafe('/api/office/findAll', { "orgId" : 1 }, GET_OFFICE_LIST);
+      await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+      await this.props.getListSafe('/api/orgdepartment/findAll', { "orgId" : 1 }, types.GET_ORG_DEPARTMENT_LIST);
+      await this.props.getListSafe('/api/office/findAll', { "orgId" : 1 }, types.GET_OFFICE_LIST);
       let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
       parent.closest(".tabs-stepper-wrapper").css("max-width", "1600px");
 
-      await this.props.getListSafe("/api/person/skillList", { "orgId" : 1 },  SKILLS_LIST);
+      await this.props.getListSafe("/api/person/skillList", { "orgId" : 1 }, types.SKILLS_LIST);
 
       let todaysDate = new Date();
       let backDate = todaysDate.setFullYear(todaysDate.getFullYear()-18);
@@ -231,7 +231,7 @@ class CreateEmployee extends Component {
             //Validation Found multiple records with similar fields
             if(nextProps.validatePerson.data.result !== null){
               let save = () => {
-                this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, this.state.fileArray, PERSON_SAVE);
+                this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, this.state.fileArray, types.PERSON_SAVE);
                 this.props.clearTempedgeStoreProp('validatePerson');
 
                 this.setState(() => ({
@@ -403,7 +403,6 @@ class CreateEmployee extends Component {
                "phone" : formValues.phone,
                "region" : formValues.state.regionId,
                "taxRegion": formValues.joblocation.regionId,
-               "temporalInfo" : false,
                "usrCreatedBy" : agency.portalUserConfId,
                "zipcode" : formValues.zip,
                "docExt": null,
@@ -431,7 +430,7 @@ class CreateEmployee extends Component {
                 formData: {...data},
                 fileArray
               }), () => {
-                this.props.tempedgeAPI("/api/person/validate", data, VALIDATE_PERSON);
+                this.props.tempedgeAPI("/api/person/validate", data, types.VALIDATE_PERSON);
               });
       });
     }
@@ -459,7 +458,7 @@ class CreateEmployee extends Component {
     }
 
     onSave = () => {
-      this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, this.state.fileArray, PERSON_SAVE);
+      this.props.tempedgeMultiPartApi("/api/person/save", this.state.formData, this.state.fileArray, types.PERSON_SAVE);
       this.props.clearTempedgeStoreProp('validatePerson');
     }
 
@@ -793,7 +792,6 @@ let mapStateToProps = (state) => {
       orgDepartmentList: (typeof state.tempEdge.orgDepartmentList !== 'undefined')? state.tempEdge.orgDepartmentList: [],
       officeList: (typeof state.tempEdge.officeList !== 'undefined')? state.tempEdge.officeList: [],
       country: selector(state, 'country'),
-      skillsList: state.tempEdge.skillsList,
       backgroundTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTest: null,
       drugTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.drugTest: null,
       birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null,

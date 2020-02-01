@@ -6,7 +6,7 @@ import { notify } from 'reapop';
 import { reset } from 'redux-form';
 import httpService from '../../../utils/services/httpService/httpService.js';
 import { getList } from '../../../Redux/actions/tempEdgeActions';
-import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST } from '../../../Redux/actions/types.js';
+import types from '../../../Redux/actions/types.js';
 import WizardCreateNewAgencyrFirstPage  from './WizardCreateNewAgencyFirstPage.js';
 import WizardCreateNewAgencySecondPage  from './WizardCreateNewAgencySecondPage.js';
 import WizardCreateNewAgencyThirdPage   from './WizardCreateNewAgencyThirdPage';
@@ -36,8 +36,8 @@ class CreateNewAgency extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+    this.props.getList('/api/funding/listAll', types.GET_FUNDING_LIST);
   }
 
   nextPage(){

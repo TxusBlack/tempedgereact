@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Validate from '../../Validations/Validations';
-import { GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST, CREATE_CLIENT } from '../../../Redux/actions/types.js';
+import types from '../../../Redux/actions/types.js';
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
 import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.js';
 import WizardCreateNewClientThirdPage  from './WizardCreateNewClientThirdPage';
@@ -18,9 +18,6 @@ import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses 
 import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
-<<<<<<< HEAD
-import { getList, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
-=======
 import { getList, tempedgeAPI, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList } from "../../../Redux/actions/tempEdgeActions";
 
 //Department Modal re-init data
@@ -69,7 +66,6 @@ const reInitFormData = {
 	clientcontactphone: "",
 	clientcontactcellphone: ""
 }
->>>>>>> firstversion
 
 class CreateNewClient extends Component {
   constructor(props) {
@@ -103,17 +99,14 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async() => {
-    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
-<<<<<<< HEAD
-=======
+    this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+    this.props.getList('/api/funding/listAll', types.GET_FUNDING_LIST);
   }
 
   componentWillUnmount = () => {
     this.props.saveDepartmentList([]);
     this.props.savePositionsList([]);
 		this.state.reduxFormDispatch(initialize('CreateNewClient', reInitFormData));
->>>>>>> firstversion
   }
 
 	componentWillReceiveProps = (nextprops) => {
@@ -229,7 +222,7 @@ class CreateNewClient extends Component {
 		this.setState(() => ({
 			submitted: 1
 		}), () => {
-			this.props.tempedgeAPI('/api/client/save', response, CREATE_CLIENT);
+			this.props.tempedgeAPI('/api/client/save', response, types.CREATE_CLIENT);
 		});
   }
 
@@ -445,8 +438,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-<<<<<<< HEAD
-export default withLocalize(connect(mapStateToProps, { notify, getList, reset, change, saveDepartmentList, savePositionsList, removeFromPositionList, removeFromDepartmentList  })(CreateNewClient));
-=======
-export default withLocalize(connect(mapStateToProps, { getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI })(CreateNewClient));
->>>>>>> firstversion
+export default withLocalize(connect(mapStateToProps, { getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI  })(CreateNewClient));

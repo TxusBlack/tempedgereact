@@ -1,19 +1,5 @@
 
-import { LOGIN, 
-  SAVE_FORM_POSITION, 
-  SAVE_FILTER_LIST, 
-  SAVE_DEPARTMENTS_LIST, 
-  SAVE_POSITIONS_LIST, 
-  REMOVE_FROM_POSITIONS_LIST, 
-  REMOVE_FROM_DEPARTMENTS_LIST, 
-  SKILLS_LIST, VALIDATE_PERSON, 
-  PERSON_SAVE, CLEAR_PROP, 
-  CLEAR_ERROR_FIELD, 
-  SET_ERROR_FIELD, 
-  REMOVE_ERROR_FIELD ,
-  CREATE_CLIENT, 
-  SAVE_BILL_RATE, 
-  SAVE_OT_BILL_RATE } from './types';
+import types from './types';
 
 import history from '../../history.js';
 import Axios from 'axios';
@@ -45,7 +31,7 @@ export let doLogin = (url, data) => {
           sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
 
           dispatch({
-            type: LOGIN,
+            type: types.LOGIN,
             payload: response.data.result
           });
 
@@ -105,7 +91,7 @@ export let tempedgeAPI = (url, data, actionName) => {
     }).then((response) => {
       dispatch({
         type: actionName,
-        payload: err
+        payload: response
       });
     });
   }
@@ -139,7 +125,7 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
       .then(response => {
         dispatch({
           type: actionName,
-          payload: (actionName !== VALIDATE_PERSON && actionName !== PERSON_SAVE)? response.data.result: response
+          payload: (actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE)? response.data.result: response
         });
       });
   }
@@ -148,7 +134,7 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
 export let clearTempedgeStoreProp = (actionProp) => {
   return (dispatch) => {
     dispatch({
-      type: CLEAR_PROP,
+      type: types.CLEAR_PROP,
       payload: actionProp
     })
   }
@@ -157,7 +143,7 @@ export let clearTempedgeStoreProp = (actionProp) => {
 export let clearErrorField = (actionProp) => {
   return (dispatch) => {
     dispatch({
-      type: CLEAR_ERROR_FIELD,
+      type: types.CLEAR_ERROR_FIELD,
       payload: {
         errorFields: [],
         lastRemoved: ''
@@ -200,7 +186,7 @@ export let getList = (url, actionName) => {
 export let storeFormPageNumber = (formName, position) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_FORM_POSITION,
+      type: types.SAVE_FORM_POSITION,
       payload: {
         form: formName,
         pos: position
@@ -224,7 +210,7 @@ export let getFilters = (url, data, actionName) => {
 export let saveDepartmentList = (deptList) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_DEPARTMENTS_LIST,
+      type: types.SAVE_DEPARTMENTS_LIST,
       payload: deptList
     });
   }
@@ -233,7 +219,7 @@ export let saveDepartmentList = (deptList) => {
 export let savePositionsList = (positionsList) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_POSITIONS_LIST,
+      type: types.SAVE_POSITIONS_LIST,
       payload: positionsList
     });
   }
@@ -242,7 +228,7 @@ export let savePositionsList = (positionsList) => {
 export let saveToPositionsList = (newPos) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_TO_POSITIONS_LIST,
+      type: types.SAVE_TO_POSITIONS_LIST,
       payload: newPos
     });
   }
@@ -251,7 +237,7 @@ export let saveToPositionsList = (newPos) => {
 export let removeFromDepartmentList = (index) => {
   return (dispatch) => {
     dispatch({
-      type: REMOVE_FROM_DEPARTMENTS_LIST,
+      type: types.REMOVE_FROM_DEPARTMENTS_LIST,
       payload: index
     });
   }
@@ -261,7 +247,7 @@ export let removeFromDepartmentList = (index) => {
 export let setErrorField = (fieldName) => {
   return (dispatch) => {
     dispatch({
-      type: SET_ERROR_FIELD,
+      type: types.SET_ERROR_FIELD,
       payload: fieldName
     });
   }
@@ -270,7 +256,7 @@ export let setErrorField = (fieldName) => {
 export let removeErrorField = (fieldName) => {
   return (dispatch) => {
     dispatch({
-      type: REMOVE_ERROR_FIELD,
+      type: types.REMOVE_ERROR_FIELD,
       payload: fieldName
     });
   }

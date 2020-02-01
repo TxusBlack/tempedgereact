@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { push } from 'connected-react-router';
-import { TEMPEDGE_LIST } from '../../../Redux/actions/types.js'
+import types from '../../../Redux/actions/types.js'
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
@@ -29,7 +29,7 @@ class PaginatedTable extends Component {
 
         if(typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined' ){
           payload.data = this.props.payload;
-          this.props.tempedgeAPI(this.props.apiUrl, payload, TEMPEDGE_LIST);
+          this.props.tempedgeAPI(this.props.apiUrl, payload, types.TEMPEDGE_LIST);
         }
     }
 
@@ -41,7 +41,7 @@ class PaginatedTable extends Component {
             filterBy: this.state.filterBy
         };
 
-        this.props.tempedgeAPI(this.props.apiUrl,payload, TEMPEDGE_LIST);
+        this.props.tempedgeAPI(this.props.apiUrl,payload, types.TEMPEDGE_LIST);
     }
 
     applyFilter = (sortBy, filterValue) =>{
@@ -57,7 +57,7 @@ class PaginatedTable extends Component {
                 orgId : 1,
                 page : this.state.tablePage,
                 filterBy : filter
-            },  TEMPEDGE_LIST);
+            },  types.TEMPEDGE_LIST);
     }
 
     render() {

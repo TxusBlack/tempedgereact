@@ -1,34 +1,4 @@
-import {
-  LOGIN,
-  GET_COUNTRY_REGION_LIST,
-  GET_FUNDING_LIST,
-  GET_ROLE_LIST,
-  CREATE_CLIENT,
-  SAVE_FORM_POSITION,
-  TEMPEDGE_LIST,
-  SAVE_DEPARTMENTS_LIST,
-  SAVE_TO_DEPARTMENTS_LIST,
-  SAVE_POSITIONS_LIST,
-  SAVE_TO_POSITIONS_LIST,
-  REMOVE_FROM_POSITIONS_LIST,
-  SKILLS_LIST,
-  GET_ORG_DEPARTMENT_LIST,
-  REMOVE_FROM_DEPARTMENTS_LIST,
-<<<<<<< HEAD
-  GET_ACTIVITY_LIST,
-  GET_OFFICE_LIST,
-  VALIDATE_PERSON,
-  PERSON_SAVE,
-  CLEAR_PROP,
-  CLEAR_ERROR_FIELD,
-  SET_ERROR_FIELD,
-  REMOVE_ERROR_FIELD
-=======
-  SAVE_BILL_RATE,
-  SAVE_OT_BILL_RATE,
-  GET_ACTIVITY_LIST
->>>>>>> firstversion
-} from '../actions/types';
+import types from '../actions/types';
 
 let initialState = {
   login: '',
@@ -38,81 +8,78 @@ let initialState = {
 
 export default function(state = initialState, action){
   switch(action.type){
-    case LOGIN:
+    case types.LOGIN:
       return{
         ...state,
         login: action.payload
       };
-    case GET_COUNTRY_REGION_LIST:
+    case types.GET_COUNTRY_REGION_LIST:
       return{
         ...state,
         country_region_list: action.payload
       };
-    case GET_FUNDING_LIST:
+    case types.GET_FUNDING_LIST:
       return{
         ...state,
         funding_list: action.payload
       }
-    case GET_ROLE_LIST:
+    case types.GET_ROLE_LIST:
       return{
         ...state,
         role_list: action.payload
       }
-    case TEMPEDGE_LIST:
+    case types.TEMPEDGE_LIST:
       return{
         ...state,
         paginatorList: action.payload
       }
-<<<<<<< HEAD
-    case SKILLS_LIST:
+    case types.SKILLS_LIST:
       return{
         ...state,
         skillsList: action.payload
       }
-    case VALIDATE_PERSON:
+    case types.VALIDATE_PERSON:
       return{
         ...state,
         validatePerson: action.payload
       }
-    case PERSON_SAVE:
+    case types.PERSON_SAVE:
       return{
         ...state,
         savePerson: action.payload
       }
-    case GET_ORG_DEPARTMENT_LIST:
+    case types.GET_ORG_DEPARTMENT_LIST:
       return{
         ...state,
         orgDepartmentList: action.payload
       }
-    case GET_OFFICE_LIST:
+    case types.GET_OFFICE_LIST:
       return{
         ...state,
         officeList: action.payload
-=======
-    case CREATE_CLIENT:
-      console.log("action.payload: ", action.payload);
+      }
+    case types.CREATE_CLIENT:
       return{
         ...state,
         client: action.payload
->>>>>>> firstversion
       }
-    case SAVE_FORM_POSITION:
+    case types.SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;
       return{
         ...state,
         [formPosition]: action.payload
       }
-    case SAVE_DEPARTMENTS_LIST:
+    case types.SAVE_DEPARTMENTS_LIST:
       return{
         ...state,
         deptList: action.payload
       }
-    case SAVE_POSITIONS_LIST:
+    case types.SAVE_POSITIONS_LIST:
       return{
         ...state,
         deptPosList: action.payload
       }
-    case SAVE_TO_POSITIONS_LIST:
+    case types.SAVE_TO_POSITIONS_LIST:
       let newState =  (typeof state.deptPosList === "undefined")? []: state.deptPosList;
 
       if(action.payload === "CLEAR"){
@@ -125,7 +92,7 @@ export default function(state = initialState, action){
         ...state,
         deptPosList: newState
       }
-    case REMOVE_FROM_POSITIONS_LIST:
+    case types.REMOVE_FROM_POSITIONS_LIST:
       let newPosListState = state.deptPosList;
       let posIndex = action.payload;
 
@@ -139,7 +106,7 @@ export default function(state = initialState, action){
           ...state,
           deptPosList: newPosListState
       }
-    case REMOVE_FROM_DEPARTMENTS_LIST:
+    case types.REMOVE_FROM_DEPARTMENTS_LIST:
       let newDeptListState = state.deptList;
       let index = action.payload;
 
@@ -153,19 +120,18 @@ export default function(state = initialState, action){
         ...state,
         deptList: newDeptListState
       }
-<<<<<<< HEAD
-    case CLEAR_PROP:
+    case types.CLEAR_PROP:
       return{
         ...state,
         [action.payload]: undefined
       }
-    case CLEAR_ERROR_FIELD:
+    case types.CLEAR_ERROR_FIELD:
       return{
         ...state,
         errorFields: action.payload.errorFields,
         lastRemoved: action.payload.lastRemoved
       }
-    case SET_ERROR_FIELD:
+    case types.SET_ERROR_FIELD:
       let errorFields = (typeof state.errorFields === 'undefined')? []: [...state.errorFields];
       let error = action.payload;
 
@@ -178,7 +144,7 @@ export default function(state = initialState, action){
         errorFields: errorFields,
         lastRemoved: ''
       }
-    case REMOVE_ERROR_FIELD:
+    case types.REMOVE_ERROR_FIELD:
       let errorFieldsArray = (typeof state.errorFields === 'undefined')? []: [...state.errorFields];
       let error_ = action.payload;
       let foundIndex = -1;
@@ -194,20 +160,18 @@ export default function(state = initialState, action){
       if(foundIndex > -1){
         errorFieldsArray.splice(foundIndex, 1);
       }
-
-=======
-    case SAVE_BILL_RATE:
+      break;
+    case types.SAVE_BILL_RATE:
       return{
         ...state,
         billRate: action.payload
       }
-    case SAVE_OT_BILL_RATE:
+    case types.SAVE_OT_BILL_RATE:
       return{
         ...state,
         otBillRate: action.payload
       }
-    case GET_ACTIVITY_LIST:
->>>>>>> firstversion
+    case types.GET_ACTIVITY_LIST:
       return{
         ...state,
         errorFields: errorFieldsArray,

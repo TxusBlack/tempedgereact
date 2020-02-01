@@ -54,7 +54,6 @@
   "com.tempedge.msg.label.ssnonly"                                    : "Numero de Seguro Social",
   "com.tempedge.msg.label.dept"                                       : "Dept",
   "com.tempedge.msg.label.phone"                                      : "Teléfono",
-<<<<<<< HEAD
   "com.tempedge.msg.label.drugtest"                                   : "Prueba de Drogas",
   "com.tempedge.msg.label.backgroundtest"                             : "Chequeo de Antecedentes",
   "com.tempedge.msg.label.affirmative"                                : "Si",
@@ -64,12 +63,10 @@
   "com.tempedge.msg.label.choosefile"                                 : "Escoger Archivo",
   "com.tempedge.msg.label.validatedpersonlist"                        : "Validacion de Empleado",
   "com.tempedge.msg.label.resume"                                     : "Curriculum Vitae",
-=======
   "com.tempedge.msg.person.newclient"                                 : "Nuevo cliente creado.",
   "com.tempedge.msg.label.hiredate"                                   : "Fecha de contrato",
   "com.tempedge.error.invaliddata"                                    : "Datos Invalidos.",
   "com.tempedge.error.undefine"                                       : "Error de Servidor",
->>>>>>> firstversion
   "com.tempedge.error.passwordnomatch"                                : "Contraseña no es igual.",
   "com.tempedge.error.phonenumberrequired"                            : "Teléfono es requerido.",
   "com.tempedge.error.officeNamerequired"                             : "Nombre es requerido.",
