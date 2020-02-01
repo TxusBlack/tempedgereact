@@ -160,7 +160,11 @@ export default function(state = initialState, action){
       if(foundIndex > -1){
         errorFieldsArray.splice(foundIndex, 1);
       }
-      break;
+
+      return{
+        ...state,
+        errorFields: errorFieldsArray
+      }
     case types.SAVE_BILL_RATE:
       return{
         ...state,

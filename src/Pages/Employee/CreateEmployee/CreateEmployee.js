@@ -71,6 +71,11 @@ class CreateEmployee extends Component {
     }
 
     componentDidMount = async() => {
+      let gendersTranslate = [];
+      let drugTest = [];
+      let backgroundTest = [];
+      let maritalStatus = [];
+
       await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
       await this.props.getListSafe('/api/orgdepartment/findAll', { "orgId" : 1 }, types.GET_ORG_DEPARTMENT_LIST);
       await this.props.getListSafe('/api/office/findAll', { "orgId" : 1 }, types.GET_OFFICE_LIST);
@@ -91,12 +96,24 @@ class CreateEmployee extends Component {
       });
 
       this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
+      await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
+      await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
+      await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
+      await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
+      await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text());
+      await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestNegativeOption)).text());
+      await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusAffirmativeOption)).text());
+      await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusNegativeOption)).text());
 
       this.setState(() => ({
         mounted: true,
         countryListRendered: this.state.countryListRendered+1,
         country_list: list,
-        regionsList: states
+        regionsList: states,
+        genders: gendersTranslate,
+        drugTest: drugTest,
+        backgroundTest: backgroundTest,
+        maritalStatus: maritalStatus
       }));
     }
 
@@ -138,7 +155,7 @@ class CreateEmployee extends Component {
       let hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
       if(hasActiveLanguageChanged){
-        this.props.push(`/employee/create/${this.props.activeLanguage.code}`);
+        this.props.push(`/employee/new/${this.props.activeLanguage.code}`);
         this.addTranslationsForActiveLanguage();
       }
     }

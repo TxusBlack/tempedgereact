@@ -92,6 +92,11 @@ export let tempedgeAPI = (url, data, actionName) => {
       dispatch({
         type: actionName,
         payload: response
+      })
+    }).catch((err) => {
+      dispatch({
+        type: actionName,
+        payload: err
       });
     });
   }
@@ -125,7 +130,12 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
       .then(response => {
         dispatch({
           type: actionName,
-          payload: (actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE)? response.data.result: response
+          payload: (actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE && actionName !== types.CREATE_CLIENT)? response.data.result: response
+        });
+      }).catch((err) => {
+        dispatch({
+          type: actionName,
+          payload: err
         });
       });
   }
@@ -254,6 +264,7 @@ export let setErrorField = (fieldName) => {
 }
 
 export let removeErrorField = (fieldName) => {
+  console.log("fieldName: ", fieldName);
   return (dispatch) => {
     dispatch({
       type: types.REMOVE_ERROR_FIELD,
