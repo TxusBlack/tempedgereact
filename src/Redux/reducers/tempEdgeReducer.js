@@ -163,7 +163,8 @@ export default function(state = initialState, action){
 
       return{
         ...state,
-        errorFields: errorFieldsArray
+        errorFields: errorFieldsArray,
+        lastRemoved: error_
       }
     case types.SAVE_BILL_RATE:
       return{

@@ -264,7 +264,6 @@ export let setErrorField = (fieldName) => {
 }
 
 export let removeErrorField = (fieldName) => {
-  console.log("fieldName: ", fieldName);
   return (dispatch) => {
     dispatch({
       type: types.REMOVE_ERROR_FIELD,
