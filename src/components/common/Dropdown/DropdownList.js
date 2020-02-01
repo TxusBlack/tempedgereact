@@ -58,10 +58,8 @@ const DropdownList = (formProps) => {
         options={formProps.data}
         onChange={(value) => formProps.input.onChange(value)}
         onBlur={() => formProps.input.onBlur(formProps.input.value)}
-        // onChange={value => this.handleChange(value)}
         getOptionLabel={(option) => `${option[formProps.textField]} `}
         getOptionValue={(option) => `${option[formProps.valueField]} `}
-        // className={errorClass}
         clearable
         styles={customStyles}
         placeholder="Select"

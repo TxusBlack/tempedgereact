@@ -25,7 +25,8 @@ export let doLogin = (url, data) => {
           },
           data: data,
           params: {
-            access_token: token
+            access_token: token,
+            browser : 'WEB'
           }
         }).then(async (response) => {
           sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
