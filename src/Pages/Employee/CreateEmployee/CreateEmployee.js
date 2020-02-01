@@ -202,31 +202,33 @@ class CreateEmployee extends Component {
       }
 
       if(typeof nextProps.country_region_list !== 'undefined'){
-        let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
-        let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
-        let states = await regionsList.map((state, index) => {
-          return state.name;
-        });
-
-        this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
-        this.props.dispatch(change('NewEmployee', 'state', { name: 'New Jersey', countryId: 4134 }));
-
-        this.setState(() => ({
-          countryListRendered: this.state.countryListRendered+1,
-          country_list: list,
-          regionsList: states,
-        }), async () => {
-          let regionsList = [];
-
-          regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, (typeof nextProps.country === 'undefined')? "United States": nextProps.country.name);
-
-          this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
-          this.setState({
-            countryListRendered: this.state.countryListRendered+1,
-            prevCountry: (typeof nextProps.country === 'undefined')? "United States": nextProps.country.name,
-            region_list: regionsList
+        if(this.state.getCountryList){
+          let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
+          let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
+          let states = await regionsList.map((state, index) => {
+            return state.name;
           });
-        });
+
+          this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
+          this.props.dispatch(change('NewEmployee', 'state', { name: 'New Jersey', countryId: 4134 }));
+
+          this.setState(() => ({
+            countryListRendered: this.state.countryListRendered+1,
+            country_list: list,
+            regionsList: states,
+          }), async () => {
+            let regionsList = [];
+
+            regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, (typeof nextProps.country === 'undefined')? "United States": nextProps.country.name);
+
+            this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
+            this.setState({
+              countryListRendered: this.state.countryListRendered+1,
+              prevCountry: (typeof nextProps.country === 'undefined')? "United States": nextProps.country.name,
+              region_list: regionsList
+            });
+          });
+        }
       }
 
       if(typeof nextProps.country !== 'undefined'){
