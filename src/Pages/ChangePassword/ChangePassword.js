@@ -4,13 +4,12 @@ import { reset, change, untouch } from 'redux-form';
 import PropTypes from 'prop-types';
 import InputBox from '../../components/common/InputBox/InputBox.js';
 import { Field, reduxForm } from 'redux-form';
-import { withLocalize, Translate } from 'react-localize-redux';
+import { withLocalize, Translate, getTranslate } from 'react-localize-redux';
 import Captcha from '../../components/common/Captcha/Captcha';
 import Validate from '../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
-import { doLogin } from '../../Redux/actions/tempEdgeActions';
 
 class ChangePassword extends Component {
   constructor(props, context) {
@@ -54,20 +53,19 @@ class ChangePassword extends Component {
   };
 
   onSubmit = async (formValues) => {
-    let values = formValues;
+    const values = formValues;
     values.grant_type = 'password';
+    console.log(values);
 
-    await this.props.doLogin('/api/login', values);
-
-    this.fireNotification();
+    // this.fireNotification();
   };
 
   fireNotification = () => {
     const { notify } = this.props;
 
     notify({
-      title: 'Login Submitted',
-      message: 'you clicked on the Submit button',
+      title: 'Password changed',
+      message: 'you clicked on the Change password button',
       status: 'success',
       position: 'br',
       dismissible: true,
@@ -93,7 +91,18 @@ class ChangePassword extends Component {
                       <label className="control-label">
                         <Translate id="com.tempedge.msg.label.current_password" />
                       </label>
-                      <Field name="password" placeholder="Enter your current password" type="text" category="person" component={InputBox} />
+
+                      <Translate>
+                        {({ translate }) => (
+                          <Field
+                            name="password"
+                            placeholder={translate('com.tempedge.msg.label.enter_current_password')}
+                            type="password"
+                            category="person"
+                            component={InputBox}
+                          />
+                        )}
+                      </Translate>
                     </div>
                   </div>
                   <div className="form-group row">
@@ -101,7 +110,18 @@ class ChangePassword extends Component {
                       <label className="control-label">
                         <Translate id="com.tempedge.msg.label.new_password" />
                       </label>
-                      <Field name="initialpassword" placeholder="Enter your new password" type="password" category="person" component={InputBox} />
+
+                      <Translate>
+                        {({ translate }) => (
+                          <Field
+                            name="initialpassword"
+                            placeholder={translate('com.tempedge.msg.label.enter_new_password')}
+                            type="password"
+                            category="person"
+                            component={InputBox}
+                          />
+                        )}
+                      </Translate>
                     </div>
                   </div>
                   <div className="form-group row">
@@ -109,7 +129,18 @@ class ChangePassword extends Component {
                       <label className="control-label">
                         <Translate id="com.tempedge.msg.label.confirmpassword" />
                       </label>
-                      <Field name="confirmpassword" placeholder="Comfirm your new password" type="password" category="person" component={InputBox} />
+
+                      <Translate>
+                        {({ translate }) => (
+                          <Field
+                            name="confirmpassword"
+                            placeholder={translate('com.tempedge.msg.label.confirm_new_password')}
+                            type="password"
+                            category="person"
+                            component={InputBox}
+                          />
+                        )}
+                      </Translate>
                     </div>
                   </div>
                   <div className="form-group">
@@ -150,4 +181,4 @@ ChangePassword = reduxForm({
   validate: Validate,
 })(ChangePassword);
 
-export default withLocalize(connect(mapStateToProps, { doLogin, push, notify, reset, change, untouch })(ChangePassword));
+export default withLocalize(connect(mapStateToProps, { push, notify, reset, change, untouch })(ChangePassword));
