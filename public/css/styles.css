@@ -73,26 +73,14 @@ body {
   width: 100%;
   min-height: 40px;
   font-size: 1.5rem;
-<<<<<<< HEAD
-=======
-  margin-bottom: 1rem;
->>>>>>> firstversion
 }
 
 .announcement-bar p{
   padding: 11.5px 10px;
-<<<<<<< HEAD
 }
 
 .success{
   background-color: #98FB98;
-=======
-  margin-bottom: 0;
-}
-
-.success{
-  background-color: #98FBB2;
->>>>>>> firstversion
   color: #008000
 }
 
