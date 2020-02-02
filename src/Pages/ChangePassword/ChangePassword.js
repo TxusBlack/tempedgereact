@@ -4,7 +4,7 @@ import { reset, change, untouch } from 'redux-form';
 import PropTypes from 'prop-types';
 import InputBox from '../../components/common/InputBox/InputBox.js';
 import { Field, reduxForm } from 'redux-form';
-import { withLocalize, Translate, getTranslate } from 'react-localize-redux';
+import { withLocalize, Translate } from 'react-localize-redux';
 import Captcha from '../../components/common/Captcha/Captcha';
 import Validate from '../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
