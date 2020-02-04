@@ -26,6 +26,7 @@ import UploadFile from './components/common/UploadFile/UploadFile';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Error from './Pages/Error/Error';
 import EmployeeList from './Pages/Employee/EmployeeList/EmployeeList';
+import CreateEmployee from './Pages/Employee/CreateEmployee/CreateEmployee';
 import ClientList from './Pages/Client/ClientList/ClientList';
 import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
@@ -93,6 +94,7 @@ class App extends React.Component{
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
                   <PrivateRoute exact path="/employee/list/:lang" component={EmployeeList} />
+                  <PrivateRoute exact path="/employee/new/:lang" component={CreateEmployee} />
                   <PrivateRoute exact path="/client/list/:lang" component={ClientList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />

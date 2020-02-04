@@ -9,7 +9,7 @@ class TPaginator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        prevBtn : false, 
+        prevBtn : false,
         nextBtn : false
     }
   }
@@ -57,17 +57,17 @@ class TPaginator extends Component {
 
     if (prevBtn) {
       paginator.push(
-        <button type="submit" className="btn " 
-            onClick={()=>this.onClickChangePage(aPage-1)} 
+        <button type="submit" className="btn "
+            onClick={()=>this.onClickChangePage(aPage-1)}
             style={{ borderRadius: 25, margin: '0 3px', backgroundColor: "#888888", color: "#FFF", padding: "5px 30px" }}>
-          
+
           Prev
         </button>
       );
     }
 
     if (btns > 0) {
-      
+
       for (let i = initPage; i < btns; i++) {
         let btnClass = '#888888';
         if(i==aPage){
@@ -96,7 +96,7 @@ class TPaginator extends Component {
   render() {
 
     let totalPages = this.props.totalPages ? this.props.totalPages : 1;
-    let actualPage = this.props.actualPage +1; 
+    let actualPage = this.props.actualPage +1;
 
     return (
 
@@ -111,10 +111,12 @@ class TPaginator extends Component {
   }
 }
 
-let mapStatetoProps = (state) => ({    //rootReducer calls 'postReducer' which returns an object with previous(current) state and new data(items) onto a prop called 'posts' as we specified below
+let mapStatetoProps = (state) => {
+  return {    //rootReducer calls 'postReducer' which returns an object with previous(current) state and new data(items) onto a prop called 'posts' as we specified below
     paginatorList: state.tempEdge.paginatorList,    //'posts', new prop in component 'Posts'. 'state.postReducer', the object where our reducer is saved in the redux state, must have same name as the reference
-    totalPages : state.tempEdge.paginatorList.data.totalPages,
-    actualPage : state.tempEdge.paginatorList.data.number,
-})
+    totalPages : (typeof state.tempEdge.paginatorList !== 'undefined') ? state.tempEdge.paginatorList.data.totalPages: null,
+    actualPage : (typeof state.tempEdge.paginatorList !== 'undefined') ? state.tempEdge.paginatorList.data.number: null,
+  }
+}
 
 export default withLocalize(connect(mapStatetoProps, { push })(TPaginator));

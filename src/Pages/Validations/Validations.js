@@ -51,8 +51,84 @@ let validate = (formValues) => {
       errors.email = 'Invalid email address.'
   }
 
-  if(!formValues.birthday){
-    errors.birthday = "Please enter your birthday";
+  // if(!formValues.gender){
+  //   errors.gender = 'Please select a gender.';
+  // }
+
+  if(!formValues.temporarydata){
+    errors.temporarydata = 'Please enter temporary data.';
+  }
+
+  if(!formValues.office){
+    errors.office = 'Please enter office.';
+  }
+
+  if(!formValues.ssn){
+    errors.ssn = 'Please enter social secuirty number.';
+  }
+
+  if(!formValues.employeeid){
+    errors.employeeid = 'Please enter employee id.';
+  }
+
+  if(!formValues.department){
+    errors.department = 'Please enter department.';
+  }
+
+  if(!formValues.birthday_){
+    errors.birthday_ = "Please enter your birthday";
+  }
+
+  if(!formValues.hireDate_){
+    errors.hireDate_ = "Hire date required.";
+  }
+
+  if(!formValues.phone){
+    errors.phone = "Please enter phone number";
+  }
+
+  if(!formValues.country){
+    errors.country = "Please enter country";
+  }
+
+  if(!formValues.address){
+    errors.address = "Please enter address";
+  }
+
+  if(!formValues.address2){
+    errors.address2 = "Please enter address 2";
+  }
+
+  if(!formValues.city){
+    errors.city = "Please enter city";
+  }
+
+  if(!formValues.state){
+    errors.state = "Please enter state";
+  }
+
+  if(!formValues.zip){
+    errors.zip = "Please enter zip code";
+  }
+
+  if(!formValues.drugTestDate){
+    errors.drugTestDate = "Drug test date is required.";
+  }
+
+  if(!formValues.backgroundTestDate){
+    errors.backgroundTestDate = "Background check date is required.";
+  }
+
+  if(!formValues.joblocation){
+    errors.joblocation = "Job location required."
+  }
+
+  if(!formValues.maritalstatusDropdown){
+    errors.maritalstatusDropdown = "Marital Status required."
+  }
+
+  if(!formValues.numberofallowances){
+    errors.numberofallowances = "Number of allowances required."
   }
 
   if(!formValues.agencyrole){

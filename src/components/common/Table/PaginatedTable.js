@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { push } from 'connected-react-router';
-import { GET_EMPLOYEE_LIST } from '../../../Redux/actions/types.js'
+import types from '../../../Redux/actions/types.js'
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
@@ -20,47 +20,57 @@ class PaginatedTable extends Component {
             filterBy : {},
             data : []
         }
-        
+
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
 
-    componentDidMount (){
-        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, filterBy:{}},  GET_EMPLOYEE_LIST);
+    componentWillMount (){
+        let payload = {orgId : 1, filterBy:{}};
+
+        if(typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined' ){
+          payload.data = this.props.payload;
+          this.props.tempedgeAPI(this.props.apiUrl, payload, types.TEMPEDGE_LIST);
+        }
     }
+
     changePage = (myPage) =>{
-        console.log(myPage);
         this.setState({tablePage : myPage});
-        this.props.tempedgeAPI(this.props.apiUrl,{orgId : 1, page : myPage, filterBy: this.state.filterBy},  GET_EMPLOYEE_LIST);
+        let payload = {
+            orgId : 1,
+            page : myPage,
+            filterBy: this.state.filterBy
+        };
+
+        this.props.tempedgeAPI(this.props.apiUrl,payload, types.TEMPEDGE_LIST);
     }
+
     applyFilter = (sortBy, filterValue) =>{
         let filter = {
             ...this.state.filterBy,
             [sortBy] : filterValue
         }
-        
+
         this.setState({sortBy : sortBy, filterBy : filter});
 
         this.props.tempedgeAPI(this.props.apiUrl,
             {
-                orgId : 1, 
-                page : this.state.tablePage, 
-                filterBy : filter 
-            },  GET_EMPLOYEE_LIST);
+                orgId : 1,
+                page : this.state.tablePage,
+                filterBy : filter
+            },  types.TEMPEDGE_LIST);
     }
 
     render() {
-        let data = this.props.paginatorList;
+        let data = (typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined') ? this.props.paginatorList: this.props.payload;
         let title = this.props.title;
-        
-        console.log(data);
 
         return (
             <React.Fragment>
-                <Container title={title} 
+                <Container title={title}
                         btns ={data && data.data ? (
                                 <TPaginator changePage={this.changePage} />
                         ):""}>
-                { data ? 
+                { data ?
                     <div className='col-12'>
                         <Table data={data} applyFilter={this.applyFilter}/>
                     </div> :
@@ -83,4 +93,3 @@ paginatorList: state.tempEdge.paginatorList,    //'posts', new prop in component
 })
 
 export default withLocalize(connect(mapStatetoProps, { push, tempedgeAPI })(PaginatedTable));
-

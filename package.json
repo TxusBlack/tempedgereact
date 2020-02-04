@@ -8,6 +8,7 @@
     "connected-react-router": "^6.3.1",
     "flatted": "^2.0.0",
     "form-data": "^2.3.3",
+    "immutability-helper": "^3.0.1",
     "jsog": "^1.0.7",
     "local-storage": "^1.4.2",
     "moment": "^2.24.0",
@@ -25,6 +26,8 @@
     "react-scripts": "^3.2.0",
     "react-select": "^2.4.4",
     "react-stepper-horizontal": "^1.0.11",
+    "react-tabs": "^3.0.0",
+    "react-tooltip": "^3.11.2",
     "react-webcam": "^1.1.0",
     "react-widgets": "^4.4.9",
     "react-widgets-moment": "^4.0.25",
@@ -36,7 +39,8 @@
     "redux-persist": "^5.10.0",
     "redux-persist-transform-filter": "0.0.18",
     "redux-thunk": "^2.3.0",
-    "xlsx": "^0.14.1"
+    "xlsx": "^0.14.1",
+    "yarn": "^1.21.1"
   },
   "scripts": {
     "start": "react-scripts start",
