@@ -63,6 +63,7 @@
   "com.tempedge.error.person.birthdayrequired"                        : "Fecha de nacimiento es requerida.",
   "com.tempedge.error.person.usernamerequired"                        : "Usuario es requerido.",
   "com.tempedge.error.person.passwordrequired"                        : "Contraseña es requerida.",
+  "com.tempedge.error.person.currentPasswordrequired"                 : "Contraseña es requerida.",
   "com.tempedge.error.person.initialpasswordrequired"                 : "Contraseña es requerida.",
   "com.tempedge.error.person.confirmpasswordrequired"                 : "Contraseña es requerida.",
   "com.tempedge.error.passwordnotvalid"                               : "Contraseña es invalida (8 caracteres, alfaanumerico).",

@@ -11,18 +11,64 @@ import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguage
 import { push } from 'connected-react-router';
 import { notify } from 'reapop';
 
+import {tempedgeAPI} from '../../Redux/actions/tempEdgeActions';
+import { CHANGE_PASSWORD } from '../../Redux/actions/types';
+
 class ChangePassword extends Component {
+  
   constructor(props, context) {
     super(props, context);
 
-    this.state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true };
+    this.state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true};
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    // if (typeof (this.props.changePassword) !== null) this.props.changePassword = null;
+  };
+
+
+  //static getDerivedStateFromProps(props, state)
+
+	static getDerivedStateFromProps (props, state) {
+    console.log("componentWillReceiveProps")
+    console.log(props)
+    console.log(state)
+    // console.log(this.state)
+    console.log("componentWillReceiveProps")
+
+    if(state.submitted === 1){
+
+      const notifyMessage = {
+        position: 'br',
+        dismissible: true,
+        dismissAfter: 3000,
+      };
+      if(props.changePassword){
+
+        notifyMessage.title = 'Password changed';
+        notifyMessage.message = 'Your password has been changed successful';
+        notifyMessage.status = 'success';
+      }else{
+        notifyMessage.title = 'There was an error';
+        notifyMessage.message = 'Please, check your current password';
+        notifyMessage.status = 'error';
+      }
+
+      fireNotification(notifyMessage);
+    }else{
+      // this.setState(() => ({
+      //   submitted: 0
+      // }));
+    }
+
+    return null;
+  }
+
 
   componentDidUpdate(prevProps, prevState) {
+
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
@@ -33,6 +79,7 @@ class ChangePassword extends Component {
 
   componentWillUnmount() {
     this.props.reset('ChangePassword'); //Reset form fields all to empty
+
   }
 
   onChange = (recaptchaToken) => {
@@ -53,27 +100,25 @@ class ChangePassword extends Component {
   };
 
   onSubmit = async (formValues) => {
-    const values = formValues;
-    values.grant_type = 'password';
-    console.log(values);
-
-    // this.fireNotification();
+    const request = {
+      oldPassword: formValues.password, 
+      newPassword: formValues.confirmpassword
+    };
+    
+    this.setState(() => ({
+			submitted: 1
+		}), () => {
+			this.props.tempedgeAPI('/api/user/changePassword', request, CHANGE_PASSWORD);
+		});
   };
 
-  fireNotification = () => {
+  fireNotification = (notifyMessage) => {
     const { notify } = this.props;
-
-    notify({
-      title: 'Password changed',
-      message: 'you clicked on the Change password button',
-      status: 'success',
-      position: 'br',
-      dismissible: true,
-      dismissAfter: 3000,
-    });
+    notify(notifyMessage);
   };
 
   render() {
+
     return (
       <div className="container-fluid login-container">
         <div className="row">
@@ -167,18 +212,22 @@ class ChangePassword extends Component {
 }
 
 ChangePassword.propTypes = {
+  tempedgeAPI: PropTypes.func.isRequired,  
   reset: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   untouch: PropTypes.func.isRequired,
 };
 
-//Current REDUX state
-const mapStateToProps = (state) => {};
+const mapStateToProps = (state) => {
+  let changePassword = state.tempEdge.changePassword;
+  return ({
+    changePassword: changePassword,
+  });
+};
 
 ChangePassword = reduxForm({
-  form: 'ChangePassword',
-  destroyOnUnmount: false, //        <------ preserve form data
+  form: 'changePassword',
   validate: Validate,
 })(ChangePassword);
 
-export default withLocalize(connect(mapStateToProps, { push, notify, reset, change, untouch })(ChangePassword));
+export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, notify, reset, change, untouch })(ChangePassword));

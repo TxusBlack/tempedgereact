@@ -68,6 +68,7 @@
   "com.tempedge.error.person.birthdayrequired"                        : "Birthday is required.",
   "com.tempedge.error.person.usernamerequired"                        : "Username is required.",
   "com.tempedge.error.person.passwordrequired"                        : "Password is required.",
+  "com.tempedge.error.person.currentPasswordrequired"                 : "Password is required.",
   "com.tempedge.error.person.initialpasswordrequired"                 : "Password is required.",
   "com.tempedge.error.person.confirmpasswordrequired"                 : "Password is required.",
   "com.tempedge.error.passwordnotvalid"                               : "Please enter a valid password (8 characters, alphanumeric).",

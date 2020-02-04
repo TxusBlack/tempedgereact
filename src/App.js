@@ -92,7 +92,7 @@ class App extends React.Component {
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
 
-                  <PrivateRoute exact path="/dashboard/:lang" component={ChangePassword} />
+                  <PrivateRoute exact path="/user/changePass/:lang" component={ChangePassword} />
 
                   <PrivateRoute exact path="/client/new/:lang" component={CreateNewClient} />
                   <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
@@ -105,7 +105,7 @@ class App extends React.Component {
                   <PrivateRoute exact path="/client/list/:lang" component={ClientList} />
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
-                  {/* <PrivateRoute exact path="/dashboard/:lang" component={Dashboard} /> */}
+                  <PrivateRoute exact path="/dashboard/:lang" component={Dashboard} />
                   <PrivateRoute exact path="/intpayroll/new/:lang" component={NewInternalPayroll} />
                 </Switch>
               </div>
