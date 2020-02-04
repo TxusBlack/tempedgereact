@@ -56,7 +56,7 @@ class ChangePassword extends Component {
         notifyMessage.status = 'error';
       }
 
-      fireNotification(notifyMessage);
+      //fireNotification(notifyMessage);
     }else{
       // this.setState(() => ({
       //   submitted: 0

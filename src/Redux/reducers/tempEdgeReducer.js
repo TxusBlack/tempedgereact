@@ -15,6 +15,7 @@ import { LOGIN,
   SAVE_OT_BILL_RATE,
   GET_ACTIVITY_LIST,
   GET_SALESMAN_LIST,
+  CHANGE_PASSWORD
 } from '../actions/types';
 
 let initialState = {
@@ -131,6 +132,11 @@ export default function(state = initialState, action){
         ...state,
         salesmanList: action.payload
       }
+    case CHANGE_PASSWORD:
+    return {
+      ...state,
+      changePassword: action.payload,
+    };
     default:
       return state;
   }
