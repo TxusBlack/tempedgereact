@@ -2,8 +2,8 @@ import Axios from 'axios';
 import FormData from 'form-data'
 import config from '../../../env/env.js';
 
-//let baseUrlTempEdge = `http://10.1.10.101:9191`;
-let baseUrlTempEdge = `http://localhost:9191`;     //***Must change this URL in the actions file as well***
+let baseUrlTempEdge = `http://10.1.10.52:9191`;
+//let baseUrlTempEdge = `http://localhost:9191`;     //***Must change this URL in the actions file as well***
 let baseUrlFaceRecognition = `http://localhost:9191`;
 
 function dataURLtoFile(dataurl, filename) {
@@ -65,7 +65,7 @@ let HttpService = {
   postImages: async (url, data) => {
     let bodyFormData = new FormData();
 
-    let newArray = await data.map( (img, index) => {   //'newArray' holds the promise returned by await, do not remove
+    await data.map( (img, index) => {   //'newArray' holds the promise returned by await, do not remove
       let file = dataURLtoFile(img, `user-${index}.jpeg`);
       bodyFormData.append('file', file);
     });

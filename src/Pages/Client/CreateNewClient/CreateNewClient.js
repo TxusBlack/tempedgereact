@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reset, reduxForm, change, initialize } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import Validate from '../../Validations/Validations';
-import {GET_SALESMAN_LIST, GET_COUNTRY_REGION_LIST, GET_FUNDING_LIST, CREATE_CLIENT } from '../../../Redux/actions/types.js';
+import types from '../../../Redux/actions/types.js';
 import WizardCreateNewClientFirstPage from './WizardCreateNewClientFirstPage.js';
 import WizardCreateNewClientSecondPage from './WizardCreateNewClientSecondPage.js';
 import WizardCreateNewClientThirdPage  from './WizardCreateNewClientThirdPage';
@@ -99,13 +99,13 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async() => {
-    this.props.getList('/api/country/listAll', GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', GET_FUNDING_LIST);
+    this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+    this.props.getList('/api/funding/listAll', types.GET_FUNDING_LIST);
     this.props.tempedgeAPI('/api/person/salesmanList', {
       "orgId" : 1,
      "page" : 0,
      "size" : 5
-    }, GET_SALESMAN_LIST)
+	 }, types.GET_SALESMAN_LIST);
   }
 
   componentWillUnmount = () => {
@@ -228,7 +228,7 @@ class CreateNewClient extends Component {
 		this.setState(() => ({
 			submitted: 1
 		}), () => {
-			this.props.tempedgeAPI('/api/client/save', response, CREATE_CLIENT);
+			this.props.tempedgeAPI('/api/client/save', response, types.CREATE_CLIENT);
 		});
   }
 
@@ -444,4 +444,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI })(CreateNewClient));
+export default withLocalize(connect(mapStateToProps, { getList, reset, change, initialize, saveDepartmentList, savePositionsList, saveToPositionsList, removeFromDepartmentList, tempedgeAPI  })(CreateNewClient));

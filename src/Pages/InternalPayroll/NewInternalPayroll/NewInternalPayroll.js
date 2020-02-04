@@ -5,7 +5,7 @@ import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
-import { SAVE_INTERNAL_PAYROLL, GET_ACTIVITY_LIST } from '../../../Redux/actions/types.js'
+import types from '../../../Redux/actions/types.js'
 import moment from 'moment';
 import Container from '../../../components/common/Container/Container';
 import SaveBtn from '../../../components/common/Buttons/SaveBtn';
@@ -31,7 +31,7 @@ class NewInternalPayroll extends Component {
     componentDidMount = async () => {
         let agency = JSON.parse(window.sessionStorage.getItem("agency"));
         orgId = agency.organizationEntity.orgId;
-        await this.props.tempedgeAPI(activityListURL, { orgId }, GET_ACTIVITY_LIST);
+        await this.props.tempedgeAPI(activityListURL, { orgId }, types.GET_ACTIVITY_LIST);
 
         this.initialData();
     }
@@ -46,7 +46,7 @@ class NewInternalPayroll extends Component {
 
     }
     initialData = () => {
-        
+
         let calendar = moment().startOf('isoWeek');
         let mon = calendar.format("DD/MM/YYYY");
         let tue = calendar.add(1, 'days').format("DD/MM/YYYY");
@@ -79,7 +79,7 @@ class NewInternalPayroll extends Component {
             total_sun: 0,
             total: 0,
         });
-        
+
 
     }
 
@@ -297,7 +297,7 @@ class NewInternalPayroll extends Component {
             console.log("IN")
             payload.map(act => {
                 act.orgId = orgId;
-                this.props.tempedgeAPI(saveIntPayrollURL, act, SAVE_INTERNAL_PAYROLL);
+                this.props.tempedgeAPI(saveIntPayrollURL, act, types.SAVE_INTERNAL_PAYROLL);
             });
             this.fireNotification();
         }
@@ -322,7 +322,7 @@ class NewInternalPayroll extends Component {
 
         payload.map(act => {
             act.orgId = orgId;
-            this.props.tempedgeAPI(saveIntPayrollURL, act, SAVE_INTERNAL_PAYROLL);
+            this.props.tempedgeAPI(saveIntPayrollURL, act, types.SAVE_INTERNAL_PAYROLL);
         });
         this.setState(initialState);
         this.initialData();

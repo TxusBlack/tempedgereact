@@ -1,10 +1,13 @@
-import { LOGIN, CREATE_CLIENT, SAVE_FORM_POSITION, SAVE_FILTER_LIST, SAVE_DEPARTMENTS_LIST, SAVE_POSITIONS_LIST, SAVE_TO_POSITIONS_LIST, REMOVE_FROM_DEPARTMENTS_LIST, SAVE_BILL_RATE, SAVE_OT_BILL_RATE } from './types';
+
+import types from './types';
+
 import history from '../../history.js';
 import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://10.1.10.52:9191`;
+//let baseUrlTempEdge = `http://localhost:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
@@ -29,7 +32,7 @@ export let doLogin = (url, data) => {
           sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
 
           dispatch({
-            type: LOGIN,
+            type: types.LOGIN,
             payload: response.data.result
           });
 
@@ -75,7 +78,6 @@ export let doLogin = (url, data) => {
 export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
-    data.IPAddress = window.location.hostname;
 
     Axios({
       url: baseUrlTempEdge + url,
@@ -90,14 +92,93 @@ export let tempedgeAPI = (url, data, actionName) => {
     }).then((response) => {
       dispatch({
         type: actionName,
-        payload: (actionName !== 'CREATE_CLIENT')? response.data.result: response
-      });
+        payload: response
+      })
     }).catch((err) => {
       dispatch({
         type: actionName,
         payload: err
       });
     });
+  }
+}
+
+export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
+  return (dispatch) => {
+    let token = sessionStorage.getItem('access_token');
+    let formData = new FormData();
+    let jsonse = JSON.stringify(data);
+    let blob = new Blob([jsonse], {type: "application/json"});
+
+    formData.append('personEntity', blob);
+    formData.append('document', fileArray.documents);
+    formData.append('resume', fileArray.resume);
+    data.base64Dco = data.base64Resume = null;
+
+    let options = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      url: baseUrlTempEdge + url,
+      method: 'post',
+      data: formData,
+      params: {
+        access_token: token
+      }
+    };
+
+    Axios(options)
+      .then(response => {
+        dispatch({
+          type: actionName,
+          payload: (actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE && actionName !== types.CREATE_CLIENT)? response.data.result: response
+        });
+      }).catch((err) => {
+        dispatch({
+          type: actionName,
+          payload: err
+        });
+      });
+  }
+}
+
+export let clearTempedgeStoreProp = (actionProp) => {
+  return (dispatch) => {
+    dispatch({
+      type: types.CLEAR_PROP,
+      payload: actionProp
+    })
+  }
+}
+
+export let clearErrorField = (actionProp) => {
+  return (dispatch) => {
+    dispatch({
+      type: types.CLEAR_ERROR_FIELD,
+      payload: {
+        errorFields: [],
+        lastRemoved: ''
+      }
+    })
+  }
+}
+
+export let getListSafe = (url, data, actionName) => {
+  return (dispatch) => {
+    let token = sessionStorage.getItem('access_token');
+
+    let options = {
+      headers: { 'Content-Type': 'application/json' },
+      params: { access_token: token }
+    };
+
+    Axios.post((baseUrlTempEdge + url), data ,options)
+      .then((response) => {
+        dispatch({
+          type: actionName,
+          payload: response.data.result
+        });
+      });
   }
 }
 
@@ -116,7 +197,7 @@ export let getList = (url, actionName) => {
 export let storeFormPageNumber = (formName, position) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_FORM_POSITION,
+      type: types.SAVE_FORM_POSITION,
       payload: {
         form: formName,
         pos: position
@@ -140,7 +221,7 @@ export let getFilters = (url, data, actionName) => {
 export let saveDepartmentList = (deptList) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_DEPARTMENTS_LIST,
+      type: types.SAVE_DEPARTMENTS_LIST,
       payload: deptList
     });
   }
@@ -149,7 +230,7 @@ export let saveDepartmentList = (deptList) => {
 export let savePositionsList = (positionsList) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_POSITIONS_LIST,
+      type: types.SAVE_POSITIONS_LIST,
       payload: positionsList
     });
   }
@@ -158,7 +239,7 @@ export let savePositionsList = (positionsList) => {
 export let saveToPositionsList = (newPos) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_TO_POSITIONS_LIST,
+      type: types.SAVE_TO_POSITIONS_LIST,
       payload: newPos
     });
   }
@@ -167,8 +248,27 @@ export let saveToPositionsList = (newPos) => {
 export let removeFromDepartmentList = (index) => {
   return (dispatch) => {
     dispatch({
-      type: REMOVE_FROM_DEPARTMENTS_LIST,
+      type: types.REMOVE_FROM_DEPARTMENTS_LIST,
       payload: index
+    });
+  }
+}
+
+
+export let setErrorField = (fieldName) => {
+  return (dispatch) => {
+    dispatch({
+      type: types.SET_ERROR_FIELD,
+      payload: fieldName
+    });
+  }
+}
+
+export let removeErrorField = (fieldName) => {
+  return (dispatch) => {
+    dispatch({
+      type: types.REMOVE_ERROR_FIELD,
+      payload: fieldName
     });
   }
 }

@@ -74,17 +74,15 @@ body {
   width: 100%;
   min-height: 40px;
   font-size: 1.5rem;
-  margin-bottom: 1rem;
 }
 
 .announcement-bar p {
   padding: 11.5px 10px;
-  margin-bottom: 0;
 }
 
-.success {
-  background-color: #98fbb2;
-  color: #008000;
+.success{
+  background-color: #98FB98;
+  color: #008000
 }
 
 .fail {
@@ -359,8 +357,10 @@ ul.menu-ul li:hover a:after {
   margin-bottom: 1.8rem;
 }
 
-.face-tile,
-.face-tile img {
+input:invalid {
+  border-color: red;
+}
+.face-tile, .face-tile img{
   width: 100%;
   min-height: 24rem;
   margin: auto;
@@ -1359,7 +1359,7 @@ form div.list .list-item:last-child button {
   min-height: 6.6rem;
 }
 
-.table-header-left {
+.table-header-left{
   font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
@@ -1402,7 +1402,73 @@ form div.list .list-item:last-child button {
   font-weight: bold !important;
   color: black;
 }
-@media screen and (max-width: 1201px) {
+
+
+/********TAB STYLE*******************************/
+.formPanel{
+  padding: 2rem 2rem 0 2rem;
+  width: 100%;
+  margin: 2rem;
+  font-size: 1.6rem;
+}
+
+.formPanelBody{
+  padding: 3rem;
+  width: 100%;
+  font-size: 1.6rem;
+  border: dotted 1px #888888;
+  border-top-right-radius: 1.6rem;
+  border-bottom-left-radius: 1.6rem;
+  border-bottom-right-radius: 1.6rem;
+}
+.nav-panel .panel .nav-link {
+  background-color: #5abeec;
+  padding: 15px 30px;
+  color: white;
+  margin: 0px 2px 0px 2px;
+  border: 2px solid #5abeec;
+}
+.nav-panel .panel .nav-link:not(.active) {
+  background-color: #888888;
+  padding: 15px 30px;
+  color: white;
+  margin: 0px 2px 0px 2px;
+  border: 2px solid #888888;
+}
+.nav-panel .first-panel .nav-link {
+  background-color: #5abeec;
+  padding: 15px 30px;
+  color: white;
+  margin: 0px 2px 0px 0px;
+  border-top-left-radius: 1.6rem;
+  border: 2px solid #5abeec;
+}
+.nav-panel .first-panel .nav-link:not(.active) {
+  background-color: #888888;
+  padding: 15px 30px;
+  color: white;
+  margin: 0px 2px 0px 2px;
+  border-top-left-radius: 1.6rem;
+  border: 2px solid #888888;
+}
+.nav-panel .last-panel .nav-link {
+  background-color: #5abeec;
+  padding: 15px 30px;
+  color: white;
+  margin: 0px 2px 0px 2px;
+  border-top-right-radius: 1.6rem;
+  border: 2px solid #5abeec;
+}
+.nav-panel .last-panel .nav-link:not(.active) {
+  background-color: #888888;
+  padding: 15px 30px;
+  color: white;
+  margin: 0px 2px 0px 2px;
+  border-top-right-radius: 1.6rem;
+  border: 2px solid #888888;
+}
+/**********************************************/
+@media screen and (max-width: 1201px){
   .hamburger-btn {
     left: 4rem;
   }

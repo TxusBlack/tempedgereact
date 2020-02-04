@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Field, FieldArray, reduxForm, reset } from 'redux-form';
+import { Field, reduxForm, reset } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
@@ -21,7 +21,7 @@ class WizardCreateNewUserFirstPage extends Component{
     this.setState(() => ({
       mounted: true,
     }));
-  
+
     this.props.getDispatch(this.props.dispatch);
   }
 

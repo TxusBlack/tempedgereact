@@ -11,7 +11,7 @@ import editIcon from "./assets/edit.png";
 import upIcon from "./assets/up.png";
 import downIcon from "./assets/down.png";
 import { saveDepartmentList, saveBillRates } from "../../../Redux/actions/tempEdgeActions";
-import { SAVE_BILL_RATE, SAVE_OT_BILL_RATE } from '../../../Redux/actions/types.js';
+import types from '../../../Redux/actions/types.js';
 
 //Department Modal re-init data
 const reInitData = {
@@ -59,8 +59,8 @@ class Department extends React.Component{
 			let billRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'billRate');
 			let otBillRate = this.calculateBillRates(this.props.payRate, this.props.markup, 'otBillRate');
 
-			this.props.saveBillRates(billRate, SAVE_BILL_RATE);
-			this.props.saveBillRates(otBillRate, SAVE_OT_BILL_RATE);
+			this.props.saveBillRates(billRate, types.SAVE_BILL_RATE);
+			this.props.saveBillRates(otBillRate, types.SAVE_OT_BILL_RATE);
 
 			this.setState(() => ({
 				billRate: billRate,

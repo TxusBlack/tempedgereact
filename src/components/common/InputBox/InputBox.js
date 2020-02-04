@@ -1,5 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ErrorRender from '../ErrorRender/ErrorRender.js';
+import { connect } from 'react-redux';
+import { setErrorField, removeErrorField } from '../../../Redux/actions/tempEdgeActions';
 
 let renderInput = (formProps) => {
   let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
@@ -32,6 +35,20 @@ let renderInput = (formProps) => {
       input = <input className="form-control tempEdge-input-box" type="text" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" disabled />
   }
 
+  if(formProps.meta.form === "NewEmployee"){
+    if(formProps.meta.error && formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched){
+      let found = formProps.errorFields.indexOf(formProps.input.name);
+      if(found === -1){
+        formProps.setErrorField(formProps.input.name);
+      }
+    }else if(typeof formProps.meta.error === 'undefined' && !formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched){
+      let found = formProps.errorFields.indexOf(formProps.input.name);
+      if(found > -1){
+        formProps.removeErrorField(formProps.input.name);
+      }
+    }
+  }
+
   return(
     <div className={errorClass}>
       {input}
@@ -45,4 +62,16 @@ let InputBox = (props) => {
   return renderInput(props);
 }
 
-export default InputBox;
+InputBox.propTypes = {
+   setErrorField: PropTypes.func.isRequired,
+   removeErrorField: PropTypes.func.isRequired
+};
+
+let mapStateToProps = (state) => {
+  return({
+    errorFields: state.tempEdge.errorFields
+  });
+};
+
+
+export default connect(mapStateToProps, { setErrorField, removeErrorField })(InputBox);

@@ -14,7 +14,7 @@ let middleware = [thunk, routerMiddleware(history)];
 let saveSubsetBlacklistFilter = createBlacklistFilter(
   'form',
   ['tempEdge'],
-  ['CreateNewAgency', 'CreateNewUser', 'CreateNewClient', 'CreateNewClient']
+  ['CreateNewAgency', 'CreateNewUser', 'CreateNewClient', 'CreateNewClient', 'NewEmployee']
 );
 
 let config = {
