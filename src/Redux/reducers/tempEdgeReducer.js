@@ -1,22 +1,3 @@
-import { LOGIN,
-  GET_COUNTRY_REGION_LIST,
-  GET_FUNDING_LIST,
-  GET_ROLE_LIST,
-  CREATE_CLIENT,
-  SAVE_FORM_POSITION,
-  GET_EMPLOYEE_LIST,
-  SAVE_DEPARTMENTS_LIST,
-  SAVE_TO_DEPARTMENTS_LIST,
-  SAVE_POSITIONS_LIST,
-  SAVE_TO_POSITIONS_LIST,
-  REMOVE_FROM_POSITIONS_LIST,
-  REMOVE_FROM_DEPARTMENTS_LIST,
-  SAVE_BILL_RATE,
-  SAVE_OT_BILL_RATE,
-  GET_ACTIVITY_LIST,
-  GET_SALESMAN_LIST,
-  CHANGE_PASSWORD
-} from '../actions/types';
 import types from '../actions/types';
 
 let initialState = {
@@ -206,11 +187,11 @@ export default function(state = initialState, action){
         ...state,
         salesmanList: action.payload
       }
-    case CHANGE_PASSWORD:
-    return {
-      ...state,
-      changePassword: action.payload,
-    };
+    case types.CHANGE_PASSWORD:
+      return {
+        ...state,
+        changePassword: action.payload,
+      }
     default:
       return state;
   }

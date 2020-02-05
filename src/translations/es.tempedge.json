@@ -211,5 +211,9 @@
   "com.tempedge.error.person.hireDate_required"                       : "Hire date required.",
   "com.tempedge.msg.info.msg.success"                                 : "Transacción Exitosa!",
   "com.tempedge.error.emailalreadyexist"                              : "Email a sido registrado previamente.",
-  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe."
+  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe.",
+  "com.tempedge.msg.info.title.password_changed"                      : "Contraseña cambiada",
+  "com.tempedge.msg.info.body.password_changed"                       : "Tu contraseña ha sido cambiada con éxito",
+  "com.tempedge.msg.info.title.invalid_password"                      : "Contraseña inválida",
+  "com.tempedge.msg.info.body.invalid_password"                       : "Revisa tu contraseña actual por favor"
 }

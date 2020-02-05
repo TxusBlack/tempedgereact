@@ -1,73 +1,55 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { reset, change, untouch } from 'redux-form';
-import PropTypes from 'prop-types';
-import InputBox from '../../components/common/InputBox/InputBox.js';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, reset } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
+import { push } from 'connected-react-router';
+import PropTypes from 'prop-types';
+import { notify } from 'reapop';
+import InputBox from '../../components/common/InputBox/InputBox';
 import Captcha from '../../components/common/Captcha/Captcha';
 import Validate from '../Validations/Validations';
-import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
-import { push } from 'connected-react-router';
-import { notify } from 'reapop';
+import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
+import { tempedgeAPI } from '../../Redux/actions/tempEdgeActions';
+import types from '../../Redux/actions/types';
+import { clearTempedgeStoreProp } from '../../Redux/actions/tempEdgeActions';
 
-import {tempedgeAPI} from '../../Redux/actions/tempEdgeActions';
-import { CHANGE_PASSWORD } from '../../Redux/actions/types';
-
-class ChangePassword extends Component {
-  
+class ChangePassword extends React.Component {
   constructor(props, context) {
     super(props, context);
-
-    this.state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true};
-
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    this.state = { btnDisabled: true, submitted: 0 };
+    const { activeLanguage } = this.props;
+    const { addTranslationForLanguage } = this.props;
+    ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
   }
 
-  componentDidMount = () => {
-    // if (typeof (this.props.changePassword) !== null) this.props.changePassword = null;
-  };
+  componentDidUpdate(prevProps) {
+    const { changePassword } = this.props;
+    const { submitted } = this.state;
+    if (submitted === 1 && changePassword) {
+      if (changePassword.status === 200) {
+        this.setState({
+          submitted: 0,
+        });
 
-
-  //static getDerivedStateFromProps(props, state)
-
-	static getDerivedStateFromProps (props, state) {
-    console.log("componentWillReceiveProps")
-    console.log(props)
-    console.log(state)
-    // console.log(this.state)
-    console.log("componentWillReceiveProps")
-
-    if(state.submitted === 1){
-
-      const notifyMessage = {
-        position: 'br',
-        dismissible: true,
-        dismissAfter: 3000,
-      };
-      if(props.changePassword){
-
-        notifyMessage.title = 'Password changed';
-        notifyMessage.message = 'Your password has been changed successful';
-        notifyMessage.status = 'success';
-      }else{
-        notifyMessage.title = 'There was an error';
-        notifyMessage.message = 'Please, check your current password';
-        notifyMessage.status = 'error';
+        this.props.clearTempedgeStoreProp("changePassword");
+        const notifyMessage = {
+          position: 'br',
+          dismissible: true,
+          dismissAfter: 3000,
+        };
+        if (changePassword.data.status === 200) {
+          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.password_changed" />;
+          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.password_changed" />;
+          notifyMessage.status = 'success';
+          this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
+        } else {
+          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.invalid_password" />;
+          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.invalid_password" />;
+          notifyMessage.status = 'error';
+        }
+        this.fireNotification(notifyMessage);
       }
-
-      //fireNotification(notifyMessage);
-    }else{
-      // this.setState(() => ({
-      //   submitted: 0
-      // }));
     }
-
-    return null;
-  }
-
-
-  componentDidUpdate(prevProps, prevState) {
 
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
@@ -79,7 +61,7 @@ class ChangePassword extends Component {
 
   componentWillUnmount() {
     this.props.reset('ChangePassword'); //Reset form fields all to empty
-
+    this.props.clearTempedgeStoreProp("changePassword");
   }
 
   onChange = (recaptchaToken) => {
@@ -95,30 +77,27 @@ class ChangePassword extends Component {
     });
   };
 
-  generateCaptcha = (formProps) => {
-    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
-  };
+  generateCaptcha = (formProps) => <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
 
   onSubmit = async (formValues) => {
     const request = {
-      oldPassword: formValues.password, 
-      newPassword: formValues.confirmpassword
+      oldPassword: formValues.password,
+      newPassword: formValues.confirmpassword,
     };
-    
+
     this.setState(() => ({
-			submitted: 1
-		}), () => {
-			this.props.tempedgeAPI('/api/user/changePassword', request, CHANGE_PASSWORD);
-		});
+      submitted: 1,
+    }), () => {
+      this.props.tempedgeAPI('/api/user/changePassword', request, types.CHANGE_PASSWORD);
+    });
   };
 
   fireNotification = (notifyMessage) => {
-    const { notify } = this.props;
+    let { notify } = this.props;
     notify(notifyMessage);
   };
 
   render() {
-
     return (
       <div className="container-fluid login-container">
         <div className="row">
@@ -212,17 +191,15 @@ class ChangePassword extends Component {
 }
 
 ChangePassword.propTypes = {
-  tempedgeAPI: PropTypes.func.isRequired,  
   reset: PropTypes.func.isRequired,
-  change: PropTypes.func.isRequired,
-  untouch: PropTypes.func.isRequired,
+  tempedgeAPI: PropTypes.func.isRequired,
+  clearTempedgeStoreProp: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
-  let changePassword = state.tempEdge.changePassword;
-  return ({
-    changePassword: changePassword,
-  });
+  return {
+    changePassword: state.tempEdge.changePassword ? state.tempEdge.changePassword : null,
+  };
 };
 
 ChangePassword = reduxForm({
@@ -230,4 +207,4 @@ ChangePassword = reduxForm({
   validate: Validate,
 })(ChangePassword);
 
-export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, notify, reset, change, untouch })(ChangePassword));
+export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, notify, reset, clearTempedgeStoreProp })(ChangePassword));
