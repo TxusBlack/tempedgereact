@@ -7,7 +7,10 @@ import { Field, reduxForm, change, formValueSelector, reset, initialize } from '
 import { date } from 'redux-form-validators';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+//import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
+import ToggleSwitch from "../../../components/common/ToggleSwitch/ToggleSwitch";
+import Datepicker from '../../../components/common/Datepicker/Datepicker';
 import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';  //DO NOT REMOVE or it will break
 import moment from 'moment';
@@ -89,14 +92,16 @@ class CreateEmployee extends Component {
       let defaultDate = new Date(backDate);
       this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
 
-      await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
-      await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
-      await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
-      await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
-      await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text());
-      await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestNegativeOption)).text());
-      await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusAffirmativeOption)).text());
-      await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusNegativeOption)).text());
+      await gendersTranslate.push({ value: 0, gender: $(ReactDOM.findDOMNode(this.refs.maleOption)).text() });
+      await gendersTranslate.push({ value: 1, gender: $(ReactDOM.findDOMNode(this.refs.femaleOption)).text() });
+      await drugTest.push({ value: 0, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text() });
+      await drugTest.push({ value: 1, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text() });
+      await backgroundTest.push({ value: 0, backgroundTest: $(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text() });
+      await backgroundTest.push({ value: 1, backgroundTest: $(ReactDOM.findDOMNode(this.refs.backgroundtestNegativeOption)).text() });
+      await maritalStatus.push({ value: 0, maritalStatus: $(ReactDOM.findDOMNode(this.refs.maritalstatusAffirmativeOption)).text() });
+      await maritalStatus.push({ value: 1, maritalStatus: $(ReactDOM.findDOMNode(this.refs.maritalstatusNegativeOption)).text() });
+
+      console.log("gendersTranslate", gendersTranslate);
 
       this.setState(() => ({
         mounted: true,
@@ -520,14 +525,14 @@ class CreateEmployee extends Component {
         let drugTestDate = (
           <div style={{width: "80%", margin: "auto"}}>
             <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.date" /></label>
-            <Field name="drugTestDate" type="text" placeholder="Drug Test Date" category="person" component={DateTime} validate={date()}/>
+            <Field name="drugTestDate" type="text" placeholder="Drug Test Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
           </div>
         );
 
         let backgroundTestDate = (
             <div style={{width: "80%", margin: "auto"}}>
               <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.date" /></label>
-              <Field name="backgroundTestDate" type="text" placeholder="Background Test Date" category="person" component={DateTime} validate={date()}/>
+              <Field name="backgroundTestDate" type="text" placeholder="Background Test Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
             </div>
           );
 
@@ -557,17 +562,17 @@ class CreateEmployee extends Component {
                         <div className="tab-content formPanelBody" style={{background: "#ffff"}}>
                             <div className="tab-pane fade show active" id="tab1" role="tabpanel">
                                 <div className="form-group row">
-                                    <div className="col-10 col-md-5 col-lg-4">
+                                    <div className="col-3 col-md-2 col-lg-2">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.tempdata" /></label>
-                                      <Field name="temporarydata" type="text" placeholder="Temporary Data" category="person" component={InputBox} />
+                                      <Field name="temporarydata" type="text" placeholder="Temporary Data" category="person" component={ToggleSwitch} />
                                     </div>
-                                    <div className="col-10 col-md-5 col-lg-4">
+                                    <div className="col-10 col-md-5 col-lg-4  offset-lg-2">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.office" /></label>
-                                      <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={Dropdown} />
+                                      <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={DropdownList} />
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.department" /></label>
-                                      <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={Dropdown} />
+                                      <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={DropdownList} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -581,7 +586,7 @@ class CreateEmployee extends Component {
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.hiredate" /></label>
-                                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" component={DateTime} validate={date()} />
+                                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -602,7 +607,7 @@ class CreateEmployee extends Component {
                                 <div className="form-group row">
                                     <div className="col-10 col-md-5 col-lg-4">
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.birthday" /></label>
-                                      <Field name="birthday_" type="text" category="person" component={DateTime} validate={date()} />
+                                      <Field name="birthday_" type="text" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label">Age</label>
@@ -612,7 +617,7 @@ class CreateEmployee extends Component {
                                       <label className="control-label"><Translate id="com.tempedge.msg.label.gender" /></label>
                                       <span style={{display: "none"}} ref="maleOption"><Translate id="com.tempedge.msg.label.gender.male" /></span>
                                       <span style={{display: "none"}} ref="femaleOption"><Translate id="com.tempedge.msg.label.gender.female" /></span>
-                                      <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={Dropdown} />
+                                      <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={DropdownList} />
                                     </div>
                                 </div>
                             </div>
@@ -631,7 +636,7 @@ class CreateEmployee extends Component {
                                 <div className="form-group row">
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.country" /></label>
-                                        <Field name="country" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
+                                        <Field name="country" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={DropdownList} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -651,7 +656,7 @@ class CreateEmployee extends Component {
                                     </div>
                                     <div className="col-10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.state" /></label>
-                                        <Field name="state" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
+                                        <Field name="state" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={DropdownList} />
                                     </div>
                                     <div className="col10 col-md-5 col-lg-4">
                                         <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode" /></label>
@@ -704,9 +709,9 @@ class CreateEmployee extends Component {
                                         <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.drugtest" /></label>
                                         <span style={{display: "none"}} ref="drugtestAffirmativeOption"><Translate id="com.tempedge.msg.label.affirmative" /></span>
                                         <span style={{display: "none"}} ref="drugtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
-                                        <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="Drug Test" category="person" component={Dropdown} />
+                                        <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="drugTest" category="person" component={DropdownList} />
                                       </div>
-                                      {(typeof this.props.drugTest === 'string')? (this.props.drugTest === 'Yes'  || this.props.drugTest === 'Si')? drugTestDate: <div style={{height: 77}}></div>: <div style={{height: 77}}></div>}
+                                      {(this.props.drugTest && typeof this.props.drugTest.drugTest === 'string')? (this.props.drugTest.drugTest === 'Yes'  || this.props.drugTest.drugTest === 'Si')? drugTestDate: <div style={{height: 77}}></div>: <div style={{height: 77}}></div>}
                                     </div>
 
                                     <div className="col-md-6">
@@ -714,9 +719,9 @@ class CreateEmployee extends Component {
                                         <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.backgroundtest" /></label>
                                         <span style={{display: "none"}} ref="backgroundtestAffirmativeOption"><Translate id="com.tempedge.msg.label.affirmative" /></span>
                                         <span style={{display: "none"}} ref="backgroundtestNegativeOption"><Translate id="com.tempedge.msg.label.negative" /></span>
-                                        <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="Background Test" category="person" component={Dropdown} />
+                                        <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="backgroundTest" category="person" component={DropdownList} />
                                       </div>
-                                      {(typeof this.props.backgroundTest === 'string')? (this.props.backgroundTest === 'Yes' || this.props.backgroundTest === 'Si')? backgroundTestDate: <div style={{height: 77}}></div> : <div style={{height: 77}}></div>}
+                                      {(this.props.backgroundTest && typeof this.props.backgroundTest.backgroundTest === 'string')? (this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si')? backgroundTestDate: <div style={{height: 77}}></div> : <div style={{height: 77}}></div>}
                                     </div>
                                   </div>
                                   <hr style={{margin: "40px 0 25px 0"}}/>
@@ -753,14 +758,14 @@ class CreateEmployee extends Component {
                                   <div className="col-md-4">
                                     <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
                                       <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.joblocation" /></label>
-                                      <Field name="joblocation" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
+                                      <Field name="joblocation" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={DropdownList} />
                                     </div>
 
                                     <div style={{width: "60%", margin: "auto", marginBottom: 10}}>
                                       <label className="control-label" style={{marginBottom: 5}}><Translate id="com.tempedge.msg.label.maritalstatus" /></label>
                                       <span style={{display: "none"}} ref="maritalstatusAffirmativeOption"><Translate id="com.tempedge.msg.label.single" /></span>
                                       <span style={{display: "none"}} ref="maritalstatusNegativeOption"><Translate id="com.tempedge.msg.label.married" /></span>
-                                      <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="Marital Status" category="person" component={Dropdown} />
+                                      <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="maritalStatus" category="person" component={DropdownList} />
                                     </div>
 
                                     <div style={{width: "60%", margin: "auto"}}>

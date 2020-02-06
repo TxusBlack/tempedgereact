@@ -51,8 +51,8 @@
   .react-datepicker__time-name {
     color: #565656;
     width: 1.9em;
-  line-height: 1.9em;
-  margin: 0.166em;
+    line-height: 1.9em;
+    margin: 0.166em;
   }
   .react-datepicker__day--selected {
     color: white;
@@ -82,8 +82,6 @@
     margin: 0.4em 1em;
   }
   .react-datepicker__navigation {
-    top: 1em;
-    line-height: 1.7em;
     border: 0.45em solid transparent;
   }
   .react-datepicker__navigation--previous {
