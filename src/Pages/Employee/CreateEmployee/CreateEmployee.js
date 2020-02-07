@@ -63,7 +63,7 @@ class CreateEmployee extends Component {
       chkResult: [[], [], [], []],
       errorPanel: [{}, {}, {}, {}],
       tabRequiredFields: [
-        ['temporarydata', 'office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
+        ['office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
         ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
@@ -213,7 +213,7 @@ class CreateEmployee extends Component {
         });
 
         this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
-        this.props.dispatch(change('NewEmployee', 'state', { name: 'New Jersey', countryId: 4134 }));
+        this.props.dispatch(change('NewEmployee', 'state', { name: 'New Jersey', regionId: 4134 }));
 
         this.setState(
           () => ({
@@ -439,6 +439,7 @@ class CreateEmployee extends Component {
 
     let agency = sessionStorage.getItem('agency');
     agency = JSON.parse(agency);
+    console.log('formValues: ', formValues);
 
     return new Promise((resolve, reject) => {
       for (let prop in formValues) {
@@ -459,25 +460,26 @@ class CreateEmployee extends Component {
       }
     }).then(skills => {
       let data = {
-        temporalInfo: formValues.temporarydata,
+        temporalInfo: formValues.temporarydata ? true : false,
         skills: skills,
         orgId: agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
-        backgroundtest: formValues.backgroundTestDropdown === 'Yes' ? true : false,
-        birthDay: moment(formValues.birthday_, 'YYYY-MM-DD'),
+        backgroundtest: formValues.backgroundTest.backgroundTest === 'Yes' ? true : false,
+        birthDay: '1991-09-18', //moment(formValues.birthday_, 'YYYY-MM-DD'),
         cellPhone: formValues.phone,
         city: formValues.city.toUpperCase(),
         country: formValues.country.countryId,
-        drugTest: formValues.drugTestDropdown === 'Yes' ? true : false,
+        drugTest: formValues.drugTest.drugTest === 'Yes' ? true : false,
         drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
         email: formValues.email_,
         empDepartment: formValues.department.orgDepartmentCode,
+        employeeid: formValues.employeeid,
         firstName: formValues.firstName.toUpperCase(),
-        gender: formValues.gender === 'Male' ? 'M' : 'F',
-        hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
-        identification: formValues.employeeid,
+        gender: formValues.gender.gender === 'Male' ? 'M' : 'F',
+        hireDate: '2000-09-05', //moment(formValues.hireDate_, 'YYYY-MM-DD'),
+        identification: formValues.ssn,
         lastName: formValues.lastName.toUpperCase(),
         maritalStatus: formValues.maritalstatusDropdown ? 0 : 1,
         middleName: formValues.middleName_ ? formValues.middleName_.toUpperCase() : '',
@@ -516,8 +518,8 @@ class CreateEmployee extends Component {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
         }
       );
+      console.log('request', data);
     });
-    console.log('temporalInfo', formValues.temporarydata);
   };
 
   convertToBase64 = file => {
@@ -566,11 +568,11 @@ class CreateEmployee extends Component {
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
 
-        console.log("SKILL: ", this.props);
-        if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
-          sortedSkillList = this.props.skillsList.sort((a, b) => {
-            let x = a.skill;
-            let y = b.skill;
+    console.log('SKILL: ', this.props);
+    if (typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)) {
+      sortedSkillList = this.props.skillsList.sort((a, b) => {
+        let x = a.skill;
+        let y = b.skill;
 
         return x < y ? -1 : x > y ? 1 : 0;
       });
@@ -995,12 +997,11 @@ CreateEmployee = reduxForm({
   validate: Validate
 })(CreateEmployee);
 
-<<<<<<< HEAD
 let mapStateToProps = state => {
   let selector = formValueSelector('NewEmployee'); // <-- same as form name
 
   return {
-    skillsList: state.tempEdge.skillList,
+    skillsList: state.tempEdge.skillsList,
     country_region_list: state.tempEdge.country_region_list,
     orgDepartmentList: typeof state.tempEdge.orgDepartmentList !== 'undefined' ? state.tempEdge.orgDepartmentList : [],
     officeList: typeof state.tempEdge.officeList !== 'undefined' ? state.tempEdge.officeList : [],
@@ -1014,26 +1015,6 @@ let mapStateToProps = state => {
     errorFields: state.tempEdge.errorFields,
     lastRemoved: state.tempEdge.lastRemoved
   };
-=======
-let mapStateToProps = (state) => {
-    let selector = formValueSelector('NewEmployee'); // <-- same as form name
-
-    return({
-      skillsList: state.tempEdge.skillsList,
-      country_region_list: state.tempEdge.country_region_list,
-      orgDepartmentList: (typeof state.tempEdge.orgDepartmentList !== 'undefined')? state.tempEdge.orgDepartmentList: [],
-      officeList: (typeof state.tempEdge.officeList !== 'undefined')? state.tempEdge.officeList: [],
-      country: selector(state, 'country'),
-      backgroundTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTest: null,
-      drugTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.drugTest: null,
-      birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null,
-      hiredate: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.hireDate_: null,
-      validatePerson: (typeof state.tempEdge.validatePerson !== 'undefined')? state.tempEdge.validatePerson: null,
-      savePerson: (typeof state.tempEdge.savePerson !== 'undefined')? state.tempEdge.savePerson: null,
-      errorFields: state.tempEdge.errorFields,
-      lastRemoved: state.tempEdge.lastRemoved
-    });
->>>>>>> firstversion
 };
 
 export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee));
