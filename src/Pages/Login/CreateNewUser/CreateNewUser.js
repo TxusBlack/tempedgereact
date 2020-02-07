@@ -39,7 +39,6 @@ class CreateNewUser extends Component {
   }
 
   onSubmit = async formValues => {
-    console.log('userRoleId: ', formValues.agencyrole.roleId);
     let response = {
       orgName: formValues.agencyorganization,
       username: formValues.username,
@@ -55,18 +54,14 @@ class CreateNewUser extends Component {
         //"agencyrole": formValues.agencyrole,
       },
       //"agencyssnlastfour" : formValues.agencyssnlastfour
-      clientName: formValues.agencyclient,
-      officeName: formValues.agencyoffice,
+      clientName: formValues.agencyclient || '',
+      officeName: formValues.agencyoffice || '',
       roleId: formValues.agencyrole.roleId
     };
-
-    console.log('response: ', response);
 
     httpService
       .post('/api/user/save', response)
       .then(res => {
-        console.log('res: ', res);
-
         this.setState(
           () => ({
             message: <Translate id={res.data.message} />

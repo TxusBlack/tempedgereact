@@ -472,7 +472,7 @@ class CreateEmployee extends Component {
         country: formValues.country.countryId,
         drugTest: formValues.drugTestDropdown === 'Yes' ? true : false,
         drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
-        email: formValues.email,
+        email: formValues.email_,
         empDepartment: formValues.department.orgDepartmentCode,
         firstName: formValues.firstName.toUpperCase(),
         gender: formValues.gender === 'Male' ? 'M' : 'F',
