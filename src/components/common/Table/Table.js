@@ -76,7 +76,7 @@ class Table extends Component {
           }
 
           {
-            content ? <TBody data={content} columns={columns} /> : "NO RECORDS FOUND"
+            content ? <TBody data={content.content } columns={columns} /> : "NO RECORDS FOUND"
           }
 
         </table>

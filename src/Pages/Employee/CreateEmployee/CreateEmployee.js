@@ -566,10 +566,11 @@ class CreateEmployee extends Component {
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
 
-    if (typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)) {
-      sortedSkillList = this.props.skillsList.sort((a, b) => {
-        let x = a.skill;
-        let y = b.skill;
+        console.log("SKILL: ", this.props);
+        if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
+          sortedSkillList = this.props.skillsList.sort((a, b) => {
+            let x = a.skill;
+            let y = b.skill;
 
         return x < y ? -1 : x > y ? 1 : 0;
       });
@@ -994,6 +995,7 @@ CreateEmployee = reduxForm({
   validate: Validate
 })(CreateEmployee);
 
+<<<<<<< HEAD
 let mapStateToProps = state => {
   let selector = formValueSelector('NewEmployee'); // <-- same as form name
 
@@ -1012,6 +1014,26 @@ let mapStateToProps = state => {
     errorFields: state.tempEdge.errorFields,
     lastRemoved: state.tempEdge.lastRemoved
   };
+=======
+let mapStateToProps = (state) => {
+    let selector = formValueSelector('NewEmployee'); // <-- same as form name
+
+    return({
+      skillsList: state.tempEdge.skillsList,
+      country_region_list: state.tempEdge.country_region_list,
+      orgDepartmentList: (typeof state.tempEdge.orgDepartmentList !== 'undefined')? state.tempEdge.orgDepartmentList: [],
+      officeList: (typeof state.tempEdge.officeList !== 'undefined')? state.tempEdge.officeList: [],
+      country: selector(state, 'country'),
+      backgroundTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.backgroundTest: null,
+      drugTest: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.drugTest: null,
+      birthday: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.birthday_: null,
+      hiredate: (typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined')? state.form.NewEmployee.values.hireDate_: null,
+      validatePerson: (typeof state.tempEdge.validatePerson !== 'undefined')? state.tempEdge.validatePerson: null,
+      savePerson: (typeof state.tempEdge.savePerson !== 'undefined')? state.tempEdge.savePerson: null,
+      errorFields: state.tempEdge.errorFields,
+      lastRemoved: state.tempEdge.lastRemoved
+    });
+>>>>>>> firstversion
 };
 
 export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee));

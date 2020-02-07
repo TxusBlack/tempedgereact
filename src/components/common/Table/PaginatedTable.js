@@ -26,8 +26,7 @@ class PaginatedTable extends Component {
 
     componentWillMount (){
         let payload = {orgId : 1, filterBy:{}};
-
-        if(typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined' ){
+        if(typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined' ){
           payload.data = this.props.payload;
           this.props.tempedgeAPI(this.props.apiUrl, payload, types.TEMPEDGE_LIST);
         }
@@ -61,7 +60,7 @@ class PaginatedTable extends Component {
     }
 
     render() {
-        let data = (typeof this.props.payload === 'undefined' && typeof this.props.url !== 'undefined') ? this.props.paginatorList: this.props.payload;
+        let data = (typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined') ? this.props.paginatorList: this.props.payload;
         let title = this.props.title;
 
         return (
