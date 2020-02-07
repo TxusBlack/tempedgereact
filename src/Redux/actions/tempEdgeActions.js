@@ -6,8 +6,7 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://10.1.10.52:9191`;
-//let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://localhost:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
@@ -79,6 +78,7 @@ export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
+    console.log("Req: ", data);
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -90,9 +90,10 @@ export let tempedgeAPI = (url, data, actionName) => {
         access_token: token
       }
     }).then((response) => {
+      console.log("Res: ", response);
       dispatch({
         type: actionName,
-        payload: response
+        payload: response.data.result
       })
     }).catch((err) => {
       dispatch({
@@ -172,8 +173,10 @@ export let getListSafe = (url, data, actionName) => {
       params: { access_token: token }
     };
 
+    console.log("getListSafe req: ",data);
     Axios.post((baseUrlTempEdge + url), data ,options)
       .then((response) => {
+        console.log("getListSafe res: ",response);
         dispatch({
           type: actionName,
           payload: response.data.result
