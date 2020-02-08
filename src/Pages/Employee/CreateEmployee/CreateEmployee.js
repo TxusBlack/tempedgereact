@@ -508,7 +508,6 @@ class CreateEmployee extends Component {
         let sortedSkillList = undefined;
         let birthDay = (this.props.birthday !== null)? moment().diff(this.props.birthday, 'years',false): "";
 
-        console.log("SKILL: ", this.props);
         if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
           sortedSkillList = this.props.skillsList.sort((a, b) => {
             let x = a.skill;

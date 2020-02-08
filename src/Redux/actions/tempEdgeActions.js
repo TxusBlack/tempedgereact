@@ -93,7 +93,7 @@ export let tempedgeAPI = (url, data, actionName) => {
       console.log("Res: ", response);
       dispatch({
         type: actionName,
-        payload: response.data.result
+        payload: response
       })
     }).catch((err) => {
       dispatch({
