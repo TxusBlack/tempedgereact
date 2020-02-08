@@ -27,9 +27,6 @@ class TBody extends Component {
         let data = this.props.data;
         let columns = this.props.columns;
 
-        console.log("columns: ", columns);
-        console.log("data: ", data);
-
         return (
             <tbody>
                 {

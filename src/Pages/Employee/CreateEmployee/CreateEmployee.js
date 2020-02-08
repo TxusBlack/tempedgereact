@@ -508,6 +508,7 @@ class CreateEmployee extends Component {
         let sortedSkillList = undefined;
         let birthDay = (this.props.birthday !== null)? moment().diff(this.props.birthday, 'years',false): "";
 
+        console.log("SKILL: ", this.props);
         if(typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)){
           sortedSkillList = this.props.skillsList.sort((a, b) => {
             let x = a.skill;
@@ -814,7 +815,7 @@ let mapStateToProps = (state) => {
     let selector = formValueSelector('NewEmployee'); // <-- same as form name
 
     return({
-      skillsList: state.tempEdge.skillList,
+      skillsList: state.tempEdge.skillsList,
       country_region_list: state.tempEdge.country_region_list,
       orgDepartmentList: (typeof state.tempEdge.orgDepartmentList !== 'undefined')? state.tempEdge.orgDepartmentList: [],
       officeList: (typeof state.tempEdge.officeList !== 'undefined')? state.tempEdge.officeList: [],
