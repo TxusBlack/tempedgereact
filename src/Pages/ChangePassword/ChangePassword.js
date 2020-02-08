@@ -30,7 +30,6 @@ class ChangePassword extends React.Component {
         this.setState({
           submitted: 0
         });
-
         this.props.clearTempedgeStoreProp('changePassword');
         const notifyMessage = {
           position: 'br',
@@ -41,7 +40,7 @@ class ChangePassword extends React.Component {
           notifyMessage.title = <Translate id='com.tempedge.msg.info.title.password_changed' />;
           notifyMessage.message = <Translate id='com.tempedge.msg.info.body.password_changed' />;
           notifyMessage.status = 'success';
-          this.onSuccess();
+          this.resetChangePasswordForm();
         } else {
           notifyMessage.title = <Translate id='com.tempedge.msg.info.title.invalid_password' />;
           notifyMessage.message = <Translate id='com.tempedge.msg.info.body.invalid_password' />;
@@ -60,10 +59,10 @@ class ChangePassword extends React.Component {
   }
 
   componentWillUnmount() {
-    this.onSuccess();
+    this.resetChangePasswordForm();
   }
 
-  onSuccess() {
+  resetChangePasswordForm() {
     this.props.reset('ChangePassword'); //Reset form fields all to empty
     this.props.clearTempedgeStoreProp('changePassword');
   }
@@ -100,7 +99,7 @@ class ChangePassword extends React.Component {
   };
 
   fireNotification = notifyMessage => {
-    let { notify } = this.props;
+    const { notify } = this.props;
     notify(notifyMessage);
   };
 
