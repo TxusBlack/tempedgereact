@@ -645,7 +645,7 @@ class CreateEmployee extends Component {
                         <label className='control-label'>
                           <Translate id='com.tempedge.msg.label.tempdata' />
                         </label>
-                        <Field name='temporarydata' category='person' component={ToggleSwitch} />
+                        <Field name='temporarydata' category='person' checked={false} component={ToggleSwitch} />
                       </div>
                       <div className='col-10 col-md-5 col-lg-4'>
                         <label className='control-label'>
