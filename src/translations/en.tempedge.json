@@ -1,4 +1,5 @@
 {
+  "com.tempedge.msg.label.selectorg"                                  : "Select your Organization",
   "com.tempedge.msg.label.sign_in"                                    : "Sign In",
   "com.tempedge.msg.label.sign_up"                                    : "Sign Up",
   "com.tempedge.msg.person.newperson"                                 : "You have successfully created a new employee.",

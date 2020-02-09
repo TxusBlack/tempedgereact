@@ -30,7 +30,7 @@ import CreateEmployee from './Pages/Employee/CreateEmployee/CreateEmployee';
 import ClientList from './Pages/Client/ClientList/ClientList';
 import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
-import AgencyList from './Pages/Agencies/AgencySelect/AgencySelectList';
+import OrgList from './Pages/Organization/OrgSelect/OrgSelectList';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -99,6 +99,7 @@ class App extends React.Component{
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/dashboard/:lang" component={Dashboard} />
+                  <PrivateRoute exact path="/organization-select/:lang" component={OrgList} />
                   <PrivateRoute exact path="/intpayroll/new/:lang" component={NewInternalPayroll} />
                 </Switch>
               </div>
