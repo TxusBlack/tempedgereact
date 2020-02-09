@@ -29,7 +29,7 @@ import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 
-const $ = window.$;
+const { $ } = window;
 
 momentLocaliser(moment);
 
@@ -120,7 +120,7 @@ class CreateEmployee extends Component {
     }));
   };
 
-  componentDidUpdate = async (prevProps, prevState) => {
+  componentDidUpdate = async prevProps => {
     if (this.state.getCountryList === false) {
       if (typeof this.props.country_region_list !== 'undefined') {
         this.setState(() => ({
@@ -131,6 +131,7 @@ class CreateEmployee extends Component {
 
     if (this.state.orgDepartmentList.length === 0 && Array.isArray(this.props.orgDepartmentList)) {
       if (this.props.orgDepartmentList.length > 0) {
+        console.log('state Setted');
         this.setState(() => ({
           orgDepartmentList: this.props.orgDepartmentList
         }));
@@ -208,6 +209,7 @@ class CreateEmployee extends Component {
       if (this.state.getCountryList) {
         let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
         let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, 'United States');
+        console.log('reseted');
         let states = await regionsList.map((state, index) => {
           return state.name;
         });
@@ -568,7 +570,6 @@ class CreateEmployee extends Component {
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
 
-    console.log('SKILL: ', this.props);
     if (typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)) {
       sortedSkillList = this.props.skillsList.sort((a, b) => {
         let x = a.skill;
