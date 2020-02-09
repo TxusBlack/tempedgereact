@@ -88,7 +88,6 @@ export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
-    console.log("Req: ", data);
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -100,7 +99,6 @@ export let tempedgeAPI = (url, data, actionName) => {
         access_token: token
       }
     }).then((response) => {
-      console.log("Res: ", response);
       dispatch({
         type: actionName,
         payload: response
