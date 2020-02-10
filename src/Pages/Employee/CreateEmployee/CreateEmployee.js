@@ -3,51 +3,47 @@ import ReactDOM from 'react-dom';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
-import { Field, reduxForm, change, formValueSelector, reset, initialize } from 'redux-form';
-import { date } from 'redux-form-validators';
-import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-//import DropdownList from 'react-widgets/lib/DropdownList';      //DO NOT REMOVE or it will break
-import DropdownList from '../../../components/common/Dropdown/DropdownList';
-import ToggleSwitch from '../../../components/common/ToggleSwitch/ToggleSwitch';
-import Datepicker from '../../../components/common/Datepicker/Datepicker';
-import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker'; //DO NOT REMOVE or it will break
+import { Field, reduxForm, change, formValueSelector, initialize } from 'redux-form';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
+import Form from 'react-bootstrap/Form';
+import Stepper from 'react-stepper-horizontal';
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
+import ToggleSwitch from '../../../components/common/ToggleSwitch/ToggleSwitch';
+import Datepicker from '../../../components/common/Datepicker/Datepicker';
 import types from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
 import { tempedgeAPI, tempedgeMultiPartApi, clearTempedgeStoreProp, clearErrorField, getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
-import Container from '../../../components/common/Container/Container';
-import Form from 'react-bootstrap/Form';
-import Stepper from 'react-stepper-horizontal';
 import Validate from '../../Validations/Validations';
 import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
+import InputBox from '../../../components/common/InputBox/InputBox.js';
 
 const { $ } = window;
 
 momentLocaliser(moment);
+
+const defaultCountry = { name: 'United States', countryId: 234 };
+const defaultRegion = { name: 'New Jersey', regionId: 4134 };
 
 class CreateEmployee extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activePage: 3,
+      getCountryList: false,
       prevCountry: '',
-      country_list: [],
+      countryList: [],
       regionsList: [],
       orgDepartmentList: [],
       officeList: [],
       steps: [{ title: '' }, { title: '' }, { title: '' }, { title: '' }],
       genders: [],
       mounted: false,
-      getCountryList: false,
-      countryListRendered: 0,
       drugTest: [],
       backgroundTest: [],
       documents: null,
@@ -66,8 +62,8 @@ class CreateEmployee extends Component {
         ['office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
-        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
-      ]
+        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances'],
+      ],
     };
 
     this.addTranslationsForActiveLanguage();
@@ -106,7 +102,7 @@ class CreateEmployee extends Component {
       genders: gendersTranslate,
       drugTest: drugTest,
       backgroundTest: backgroundTest,
-      maritalStatus: maritalStatus
+      maritalStatus: maritalStatus,
     }));
   };
 
@@ -116,24 +112,26 @@ class CreateEmployee extends Component {
     this.props.clearTempedgeStoreProp('savePerson');
 
     this.setState(() => ({
-      announcementBar: ''
+      announcementBar: '',
     }));
   };
 
-  componentDidUpdate = async prevProps => {
-    if (this.state.getCountryList === false) {
-      if (typeof this.props.country_region_list !== 'undefined') {
+  componentDidUpdate = async (prevProps) => {
+    const { getCountryList } = this.state;
+    const { countryRegionList } = this.props;
+    if (getCountryList === false) {
+      if (typeof countryRegionList !== 'undefined') {
         this.setState(() => ({
-          getCountryList: true
+          getCountryList: true,
         }));
+        this.setCountryList(defaultCountry, defaultRegion);
       }
     }
 
     if (this.state.orgDepartmentList.length === 0 && Array.isArray(this.props.orgDepartmentList)) {
       if (this.props.orgDepartmentList.length > 0) {
-        console.log('state Setted');
         this.setState(() => ({
-          orgDepartmentList: this.props.orgDepartmentList
+          orgDepartmentList: this.props.orgDepartmentList,
         }));
       }
     }
@@ -141,7 +139,7 @@ class CreateEmployee extends Component {
     if (this.state.officeList.length === 0 && Array.isArray(this.props.officeList)) {
       if (this.props.officeList.length > 0) {
         this.setState(() => ({
-          officeList: this.props.officeList
+          officeList: this.props.officeList,
         }));
       }
     }
@@ -154,12 +152,46 @@ class CreateEmployee extends Component {
     }
   };
 
-  componentWillReceiveProps = async nextProps => {
+  onChangeCountry(country) {
+    const { countryRegionList } = this.props;
+    const { prevCountry } = this.state;
+
+    if (typeof country.name !== 'undefined') {
+      if (prevCountry !== country.name) {
+        if (typeof countryRegionList !== 'undefined' && countryRegionList.length > 0) {
+          this.setCountryList(country);
+        }
+      }
+    }
+  }
+
+  async setCountryList(countrySelected, regionSelected) {
+    const country = countrySelected || { name: '', countryId: '' };
+    const region = regionSelected || { name: '', regionId: '' };
+    const { countryRegionList, dispatch } = this.props;
+
+    console.log('countryRegionList', countryRegionList);
+
+    if (typeof countryRegionList !== 'undefined') {
+      const countryList = CountryRegionParser.getCountryList(countryRegionList).country_list;
+      const regionsList = await CountryRegionParser.getRegionList(countryRegionList, country.name);
+      dispatch(change('NewEmployee', 'country', country));
+      dispatch(change('NewEmployee', 'state', region));
+      dispatch(change('NewEmployee', 'joblocation', ''));
+      this.setState(() => ({
+        countryList,
+        regionsList,
+        prevCountry: country.name,
+      }));
+    }
+  }
+
+  componentWillReceiveProps = async (nextProps) => {
     if (typeof nextProps.errorFields !== 'undefined') {
       let chkResult = [...this.state.chkResult];
       let errorPanel = [...this.state.errorPanel];
 
-      this.state.tabRequiredFields[0].map(field => {
+      this.state.tabRequiredFields[0].map((field) => {
         let found = nextProps.errorFields.indexOf(field);
 
         if (found > -1 && this.state.chkResult[0].indexOf(field) === -1) {
@@ -171,7 +203,7 @@ class CreateEmployee extends Component {
         }
       });
 
-      this.state.tabRequiredFields[1].map(field => {
+      this.state.tabRequiredFields[1].map((field) => {
         let found = nextProps.errorFields.indexOf(field);
 
         if (found > -1 && this.state.chkResult[1].indexOf(field) === -1) {
@@ -183,7 +215,7 @@ class CreateEmployee extends Component {
         }
       });
 
-      this.state.tabRequiredFields[3].map(field => {
+      this.state.tabRequiredFields[3].map((field) => {
         let found = nextProps.errorFields.indexOf(field);
 
         if (found > -1 && this.state.chkResult[3].indexOf(field) === -1) {
@@ -201,50 +233,8 @@ class CreateEmployee extends Component {
 
       this.setState(() => ({
         chkResult: chkResult,
-        errorPanel: errorPanel
+        errorPanel: errorPanel,
       }));
-    }
-
-    if (typeof nextProps.country_region_list !== 'undefined') {
-      if (this.state.getCountryList) {
-        let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
-        let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, 'United States');
-        console.log('reseted');
-        let states = await regionsList.map((state, index) => {
-          return state.name;
-        });
-
-        this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
-        this.props.dispatch(change('NewEmployee', 'state', { name: 'New Jersey', regionId: 4134 }));
-
-        this.setState(
-          () => ({
-            countryListRendered: this.state.countryListRendered + 1,
-            country_list: list,
-            regionsList: states
-          }),
-          async () => {
-            let regionsList = [];
-
-            regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, typeof nextProps.country === 'undefined' ? 'United States' : nextProps.country.name);
-
-            this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
-            this.setState({
-              countryListRendered: this.state.countryListRendered + 1,
-              prevCountry: typeof nextProps.country === 'undefined' ? 'United States' : nextProps.country.name,
-              region_list: regionsList
-            });
-          }
-        );
-      }
-    }
-
-    if (typeof nextProps.country !== 'undefined') {
-      if (this.state.prevCountry !== nextProps.country.name) {
-        if (typeof this.props.country_region_list !== 'undefined' && this.props.country_region_list.length > 0) {
-          this.props.dispatch(change('NewEmployee', 'state', ''));
-        }
-      }
     }
 
     if (nextProps.savePerson !== null) {
@@ -257,9 +247,9 @@ class CreateEmployee extends Component {
                   <Translate id='com.tempedge.msg.person.newperson' />
                 </p>
               </div>
-            )
+            ),
           }),
-          () => this.props.reset()
+          () => this.props.reset(),
         );
       } else {
         //Validation Failed
@@ -270,7 +260,7 @@ class CreateEmployee extends Component {
                 <Translate id={this.state.validateMsg} />
               </p>
             </div>
-          )
+          ),
         }));
       }
     }
@@ -286,11 +276,11 @@ class CreateEmployee extends Component {
 
               this.setState(
                 () => ({
-                  validateMsg: nextProps.validatePerson.data.message
+                  validateMsg: nextProps.validatePerson.data.message,
                 }),
                 () => {
                   this.toggleModalOnOff();
-                }
+                },
               );
             };
 
@@ -317,18 +307,18 @@ class CreateEmployee extends Component {
 
             this.setState(
               () => ({
-                showModal: !this.state.showModal
+                showModal: !this.state.showModal,
               }),
               () => {
                 this.setState(() => ({
-                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />
+                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />,
                 }));
-              }
+              },
             );
 
             this.setState(() => ({
               paginatedTable: paginatedTable,
-              btns: btns
+              btns: btns,
             }));
           } else {
             //Validation Failed
@@ -339,7 +329,7 @@ class CreateEmployee extends Component {
                     <Translate id={nextProps.validatePerson.data.message} />
                   </p>
                 </div>
-              )
+              ),
             }));
           }
         } else {
@@ -351,7 +341,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            )
+            ),
           }));
         }
       } else if (nextProps.validatePerson.data.status === 500) {
@@ -363,7 +353,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            )
+            ),
           }));
         }
       } else if (nextProps.validatePerson.data.status === 200) {
@@ -403,7 +393,7 @@ class CreateEmployee extends Component {
         genders: gendersTranslate,
         drugTest: drugTest,
         backgroundTest: backgroundTest,
-        maritalStatus: maritalStatus
+        maritalStatus: maritalStatus,
       }));
     }
   };
@@ -419,7 +409,7 @@ class CreateEmployee extends Component {
     reader.readAsBinaryString(file); //Read Blob as binary
 
     //Event Listener for when a file is selected to be uploaded
-    reader.onload = event => {
+    reader.onload = (event) => {
       //(on_file_select_event)
       let data = event.target.result; //'result' if not 'null', contains the contents of the file as a binary string
       let stateName = ref === 'fileInputDocuments' ? 'documents' : 'resume';
@@ -428,13 +418,13 @@ class CreateEmployee extends Component {
       this.setState(() => ({
         [stateName]: {
           name: file.name,
-          data: data
-        }
+          data: data,
+        },
       }));
     };
   };
 
-  onSubmit = async formValues => {
+  onSubmit = async (formValues) => {
     let skills = [];
     let counter = 0;
     let fomrValueLen = Object.keys(formValues).length;
@@ -450,7 +440,7 @@ class CreateEmployee extends Component {
         if (prop.indexOf('data-skill-id-') > -1) {
           id = prop.match(/(\d+)/);
           skills.push({
-            skillId: parseInt(id[0])
+            skillId: parseInt(id[0]),
           });
         }
 
@@ -460,7 +450,7 @@ class CreateEmployee extends Component {
 
         counter++;
       }
-    }).then(skills => {
+    }).then((skills) => {
       let data = {
         temporalInfo: formValues.temporarydata ? true : false,
         skills: skills,
@@ -469,7 +459,7 @@ class CreateEmployee extends Component {
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
         backgroundtest: formValues.backgroundTest.backgroundTest === 'Yes' ? true : false,
-        birthDay: '1991-09-18', //moment(formValues.birthday_, 'YYYY-MM-DD'),
+        birthDay: moment(formValues.birthday_, 'YYYY-MM-DD'),
         cellPhone: formValues.phone,
         city: formValues.city.toUpperCase(),
         country: formValues.country.countryId,
@@ -480,7 +470,7 @@ class CreateEmployee extends Component {
         employeeid: formValues.employeeid,
         firstName: formValues.firstName.toUpperCase(),
         gender: formValues.gender.gender === 'Male' ? 'M' : 'F',
-        hireDate: '2000-09-05', //moment(formValues.hireDate_, 'YYYY-MM-DD'),
+        hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
         identification: formValues.ssn,
         lastName: formValues.lastName.toUpperCase(),
         maritalStatus: formValues.maritalstatusDropdown ? 0 : 1,
@@ -493,11 +483,11 @@ class CreateEmployee extends Component {
         docExt: null,
         resumExt: null,
         personType: {
-          personTypeId: 1 // ** TODO **
+          personTypeId: 1, // ** TODO **
         },
         office: {
-          officeId: formValues.office.officeId
-        }
+          officeId: formValues.office.officeId,
+        },
       };
 
       var fileArray = {};
@@ -514,17 +504,18 @@ class CreateEmployee extends Component {
       this.setState(
         () => ({
           formData: { ...data },
-          fileArray
+          fileArray,
         }),
         () => {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
-        }
+        },
       );
       console.log('request', data);
+      debugger;
     });
   };
 
-  convertToBase64 = file => {
+  convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       // Select the very first file from list
       let fileToLoad = file;
@@ -555,7 +546,7 @@ class CreateEmployee extends Component {
   toggleModalOnOff = () => {
     this.setState({
       showModal: !this.state.showModal,
-      modal: ''
+      modal: '',
     });
   };
 
@@ -610,7 +601,7 @@ class CreateEmployee extends Component {
             borderBottomLeftRadius: '1.6rem',
             borderBottomRightRadius: '1.6rem',
             backgroundColor: '#ffff',
-            margin: 'auto'
+            margin: 'auto',
           }}>
           {this.state.announcementBar}
           <div className='tabs-stepper-wrapper register-form-panel-inputs' ref='createNewEmployee1' style={{ margin: 'auto', padding: 0 }}>
@@ -748,7 +739,15 @@ class CreateEmployee extends Component {
                         <label className='control-label'>
                           <Translate id='com.tempedge.msg.label.country' />
                         </label>
-                        <Field name='country' data={this.state.country_list} valueField='countryId' textField='name' category='agency' component={DropdownList} />
+                        <Field
+                          name='country'
+                          data={this.state.countryList}
+                          onChange={(e) => this.onChangeCountry(e)}
+                          valueField='countryId'
+                          textField='name'
+                          category='agency'
+                          component={DropdownList}
+                        />
                       </div>
                     </div>
                     <div className='form-group row'>
@@ -776,7 +775,7 @@ class CreateEmployee extends Component {
                         <label className='control-label'>
                           <Translate id='com.tempedge.msg.label.state' />
                         </label>
-                        <Field name='state' data={this.state.region_list} valueField='regionId' textField='name' category='person' component={DropdownList} />
+                        <Field name='state' data={this.state.regionsList} valueField='regionId' textField='name' category='person' component={DropdownList} />
                       </div>
                       <div className='col10 col-md-5 col-lg-4'>
                         <label className='control-label'>
@@ -835,7 +834,7 @@ class CreateEmployee extends Component {
                           <label className='control-label' style={{ marginBottom: 5 }}>
                             <Translate id='com.tempedge.msg.label.joblocation' />
                           </label>
-                          <Field name='joblocation' data={this.state.region_list} valueField='regionId' textField='name' category='person' component={DropdownList} />
+                          <Field name='joblocation' data={this.state.regionsList} valueField='regionId' textField='name' category='person' component={DropdownList} />
                         </div>
 
                         <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
@@ -919,7 +918,7 @@ class CreateEmployee extends Component {
                                 <label className='input-group-btn' style={{ width: '100%', textAlign: 'center' }}>
                                   <span className='btn department-list-button'>
                                     <Translate id='com.tempedge.msg.label.choosefile' />
-                                    <input type='file' onChange={e => this.onChange(e.target.files[0], 'fileInputDocuments')} style={{ display: 'none' }} accept='.pdf' />
+                                    <input type='file' onChange={(e) => this.onChange(e.target.files[0], 'fileInputDocuments')} style={{ display: 'none' }} accept='.pdf' />
                                   </span>
                                 </label>
                                 <br />
@@ -939,7 +938,7 @@ class CreateEmployee extends Component {
                                     <Translate id='com.tempedge.msg.label.choosefile' />
                                     <input
                                       type='file'
-                                      onChange={e => this.onChange(e.target.files[0], 'fileInputResume')}
+                                      onChange={(e) => this.onChange(e.target.files[0], 'fileInputResume')}
                                       style={{ display: 'none' }}
                                       accept='.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .pdf'
                                     />
@@ -989,21 +988,23 @@ CreateEmployee.propTypes = {
   getListSafe: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
-  clearErrorField: PropTypes.func.isRequired
+  clearErrorField: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  countryRegionList: PropTypes.array,
 };
 
 CreateEmployee = reduxForm({
   form: 'NewEmployee', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
-  validate: Validate
+  validate: Validate,
 })(CreateEmployee);
 
-let mapStateToProps = state => {
+let mapStateToProps = (state) => {
   let selector = formValueSelector('NewEmployee'); // <-- same as form name
 
   return {
     skillsList: state.tempEdge.skillsList,
-    country_region_list: state.tempEdge.country_region_list,
+    countryRegionList: state.tempEdge.country_region_list,
     orgDepartmentList: typeof state.tempEdge.orgDepartmentList !== 'undefined' ? state.tempEdge.orgDepartmentList : [],
     officeList: typeof state.tempEdge.officeList !== 'undefined' ? state.tempEdge.officeList : [],
     country: selector(state, 'country'),
@@ -1014,7 +1015,7 @@ let mapStateToProps = state => {
     validatePerson: typeof state.tempEdge.validatePerson !== 'undefined' ? state.tempEdge.validatePerson : null,
     savePerson: typeof state.tempEdge.savePerson !== 'undefined' ? state.tempEdge.savePerson : null,
     errorFields: state.tempEdge.errorFields,
-    lastRemoved: state.tempEdge.lastRemoved
+    lastRemoved: state.tempEdge.lastRemoved,
   };
 };
 
