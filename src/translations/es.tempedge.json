@@ -204,5 +204,9 @@
   "com.tempedge.error.person.hireDate_required"                       : "Hire date required.",
   "com.tempedge.msg.info.msg.success"                                 : "Transacción Exitosa!",
   "com.tempedge.error.emailalreadyexist"                              : "Email a sido registrado previamente.",
-  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe."
+  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe.",
+  "com.tempedge.table.header.label.departmentCode"                    : "Código del departamento",
+  "com.tempedge.table.header.label.departmentName"                    : "Nombre del departamento",
+  "com.tempedge.table.header.label.departmentNotFound"                : "Departamento no encontrado",
+  "com.tempedge.table.header.label.searchByCode"                      : "Buscar por código"
 }

@@ -204,5 +204,9 @@
   "com.tempedge.error.person.hireDate_required"                       : "Hire date required.",
   "com.tempedge.msg.info.msg.success"                                 : "Process Complete!",
   "com.tempedge.error.emailalreadyexist"                              : "Email registered already.",
-  "com.tempedge.error.useralreadyexist"                               : "User already Exists."
+  "com.tempedge.error.useralreadyexist"                               : "User already Exists.",
+  "com.tempedge.table.header.label.departmentCode"                    : "Department code",
+  "com.tempedge.table.header.label.departmentName"                    : "Department name",
+  "com.tempedge.table.header.label.departmentNotFound"                : "Department not found",
+  "com.tempedge.table.header.label.searchByCode"                      : "Search by code"
 }

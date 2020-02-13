@@ -26,6 +26,7 @@ import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
+import Table from '../../../components/common/Table/Table.js';
 
 const $ = window.$;
 
@@ -69,6 +70,8 @@ class CreateEmployee extends Component {
     };
 
     this.departmentInput = React.createRef();
+    this.tbodyRef = React.createRef();
+
     this.addTranslationsForActiveLanguage();
   }
 
@@ -126,23 +129,52 @@ class CreateEmployee extends Component {
 
   createDepartmentsTable() {
     const { orgDepartmentList } = this.state;
+
     const departmentsTable = (
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>Department code</th>
-            <th>Department name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orgDepartmentList.map((department) => (
-            <tr onClick={(e) => this.setInputValue(e)} key={department.orgDepartmentId}>
-              <td>{department.orgDepartmentCode}</td>
-              <td>{department.name}</td>
+      <div className="container">
+        <table className="table table-hover">
+          <thead>
+            <tr className="tableRow text-center">
+              <th className="table-header-left">
+                <Translate id="com.tempedge.table.header.label.departmentCode" />
+                <div className="row">
+                  <div className="col-10 offset-1 col-sm-6 offset-sm-3">
+                    <Translate>
+                      {({ translate }) => (
+                        <input
+                          type="text"
+                          className="form-control tempEdge-input-box"
+                          placeholder={translate('com.tempedge.table.header.label.searchByCode')}
+                          onChange={(e) => this.onFilteringDepartments(e)}
+                        />
+                      )}
+                    </Translate>
+                  </div>
+                </div>
+              </th>
+              <th className="table-header-right">
+                <Translate id="com.tempedge.table.header.label.departmentName" />
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody ref={this.tbodyRef}>
+            {orgDepartmentList && orgDepartmentList.length > 0 ? (
+              orgDepartmentList.map((department) => (
+                <tr className="tableRow text-center" onClick={(e) => this.setInputValue(e)} key={department.orgDepartmentId}>
+                  <td className="table-content">{department.orgDepartmentId}</td>
+                  <td className="table-content">{department.name}</td>
+                </tr>
+              ))
+            ) : (
+              <tr className="tableRow text-center">
+                <td colSpan="2" className="table-content">
+                  <Translate id="com.tempedge.table.header.label.departmentNotFound" />
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     );
 
     this.setState({
@@ -150,9 +182,28 @@ class CreateEmployee extends Component {
     });
   }
 
+  onFilteringDepartments(e) {
+    const rowList = this.tbodyRef.current.querySelectorAll('tr');
+    const wroteValue = e.target.value;
+    if (rowList && rowList.length > 0) {
+      rowList.forEach((row) => {
+        const cell = row.querySelector('td');
+        if (cell.textContent.includes(wroteValue)) {
+          row.classList.remove('d-none');
+        } else {
+          row.classList.add('d-none');
+        }
+      });
+    }
+  }
+
   setInputValue(e) {
     const departmentSelected = e.currentTarget.querySelector('td:nth-child(2)').textContent;
+    const orgDepartmentId = e.currentTarget.querySelector('td:nth-child(1)').textContent;
     this.props.dispatch(change('NewEmployee', 'department', departmentSelected));
+    this.setState({
+      orgDepartmentId,
+    });
     this.toggleModalOnOff();
   }
 
@@ -509,7 +560,7 @@ class CreateEmployee extends Component {
         drugTest: formValues.drugTestDropdown === 'Yes' ? true : false,
         drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
         email: formValues.email,
-        empDepartment: formValues.department.orgDepartmentCode,
+        empDepartment: this.state.orgDepartmentId || formValues.department,
         firstName: formValues.firstName.toUpperCase(),
         gender: formValues.gender === 'Male' ? 'M' : 'F',
         hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
@@ -691,11 +742,23 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.department" />
                         </label>
-
-                        <div className="input-group">
-                          <Field name="department" placeholder="Department" category="person" component="input" ref={this.departmentInput} className="form-control tempEdge-input-box" />
-                          <div className="input-group-append">
-                            <button className="btn btn-outline-secondary" type="button" onClick={() => this.openModal()}>
+                        <div className="row">
+                          <div className="col-9 col-md-8 col-lg-9">
+                            <Translate>
+                              {({ translate }) => (
+                                <Field
+                                  name="department"
+                                  placeholder={translate('com.tempedge.msg.label.department')}
+                                  category="person"
+                                  component={InputBox}
+                                  ref={this.departmentInput}
+                                  className="form-control tempEdge-input-box"
+                                />
+                              )}
+                            </Translate>
+                          </div>
+                          <div className="col-3 col-md-4 col-lg-3 text-right">
+                            <button className="btn symbol-button" type="button" onClick={() => this.openModal()}>
                               +
                             </button>
                           </div>

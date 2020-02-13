@@ -1602,6 +1602,15 @@ form div.list .list-item:last-child button {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
 }
-.btn-outline-secondary{
-  max-height: 38px;
+
+.symbol-button{
+  background-color: var(--normal-blue);
+  color: white;
+  width: 100%;
+  border-radius: 1.6rem;    
+  min-width: 32px;
+  max-width: 60px;
+}
+.symbol-button:hover{
+  color: white;  
 }
