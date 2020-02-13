@@ -25,29 +25,33 @@ class ChangePassword extends React.Component {
   componentDidUpdate(prevProps) {
     const { changePassword } = this.props;
     const { submitted } = this.state;
-    if (submitted === 1 && changePassword) {
+    if (changePassword && submitted === 1) {
+      const notifyMessage = {
+        position: 'br',
+        dismissible: true,
+        dismissAfter: 3000,
+      };
+      this.setState({
+        submitted: 0,
+      });
       if (changePassword.status === 200) {
-        this.setState({
-          submitted: 0
-        });
         this.props.clearTempedgeStoreProp('changePassword');
-        const notifyMessage = {
-          position: 'br',
-          dismissible: true,
-          dismissAfter: 3000
-        };
         if (changePassword.data.status === 200) {
-          notifyMessage.title = <Translate id='com.tempedge.msg.info.title.password_changed' />;
-          notifyMessage.message = <Translate id='com.tempedge.msg.info.body.password_changed' />;
+          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.password_changed" />;
+          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.password_changed" />;
           notifyMessage.status = 'success';
           this.resetChangePasswordForm();
         } else {
-          notifyMessage.title = <Translate id='com.tempedge.msg.info.title.invalid_password' />;
-          notifyMessage.message = <Translate id='com.tempedge.msg.info.body.invalid_password' />;
+          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.invalid_password" />;
+          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.invalid_password" />;
           notifyMessage.status = 'error';
         }
-        this.fireNotification(notifyMessage);
+      } else {
+        notifyMessage.title = <Translate id="com.tempedge.error.undefine" />;
+        notifyMessage.message = <Translate id="com.tempedge.error.undefine" />;
+        notifyMessage.status = 'error';
       }
+      this.fireNotification(notifyMessage);
     }
 
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
@@ -67,101 +71,101 @@ class ChangePassword extends React.Component {
     this.props.clearTempedgeStoreProp('changePassword');
   }
 
-  onChange = recaptchaToken => {
+  onChange = (recaptchaToken) => {
     this.setState({
       reCaptchaToken: recaptchaToken,
-      btnDisabled: false
+      btnDisabled: false,
     });
   };
 
-  setCaptchaRef = ref => {
+  setCaptchaRef = (ref) => {
     this.setState({
-      captchaRef: React.createRef(ref)
+      captchaRef: React.createRef(ref),
     });
   };
 
-  generateCaptcha = formProps => <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
+  generateCaptcha = (formProps) => <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
 
-  onSubmit = async formValues => {
+  onSubmit = async (formValues) => {
     const request = {
       oldPassword: formValues.password,
-      newPassword: formValues.confirmpassword
+      newPassword: formValues.confirmpassword,
     };
 
     this.setState(
       () => ({
-        submitted: 1
+        submitted: 1,
       }),
       () => {
         this.props.tempedgeAPI('/api/user/changePassword', request, types.CHANGE_PASSWORD);
-      }
+      },
     );
   };
 
-  fireNotification = notifyMessage => {
+  fireNotification = (notifyMessage) => {
     const { notify } = this.props;
     notify(notifyMessage);
   };
 
   render() {
     return (
-      <div className='container-fluid login-container'>
-        <div className='row'>
-          <div className='col-md-12'>
-            <div className='login-form'>
-              <div className='panel panel-default login-form-panel'>
-                <div className='panel-heading login-header'>
-                  <h2 className='text-center'>
-                    <Translate id='com.tempedge.msg.label.change_password' />
+      <div className="container-fluid login-container">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="login-form">
+              <div className="panel panel-default login-form-panel">
+                <div className="panel-heading login-header">
+                  <h2 className="text-center">
+                    <Translate id="com.tempedge.msg.label.change_password" />
                   </h2>
                 </div>
-                <form className='panel-body' onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                  <div className='form-group row'>
-                    <div className='col-12'>
-                      <p className='text-left label-p'>
-                        <Translate id='com.tempedge.msg.label.current_password' />
+                <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                  <div className="form-group row">
+                    <div className="col-12">
+                      <p className="text-left label-p">
+                        <Translate id="com.tempedge.msg.label.current_password" />
                       </p>
 
                       <Translate>
-                        {({ translate }) => <Field name='password' placeholder={translate('com.tempedge.msg.label.enter_current_password')} type='password' category='person' component={InputBox} />}
+                        {({ translate }) => <Field name="password" placeholder={translate('com.tempedge.msg.label.enter_current_password')} type="password" category="person" component={InputBox} />}
                       </Translate>
                     </div>
                   </div>
-                  <div className='form-group row'>
-                    <div className='col-12'>
-                      <p className='text-left label-p'>
-                        <Translate id='com.tempedge.msg.label.new_password' />
-                      </p>
-
-                      <Translate>
-                        {({ translate }) => (
-                          <Field name='initialpassword' placeholder={translate('com.tempedge.msg.label.enter_new_password')} type='password' category='person' component={InputBox} />
-                        )}
-                      </Translate>
-                    </div>
-                  </div>
-                  <div className='form-group row'>
-                    <div className='col-12'>
-                      <p className='text-left label-p'>
-                        <Translate id='com.tempedge.msg.label.confirmpassword' />
+                  <div className="form-group row">
+                    <div className="col-12">
+                      <p className="text-left label-p">
+                        <Translate id="com.tempedge.msg.label.new_password" />
                       </p>
 
                       <Translate>
                         {({ translate }) => (
-                          <Field name='confirmpassword' placeholder={translate('com.tempedge.msg.label.confirm_new_password')} type='password' category='person' component={InputBox} />
+                          <Field name="initialpassword" placeholder={translate('com.tempedge.msg.label.enter_new_password')} type="password" category="person" component={InputBox} />
                         )}
                       </Translate>
                     </div>
                   </div>
-                  <div className='form-group'>
-                    <button type='submit' className='btn btn-primary btn-block' disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}>
-                      <Translate id='com.tempedge.msg.label.change_password' />
+                  <div className="form-group row">
+                    <div className="col-12">
+                      <p className="text-left label-p">
+                        <Translate id="com.tempedge.msg.label.confirmpassword" />
+                      </p>
+
+                      <Translate>
+                        {({ translate }) => (
+                          <Field name="confirmpassword" placeholder={translate('com.tempedge.msg.label.confirm_new_password')} type="password" category="person" component={InputBox} />
+                        )}
+                      </Translate>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}>
+                      <Translate id="com.tempedge.msg.label.change_password" />
                     </button>
                   </div>
                 </form>
-                <div className='captcha-container'>
-                  <div className='center-block captcha-panel' style={{ width: '304px' }}>
-                    <Field name='captcha' size='normal' height='130px' theme='light' component={this.generateCaptcha} />
+                <div className="captcha-container">
+                  <div className="center-block captcha-panel" style={{ width: '304px' }}>
+                    <Field name="captcha" size="normal" height="130px" theme="light" component={this.generateCaptcha} />
                   </div>
                 </div>
               </div>
@@ -176,18 +180,18 @@ class ChangePassword extends React.Component {
 ChangePassword.propTypes = {
   reset: PropTypes.func.isRequired,
   tempedgeAPI: PropTypes.func.isRequired,
-  clearTempedgeStoreProp: PropTypes.func.isRequired
+  clearTempedgeStoreProp: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    changePassword: state.tempEdge.changePassword ? state.tempEdge.changePassword : null
+    changePassword: state.tempEdge.changePassword ? state.tempEdge.changePassword : null,
   };
 };
 
 ChangePassword = reduxForm({
   form: 'changePassword',
-  validate: Validate
+  validate: Validate,
 })(ChangePassword);
 
 export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, notify, reset, clearTempedgeStoreProp })(ChangePassword));
