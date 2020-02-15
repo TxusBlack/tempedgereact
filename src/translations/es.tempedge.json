@@ -204,5 +204,7 @@
   "com.tempedge.error.person.hireDate_required"                       : "Hire date required.",
   "com.tempedge.msg.info.msg.success"                                 : "Transacción Exitosa!",
   "com.tempedge.error.emailalreadyexist"                              : "Email a sido registrado previamente.",
-  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe."
+  "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe.",
+  "com.tempedge.msg.label.uploadEmployeeList"                         : "Subir lista de archivos",
+  "com.tempedge.msg.label.upload"                                     : "Subir"
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import 'babel-polyfill';
 import { Switch, Route } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router'
+import { ConnectedRouter } from 'connected-react-router';
 import { store, persistor, history } from './store/store';
-import { Provider } from "react-redux";
+import { Provider } from 'react-redux';
 import { LocalizeProvider } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -32,45 +32,52 @@ import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
 import AgencyList from './Pages/Agencies/AgencySelect/AgencySelectList';
 
+import UpdloadEmployeeList from './Pages/Employee/UploadEmployeeList/UpdloadEmployeeList';
+
 window.recaptchaOptions = {
   lang: 'en',
   useRecaptchaNet: false,
   removeOnUnmount: true,
 };
 
-class App extends React.Component{
-  state = { panelNavShow: false }
+class App extends React.Component {
+  state = { panelNavShow: false };
 
   togglePanelNav = () => {
     this.setState(() => {
       return { panelNavShow: !this.state.panelNavShow };
     });
-  }
+  };
 
   closeNav = () => {
     this.setState(() => {
       return { panelNavShow: false };
     });
-  }
+  };
 
-  render(){
+  render() {
     let defaultLanguage = 'en';
 
     let languages = [
       { name: 'English', code: 'en' },
-      { name: 'Spanish', code: 'es' }
+      { name: 'Spanish', code: 'es' },
     ];
 
     let options = {
       defaultLanguage: defaultLanguage,
-      renderToStaticMarkup: renderToStaticMarkup
+      renderToStaticMarkup: renderToStaticMarkup,
     };
 
-    let footerContent= <p> © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights"></Translate> </p>;
+    let footerContent = (
+      <p>
+        {' '}
+        © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights"></Translate>{' '}
+      </p>
+    );
 
-    let backgroundFade = (this.state.panelNavShow)? <BackgroundFade closeNav={this.closeNav} />: null;
+    let backgroundFade = this.state.panelNavShow ? <BackgroundFade closeNav={this.closeNav} /> : null;
 
-    return(
+    return (
       <Provider store={store}>
         <PersistGate loading={<LoadingView />} persistor={persistor}>
           <LocalizeProvider store={store} initialize={{ languages: languages, options: options }}>
@@ -82,7 +89,7 @@ class App extends React.Component{
                 <NavPanelLeft toggleNav={this.togglePanelNav} show={this.state.panelNavShow} />
                 {backgroundFade}
                 <Switch>
-                  <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
+                  <Route exact path="/" component={() => <HomePage lang={defaultLanguage} />} />
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
@@ -90,6 +97,8 @@ class App extends React.Component{
                   <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <PrivateRoute exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                   <PrivateRoute exact path="/upload/:lang" component={UploadFile} />
+                  <PrivateRoute exact path="/profile/:lang" component={UpdloadEmployeeList} />
+
                   <Route exact path="/pending/user/:lang" component={Error} />
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
@@ -109,6 +118,6 @@ class App extends React.Component{
       </Provider>
     );
   }
- }
+}
 
- export default withLocalize(App);
+export default withLocalize(App);
