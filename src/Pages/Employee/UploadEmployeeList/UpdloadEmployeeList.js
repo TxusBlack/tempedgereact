@@ -1,108 +1,188 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { Field, reduxForm, reset } from 'redux-form';
+import { reduxForm, reset } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { notify } from 'reapop';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import readXlsxFile from 'read-excel-file';
 import Validate from '../../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
 import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import types from '../../../Redux/actions/types';
 
-const $ = window.$;
-
 class UploadEmployeeList extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { btnDisabled: true, submitted: 0 };
+    this.state = { btnDisabled: true, submitted: 0, now: 0, loading: false };
+    this.fileNameTextBox = React.createRef();
     const { activeLanguage } = this.props;
     const { addTranslationForLanguage } = this.props;
     ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
   }
 
   componentDidUpdate(prevProps) {
-    // const { changePassword } = this.props;
-    // const { submitted } = this.state;
-    // if (changePassword && submitted === 1) {
-    //   const notifyMessage = {
-    //     position: 'br',
-    //     dismissible: true,
-    //     dismissAfter: 3000,
-    //   };
-    //   this.setState({
-    //     submitted: 0,
-    //   });
-    //   if (changePassword.status === 200) {
-    //     this.props.clearTempedgeStoreProp('changePassword');
-    //     if (changePassword.data.status === 200) {
-    //       notifyMessage.title = <Translate id="com.tempedge.msg.info.title.password_changed" />;
-    //       notifyMessage.message = <Translate id="com.tempedge.msg.info.body.password_changed" />;
-    //       notifyMessage.status = 'success';
-    //       this.resetChangePasswordForm();
-    //     } else {
-    //       notifyMessage.title = <Translate id="com.tempedge.msg.info.title.invalid_password" />;
-    //       notifyMessage.message = <Translate id="com.tempedge.msg.info.body.invalid_password" />;
-    //       notifyMessage.status = 'error';
-    //     }
-    //   } else {
-    //     notifyMessage.title = <Translate id="com.tempedge.error.undefine" />;
-    //     notifyMessage.message = <Translate id="com.tempedge.error.undefine" />;
-    //     notifyMessage.status = 'error';
-    //   }
-    //   this.fireNotification(notifyMessage);
-    // }
+    const { savePerson, activeLanguage, addTranslationForLanguage } = this.props;
+    const { submitted } = this.state;
+    let { totalFilesToProccess, currentFileNum } = this.state;
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
+    if (currentFileNum !== totalFilesToProccess && savePerson && submitted === 1) {
+      const notifyMessage = {
+        position: 'br',
+        dismissible: true,
+        dismissAfter: 3000,
+      };
+      currentFileNum += 1;
+      this.setState({
+        // submitted: 0,
+        currentFileNum,
+        now: (currentFileNum / totalFilesToProccess) * 100,
+        loading: currentFileNum === totalFilesToProccess ? false : true,
+      });
 
-    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+      if (savePerson.status === 200) {
+        if (savePerson.data.status === 200) {
+          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.employeeCreated" />;
+          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.employeeCreated" />;
+          notifyMessage.status = 'success';
+          this.resetChangePasswordForm();
+        } else {
+          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.undefine" />;
+          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.undefine" />;
+          notifyMessage.status = 'error';
+        }
+      } else {
+        notifyMessage.title = <Translate id="com.tempedge.error.undefine" />;
+        notifyMessage.message = <Translate id="com.tempedge.error.undefine" />;
+        notifyMessage.status = 'error';
+      }
+
+      this.props.clearTempedgeStoreProp('savePerson');
+      this.fireNotification(notifyMessage);
+    }
 
     if (hasActiveLanguageChanged) {
-      this.props.push(`/auth/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      push(`/auth/${activeLanguage.code}`);
+      ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
     }
   }
 
-  onChange = (file, ref) => {
-    let readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs[ref]));
-    let fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+  componentWillUnmount() {
+    this.props.clearTempedgeStoreProp('savePerson');
+  }
 
-    readOnlyTextBox.text(fileName);
-
-    let reader = new FileReader();
-
-    reader.readAsBinaryString(file); //Read Blob as binary
-
-    //Event Listener for when a file is selected to be uploaded
+  onChange = (e) => {
+    const [file] = e.target.files;
+    const fileNameTextBox = this.fileNameTextBox.current;
+    const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+    const reader = new FileReader();
+    fileNameTextBox.textContent = fileName;
+    // Read Blob as binary
+    reader.readAsBinaryString(file);
+    // Event Listener for when a file is selected to be uploaded
     reader.onload = (event) => {
-      //(on_file_select_event)
-      let data = event.target.result; //'result' if not 'null', contains the contents of the file as a binary string
-      let stateName = ref === 'fileInputDocuments' ? 'documents' : 'resume';
+      // (on_file_select_event), 'result' if not 'null', contains the contents of the file as a binary string
+      const data = event.target.result;
 
       /* Update state */
       this.setState(() => ({
-        [stateName]: {
-          name: file.name,
-          data: data,
-        },
+        name: file.name,
+        data,
+        file,
         btnDisabled: false,
       }));
     };
   };
 
-  onSubmit = async (formValues) => {
-    const request = {
-      oldPassword: formValues.password,
-      newPassword: formValues.confirmpassword,
-    };
-
-    this.setState(
-      () => ({
-        submitted: 1,
-      }),
-      () => {
-        this.props.tempedgeAPI('/api/user/changePassword', request, types.CHANGE_PASSWORD);
+  onSubmit = async () => {
+    const { file } = this.state;
+    const schema = {
+      DEPARTMENT: {
+        prop: 'empDepartment',
+        type: String,
       },
-    );
+      'EMPLOYEE ID': {
+        prop: 'employeeId',
+        type: String,
+        required: true,
+      },
+      LASTNAME: {
+        prop: 'lastName',
+        type: String,
+        required: true,
+      },
+      FIRSTNAME: {
+        prop: 'firstName',
+        type: String,
+        required: true,
+      },
+      MIDDLENAME: {
+        prop: 'middleName',
+        type: String,
+      },
+      SSN: {
+        prop: 'identification',
+        type: String,
+        required: true,
+      },
+      ADDRESS: {
+        prop: 'address',
+        type: String,
+        required: true,
+      },
+      ADDRESS2: {
+        prop: 'address2',
+        type: String,
+      },
+      CITY: {
+        prop: 'city',
+        type: String,
+        required: true,
+      },
+      'STATE (2CHARS)': {
+        prop: 'region',
+        type: Number,
+        required: true,
+      },
+      ZIPCODE: {
+        prop: 'zipcode',
+        type: String,
+        required: true,
+      },
+      PHONE: {
+        prop: 'phone',
+        type: String,
+        required: true,
+      },
+      GENDER: {
+        prop: 'gender',
+        type: String,
+        required: true,
+      },
+      BIRTHDAY: {
+        prop: 'birthDay',
+        type: String,
+        required: true,
+      },
+    };
+    readXlsxFile(file, { schema }).then(({ rows, errors }) => {
+      if (errors.length === 0) {
+        // progressInstance = ;
+        this.setState(() => ({
+          submitted: 1,
+          now: 0,
+          totalFilesToProccess: rows.length,
+          currentFileNum: 0,
+          loading: true,
+        }));
+        rows.forEach((employee) => {
+          this.props.tempedgeAPI('/api/person/save', employee, types.PERSON_SAVE);
+        });
+      } else {
+        throw new Error('There was an error procesing your excel file.');
+      }
+    });
   };
 
   fireNotification = (notifyMessage) => {
@@ -111,6 +191,14 @@ class UploadEmployeeList extends React.Component {
   };
 
   render() {
+    const { btnDisabled, currentFileNum, totalFilesToProccess, now, loading } = this.state;
+    const { handleSubmit } = this.props;
+    let progressInstance = null;
+    // if (loading) {
+    //   console.log('ok');
+    //   progressInstance = <ProgressBar animated now={now} label={`${now}%`} />;
+    // }
+
     return (
       <div className="container-fluid login-container">
         <div className="row">
@@ -122,31 +210,32 @@ class UploadEmployeeList extends React.Component {
                     <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
                   </h2>
                 </div>
-                <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                <form className="panel-body" onSubmit={handleSubmit(this.onSubmit)}>
                   <div className="form-group row">
                     <div className="col-12">
                       <p className="text-left label-p">
                         <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
                       </p>
-
                       <div className="input-group">
-                        <label className="input-group-btn" style={{ width: '100%' }}>
+                        <label htmlFor="employeeListFile" className="input-group-btn">
                           <span className="btn department-list-button">
                             <Translate id="com.tempedge.msg.label.choosefile" />
-                            <input type="file" onChange={(e) => this.onChange(e.target.files[0], 'fileInputDocuments')} style={{ display: 'none' }} accept=".xlsx" />
+                            <input id="employeeListFile" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".xlsx, .xls" />
                           </span>
                         </label>
                         <br />
-                        <p ref="fileInputDocuments" style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
+                        <p className="text-left label-p" ref={this.fileNameTextBox} />
                       </div>
                     </div>
                   </div>
+                  <ProgressBar animated now={now} label={`${now}%`} />
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" disabled={this.state.btnDisabled}>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
                       <Translate id="com.tempedge.msg.label.upload" />
                     </button>
                   </div>
                 </form>
+                <div className="panel-footer login-footer" />
               </div>
             </div>
           </div>
@@ -162,15 +251,19 @@ UploadEmployeeList.propTypes = {
   clearTempedgeStoreProp: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    // changePassword: state.tempEdge.changePassword ? state.tempEdge.changePassword : null,
-  };
-};
+const mapStateToProps = ({ tempEdge }) => ({ savePerson: tempEdge.savePerson });
 
-UploadEmployeeList = reduxForm({
+const uploadEmployeeList = reduxForm({
   form: 'uploadEmployeeList',
   validate: Validate,
 })(UploadEmployeeList);
 
-export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, notify, reset, clearTempedgeStoreProp })(UploadEmployeeList));
+export default withLocalize(
+  connect(mapStateToProps, {
+    tempedgeAPI,
+    push,
+    notify,
+    reset,
+    clearTempedgeStoreProp,
+  })(uploadEmployeeList),
+);

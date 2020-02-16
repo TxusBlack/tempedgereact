@@ -1112,13 +1112,12 @@ form div.list .list-item:last-child button {
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  width: 70%;
   margin: auto;
-  //margin-bottom: 37.6rem;
 }
 
 .department-list-button:hover{
   cursor: pointer;
+  color: white;
 }
 
 .client-dpt-btn-edit-delete{

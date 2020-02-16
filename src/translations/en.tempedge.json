@@ -206,5 +206,7 @@
   "com.tempedge.error.emailalreadyexist"                              : "Email registered already.",
   "com.tempedge.error.useralreadyexist"                               : "User already Exists.",
   "com.tempedge.msg.label.uploadEmployeeList"                         : "Upload employee list",
-  "com.tempedge.msg.label.upload"                                     : "Upload"
+  "com.tempedge.msg.label.upload"                                     : "Upload",
+  "com.tempedge.msg.info.title.employeeCreated"                       : "Employee created",
+  "com.tempedge.msg.info.body.employeeCreated"                        : "The employee has been created successful."
 }
