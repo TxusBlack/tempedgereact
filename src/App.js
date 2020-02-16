@@ -13,7 +13,6 @@ import NavBar from './components/common/NavBar/NavBar';
 import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
 import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
 import Footer from './components/common/Footer/Footer';
-import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
 import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
@@ -82,7 +81,6 @@ class App extends React.Component{
                 <NavPanelLeft toggleNav={this.togglePanelNav} show={this.state.panelNavShow} />
                 {backgroundFade}
                 <Switch>
-                  <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />

@@ -57,6 +57,17 @@ export let doLogin = (url, data) => {
   }
 }
 
+export let doLogout = (lang) => {
+  return (dispatch) => {
+    dispatch({
+      type: types.LOGOUT,
+      payload: {}
+    });
+
+    history.push(`/auth/${lang}`);
+  }
+}
+
 export let validateOrg = (org) => {
   let lang = window.location.pathname;
   lang = lang.split("/");

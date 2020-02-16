@@ -37,8 +37,7 @@ class NavBar extends React.Component{
     let activeMenuItem = ['active', '', ''];
     let hamburgerBtn = "";
 
-    if(this.props.pathname.includes("dashboard")){
-      console.log("this.props.pathname: ",this.props.pathname );
+    if(typeof this.props.portalUserList !== 'undefined' && this.props.portalUserList[0].status === "A"){
       hamburgerBtn = <HamburgerButton toggleNav={this.props.toggleNav} />;
     }
 
@@ -49,7 +48,7 @@ class NavBar extends React.Component{
           <div className="row" style={{pading: 0, margin: 0, width: "100%"}}>
             <div className="col-lg-1">{hamburgerBtn}</div>
             <div className="col-lg-2 col-xs-6 col-sm-6">
-              <Link to="/"><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" /></Link>
+              <Link to={`/auth/${activeLanguage.code}`}><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" /></Link>
             </div>
             <div className="col-xs-4 col-sm-4 language-container-xs">
               <div className="language">
@@ -70,9 +69,13 @@ class NavBar extends React.Component{
             <div className="col-lg-6 col-xs-12 col-sm-12 menu-list">
               <div className="navbar-collapse collapse" id="navbarsExample03">
                 <ul className="nav navbar-nav menu-ul mr-auto">
-                  <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.sign_in" /></Link></li>
-                  <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser" /></Link></li>
-                  <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency" /></Link></li>
+                  {(typeof this.props.portalUserList !== 'undefined' && this.props.portalUserList[0].status === "A")? "" :(
+                    <React.Fragment>
+                      <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.sign_in" /></Link></li>
+                      <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser" /></Link></li>
+                      <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency" /></Link></li>
+                    </React.Fragment>
+                  )}
                 </ul>
               </div>
             </div>
@@ -100,7 +103,8 @@ let mapStateToProps = (state) => {
 
   return({
     activePage: parsedPath[1],   //HomePage is [0]
-    pathname: state.router.location.pathname
+    pathname: state.router.location.pathname,
+    portalUserList: (typeof state.tempEdge.login !== 'undefined' || typeof state.tempEdge.login.portalUserList !== 'undefined')? state.tempEdge.login.portalUserList: {}
   });
 }
 

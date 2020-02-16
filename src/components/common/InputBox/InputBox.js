@@ -36,12 +36,12 @@ let renderInput = (formProps) => {
   }
 
   if(formProps.meta.form === "NewEmployee"){
-    if(formProps.meta.error && formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched){
+    if(formProps.meta.error && formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched && typeof formProps.errorFields !== 'undefined'){
       let found = formProps.errorFields.indexOf(formProps.input.name);
       if(found === -1){
         formProps.setErrorField(formProps.input.name);
       }
-    }else if(typeof formProps.meta.error === 'undefined' && !formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched){
+    }else if(typeof formProps.meta.error === 'undefined' && !formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched && typeof formProps.errorFields !== 'undefined'){
       let found = formProps.errorFields.indexOf(formProps.input.name);
       if(found > -1){
         formProps.removeErrorField(formProps.input.name);
