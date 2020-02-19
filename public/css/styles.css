@@ -1601,3 +1601,12 @@ form div.list .list-item:last-child button {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
 }
+.progress{
+  height: 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 1.6rem;
+}
+
+.progress-bar{
+  background-color: var(--normal-blue);
+}
