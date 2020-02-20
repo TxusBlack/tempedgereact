@@ -5,22 +5,19 @@ import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { Field, reduxForm, change, formValueSelector, reset, initialize } from 'redux-form';
 import { date } from 'redux-form-validators';
-import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList'; //DO NOT REMOVE or it will break
-import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker'; //DO NOT REMOVE or it will break
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
+import Form from 'react-bootstrap/Form';
+import Stepper from 'react-stepper-horizontal';
+import InputBox from '../../../components/common/InputBox/InputBox.js';
+import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
+import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
 import types from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
 import { tempedgeAPI, tempedgeMultiPartApi, clearTempedgeStoreProp, clearErrorField, getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
-import Container from '../../../components/common/Container/Container';
-import Form from 'react-bootstrap/Form';
-import Stepper from 'react-stepper-horizontal';
 import Validate from '../../Validations/Validations';
 import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
@@ -126,9 +123,17 @@ class CreateEmployee extends Component {
     this.createDepartmentsTable();
     this.toggleModalOnOff(); //Open or close Modal
   }
-
   createDepartmentsTable() {
-    const { orgDepartmentList } = this.state;
+    const { orgDepartmentList, country_list } = this.state;
+    const departmentsTable = <PaginatedTable payload={country_list} title="com.tempedge.msg.label.employeeList" />;
+    this.setState({
+      departmentsTable,
+    });
+  }
+
+  createDepartmentsTable2() {
+    const { orgDepartmentList, country_list } = this.state;
+    console.log(country_list);
 
     const departmentsTable = (
       <div className="container">
@@ -158,11 +163,19 @@ class CreateEmployee extends Component {
             </tr>
           </thead>
           <tbody ref={this.tbodyRef}>
-            {orgDepartmentList && orgDepartmentList.length > 0 ? (
+            {/* {orgDepartmentList && orgDepartmentList.length > 0 ? (
               orgDepartmentList.map((department) => (
                 <tr className="tableRow text-center" onClick={(e) => this.setInputValue(e)} key={department.orgDepartmentId}>
                   <td className="table-content">{department.orgDepartmentId}</td>
                   <td className="table-content">{department.name}</td>
+                </tr>
+              ))
+            ) : ( */}
+            {country_list && country_list.length > 0 ? (
+              country_list.map((country) => (
+                <tr className="tableRow text-center" onClick={(e) => this.setInputValue(e)} key={country.countryId}>
+                  <td className="table-content">{country.countryId}</td>
+                  <td className="table-content">{country.name}</td>
                 </tr>
               ))
             ) : (
