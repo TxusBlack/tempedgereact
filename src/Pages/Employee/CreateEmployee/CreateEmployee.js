@@ -24,6 +24,7 @@ import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
 import Table from '../../../components/common/Table/Table.js';
+import EmployeeList from '../EmployeeList/EmployeeList';
 
 const $ = window.$;
 
@@ -119,21 +120,16 @@ class CreateEmployee extends Component {
     }));
   };
 
-  openModal() {
-    this.createDepartmentsTable();
-    this.toggleModalOnOff(); //Open or close Modal
-  }
   createDepartmentsTable() {
     const { orgDepartmentList, country_list } = this.state;
-    const departmentsTable = <PaginatedTable payload={country_list} title="com.tempedge.msg.label.employeeList" />;
+    const departmentsTable = <EmployeeList onClickARow={(e) => this.setInputValue(e)} />;
     this.setState({
       departmentsTable,
     });
   }
 
   createDepartmentsTable2() {
-    const { orgDepartmentList, country_list } = this.state;
-    console.log(country_list);
+    const { orgDepartmentList } = this.state;
 
     const departmentsTable = (
       <div className="container">
@@ -163,19 +159,11 @@ class CreateEmployee extends Component {
             </tr>
           </thead>
           <tbody ref={this.tbodyRef}>
-            {/* {orgDepartmentList && orgDepartmentList.length > 0 ? (
+            {orgDepartmentList && orgDepartmentList.length > 0 ? (
               orgDepartmentList.map((department) => (
                 <tr className="tableRow text-center" onClick={(e) => this.setInputValue(e)} key={department.orgDepartmentId}>
                   <td className="table-content">{department.orgDepartmentId}</td>
                   <td className="table-content">{department.name}</td>
-                </tr>
-              ))
-            ) : ( */}
-            {country_list && country_list.length > 0 ? (
-              country_list.map((country) => (
-                <tr className="tableRow text-center" onClick={(e) => this.setInputValue(e)} key={country.countryId}>
-                  <td className="table-content">{country.countryId}</td>
-                  <td className="table-content">{country.name}</td>
                 </tr>
               ))
             ) : (
@@ -211,8 +199,10 @@ class CreateEmployee extends Component {
   }
 
   setInputValue(e) {
-    const departmentSelected = e.currentTarget.querySelector('td:nth-child(2)').textContent;
-    const orgDepartmentId = e.currentTarget.querySelector('td:nth-child(1)').textContent;
+    const { currentTarget } = e;
+    console.log(currentTarget);
+    const departmentSelected = currentTarget.querySelector('td:nth-child(2)').textContent;
+    const orgDepartmentId = currentTarget.querySelector('td:nth-child(1)').textContent;
     this.props.dispatch(change('NewEmployee', 'department', departmentSelected));
     this.setState({
       orgDepartmentId,
@@ -654,11 +644,16 @@ class CreateEmployee extends Component {
     });
   };
 
-  //Close Modal
+  // Close Modal
   onClose = () => {
-    //this.props.dispatch(reset("NewEmployee"));
-    this.toggleModalOnOff(); //Close Modal
+    // this.props.dispatch(reset("NewEmployee"));
+    this.toggleModalOnOff(); // Close Modal
   };
+
+  openModal() {
+    this.createDepartmentsTable();
+    this.toggleModalOnOff(); // Open or close Modal
+  }
 
   render() {
     let key = this.state.key;
