@@ -9,61 +9,48 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import readXlsxFile from 'read-excel-file';
 import Validate from '../../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
-import { tempedgeAPI, clearTempedgeStoreProp, tempedgeMultiPartApi } from '../../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import types from '../../../Redux/actions/types';
 
 class UploadEmployeeList extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { btnDisabled: true, submitted: 0, now: 0, loading: false };
+    this.state = { btnDisabled: true, submitted: 0, now: 0 };
     this.fileNameTextBox = React.createRef();
     this.progressBar = React.createRef();
+    this.progressBarStatus = 0;
     const { activeLanguage } = this.props;
     const { addTranslationForLanguage } = this.props;
     ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
   }
 
   componentDidUpdate(prevProps) {
-    const { savePerson, activeLanguage, addTranslationForLanguage } = this.props;
+    const { saveEmployeeList, activeLanguage, addTranslationForLanguage, clearTempedgeStoreProp } = this.props;
     const { submitted } = this.state;
-    let { totalFilesToProccess, currentFileNum } = this.state;
     const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
-    if (currentFileNum !== totalFilesToProccess && savePerson && submitted === 1) {
-      const notifyMessage = {
-        position: 'br',
-        dismissible: true,
-        dismissAfter: 3000,
-      };
-      currentFileNum += 1;
-      this.setState(
-        {
-          // submitted: 0,
-          currentFileNum,
-          now: (currentFileNum / totalFilesToProccess) * 100,
-          loading: currentFileNum === totalFilesToProccess ? false : true,
-        },
-        this.hideProgressbar(currentFileNum),
-      );
+    if (saveEmployeeList && submitted === 1) {
+      this.progressBarStatus = 100;
+      this.setState({
+        submitted: 0,
+      });
 
-      if (savePerson.status === 200) {
-        if (savePerson.data.status === 200) {
-          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.employeeCreated" />;
-          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.employeeCreated" />;
-          notifyMessage.status = 'success';
-          this.resetChangePasswordForm();
+      if (saveEmployeeList.status === 200) {
+        if (saveEmployeeList.data.status === 200) {
+          this.succesNotification();
+          this.resetForm();
         } else {
-          notifyMessage.title = <Translate id="com.tempedge.error.undefine" />;
-          notifyMessage.message = <Translate id="com.tempedge.error.undefine" />;
-          notifyMessage.status = 'error';
+          this.warningNotification({
+            title: 'Some records have already been registered previously. Please review your file.',
+          });
         }
       } else {
-        notifyMessage.title = <Translate id="com.tempedge.error.undefine" />;
-        notifyMessage.message = <Translate id="com.tempedge.error.undefine" />;
-        notifyMessage.status = 'error';
+        this.errorNotification({
+          title: <Translate id="com.tempedge.error.undefine" />,
+          message: <Translate id="com.tempedge.error.undefine" />,
+        });
       }
 
-      this.props.clearTempedgeStoreProp('savePerson');
-      this.fireNotification(notifyMessage);
+      clearTempedgeStoreProp('saveEmployeeList');
     }
 
     if (hasActiveLanguageChanged) {
@@ -72,48 +59,37 @@ class UploadEmployeeList extends React.Component {
     }
   }
 
-  hideProgressbar(currentFileNum) {
-    const { totalFilesToProccess } = this.state;
-    console.log(currentFileNum);
-    console.log(totalFilesToProccess);
-
-    if (currentFileNum === totalFilesToProccess) {
-      console.log('okk');
-      this.progressBar.current.classList.add('d-none'); // hide progressbar
-    }
-  }
-
   componentWillUnmount() {
-    this.props.clearTempedgeStoreProp('savePerson');
+    this.props.clearTempedgeStoreProp('saveEmployeeList');
   }
 
   onChange = (e) => {
     const [file] = e.target.files;
     const fileNameTextBox = this.fileNameTextBox.current;
-    const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
-    const reader = new FileReader();
-    fileNameTextBox.textContent = fileName;
-    // Read Blob as binary
-    reader.readAsBinaryString(file);
-    // Event Listener for when a file is selected to be uploaded
-    reader.onload = (event) => {
-      // (on_file_select_event), 'result' if not 'null', contains the contents of the file as a binary string
-      const data = event.target.result;
 
-      /* Update state */
-      this.setState(() => ({
-        name: file.name,
-        data,
-        file,
-        btnDisabled: false,
-      }));
-    };
+    if (file && (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.type === 'application/vnd.ms-excel')) {
+      const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+      const reader = new FileReader();
+      fileNameTextBox.textContent = fileName;
+      // Read Blob as binary
+      reader.readAsBinaryString(file);
+      // Event Listener for when a file is selected to be uploaded
+      reader.onload = () => {
+        this.setState(() => ({
+          file,
+          btnDisabled: false,
+        }));
+      };
+    } else {
+      this.warningNotification({
+        title: 'Please, select a file with extension .xlsx or xls',
+      });
+    }
   };
 
   onSubmit = async () => {
-    this.progressBar.current.classList.remove('d-none'); // Show progressbar
     const { file } = this.state;
-    const { tempedgeAPI, tempedgeMultiPartApi } = this.props;
+    const { tempedgeAPI } = this.props;
 
     const schema = {
       DEPARTMENT: {
@@ -185,32 +161,79 @@ class UploadEmployeeList extends React.Component {
       },
     };
     readXlsxFile(file, { schema }).then(({ rows, errors }) => {
+      const request = { orgId: 1, personEntityList: rows };
       if (errors.length === 0) {
-        // progressInstance = ;
-        this.setState(() => ({
-          submitted: 1,
-          now: 0,
-          totalFilesToProccess: rows.length,
-          currentFileNum: 0,
-          loading: true,
-        }));
-        rows.forEach((employee) => {
-          tempedgeMultiPartApi('/api/person/save', employee, [], types.PERSON_SAVE);
-        });
+        if (rows.length === 0) {
+          this.warningNotification({
+            title: 'Your file is empty, please make sure your file has at least one record.',
+          });
+        } else {
+          this.progressBarStatus = 50;
+          this.showProgressbar();
+          this.setState(() => ({
+            submitted: 1,
+            // now: 50,
+          }));
+          tempedgeAPI('/api/person/saveList', request, types.SAVE_EMPLOYEE_LIST);
+        }
       } else {
-        throw new Error('There was an error procesing your excel file.');
+        this.errorNotification({
+          title: 'There was an error procesing your excel file, please You try again.',
+        });
       }
     });
   };
 
   fireNotification = (notifyMessage) => {
+    const message = {
+      ...notifyMessage,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000,
+    };
     const { notify } = this.props;
-    notify(notifyMessage);
+    notify(message);
   };
 
+  warningNotification = (message) => {
+    this.fireNotification({ ...message, status: 'warning' });
+  };
+
+  errorNotification = (message) => {
+    this.fireNotification({ ...message, status: 'error' });
+  };
+
+  succesNotification = () => {
+    this.fireNotification({
+      title: <Translate id="com.tempedge.msg.info.title.employeeCreated" />,
+      message: <Translate id="com.tempedge.msg.info.body.employeeCreated" />,
+      status: 'success',
+    });
+  };
+
+  showProgressbar() {
+    this.progressBar.current.classList.remove('d-none'); // show a progressbar
+  }
+
+  hideProgressbar() {
+    this.progressBar.current.classList.add('d-none'); // hide a progressbar
+  }
+
+  resetForm() {
+    this.props.reset('uploadEmployeeList');
+    this.fileNameTextBox.current.textContent = '';
+    clearTempedgeStoreProp('saveEmployeeList');
+    this.setState(() => ({
+      btnDisabled: true,
+    }));
+  }
+
   render() {
-    const { btnDisabled, now } = this.state;
+    const { btnDisabled } = this.state;
     const { handleSubmit } = this.props;
+    if (this.progressBarStatus === 100) {
+      this.hideProgressbar();
+    }
 
     return (
       <div className="container-fluid login-container">
@@ -237,11 +260,13 @@ class UploadEmployeeList extends React.Component {
                           </span>
                         </label>
                         <br />
-                        <p className="text-left label-p" ref={this.fileNameTextBox} />
+                        <div className="w-100">
+                          <p className="text-left" ref={this.fileNameTextBox} />
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <ProgressBar ref={this.progressBar} animated className="d-none" now={now} label={`${now}%`} />
+                  <ProgressBar ref={this.progressBar} animated className="d-none" now={this.progressBarStatus} label={`${this.progressBarStatus}%`} />
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
                       <Translate id="com.tempedge.msg.label.upload" />
@@ -261,11 +286,10 @@ class UploadEmployeeList extends React.Component {
 UploadEmployeeList.propTypes = {
   reset: PropTypes.func.isRequired,
   tempedgeAPI: PropTypes.func.isRequired,
-  tempedgeMultiPartApi: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ tempEdge }) => ({ savePerson: tempEdge.savePerson });
+const mapStateToProps = ({ tempEdge }) => ({ saveEmployeeList: tempEdge.saveEmployeeList });
 
 const uploadEmployeeList = reduxForm({
   form: 'uploadEmployeeList',
@@ -275,7 +299,6 @@ const uploadEmployeeList = reduxForm({
 export default withLocalize(
   connect(mapStateToProps, {
     tempedgeAPI,
-    tempedgeMultiPartApi,
     push,
     notify,
     reset,
