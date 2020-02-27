@@ -207,6 +207,10 @@
   "com.tempedge.error.useralreadyexist"                               : "User already Exists.",
   "com.tempedge.msg.label.uploadEmployeeList"                         : "Upload employee list",
   "com.tempedge.msg.label.upload"                                     : "Upload",
-  "com.tempedge.msg.info.title.employeeCreated"                       : "Employee created",
-  "com.tempedge.msg.info.body.employeeCreated"                        : "The employee has been created successful."
+  "com.tempedge.msg.info.title.employeeCreated"                       : "Employee list saved",
+  "com.tempedge.msg.info.body.employeeCreated"                        : "The employee list has been saved successfully.",
+  "com.tempedge.msg.info.title.empleyeesAlreadyExist"                 : "Some records have already been registered previously. Please review your file.",
+  "com.tempedge.msg.info.title.incorrectFileExtension"                : "Please, select a file with extension xlsx or xls.",
+  "com.tempedge.msg.info.title.emptyFile"                             : "Your file is empty, please make sure your file has at least one record.",
+  "com.tempedge.msg.info.title.errorProcessingFile"                   : "There was an error processing your excel file, please check that It has the columns correctly."
 }

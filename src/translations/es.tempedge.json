@@ -205,8 +205,12 @@
   "com.tempedge.msg.info.msg.success"                                 : "Transacción Exitosa!",
   "com.tempedge.error.emailalreadyexist"                              : "Email a sido registrado previamente.",
   "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe.",
-  "com.tempedge.msg.label.uploadEmployeeList"                         : "Subir lista de archivos",
+  "com.tempedge.msg.label.uploadEmployeeList"                         : "Subir lista de empleados",
   "com.tempedge.msg.label.upload"                                     : "Subir",
-  "com.tempedge.msg.info.title.employeeCreated"                       : "Empleado creado",
-  "com.tempedge.msg.info.body.employeeCreated"                        : "El empleado ha sido creado con éxito."
+  "com.tempedge.msg.info.title.employeeCreated"                       : "Lista de empleados guardada",
+  "com.tempedge.msg.info.body.employeeCreated"                        : "La lista de empleados ha sido guardada con éxito.",
+  "com.tempedge.msg.info.title.empleyeesAlreadyExist"                 : "Alugunos registros ya han sido registrados previamente. Por favor revisa tu archivo.",
+  "com.tempedge.msg.info.title.incorrectFileExtension"                : "Por favor selecciona un archivo con extensión .xlsx o .xls",
+  "com.tempedge.msg.info.title.emptyFile"                             : "Tu archivo está vacío, por favor asegúrate que tu archivo contiene almenos un registro.",
+  "com.tempedge.msg.info.title.errorProcessingFile"                   : "Hubo un error procesando tu archivo de excel, por favor revisa que éste tiene las columnas correctamente."
 }

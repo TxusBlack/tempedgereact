@@ -12,13 +12,13 @@ import ActiveLanguageAddTranslation from '../../../components/common/ActiveLangu
 import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import types from '../../../Redux/actions/types';
 
+const url = '/api/person/saveList';
+
 class UploadEmployeeList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = { btnDisabled: true, submitted: 0, now: 0 };
     this.fileNameTextBox = React.createRef();
-    this.progressBar = React.createRef();
-    this.progressBarStatus = 0;
     const { activeLanguage } = this.props;
     const { addTranslationForLanguage } = this.props;
     ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
@@ -28,8 +28,9 @@ class UploadEmployeeList extends React.Component {
     const { saveEmployeeList, activeLanguage, addTranslationForLanguage, clearTempedgeStoreProp } = this.props;
     const { submitted } = this.state;
     const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
+
     if (saveEmployeeList && submitted === 1) {
-      this.progressBarStatus = 100;
+      this.changeProgressbar(100);
       this.setState({
         submitted: 0,
       });
@@ -40,7 +41,7 @@ class UploadEmployeeList extends React.Component {
           this.resetForm();
         } else {
           this.warningNotification({
-            title: 'Some records have already been registered previously. Please review your file.',
+            title: <Translate id="com.tempedge.msg.info.title.empleyeesAlreadyExist" />,
           });
         }
       } else {
@@ -60,7 +61,8 @@ class UploadEmployeeList extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.clearTempedgeStoreProp('saveEmployeeList');
+    const { clearTempedgeStoreProp } = this.props;
+    clearTempedgeStoreProp('saveEmployeeList');
   }
 
   onChange = (e) => {
@@ -82,7 +84,7 @@ class UploadEmployeeList extends React.Component {
       };
     } else {
       this.warningNotification({
-        title: 'Please, select a file with extension .xlsx or xls',
+        title: <Translate id="com.tempedge.msg.info.title.incorrectFileExtension" />,
       });
     }
   };
@@ -90,6 +92,7 @@ class UploadEmployeeList extends React.Component {
   onSubmit = async () => {
     const { file } = this.state;
     const { tempedgeAPI } = this.props;
+    this.changeProgressbar(0);
 
     const schema = {
       DEPARTMENT: {
@@ -160,26 +163,26 @@ class UploadEmployeeList extends React.Component {
         required: true,
       },
     };
+
     readXlsxFile(file, { schema }).then(({ rows, errors }) => {
       const request = { orgId: 1, personEntityList: rows };
       if (errors.length === 0) {
         if (rows.length === 0) {
           this.warningNotification({
-            title: 'Your file is empty, please make sure your file has at least one record.',
+            title: <Translate id="com.tempedge.msg.info.title.emptyFile" />,
           });
+          this.changeProgressbar(100);
         } else {
-          this.progressBarStatus = 50;
-          this.showProgressbar();
           this.setState(() => ({
             submitted: 1,
-            // now: 50,
           }));
-          tempedgeAPI('/api/person/saveList', request, types.SAVE_EMPLOYEE_LIST);
+          tempedgeAPI(url, request, types.SAVE_EMPLOYEE_LIST);
         }
       } else {
         this.errorNotification({
-          title: 'There was an error procesing your excel file, please You try again.',
+          title: <Translate id="com.tempedge.msg.info.title.errorProcessingFile" />,
         });
+        this.changeProgressbar(100);
       }
     });
   };
@@ -195,12 +198,12 @@ class UploadEmployeeList extends React.Component {
     notify(message);
   };
 
-  warningNotification = (message) => {
-    this.fireNotification({ ...message, status: 'warning' });
-  };
-
   errorNotification = (message) => {
     this.fireNotification({ ...message, status: 'error' });
+  };
+
+  warningNotification = (message) => {
+    this.fireNotification({ ...message, status: 'warning' });
   };
 
   succesNotification = () => {
@@ -211,16 +214,15 @@ class UploadEmployeeList extends React.Component {
     });
   };
 
-  showProgressbar() {
-    this.progressBar.current.classList.remove('d-none'); // show a progressbar
-  }
-
-  hideProgressbar() {
-    this.progressBar.current.classList.add('d-none'); // hide a progressbar
+  changeProgressbar(progress) {
+    this.setState({
+      now: progress,
+    });
   }
 
   resetForm() {
-    this.props.reset('uploadEmployeeList');
+    const { reset } = this.props;
+    reset('uploadEmployeeList');
     this.fileNameTextBox.current.textContent = '';
     clearTempedgeStoreProp('saveEmployeeList');
     this.setState(() => ({
@@ -229,11 +231,8 @@ class UploadEmployeeList extends React.Component {
   }
 
   render() {
-    const { btnDisabled } = this.state;
+    const { btnDisabled, now } = this.state;
     const { handleSubmit } = this.props;
-    if (this.progressBarStatus === 100) {
-      this.hideProgressbar();
-    }
 
     return (
       <div className="container-fluid login-container">
@@ -266,7 +265,7 @@ class UploadEmployeeList extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <ProgressBar ref={this.progressBar} animated className="d-none" now={this.progressBarStatus} label={`${this.progressBarStatus}%`} />
+                  <ProgressBar animated now={now} label={`${now}%`} />
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
                       <Translate id="com.tempedge.msg.label.upload" />
@@ -287,6 +286,8 @@ UploadEmployeeList.propTypes = {
   reset: PropTypes.func.isRequired,
   tempedgeAPI: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ tempEdge }) => ({ saveEmployeeList: tempEdge.saveEmployeeList });
