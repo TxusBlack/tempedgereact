@@ -365,7 +365,6 @@ let validate = (formValues) => {
   }
 
   if (formValues.agencyssnlastfour) {
-    console.log(formValues.agencyssnlastfour);
     const regExp = new RegExp(/^\d{4}$/);
     if (!regExp.test(formValues.agencyssnlastfour)) {
       errors.agencyssnlastfour = 'Please, enter just 4 numbers';
