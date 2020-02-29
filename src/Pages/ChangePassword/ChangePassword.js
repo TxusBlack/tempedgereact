@@ -4,14 +4,15 @@ import { Field, reduxForm, reset } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
-import { notify } from 'reapop';
 import InputBox from '../../components/common/InputBox/InputBox';
 import Captcha from '../../components/common/Captcha/Captcha';
 import Validate from '../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
-import { tempedgeAPI } from '../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, clearTempedgeStoreProp } from '../../Redux/actions/tempEdgeActions';
 import types from '../../Redux/actions/types';
-import { clearTempedgeStoreProp } from '../../Redux/actions/tempEdgeActions';
+import OutcomeBar from '../../components/common/OutcomeBar';
+
+const requestUrl = '/api/user/changePassword';
 
 class ChangePassword extends React.Component {
   constructor(props, context) {
@@ -23,42 +24,30 @@ class ChangePassword extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { changePassword } = this.props;
+    const { changePassword, clearTempedgeStoreProp, push, activeLanguage, addTranslationForLanguage } = this.props;
     const { submitted } = this.state;
     if (changePassword && submitted === 1) {
-      const notifyMessage = {
-        position: 'br',
-        dismissible: true,
-        dismissAfter: 3000,
-      };
       this.setState({
         submitted: 0,
       });
       if (changePassword.status === 200) {
-        this.props.clearTempedgeStoreProp('changePassword');
+        clearTempedgeStoreProp('changePassword');
         if (changePassword.data.status === 200) {
-          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.password_changed" />;
-          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.password_changed" />;
-          notifyMessage.status = 'success';
+          this.showSuccessResultBar('com.tempedge.msg.info.msg.success');
           this.resetChangePasswordForm();
         } else {
-          notifyMessage.title = <Translate id="com.tempedge.msg.info.title.invalid_password" />;
-          notifyMessage.message = <Translate id="com.tempedge.msg.info.body.invalid_password" />;
-          notifyMessage.status = 'error';
+          this.showErrorResultBar('com.tempedge.msg.info.body.invalid_password');
         }
       } else {
-        notifyMessage.title = <Translate id="com.tempedge.error.undefine" />;
-        notifyMessage.message = <Translate id="com.tempedge.error.undefine" />;
-        notifyMessage.status = 'error';
+        this.showErrorResultBar('com.tempedge.error.undefine');
       }
-      this.fireNotification(notifyMessage);
     }
 
-    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      this.props.push(`/auth/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      push(`/auth/${activeLanguage.code}`);
+      ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
     }
   }
 
@@ -66,14 +55,9 @@ class ChangePassword extends React.Component {
     this.resetChangePasswordForm();
   }
 
-  resetChangePasswordForm() {
-    this.props.reset('ChangePassword'); //Reset form fields all to empty
-    this.props.clearTempedgeStoreProp('changePassword');
-  }
-
   onChange = (recaptchaToken) => {
     this.setState({
-      reCaptchaToken: recaptchaToken,
+      recaptchaToken,
       btnDisabled: false,
     });
   };
@@ -97,17 +81,34 @@ class ChangePassword extends React.Component {
         submitted: 1,
       }),
       () => {
-        this.props.tempedgeAPI('/api/user/changePassword', request, types.CHANGE_PASSWORD);
+        this.props.tempedgeAPI(requestUrl, request, types.CHANGE_PASSWORD);
       },
     );
   };
 
-  fireNotification = (notifyMessage) => {
-    const { notify } = this.props;
-    notify(notifyMessage);
-  };
+  showResultBar(translateId, messageType) {
+    this.setState({
+      resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} />,
+    });
+  }
+
+  showSuccessResultBar(translateId) {
+    this.showResultBar(translateId, 'success');
+  }
+
+  showErrorResultBar(translateId) {
+    this.showResultBar(translateId, 'fail');
+  }
+
+  resetChangePasswordForm() {
+    const { reset, clearTempedgeStoreProp } = this.props;
+    reset('ChangePassword'); // Reset form fields all to empty
+    clearTempedgeStoreProp('changePassword');
+  }
 
   render() {
+    const { resultBar, btnDisabled } = this.state;
+    const { handleSubmit, invalid, submiting, pristine } = this.props;
     return (
       <div className="container-fluid login-container">
         <div className="row">
@@ -119,7 +120,10 @@ class ChangePassword extends React.Component {
                     <Translate id="com.tempedge.msg.label.change_password" />
                   </h2>
                 </div>
-                <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                <form className="panel-body" onSubmit={handleSubmit(this.onSubmit)}>
+                  <div className="form-group row">
+                    <div className="col-12">{resultBar}</div>
+                  </div>
                   <div className="form-group row">
                     <div className="col-12">
                       <p className="text-left label-p">
@@ -158,7 +162,7 @@ class ChangePassword extends React.Component {
                     </div>
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={invalid || submiting || pristine || btnDisabled}>
                       <Translate id="com.tempedge.msg.label.change_password" />
                     </button>
                   </div>
@@ -194,4 +198,4 @@ ChangePassword = reduxForm({
   validate: Validate,
 })(ChangePassword);
 
-export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, notify, reset, clearTempedgeStoreProp })(ChangePassword));
+export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, reset, clearTempedgeStoreProp })(ChangePassword));
