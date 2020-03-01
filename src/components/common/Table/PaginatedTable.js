@@ -60,7 +60,8 @@ class PaginatedTable extends Component {
     }
 
     render() {
-        let data = (typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined') ? this.props.paginatorList: this.props.payload;
+            
+        let data = (typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined') ? this.props.paginatorList.data.result: this.props.payload;
         let title = this.props.title;
 
         return (
