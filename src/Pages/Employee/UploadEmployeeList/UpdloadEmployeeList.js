@@ -6,13 +6,14 @@ import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { notify } from 'reapop';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import readXlsxFile from 'read-excel-file';
+import XLSX from 'xlsx';
 import Validate from '../../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
 import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import types from '../../../Redux/actions/types';
+import OutcomeBar from '../../../components/common/OutcomeBar';
 
-const url = '/api/person/saveList';
+const requestUrl = '/api/person/saveList';
 
 class UploadEmployeeList extends React.Component {
   constructor(props, context) {
@@ -34,21 +35,20 @@ class UploadEmployeeList extends React.Component {
       this.setState({
         submitted: 0,
       });
+      console.log(saveEmployeeList);
 
       if (saveEmployeeList.status === 200) {
+        const { result } = saveEmployeeList.data;
+        const summary = { newEmployees: result.newEmployees, modEmployees: result.modEmployees, error: JSON.stringify(result.error) };
         if (saveEmployeeList.data.status === 200) {
-          this.succesNotification();
+          this.showSuccessResultBar('com.tempedge.msg.info.title.employeeCreated', summary);
           this.resetForm();
-        } else {
-          this.warningNotification({
-            title: <Translate id="com.tempedge.msg.info.title.empleyeesAlreadyExist" />,
-          });
+        } else if (saveEmployeeList.data.status === 206) {
+          const { result } = saveEmployeeList.data;
+          this.showWarningResultBar(saveEmployeeList.data.message, summary);
         }
       } else {
-        this.errorNotification({
-          title: <Translate id="com.tempedge.error.undefine" />,
-          message: <Translate id="com.tempedge.error.undefine" />,
-        });
+        this.showErrorResultBar('com.tempedge.error.undefine');
       }
 
       clearTempedgeStoreProp('saveEmployeeList');
@@ -73,146 +73,72 @@ class UploadEmployeeList extends React.Component {
       const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
       const reader = new FileReader();
       fileNameTextBox.textContent = fileName;
-      // Read Blob as binary
-      reader.readAsBinaryString(file);
       // Event Listener for when a file is selected to be uploaded
-      reader.onload = () => {
+      reader.onload = (event) => {
+        const binaryString = event.target.result;
         this.setState(() => ({
-          file,
+          binaryString,
           btnDisabled: false,
         }));
       };
+      // Read Blob as binary
+      reader.readAsBinaryString(file);
     } else {
-      this.warningNotification({
-        title: <Translate id="com.tempedge.msg.info.title.incorrectFileExtension" />,
-      });
+      this.showWarningResultBar('com.tempedge.msg.info.title.incorrectFileExtension');
     }
   };
 
   onSubmit = async () => {
-    const { file } = this.state;
+    const { binaryString } = this.state;
     const { tempedgeAPI } = this.props;
-    this.changeProgressbar(0);
-
-    const schema = {
-      DEPARTMENT: {
-        prop: 'empDepartment',
-        type: String,
-      },
-      'EMPLOYEE ID': {
-        prop: 'employeeId',
-        type: String,
-        required: true,
-      },
-      LASTNAME: {
-        prop: 'lastName',
-        type: String,
-        required: true,
-      },
-      FIRSTNAME: {
-        prop: 'firstName',
-        type: String,
-        required: true,
-      },
-      MIDDLENAME: {
-        prop: 'middleName',
-        type: String,
-      },
-      SSN: {
-        prop: 'identification',
-        type: String,
-        required: true,
-      },
-      ADDRESS: {
-        prop: 'address',
-        type: String,
-        required: true,
-      },
-      ADDRESS2: {
-        prop: 'address2',
-        type: String,
-      },
-      CITY: {
-        prop: 'city',
-        type: String,
-        required: true,
-      },
-      'STATE (2CHARS)': {
-        prop: 'region',
-        type: Number,
-        required: true,
-      },
-      ZIPCODE: {
-        prop: 'zipcode',
-        type: String,
-        required: true,
-      },
-      PHONE: {
-        prop: 'phone',
-        type: String,
-        required: true,
-      },
-      GENDER: {
-        prop: 'gender',
-        type: String,
-        required: true,
-      },
-      BIRTHDAY: {
-        prop: 'birthDay',
-        type: String,
-        required: true,
-      },
-    };
-
-    readXlsxFile(file, { schema }).then(({ rows, errors }) => {
-      const request = { orgId: 1, personEntityList: rows };
-      if (errors.length === 0) {
-        if (rows.length === 0) {
-          this.warningNotification({
-            title: <Translate id="com.tempedge.msg.info.title.emptyFile" />,
-          });
-          this.changeProgressbar(100);
-        } else {
-          this.setState(() => ({
-            submitted: 1,
-          }));
-          tempedgeAPI(url, request, types.SAVE_EMPLOYEE_LIST);
-        }
+    try {
+      const wb = XLSX.read(binaryString, { type: 'binary', cellDates: true, raw: true, dateNF: 'mm/dd/yyyy' });
+      // Get first worksheet
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      // Convert excel to json
+      const data = XLSX.utils.sheet_to_json(ws, {
+        header: ['empDepartment', 'employeeId', 'lastName', 'firstName', 'middleName', 'identification', 'address', 'address2', 'city', 'region', 'zipcode', 'phone', 'gender', 'birthDay'],
+      });
+      const request = { orgId: 1, personEntityList: data };
+      if (data.length === 0) {
+        this.showWarningResultBar('com.tempedge.msg.info.title.emptyFile');
+        this.changeProgressbar(0);
       } else {
-        this.errorNotification({
-          title: <Translate id="com.tempedge.msg.info.title.errorProcessingFile" />,
-        });
-        this.changeProgressbar(100);
+        this.changeProgressbar(25);
+        this.setState(() => ({
+          submitted: 1,
+          btnDisabled: true,
+        }));
+        console.log('request', request);
+        tempedgeAPI(requestUrl, request, types.SAVE_EMPLOYEE_LIST);
       }
+    } catch (error) {
+      this.showErrorResultBar('com.tempedge.msg.info.title.errorProcessingFile');
+      this.setState(() => ({
+        submitted: 0,
+        btnDisabled: false,
+      }));
+    }
+  };
+
+  showResultBar(translateId, messageType, customMessage) {
+    this.setState({
+      resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} customData={customMessage}></OutcomeBar>,
     });
-  };
+  }
 
-  fireNotification = (notifyMessage) => {
-    const message = {
-      ...notifyMessage,
-      position: 'br',
-      dismissible: true,
-      dismissAfter: 3000,
-    };
-    const { notify } = this.props;
-    notify(message);
-  };
+  showSuccessResultBar(translateId, customMessage) {
+    this.showResultBar(translateId, 'success', customMessage);
+  }
 
-  errorNotification = (message) => {
-    this.fireNotification({ ...message, status: 'error' });
-  };
+  showWarningResultBar(translateId, customMessage) {
+    this.showResultBar(translateId, 'warning', customMessage);
+  }
 
-  warningNotification = (message) => {
-    this.fireNotification({ ...message, status: 'warning' });
-  };
-
-  succesNotification = () => {
-    this.fireNotification({
-      title: <Translate id="com.tempedge.msg.info.title.employeeCreated" />,
-      message: <Translate id="com.tempedge.msg.info.body.employeeCreated" />,
-      status: 'success',
-    });
-  };
+  showErrorResultBar(translateId, customMessage) {
+    this.showResultBar(translateId, 'fail', customMessage);
+  }
 
   changeProgressbar(progress) {
     this.setState({
@@ -231,7 +157,7 @@ class UploadEmployeeList extends React.Component {
   }
 
   render() {
-    const { btnDisabled, now } = this.state;
+    const { btnDisabled, now, resultBar } = this.state;
     const { handleSubmit } = this.props;
 
     return (
@@ -246,6 +172,10 @@ class UploadEmployeeList extends React.Component {
                   </h2>
                 </div>
                 <form className="panel-body" onSubmit={handleSubmit(this.onSubmit)}>
+                  <div className="row">
+                    <div className="col-12">{resultBar}</div>
+                  </div>
+
                   <div className="form-group row">
                     <div className="col-12">
                       <p className="text-left label-p">

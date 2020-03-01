@@ -66,7 +66,6 @@
   "com.tempedge.msg.label.validatedpersonlist"                        : "Employee Validation",
   "com.tempedge.msg.label.hiredate"                                   : "Hiredate",
   "com.tempedge.error.invaliddata"                                    : "Invalid Data",
-  "com.tempedge.error.undefine"                                       : "Server Error",
   "com.tempedge.msg.person.newclient"                                 : "New client created.",
   "com.tempedge.error.passwordnomatch"                                : "Password does not match.",
   "com.tempedge.error.phonenumberrequired"                            : "Phone number is required.",
@@ -207,10 +206,10 @@
   "com.tempedge.error.useralreadyexist"                               : "User already Exists.",
   "com.tempedge.msg.label.uploadEmployeeList"                         : "Upload employee list",
   "com.tempedge.msg.label.upload"                                     : "Upload",
-  "com.tempedge.msg.info.title.employeeCreated"                       : "Employee list saved",
+  "com.tempedge.msg.info.title.employeeCreated"                       : "Employee list saved. <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees}",
   "com.tempedge.msg.info.body.employeeCreated"                        : "The employee list has been saved successfully.",
-  "com.tempedge.msg.info.title.empleyeesAlreadyExist"                 : "Some records have already been registered previously. Please review your file.",
-  "com.tempedge.msg.info.title.incorrectFileExtension"                : "Please, select a file with extension xlsx or xls.",
+  "com.tempedge.error.person.partialsave"                             : "Partial save. <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees} <br/> Employees not saved: ${error}",
+  "com.tempedge.msg.info.title.incorrectFileExtension"                : "Please, select a file with one of these extensions: .xlsx or .xls",
   "com.tempedge.msg.info.title.emptyFile"                             : "Your file is empty, please make sure your file has at least one record.",
   "com.tempedge.msg.info.title.errorProcessingFile"                   : "There was an error processing your excel file, please check that It has the columns correctly."
 }

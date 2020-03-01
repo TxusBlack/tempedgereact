@@ -77,11 +77,16 @@ body {
 
 .announcement-bar p{
   padding: 11.5px 10px;
+  text-align: left;
 }
 
 .success{
   background-color: #98FB98;
   color: #008000
+}
+.warning{
+  background-color: #fff3cd;
+  color: #856404
 }
 
 .fail{
