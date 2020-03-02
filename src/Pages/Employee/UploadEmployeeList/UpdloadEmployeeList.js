@@ -9,11 +9,13 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import XLSX from 'xlsx';
 import Validate from '../../Validations/Validations';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
-import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, clearTempedgeStoreProp, getList } from '../../../Redux/actions/tempEdgeActions';
 import types from '../../../Redux/actions/types';
 import OutcomeBar from '../../../components/common/OutcomeBar';
+import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser';
 
 const requestUrl = '/api/person/saveList';
+const defaultCountry = 'United States';
 
 class UploadEmployeeList extends React.Component {
   constructor(props, context) {
@@ -23,6 +25,13 @@ class UploadEmployeeList extends React.Component {
     const { activeLanguage } = this.props;
     const { addTranslationForLanguage } = this.props;
     ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
+    this.regionsList = null;
+  }
+
+  async componentDidMount() {
+    const { countryRegionList, getList } = this.props;
+    await getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+    this.regionsList = await CountryRegionParser.getRegionList(countryRegionList, defaultCountry);
   }
 
   componentDidUpdate(prevProps) {
@@ -35,7 +44,6 @@ class UploadEmployeeList extends React.Component {
       this.setState({
         submitted: 0,
       });
-      console.log(saveEmployeeList);
 
       if (saveEmployeeList.status === 200) {
         const { result } = saveEmployeeList.data;
@@ -46,6 +54,8 @@ class UploadEmployeeList extends React.Component {
         } else if (saveEmployeeList.data.status === 206) {
           const { result } = saveEmployeeList.data;
           this.showWarningResultBar(saveEmployeeList.data.message, summary);
+        } else {
+          this.showErrorResultBar(saveEmployeeList.data.message);
         }
       } else {
         this.showErrorResultBar('com.tempedge.error.undefine');
@@ -92,25 +102,25 @@ class UploadEmployeeList extends React.Component {
     const { binaryString } = this.state;
     const { tempedgeAPI } = this.props;
     try {
-      const wb = XLSX.read(binaryString, { type: 'binary', cellDates: true, raw: true, dateNF: 'mm/dd/yyyy' });
+      const wb = XLSX.read(binaryString, { type: 'binary', cellDates: true, dateNF: 'yyyy-mm-dd' });
       // Get first worksheet
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       // Convert excel to json
-      const data = XLSX.utils.sheet_to_json(ws, {
+      const employeeList = XLSX.utils.sheet_to_json(ws, {
         header: ['empDepartment', 'employeeId', 'lastName', 'firstName', 'middleName', 'identification', 'address', 'address2', 'city', 'region', 'zipcode', 'phone', 'gender', 'birthDay'],
       });
-      const request = { orgId: 1, personEntityList: data };
-      if (data.length === 0) {
+      const request = { orgId: 1, personEntityList: employeeList };
+      if (employeeList.length === 0) {
         this.showWarningResultBar('com.tempedge.msg.info.title.emptyFile');
         this.changeProgressbar(0);
       } else {
         this.changeProgressbar(25);
+        this.changeShortCodeByRegionCode(employeeList);
         this.setState(() => ({
           submitted: 1,
           btnDisabled: true,
         }));
-        console.log('request', request);
         tempedgeAPI(requestUrl, request, types.SAVE_EMPLOYEE_LIST);
       }
     } catch (error) {
@@ -121,6 +131,22 @@ class UploadEmployeeList extends React.Component {
       }));
     }
   };
+
+  changeShortCodeByRegionCode(employeeList) {
+    employeeList.map((employee) => {
+      if (employee.region && typeof employee.region === 'string') {
+        employee.region = this.findRegionId(employee.region);
+      }
+    });
+  }
+
+  findRegionId(shortCode) {
+    const region = this.regionsList.find((regionData) => regionData.shortCode === shortCode);
+    if (region) {
+      return region.regionId;
+    }
+    return null;
+  }
 
   showResultBar(translateId, messageType, customMessage) {
     this.setState({
@@ -220,7 +246,7 @@ UploadEmployeeList.propTypes = {
   notify: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ tempEdge }) => ({ saveEmployeeList: tempEdge.saveEmployeeList });
+const mapStateToProps = ({ tempEdge }) => ({ saveEmployeeList: tempEdge.saveEmployeeList, countryRegionList: tempEdge.country_region_list });
 
 const uploadEmployeeList = reduxForm({
   form: 'uploadEmployeeList',
@@ -233,6 +259,7 @@ export default withLocalize(
     push,
     notify,
     reset,
+    getList,
     clearTempedgeStoreProp,
   })(uploadEmployeeList),
 );
