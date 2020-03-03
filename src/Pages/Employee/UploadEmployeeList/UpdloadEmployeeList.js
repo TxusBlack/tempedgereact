@@ -29,15 +29,18 @@ class UploadEmployeeList extends React.Component {
   }
 
   async componentDidMount() {
-    const { countryRegionList, getList } = this.props;
+    const { getList, countryRegionList } = this.props;
     await getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    this.regionsList = await CountryRegionParser.getRegionList(countryRegionList, defaultCountry);
   }
 
   componentDidUpdate(prevProps) {
-    const { saveEmployeeList, activeLanguage, addTranslationForLanguage, clearTempedgeStoreProp } = this.props;
+    const { saveEmployeeList, activeLanguage, addTranslationForLanguage, clearTempedgeStoreProp, countryRegionList } = this.props;
     const { submitted } = this.state;
     const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
+
+    if (!this.regionsList) {
+      this.getRegionList(countryRegionList);
+    }
 
     if (saveEmployeeList && submitted === 1) {
       this.changeProgressbar(100);
@@ -75,6 +78,10 @@ class UploadEmployeeList extends React.Component {
     clearTempedgeStoreProp('saveEmployeeList');
   }
 
+  async getRegionList(countryRegionList) {
+    this.regionsList = await CountryRegionParser.getRegionList(countryRegionList, defaultCountry);
+  }
+
   onChange = (e) => {
     const [file] = e.target.files;
     const fileNameTextBox = this.fileNameTextBox.current;
@@ -101,6 +108,8 @@ class UploadEmployeeList extends React.Component {
   onSubmit = async () => {
     const { binaryString } = this.state;
     const { tempedgeAPI } = this.props;
+
+    this.changeProgressbar(0);
     try {
       const wb = XLSX.read(binaryString, { type: 'binary', cellDates: true, dateNF: 'yyyy-mm-dd' });
       // Get first worksheet
@@ -113,7 +122,6 @@ class UploadEmployeeList extends React.Component {
       const request = { orgId: 1, personEntityList: employeeList };
       if (employeeList.length === 0) {
         this.showWarningResultBar('com.tempedge.msg.info.title.emptyFile');
-        this.changeProgressbar(0);
       } else {
         this.changeProgressbar(25);
         this.changeShortCodeByRegionCode(employeeList);
@@ -152,6 +160,10 @@ class UploadEmployeeList extends React.Component {
     this.setState({
       resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} customData={customMessage}></OutcomeBar>,
     });
+
+    setTimeout(() => {
+      this.changeProgressbar(0);
+    }, 2000);
   }
 
   showSuccessResultBar(translateId, customMessage) {
