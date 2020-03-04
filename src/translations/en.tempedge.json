@@ -136,6 +136,7 @@
   "com.tempedge.error.agency.weekdaysdropdown1required"               : "Please select a weekday.",
   "com.tempedge.error.agency.weekdaysdropdown2required"               : "Please select a weekday.",
   "com.tempedge.error.agency.weekdaysdropdown3required"               : "Please select a weekday.",
+  "com.tempedge.error.agency.agencyssnlastfourrequired"               : "Please, enter 4 numbers",
   "com.tempedge.msg.label.role"                                       : "Role",
   "com.tempedge.msg.label.client"                                     : "Client",
   "com.tempedge.msg.label.userconfiguration"                          : "User Configuration",
