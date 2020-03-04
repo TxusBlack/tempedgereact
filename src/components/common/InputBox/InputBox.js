@@ -30,7 +30,7 @@ let renderInput = (formProps) => {
       input = <input className="form-control tempEdge-input-box" type="password" rows="2" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
   }else{
     if(formProps.active !== "disabled")
-      input = <input className="form-control tempEdge-input-box" type="text" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />
+      input = <input className="form-control tempEdge-input-box" type="text" maxLength={formProps.maxlength} placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />
     else
       input = <input className="form-control tempEdge-input-box" type="text" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" disabled />
   }
