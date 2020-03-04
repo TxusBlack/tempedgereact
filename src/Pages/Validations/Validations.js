@@ -1,4 +1,4 @@
-let validate = formValues => {
+let validate = (formValues) => {
   let errors = {};
 
   if (!formValues.firstName) {
@@ -55,9 +55,9 @@ let validate = formValues => {
   //   errors.gender = 'Please select a gender.';
   // }
 
-  // if(!formValues.temporarydata){
-  //   errors.temporarydata = 'Please enter temporary data.';
-  // }
+  if (!formValues.temporarydata) {
+    errors.temporarydata = 'Please enter temporary data.';
+  }
 
   if (!formValues.office) {
     errors.office = 'Please enter office.';
@@ -362,6 +362,13 @@ let validate = formValues => {
 
   if (!formValues.departmentname) {
     errors.departmentname = 'Please enter department name';
+  }
+
+  if (formValues.agencyssnlastfour) {
+    const regExp = new RegExp(/^\d{4}$/);
+    if (!regExp.test(formValues.agencyssnlastfour)) {
+      errors.agencyssnlastfour = 'Please, enter just 4 numbers';
+    }
   }
 
   return errors;
