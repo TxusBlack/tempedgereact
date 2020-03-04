@@ -45,7 +45,7 @@ class UploadEmployeeList extends React.Component {
     if (saveEmployeeList && submitted === 1) {
       this.changeProgressbar(100);
       this.setState({
-        submitted: 0,
+        submitted: 0
       });
 
       if (saveEmployeeList.status === 200) {
@@ -95,7 +95,7 @@ class UploadEmployeeList extends React.Component {
         const binaryString = event.target.result;
         this.setState(() => ({
           binaryString,
-          btnDisabled: false,
+          btnDisabled: false
         }));
       };
       // Read Blob as binary
@@ -117,7 +117,7 @@ class UploadEmployeeList extends React.Component {
       const ws = wb.Sheets[wsname];
       // Convert excel to json
       const employeeList = XLSX.utils.sheet_to_json(ws, {
-        header: ['empDepartment', 'employeeId', 'lastName', 'firstName', 'middleName', 'identification', 'address', 'address2', 'city', 'region', 'zipcode', 'phone', 'gender', 'birthDay'],
+        header: ['empDepartment', 'employeeId', 'lastName', 'firstName', 'middleName', 'identification', 'address', 'address2', 'city', 'region', 'zipcode', 'phone', 'gender', 'birthDay']
       });
       const request = { orgId: 1, personEntityList: employeeList };
       if (employeeList.length === 0) {
@@ -127,7 +127,7 @@ class UploadEmployeeList extends React.Component {
         this.changeShortCodeByRegionCode(employeeList);
         this.setState(() => ({
           submitted: 1,
-          btnDisabled: true,
+          btnDisabled: true
         }));
         tempedgeAPI(requestUrl, request, types.SAVE_EMPLOYEE_LIST);
       }
@@ -135,7 +135,7 @@ class UploadEmployeeList extends React.Component {
       this.showErrorResultBar('com.tempedge.msg.info.title.errorProcessingFile');
       this.setState(() => ({
         submitted: 0,
-        btnDisabled: false,
+        btnDisabled: false
       }));
     }
   };
@@ -158,7 +158,7 @@ class UploadEmployeeList extends React.Component {
 
   showResultBar(translateId, messageType, customMessage) {
     this.setState({
-      resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} customData={customMessage}></OutcomeBar>,
+      resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} customData={customMessage}></OutcomeBar>
     });
 
     setTimeout(() => {
@@ -180,7 +180,7 @@ class UploadEmployeeList extends React.Component {
 
   changeProgressbar(progress) {
     this.setState({
-      now: progress,
+      now: progress
     });
   }
 
@@ -190,7 +190,7 @@ class UploadEmployeeList extends React.Component {
     this.fileNameTextBox.current.textContent = '';
     clearTempedgeStoreProp('saveEmployeeList');
     this.setState(() => ({
-      btnDisabled: true,
+      btnDisabled: true
     }));
   }
 
@@ -255,14 +255,14 @@ UploadEmployeeList.propTypes = {
   tempedgeAPI: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ tempEdge }) => ({ saveEmployeeList: tempEdge.saveEmployeeList, countryRegionList: tempEdge.country_region_list });
 
 const uploadEmployeeList = reduxForm({
   form: 'uploadEmployeeList',
-  validate: Validate,
+  validate: Validate
 })(UploadEmployeeList);
 
 export default withLocalize(
@@ -272,6 +272,6 @@ export default withLocalize(
     notify,
     reset,
     getList,
-    clearTempedgeStoreProp,
-  })(uploadEmployeeList),
+    clearTempedgeStoreProp
+  })(uploadEmployeeList)
 );

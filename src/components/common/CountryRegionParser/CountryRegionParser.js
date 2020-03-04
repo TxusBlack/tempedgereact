@@ -4,13 +4,13 @@ let getCountryList = (countryList) => {
   countryList.map((country) => {
     country_list.push({
       name: country.name,
-      countryId: country.countryId,
+      countryId: country.countryId
     });
   });
 
   return {
     countryList,
-    country_list,
+    country_list
   };
 };
 
@@ -24,11 +24,11 @@ let getRegionList = async (countryList, selectedCountry) => {
     }
   });
 
-  regions.map((region, index) => {
+  regions.map((region) => {
     regions_list.push({
       name: region.name,
       regionId: region.regionId,
-      shortCode: region.shortCode,
+      shortCode: region.shortCode
     });
   });
 
@@ -37,7 +37,7 @@ let getRegionList = async (countryList, selectedCountry) => {
 
 let parseCountryRegion = {
   getCountryList,
-  getRegionList,
+  getRegionList
 };
 
 export default parseCountryRegion;

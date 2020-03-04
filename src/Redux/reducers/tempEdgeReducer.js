@@ -3,7 +3,7 @@ import types from '../actions/types';
 let initialState = {
   login: '',
   errorFields: [],
-  lastRemoved: '',
+  lastRemoved: ''
 };
 
 export default function(state = initialState, action) {
@@ -11,73 +11,73 @@ export default function(state = initialState, action) {
     case types.LOGIN:
       return {
         ...state,
-        login: action.payload,
+        login: action.payload
       };
     case types.GET_COUNTRY_REGION_LIST:
       return {
         ...state,
-        country_region_list: action.payload,
+        country_region_list: action.payload
       };
     case types.GET_FUNDING_LIST:
       return {
         ...state,
-        funding_list: action.payload,
+        funding_list: action.payload
       };
     case types.GET_ROLE_LIST:
       return {
         ...state,
-        role_list: action.payload,
+        role_list: action.payload
       };
     case types.TEMPEDGE_LIST:
       return {
         ...state,
-        paginatorList: action.payload,
+        paginatorList: action.payload
       };
     case types.SKILLS_LIST:
       return {
         ...state,
-        skillsList: action.payload,
+        skillsList: action.payload
       };
     case types.VALIDATE_PERSON:
       return {
         ...state,
-        validatePerson: action.payload,
+        validatePerson: action.payload
       };
     case types.PERSON_SAVE:
       return {
         ...state,
-        savePerson: action.payload,
+        savePerson: action.payload
       };
     case types.GET_ORG_DEPARTMENT_LIST:
       return {
         ...state,
-        orgDepartmentList: action.payload,
+        orgDepartmentList: action.payload
       };
     case types.GET_OFFICE_LIST:
       return {
         ...state,
-        officeList: action.payload,
+        officeList: action.payload
       };
     case types.CREATE_CLIENT:
       return {
         ...state,
-        client: action.payload,
+        client: action.payload
       };
     case types.SAVE_FORM_POSITION:
       let formPosition = `${action.payload.form}WizardFormTracker`;
       return {
         ...state,
-        [formPosition]: action.payload,
+        [formPosition]: action.payload
       };
     case types.SAVE_DEPARTMENTS_LIST:
       return {
         ...state,
-        deptList: action.payload,
+        deptList: action.payload
       };
     case types.SAVE_POSITIONS_LIST:
       return {
         ...state,
-        deptPosList: action.payload,
+        deptPosList: action.payload
       };
     case types.SAVE_TO_POSITIONS_LIST:
       let newState = typeof state.deptPosList === 'undefined' ? [] : state.deptPosList;
@@ -90,7 +90,7 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        deptPosList: newState,
+        deptPosList: newState
       };
     case types.REMOVE_FROM_POSITIONS_LIST:
       let newPosListState = state.deptPosList;
@@ -104,7 +104,7 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        deptPosList: newPosListState,
+        deptPosList: newPosListState
       };
     case types.REMOVE_FROM_DEPARTMENTS_LIST:
       let newDeptListState = state.deptList;
@@ -118,18 +118,18 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        deptList: newDeptListState,
+        deptList: newDeptListState
       };
     case types.CLEAR_PROP:
       return {
         ...state,
-        [action.payload]: undefined,
+        [action.payload]: undefined
       };
     case types.CLEAR_ERROR_FIELD:
       return {
         ...state,
         errorFields: action.payload.errorFields,
-        lastRemoved: action.payload.lastRemoved,
+        lastRemoved: action.payload.lastRemoved
       };
     case types.SET_ERROR_FIELD:
       let errorFields = typeof state.errorFields === 'undefined' ? [] : [...state.errorFields];
@@ -142,7 +142,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         errorFields: errorFields,
-        lastRemoved: '',
+        lastRemoved: ''
       };
     case types.REMOVE_ERROR_FIELD:
       let errorFieldsArray = typeof state.errorFields === 'undefined' ? [] : [...state.errorFields];
@@ -164,33 +164,33 @@ export default function(state = initialState, action) {
       return {
         ...state,
         errorFields: errorFieldsArray,
-        lastRemoved: error_,
+        lastRemoved: error_
       };
     case types.SAVE_BILL_RATE:
       return {
         ...state,
-        billRate: action.payload,
+        billRate: action.payload
       };
     case types.SAVE_OT_BILL_RATE:
       return {
         ...state,
-        otBillRate: action.payload,
+        otBillRate: action.payload
       };
     case types.GET_ACTIVITY_LIST:
       return {
         ...state,
         errorFields: errorFieldsArray,
-        lastRemoved: action.payload,
+        lastRemoved: action.payload
       };
     case types.GET_SALESMAN_LIST:
       return {
         ...state,
-        salesmanList: action.payload,
+        salesmanList: action.payload
       };
     case types.SAVE_EMPLOYEE_LIST:
       return {
         ...state,
-        saveEmployeeList: action.payload,
+        saveEmployeeList: action.payload
       };
     default:
       return state;
