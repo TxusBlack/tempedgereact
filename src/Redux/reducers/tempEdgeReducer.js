@@ -187,6 +187,11 @@ export default function(state = initialState, action){
         ...state,
         salesmanList: action.payload
       }
+    case types.CHANGE_PASSWORD:
+      return {
+        ...state,
+        changePassword: action.payload,
+      }
     default:
       return state;
   }
