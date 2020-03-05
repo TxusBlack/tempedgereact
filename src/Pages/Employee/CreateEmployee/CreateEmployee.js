@@ -26,8 +26,10 @@ import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 
-const $ = window.$;
+import OutcomeBar from '../../../components/common/OutcomeBar';
 
+const $ = window.$;
+const maxSizeAllowedForFiles = 1e7; // Equals to 10MB -> 10 000 000 bytes
 momentLocaliser(moment);
 
 class CreateEmployee extends Component {
@@ -63,8 +65,8 @@ class CreateEmployee extends Component {
         ['temporarydata', 'office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
-        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances'],
-      ],
+        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
+      ]
     };
 
     this.addTranslationsForActiveLanguage();
@@ -103,7 +105,7 @@ class CreateEmployee extends Component {
       genders: gendersTranslate,
       drugTest: drugTest,
       backgroundTest: backgroundTest,
-      maritalStatus: maritalStatus,
+      maritalStatus: maritalStatus
     }));
   };
 
@@ -114,7 +116,7 @@ class CreateEmployee extends Component {
     this.props.clearTempedgeStoreProp('validatePerson');
 
     this.setState(() => ({
-      announcementBar: '',
+      announcementBar: ''
     }));
   };
 
@@ -122,7 +124,7 @@ class CreateEmployee extends Component {
     if (this.state.getCountryList === false) {
       if (typeof this.props.country_region_list !== 'undefined') {
         this.setState(() => ({
-          getCountryList: true,
+          getCountryList: true
         }));
       }
     }
@@ -130,7 +132,7 @@ class CreateEmployee extends Component {
     if (this.state.orgDepartmentList.length === 0 && Array.isArray(this.props.orgDepartmentList)) {
       if (this.props.orgDepartmentList.length > 0) {
         this.setState(() => ({
-          orgDepartmentList: this.props.orgDepartmentList,
+          orgDepartmentList: this.props.orgDepartmentList
         }));
       }
     }
@@ -138,7 +140,7 @@ class CreateEmployee extends Component {
     if (this.state.officeList.length === 0 && Array.isArray(this.props.officeList)) {
       if (this.props.officeList.length > 0) {
         this.setState(() => ({
-          officeList: this.props.officeList,
+          officeList: this.props.officeList
         }));
       }
     }
@@ -198,7 +200,7 @@ class CreateEmployee extends Component {
 
       this.setState(() => ({
         chkResult: chkResult,
-        errorPanel: errorPanel,
+        errorPanel: errorPanel
       }));
     }
 
@@ -217,7 +219,7 @@ class CreateEmployee extends Component {
           () => ({
             countryListRendered: this.state.countryListRendered + 1,
             country_list: list,
-            regionsList: states,
+            regionsList: states
           }),
           async () => {
             let regionsList = [];
@@ -228,9 +230,9 @@ class CreateEmployee extends Component {
             this.setState({
               countryListRendered: this.state.countryListRendered + 1,
               prevCountry: typeof nextProps.country === 'undefined' ? 'United States' : nextProps.country.name,
-              region_list: regionsList,
+              region_list: regionsList
             });
-          },
+          }
         );
       }
     }
@@ -253,10 +255,11 @@ class CreateEmployee extends Component {
                   <Translate id="com.tempedge.msg.person.newperson" />
                 </p>
               </div>
-            ),
-          }),
-          () => this.props.reset(),
+            )
+          })
+          // () => this.props.reset()
         );
+        this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
       } else {
         //Validation Failed
         this.setState(() => ({
@@ -266,12 +269,11 @@ class CreateEmployee extends Component {
                 <Translate id={this.state.validateMsg} />
               </p>
             </div>
-          ),
+          )
         }));
       }
     }
 
-    console.log('validatePerson', nextProps.validatePerson);
     if (nextProps.validatePerson !== null) {
       if (nextProps.validatePerson.data.status === 409) {
         if (nextProps.validatePerson.data.code === 'TE-E07') {
@@ -283,11 +285,11 @@ class CreateEmployee extends Component {
 
               this.setState(
                 () => ({
-                  validateMsg: nextProps.validatePerson.data.message,
+                  validateMsg: nextProps.validatePerson.data.message
                 }),
                 () => {
                   this.toggleModalOnOff();
-                },
+                }
               );
             };
 
@@ -314,18 +316,18 @@ class CreateEmployee extends Component {
 
             this.setState(
               () => ({
-                showModal: !this.state.showModal,
+                showModal: !this.state.showModal
               }),
               () => {
                 this.setState(() => ({
-                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />,
+                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />
                 }));
-              },
+              }
             );
 
             this.setState(() => ({
               paginatedTable: paginatedTable,
-              btns: btns,
+              btns: btns
             }));
           } else {
             //Validation Failed
@@ -336,7 +338,7 @@ class CreateEmployee extends Component {
                     <Translate id={nextProps.validatePerson.data.message} />
                   </p>
                 </div>
-              ),
+              )
             }));
           }
         } else {
@@ -348,7 +350,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            ),
+            )
           }));
         }
       } else if (nextProps.validatePerson.data.status === 500) {
@@ -360,7 +362,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            ),
+            )
           }));
         }
       } else if (nextProps.validatePerson.data.status === 200) {
@@ -400,35 +402,46 @@ class CreateEmployee extends Component {
         genders: gendersTranslate,
         drugTest: drugTest,
         backgroundTest: backgroundTest,
-        maritalStatus: maritalStatus,
+        maritalStatus: maritalStatus
       }));
     }
   };
 
   onChange = (file, ref) => {
-    let readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs[ref]));
-    let fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+    if (file && file.type === 'application/pdf') {
+      const readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs[ref]));
+      const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+      if (file.size <= maxSizeAllowedForFiles) {
+        const reader = new FileReader();
+        readOnlyTextBox.text(fileName);
+        reader.readAsBinaryString(file); // Read Blob as binary
 
-    readOnlyTextBox.text(fileName);
+        // Event Listener for when a file is selected to be uploaded
+        reader.onload = (event) => {
+          // (on_file_select_event)
+          const data = event.target.result; // 'result' if not 'null', contains the contents of the file as a binary string
+          const stateName = ref === 'fileInputDocuments' ? 'documents' : 'resume';
 
-    let reader = new FileReader();
-
-    reader.readAsBinaryString(file); //Read Blob as binary
-
-    //Event Listener for when a file is selected to be uploaded
-    reader.onload = (event) => {
-      //(on_file_select_event)
-      let data = event.target.result; //'result' if not 'null', contains the contents of the file as a binary string
-      let stateName = ref === 'fileInputDocuments' ? 'documents' : 'resume';
-
-      /* Update state */
+          /* Update state */
+          this.setState(() => ({
+            [stateName]: {
+              name: file.name,
+              data
+            }
+          }));
+        };
+      } else {
+        this.setState(() => ({
+          announcementBar: (
+            <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.maxSizeAllowedForFiles" customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }} />
+          )
+        }));
+      }
+    } else {
       this.setState(() => ({
-        [stateName]: {
-          name: file.name,
-          data: data,
-        },
+        announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.invalidFileType" />
       }));
-    };
+    }
   };
 
   onSubmit = async (formValues) => {
@@ -446,7 +459,7 @@ class CreateEmployee extends Component {
         if (prop.indexOf('data-skill-id-') > -1) {
           id = prop.match(/(\d+)/);
           skills.push({
-            skillId: parseInt(id[0]),
+            skillId: parseInt(id[0])
           });
         }
 
@@ -460,7 +473,7 @@ class CreateEmployee extends Component {
       let data = {
         temporalInfo: true,
         skills: skills,
-        orgId: agency.organizationEntity.orgId,
+        orgId: 1, // agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
@@ -484,19 +497,19 @@ class CreateEmployee extends Component {
         phone: formValues.phone,
         region: formValues.state.regionId,
         taxRegion: formValues.joblocation.regionId,
-        usrCreatedBy: agency.portalUserConfId,
+        usrCreatedBy: 2, //agency.portalUserConfId,
         zipcode: formValues.zip,
         docExt: null,
-        resumExt: null,
+        resumeExt: null,
         personType: {
-          personTypeId: 1, // ** TODO **
+          personTypeId: 1 // ** TODO **
         },
         office: {
-          officeId: formValues.office.officeId,
-        },
+          officeId: formValues.office.officeId
+        }
       };
 
-      var fileArray = {};
+      const fileArray = {};
       if (this.state.documents !== null) {
         fileArray.documents = new Blob([this.state.documents.data], { type: 'application/pdf' });
         data.docExt = this.state.documents.name.split('.').pop();
@@ -504,20 +517,17 @@ class CreateEmployee extends Component {
 
       if (this.state.resume !== null) {
         fileArray.resume = new Blob([this.state.resume.data], { type: 'application/pdf' });
-        data.resumExt = this.state.resume.name.split('.').pop();
+        data.resumeExt = this.state.resume.name.split('.').pop();
       }
-
-      console.log(data);
-      console.log(fileArray);
 
       this.setState(
         () => ({
           formData: { ...data },
-          fileArray,
+          fileArray
         }),
         () => {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
-        },
+        }
       );
     });
   };
@@ -534,7 +544,7 @@ class CreateEmployee extends Component {
       fileReader.readAsDataURL(fileToLoad);
 
       // Onload of file read the file content
-      fileReader.onload = function(fileLoadedEvent) {
+      fileReader.onload = (fileLoadedEvent) => {
         base64 = fileLoadedEvent.target.result;
         base64 = base64.replace('data:application/pdf;base64,', '');
 
@@ -545,7 +555,6 @@ class CreateEmployee extends Component {
   };
 
   onSave = () => {
-    console.log(this.state.fileArray);
     this.props.tempedgeMultiPartApi('/api/person/save', this.state.formData, this.state.fileArray, types.PERSON_SAVE);
     this.props.clearTempedgeStoreProp('validatePerson');
   };
@@ -554,7 +563,7 @@ class CreateEmployee extends Component {
   toggleModalOnOff = () => {
     this.setState({
       showModal: !this.state.showModal,
-      modal: '',
+      modal: ''
     });
   };
 
@@ -609,7 +618,7 @@ class CreateEmployee extends Component {
             borderBottomLeftRadius: '1.6rem',
             borderBottomRightRadius: '1.6rem',
             backgroundColor: '#ffff',
-            margin: 'auto',
+            margin: 'auto'
           }}>
           {this.state.announcementBar}
           <div className="tabs-stepper-wrapper register-form-panel-inputs" ref="createNewEmployee1" style={{ margin: 'auto', padding: 0 }}>
@@ -988,13 +997,13 @@ CreateEmployee.propTypes = {
   getListSafe: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
-  clearErrorField: PropTypes.func.isRequired,
+  clearErrorField: PropTypes.func.isRequired
 };
 
 CreateEmployee = reduxForm({
   form: 'NewEmployee', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
-  validate: Validate,
+  validate: Validate
 })(CreateEmployee);
 
 let mapStateToProps = (state) => {
@@ -1013,7 +1022,7 @@ let mapStateToProps = (state) => {
     validatePerson: typeof state.tempEdge.validatePerson !== 'undefined' ? state.tempEdge.validatePerson : null,
     savePerson: typeof state.tempEdge.savePerson !== 'undefined' ? state.tempEdge.savePerson : null,
     errorFields: state.tempEdge.errorFields,
-    lastRemoved: state.tempEdge.lastRemoved,
+    lastRemoved: state.tempEdge.lastRemoved
   };
 };
 

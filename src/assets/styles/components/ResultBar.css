@@ -1,22 +1,25 @@
-
 @import '../Vars.css';
 
 .announcement-bar {
-    width: 100%;
-    min-height: 40px;
-    font-size: 1.5rem;
-  }
-  
-  .announcement-bar p {
-    padding: 11.5px 10px;
-  }
-  
-  .success{
-    background-color: var(--success-result-bar-bkg-color);
-    color: var(--success-result-bar-font-color);
-  }
-  
-  .fail {
-    background-color: var(--error-result-bar-bkg-color);
-    color: var(--error-result-bar-font-color);
-  }
+  width: 100%;
+  min-height: 40px;
+  font-size: 1.5rem;
+}
+
+.announcement-bar p {
+  padding: 11.5px 10px;
+}
+
+.success {
+  background-color: var(--success-result-bar-bkg-color);
+  color: var(--success-result-bar-font-color);
+}
+.warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.fail {
+  background-color: var(--error-result-bar-bkg-color);
+  color: var(--error-result-bar-font-color);
+}
