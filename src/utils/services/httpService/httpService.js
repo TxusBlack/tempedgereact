@@ -23,9 +23,9 @@ let HttpService = {
       url: baseUrlTempEdge + url,
       method: 'get',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      data: {},
+      data: {}
     });
 
     return response;
@@ -36,9 +36,9 @@ let HttpService = {
       url: baseUrlTempEdge + url,
       method: 'post',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      data: data,
+      data: data
     });
 
     return response;
@@ -52,8 +52,8 @@ let HttpService = {
 
     return Axios.post(baseUrlTempEdge + url, bodyFormData, {
       headers: {
-        Authorization: 'Basic ' + btoa(config.tempedgeUser + ':' + config.tempedgePassword),
-      },
+        Authorization: 'Basic ' + btoa(config.tempedgeUser + ':' + config.tempedgePassword)
+      }
     });
   },
   tokenValidation: async (url, token) => {
@@ -62,8 +62,8 @@ let HttpService = {
 
     return Axios.post(baseUrlTempEdge + url, bodyFormData, {
       headers: {
-        Authorization: 'Basic ' + btoa(config.tempedgeUser + ':' + config.tempedgePassword),
-      },
+        Authorization: 'Basic ' + btoa(config.tempedgeUser + ':' + config.tempedgePassword)
+      }
     });
   },
   postImages: async (url, data) => {
@@ -84,17 +84,17 @@ let HttpService = {
       data: bodyFormData,
       config: {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       },
       params: {
         access_token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTgxNTQ0MDMsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJiZTFjMmU2Ni02Njg4LTQwNjItOTI4YS01ZGEyYjY0OTEzOGYiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.0-AOY6f_K6DziyYackSsPz-G3tVGC8B5EAN363Uorv4',
-      },
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTgxNTQ0MDMsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJiZTFjMmU2Ni02Njg4LTQwNjItOTI4YS01ZGEyYjY0OTEzOGYiLCJjbGllbnRfaWQiOiJMdWlzLWNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.0-AOY6f_K6DziyYackSsPz-G3tVGC8B5EAN363Uorv4'
+      }
     });
 
     return response;
-  },
+  }
 };
 
 export default HttpService;
