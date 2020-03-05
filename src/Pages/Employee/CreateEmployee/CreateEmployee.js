@@ -256,8 +256,8 @@ class CreateEmployee extends Component {
                 </p>
               </div>
             )
-          })
-          // () => this.props.reset()
+          }),
+          () => this.props.reset()
         );
         this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
       } else {
