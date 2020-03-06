@@ -1,4 +1,3 @@
-
 import types from './types';
 
 import history from '../../history.js';
@@ -6,11 +5,13 @@ import Axios from 'axios';
 //import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://localhost:9191`;
+let baseUrlTempEdge = `http://100.1.147.42:9191`;
 
 export let doLogin = (url, data) => {
-  return (dispatch) => {   //'dispatch', courtesy of the Thunk middleware so we can call it directly
-    httpService.getAuthToken('/oauth/token', data)
+  return (dispatch) => {
+    //'dispatch', courtesy of the Thunk middleware so we can call it directly
+    httpService
+      .getAuthToken('/oauth/token', data)
       .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
@@ -25,7 +26,7 @@ export let doLogin = (url, data) => {
           data: data,
           params: {
             access_token: token,
-            browser : 'WEB'
+            browser: 'WEB'
           }
         }).then(async (response) => {
           sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
@@ -36,49 +37,53 @@ export let doLogin = (url, data) => {
           });
 
           let lang = window.location.pathname;
-          lang = lang.split("/");
+          lang = lang.split('/');
           let agencyList = response.data.result.portalUserList;
 
-          if(agencyList.length < 1){
+          if (agencyList.length < 1) {
             history.push(`/error/${lang[2]}`);
-          }else if(agencyList.length === 1){
+          } else if (agencyList.length === 1) {
             sessionStorage.setItem('agency', JSON.stringify(response.data.result.portalUserList[0]));
 
-            if(response.data.result.portalUserList[0].status === "A" && response.data.result.portalUserList[0].organizationEntity.status === "A"){
+            if (response.data.result.portalUserList[0].status === 'A' && response.data.result.portalUserList[0].organizationEntity.status === 'A') {
               history.push(`/dashboard/${lang[2]}`);
-            }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "A" /*&& response.data.result.portalUserList[0].userRoleId >= 4*/){
+            } else if (
+              response.data.result.portalUserList[0].status === 'P' &&
+              response.data.result.portalUserList[0].organizationEntity.status === 'A' /*&& response.data.result.portalUserList[0].userRoleId >= 4*/
+            ) {
               history.push(`/pending/user/${lang[2]}`);
-            }else if(response.data.result.portalUserList[0].status === "P"  && response.data.result.portalUserList[0].organizationEntity.status === "P"){
+            } else if (response.data.result.portalUserList[0].status === 'P' && response.data.result.portalUserList[0].organizationEntity.status === 'P') {
               history.push(`/pending/agency/${lang[2]}`);
-            }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "A"){
+            } else if (response.data.result.portalUserList[0].status === 'D' && response.data.result.portalUserList[0].organizationEntity.status === 'A') {
               history.push(`/denied/user/${lang[2]}`);
               //history.push(`/register/${lang[2]}`);
-            }else if(response.data.result.portalUserList[0].status === "D"  && response.data.result.portalUserList[0].organizationEntity.status === "D"){
+            } else if (response.data.result.portalUserList[0].status === 'D' && response.data.result.portalUserList[0].organizationEntity.status === 'D') {
               history.push(`/denied/agency/${lang[2]}`);
               //history.push(`/registerAgency/${lang[2]}`);
-            }else if(response.data.result.portalUserList[0].status === "ERROR"){
+            } else if (response.data.result.portalUserList[0].status === 'ERROR') {
               history.push(`/error/${lang[2]}`);
-            }else{
+            } else {
               history.push(`/auth/${lang[2]}`);
             }
-          }else if(agencyList.length > 1){
+          } else if (agencyList.length > 1) {
             history.push(`/dashboard/${lang[2]}`);
           }
         });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         let lang = window.location.pathname;
-        lang = lang.split("/");
+        lang = lang.split('/');
 
         history.push(`/error/${lang[2]}`);
       });
-  }
-}
+  };
+};
 
 export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
-    console.log("Req: ", data);
+    console.log('Req: ', data);
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -89,27 +94,29 @@ export let tempedgeAPI = (url, data, actionName) => {
       params: {
         access_token: token
       }
-    }).then((response) => {
-      console.log("Res: ", response);
-      dispatch({
-        type: actionName,
-        payload: response
+    })
+      .then((response) => {
+        console.log('Res: ', response);
+        dispatch({
+          type: actionName,
+          payload: response
+        });
       })
-    }).catch((err) => {
-      dispatch({
-        type: actionName,
-        payload: err
+      .catch((err) => {
+        dispatch({
+          type: actionName,
+          payload: err
+        });
       });
-    });
-  }
-}
+  };
+};
 
 export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     let formData = new FormData();
     let jsonse = JSON.stringify(data);
-    let blob = new Blob([jsonse], {type: "application/json"});
+    let blob = new Blob([jsonse], { type: 'application/json' });
 
     formData.append('personEntity', blob);
     formData.append('document', fileArray.documents);
@@ -129,28 +136,29 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
     };
 
     Axios(options)
-      .then(response => {
+      .then((response) => {
         dispatch({
           type: actionName,
-          payload: (actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE && actionName !== types.CREATE_CLIENT)? response.data.result: response
+          payload: actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE && actionName !== types.CREATE_CLIENT ? response.data.result : response
         });
-      }).catch((err) => {
+      })
+      .catch((err) => {
         dispatch({
           type: actionName,
           payload: err
         });
       });
-  }
-}
+  };
+};
 
 export let clearTempedgeStoreProp = (actionProp) => {
   return (dispatch) => {
     dispatch({
       type: types.CLEAR_PROP,
       payload: actionProp
-    })
-  }
-}
+    });
+  };
+};
 
 export let clearErrorField = (actionProp) => {
   return (dispatch) => {
@@ -160,9 +168,9 @@ export let clearErrorField = (actionProp) => {
         errorFields: [],
         lastRemoved: ''
       }
-    })
-  }
-}
+    });
+  };
+};
 
 export let getListSafe = (url, data, actionName) => {
   return (dispatch) => {
@@ -173,29 +181,27 @@ export let getListSafe = (url, data, actionName) => {
       params: { access_token: token }
     };
 
-    console.log("getListSafe req: ",data);
-    Axios.post((baseUrlTempEdge + url), data ,options)
-      .then((response) => {
-        console.log("getListSafe res: ",response);
-        dispatch({
-          type: actionName,
-          payload: response.data.result
-        });
+    console.log('getListSafe req: ', data);
+    Axios.post(baseUrlTempEdge + url, data, options).then((response) => {
+      console.log('getListSafe res: ', response);
+      dispatch({
+        type: actionName,
+        payload: response.data.result
       });
-  }
-}
+    });
+  };
+};
 
 export let getList = (url, actionName) => {
   return (dispatch) => {
-    httpService.get(url)
-      .then((response) => {
-        dispatch({
-          type: actionName,
-          payload: response.data.result
-        });
+    httpService.get(url).then((response) => {
+      dispatch({
+        type: actionName,
+        payload: response.data.result
       });
-    }
-}
+    });
+  };
+};
 
 export let storeFormPageNumber = (formName, position) => {
   return (dispatch) => {
@@ -206,20 +212,19 @@ export let storeFormPageNumber = (formName, position) => {
         pos: position
       }
     });
-  }
-}
+  };
+};
 
 export let getFilters = (url, data, actionName) => {
   return (dispatch) => {
-    httpService.get(url)
-      .then((response) => {
-        dispatch({
-          type: actionName,
-          payload: response.data.result
-        });
+    httpService.get(url).then((response) => {
+      dispatch({
+        type: actionName,
+        payload: response.data.result
       });
-    }
-}
+    });
+  };
+};
 
 export let saveDepartmentList = (deptList) => {
   return (dispatch) => {
@@ -227,8 +232,8 @@ export let saveDepartmentList = (deptList) => {
       type: types.SAVE_DEPARTMENTS_LIST,
       payload: deptList
     });
-  }
-}
+  };
+};
 
 export let savePositionsList = (positionsList) => {
   return (dispatch) => {
@@ -236,8 +241,8 @@ export let savePositionsList = (positionsList) => {
       type: types.SAVE_POSITIONS_LIST,
       payload: positionsList
     });
-  }
-}
+  };
+};
 
 export let saveToPositionsList = (newPos) => {
   return (dispatch) => {
@@ -245,8 +250,8 @@ export let saveToPositionsList = (newPos) => {
       type: types.SAVE_TO_POSITIONS_LIST,
       payload: newPos
     });
-  }
-}
+  };
+};
 
 export let removeFromDepartmentList = (index) => {
   return (dispatch) => {
@@ -254,9 +259,8 @@ export let removeFromDepartmentList = (index) => {
       type: types.REMOVE_FROM_DEPARTMENTS_LIST,
       payload: index
     });
-  }
-}
-
+  };
+};
 
 export let setErrorField = (fieldName) => {
   return (dispatch) => {
@@ -264,8 +268,8 @@ export let setErrorField = (fieldName) => {
       type: types.SET_ERROR_FIELD,
       payload: fieldName
     });
-  }
-}
+  };
+};
 
 export let removeErrorField = (fieldName) => {
   return (dispatch) => {
@@ -273,8 +277,8 @@ export let removeErrorField = (fieldName) => {
       type: types.REMOVE_ERROR_FIELD,
       payload: fieldName
     });
-  }
-}
+  };
+};
 
 export let saveBillRates = (rate, type) => {
   return (dispatch) => {
@@ -282,5 +286,5 @@ export let saveBillRates = (rate, type) => {
       type: type,
       payload: rate
     });
-  }
-}
+  };
+};
