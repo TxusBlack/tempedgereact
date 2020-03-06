@@ -208,7 +208,7 @@
   "com.tempedge.msg.label.upload"                                     : "Upload",
   "com.tempedge.msg.info.title.employeeCreated"                       : "Employee list saved. <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees}",
   "com.tempedge.msg.info.body.employeeCreated"                        : "The employee list has been saved successfully.",
-  "com.tempedge.error.person.partialsave"                             : "Partial save. <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees} <br/> Employees not saved: ${error}",
+  "com.tempedge.error.person.partialsave"                             : "Partial save.",
   "com.tempedge.msg.info.title.incorrectFileExtension"                : "Please, select a file with one of these extensions: .xlsx or .xls",
   "com.tempedge.msg.info.title.emptyFile"                             : "Your file is empty, please make sure your file has at least one record.",
   "com.tempedge.msg.info.title.errorProcessingFile"                   : "There was an error processing your excel file, please check that It has the columns correctly."

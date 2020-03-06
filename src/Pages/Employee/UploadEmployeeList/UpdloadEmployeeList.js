@@ -56,12 +56,12 @@ class UploadEmployeeList extends React.Component {
           this.resetForm();
         } else if (saveEmployeeList.data.status === 206) {
           const { result } = saveEmployeeList.data;
-          this.showWarningResultBar(saveEmployeeList.data.message, summary);
+          this.showWarningResultBar(saveEmployeeList.data.message);
         } else {
           this.showErrorResultBar(saveEmployeeList.data.message);
         }
       } else {
-        this.showErrorResultBar('com.tempedge.error.undefine');
+        this.showErrorResultBar(saveEmployeeList.data.message);
       }
 
       clearTempedgeStoreProp('saveEmployeeList');
