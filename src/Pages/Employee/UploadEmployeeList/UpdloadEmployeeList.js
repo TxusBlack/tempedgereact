@@ -47,21 +47,21 @@ class UploadEmployeeList extends React.Component {
       this.setState({
         submitted: 0
       });
-
       if (saveEmployeeList.status === 200) {
         const { result } = saveEmployeeList.data;
         const summary = { newEmployees: result.newEmployees, modEmployees: result.modEmployees, error: JSON.stringify(result.error) };
         if (saveEmployeeList.data.status === 200) {
           this.showSuccessResultBar('com.tempedge.msg.info.title.employeeCreated', summary);
           this.resetForm();
-        } else if (saveEmployeeList.data.status === 206) {
-          const { result } = saveEmployeeList.data;
+        } else if (saveEmployeeList.data.status !== 401) {
           this.showWarningResultBar(saveEmployeeList.data.message);
         } else {
-          this.showErrorResultBar(saveEmployeeList.data.message);
+          this.showErrorResultBar('com.tempedge.msg.person.tokeninvalid');
         }
+      } else if (saveEmployeeList.response && saveEmployeeList.response.status === 401) {
+        this.showErrorResultBar('com.tempedge.msg.person.tokeninvalid');
       } else {
-        this.showErrorResultBar(saveEmployeeList.data.message);
+        this.showErrorResultBar('com.tempedge.error.undefine');
       }
 
       clearTempedgeStoreProp('saveEmployeeList');

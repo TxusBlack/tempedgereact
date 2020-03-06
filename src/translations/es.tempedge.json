@@ -211,5 +211,6 @@
   "com.tempedge.error.person.partialsave"                             : "Guardado parcial.",
   "com.tempedge.msg.info.title.incorrectFileExtension"                : "Por favor selecciona un archivo con extensión .xlsx o .xls",
   "com.tempedge.msg.info.title.emptyFile"                             : "Archivo vacío. Por favor asegúrate que tu archivo contiene almenos un registro.",
-  "com.tempedge.msg.info.title.errorProcessingFile"                   : "Hubo un error procesando tu archivo de excel, por favor revisa que éste tiene las columnas correctamente."
+  "com.tempedge.msg.info.title.errorProcessingFile"                   : "Hubo un error procesando tu archivo de excel, por favor revisa que éste tiene las columnas correctamente.",
+  "com.tempedge.error.network"                                        : "Error de red. POr favor revisa tu conexión a internet."
 }
