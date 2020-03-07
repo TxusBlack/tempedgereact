@@ -62,8 +62,8 @@ class CreateEmployee extends Component {
         ['office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
-        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances'],
-      ],
+        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
+      ]
     };
 
     this.addTranslationsForActiveLanguage();
@@ -102,7 +102,7 @@ class CreateEmployee extends Component {
       genders: gendersTranslate,
       drugTest: drugTest,
       backgroundTest: backgroundTest,
-      maritalStatus: maritalStatus,
+      maritalStatus: maritalStatus
     }));
   };
 
@@ -112,7 +112,7 @@ class CreateEmployee extends Component {
     this.props.clearTempedgeStoreProp('savePerson');
 
     this.setState(() => ({
-      announcementBar: '',
+      announcementBar: ''
     }));
   };
 
@@ -122,7 +122,7 @@ class CreateEmployee extends Component {
     if (getCountryList === false) {
       if (typeof countryRegionList !== 'undefined') {
         this.setState(() => ({
-          getCountryList: true,
+          getCountryList: true
         }));
         this.setCountryList(defaultCountry, defaultRegion);
       }
@@ -131,7 +131,7 @@ class CreateEmployee extends Component {
     if (this.state.orgDepartmentList.length === 0 && Array.isArray(this.props.orgDepartmentList)) {
       if (this.props.orgDepartmentList.length > 0) {
         this.setState(() => ({
-          orgDepartmentList: this.props.orgDepartmentList,
+          orgDepartmentList: this.props.orgDepartmentList
         }));
       }
     }
@@ -139,7 +139,7 @@ class CreateEmployee extends Component {
     if (this.state.officeList.length === 0 && Array.isArray(this.props.officeList)) {
       if (this.props.officeList.length > 0) {
         this.setState(() => ({
-          officeList: this.props.officeList,
+          officeList: this.props.officeList
         }));
       }
     }
@@ -179,7 +179,7 @@ class CreateEmployee extends Component {
       this.setState(() => ({
         countryList,
         regionsList,
-        prevCountry: country.name,
+        prevCountry: country.name
       }));
     }
   }
@@ -231,7 +231,7 @@ class CreateEmployee extends Component {
 
       this.setState(() => ({
         chkResult: chkResult,
-        errorPanel: errorPanel,
+        errorPanel: errorPanel
       }));
     }
 
@@ -245,9 +245,9 @@ class CreateEmployee extends Component {
                   <Translate id="com.tempedge.msg.person.newperson" />
                 </p>
               </div>
-            ),
+            )
           }),
-          () => this.props.reset(),
+          () => this.props.reset()
         );
       } else {
         //Validation Failed
@@ -258,7 +258,7 @@ class CreateEmployee extends Component {
                 <Translate id={this.state.validateMsg} />
               </p>
             </div>
-          ),
+          )
         }));
       }
     }
@@ -274,11 +274,11 @@ class CreateEmployee extends Component {
 
               this.setState(
                 () => ({
-                  validateMsg: nextProps.validatePerson.data.message,
+                  validateMsg: nextProps.validatePerson.data.message
                 }),
                 () => {
                   this.toggleModalOnOff();
-                },
+                }
               );
             };
 
@@ -305,18 +305,18 @@ class CreateEmployee extends Component {
 
             this.setState(
               () => ({
-                showModal: !this.state.showModal,
+                showModal: !this.state.showModal
               }),
               () => {
                 this.setState(() => ({
-                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />,
+                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />
                 }));
-              },
+              }
             );
 
             this.setState(() => ({
               paginatedTable: paginatedTable,
-              btns: btns,
+              btns: btns
             }));
           } else {
             //Validation Failed
@@ -327,7 +327,7 @@ class CreateEmployee extends Component {
                     <Translate id={nextProps.validatePerson.data.message} />
                   </p>
                 </div>
-              ),
+              )
             }));
           }
         } else {
@@ -339,7 +339,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            ),
+            )
           }));
         }
       } else if (nextProps.validatePerson.data.status === 500) {
@@ -351,7 +351,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            ),
+            )
           }));
         }
       } else if (nextProps.validatePerson.data.status === 200) {
@@ -391,7 +391,7 @@ class CreateEmployee extends Component {
         genders: gendersTranslate,
         drugTest: drugTest,
         backgroundTest: backgroundTest,
-        maritalStatus: maritalStatus,
+        maritalStatus: maritalStatus
       }));
     }
   };
@@ -416,8 +416,8 @@ class CreateEmployee extends Component {
       this.setState(() => ({
         [stateName]: {
           name: file.name,
-          data: data,
-        },
+          data: data
+        }
       }));
     };
   };
@@ -437,7 +437,7 @@ class CreateEmployee extends Component {
         if (prop.indexOf('data-skill-id-') > -1) {
           id = prop.match(/(\d+)/);
           skills.push({
-            skillId: parseInt(id[0]),
+            skillId: parseInt(id[0])
           });
         }
 
@@ -480,11 +480,11 @@ class CreateEmployee extends Component {
         docExt: null,
         resumExt: null,
         personType: {
-          personTypeId: 1, // ** TODO **
+          personTypeId: 1 // ** TODO **
         },
         office: {
-          officeId: formValues.office.officeId,
-        },
+          officeId: formValues.office.officeId
+        }
       };
 
       var fileArray = {};
@@ -501,11 +501,11 @@ class CreateEmployee extends Component {
       this.setState(
         () => ({
           formData: { ...data },
-          fileArray,
+          fileArray
         }),
         () => {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
-        },
+        }
       );
       debugger;
     });
@@ -542,7 +542,7 @@ class CreateEmployee extends Component {
   toggleModalOnOff = () => {
     this.setState({
       showModal: !this.state.showModal,
-      modal: '',
+      modal: ''
     });
   };
 
@@ -597,7 +597,7 @@ class CreateEmployee extends Component {
             borderBottomLeftRadius: '1.6rem',
             borderBottomRightRadius: '1.6rem',
             backgroundColor: '#ffff',
-            margin: 'auto',
+            margin: 'auto'
           }}>
           {this.state.announcementBar}
           <div className="tabs-stepper-wrapper register-form-panel-inputs" ref="createNewEmployee1" style={{ margin: 'auto', padding: 0 }}>
@@ -986,13 +986,13 @@ CreateEmployee.propTypes = {
   clearTempedgeStoreProp: PropTypes.func.isRequired,
   clearErrorField: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
-  countryRegionList: PropTypes.array,
+  countryRegionList: PropTypes.array
 };
 
 CreateEmployee = reduxForm({
   form: 'NewEmployee', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
-  validate: Validate,
+  validate: Validate
 })(CreateEmployee);
 
 let mapStateToProps = (state) => {
@@ -1011,7 +1011,7 @@ let mapStateToProps = (state) => {
     validatePerson: typeof state.tempEdge.validatePerson !== 'undefined' ? state.tempEdge.validatePerson : null,
     savePerson: typeof state.tempEdge.savePerson !== 'undefined' ? state.tempEdge.savePerson : null,
     errorFields: state.tempEdge.errorFields,
-    lastRemoved: state.tempEdge.lastRemoved,
+    lastRemoved: state.tempEdge.lastRemoved
   };
 };
 
