@@ -2,8 +2,7 @@ import Axios from 'axios';
 import FormData from 'form-data';
 import config from '../../../env/env.js';
 
-let baseUrlTempEdge = `http://100.1.147.42:9191`;
-//let baseUrlTempEdge = `http://localhost:9191`;     //***Must change this URL in the actions file as well***
+let baseUrlTempEdge = `http://100.1.147.42:9191`; //***Must change this URL in the actions file as well***
 let baseUrlFaceRecognition = `http://100.1.147.42:9191`;
 
 function dataURLtoFile(dataurl, filename) {
@@ -19,7 +18,7 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 let HttpService = {
-  get: async url => {
+  get: async (url) => {
     let response = await Axios({
       url: baseUrlTempEdge + url,
       method: 'get',

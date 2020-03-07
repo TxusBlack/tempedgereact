@@ -1,9 +1,9 @@
 import React from 'react';
 import 'babel-polyfill';
 import { Switch, Route } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router'
+import { ConnectedRouter } from 'connected-react-router';
 import { store, persistor, history } from './store/store';
-import { Provider } from "react-redux";
+import { Provider } from 'react-redux';
 import { LocalizeProvider } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { withLocalize, Translate } from 'react-localize-redux';
@@ -13,7 +13,6 @@ import NavBar from './components/common/NavBar/NavBar';
 import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
 import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
 import Footer from './components/common/Footer/Footer';
-import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
 import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
@@ -30,7 +29,8 @@ import CreateEmployee from './Pages/Employee/CreateEmployee/CreateEmployee';
 import ClientList from './Pages/Client/ClientList/ClientList';
 import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
-import AgencyList from './Pages/Agencies/AgencySelect/AgencySelectList';
+import OrgList from './Pages/Organization/OrgSelect/OrgSelectList';
+import ChangePassword from './Pages/ChangePassword/ChangePassword';
 
 window.recaptchaOptions = {
   lang: 'en',
@@ -38,39 +38,44 @@ window.recaptchaOptions = {
   removeOnUnmount: true,
 };
 
-class App extends React.Component{
-  state = { panelNavShow: false }
+class App extends React.Component {
+  state = { panelNavShow: false };
 
   togglePanelNav = () => {
     this.setState(() => {
       return { panelNavShow: !this.state.panelNavShow };
     });
-  }
+  };
 
   closeNav = () => {
     this.setState(() => {
       return { panelNavShow: false };
     });
-  }
+  };
 
-  render(){
+  render() {
     let defaultLanguage = 'en';
 
     let languages = [
       { name: 'English', code: 'en' },
-      { name: 'Spanish', code: 'es' }
+      { name: 'Spanish', code: 'es' },
     ];
 
     let options = {
       defaultLanguage: defaultLanguage,
-      renderToStaticMarkup: renderToStaticMarkup
+      renderToStaticMarkup: renderToStaticMarkup,
     };
 
-    let footerContent= <p> © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights"></Translate> </p>;
+    let footerContent = (
+      <p>
+        {' '}
+        © 2019 - TempEdge LLC. 101 N Feltus St. South Amboy NJ. 08879. <Translate id="com.tempedge.msg.label.rights"></Translate>{' '}
+      </p>
+    );
 
-    let backgroundFade = (this.state.panelNavShow)? <BackgroundFade closeNav={this.closeNav} />: null;
+    let backgroundFade = this.state.panelNavShow ? <BackgroundFade closeNav={this.closeNav} /> : null;
 
-    return(
+    return (
       <Provider store={store}>
         <PersistGate loading={<LoadingView />} persistor={persistor}>
           <LocalizeProvider store={store} initialize={{ languages: languages, options: options }}>
@@ -82,10 +87,12 @@ class App extends React.Component{
                 <NavPanelLeft toggleNav={this.togglePanelNav} show={this.state.panelNavShow} />
                 {backgroundFade}
                 <Switch>
-                  <Route exact path="/" component={ () => <HomePage lang={defaultLanguage} /> } />
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
+
+                  <PrivateRoute exact path="/user/changePass/:lang" component={ChangePassword} />
+
                   <PrivateRoute exact path="/client/new/:lang" component={CreateNewClient} />
                   <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <PrivateRoute exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
@@ -99,6 +106,7 @@ class App extends React.Component{
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/dashboard/:lang" component={Dashboard} />
+                  <PrivateRoute exact path="/organization-select/:lang" component={OrgList} />
                   <PrivateRoute exact path="/intpayroll/new/:lang" component={NewInternalPayroll} />
                 </Switch>
               </div>
@@ -109,6 +117,6 @@ class App extends React.Component{
       </Provider>
     );
   }
- }
+}
 
- export default withLocalize(App);
+export default withLocalize(App);
