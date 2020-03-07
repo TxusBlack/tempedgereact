@@ -31,11 +31,19 @@ class NavBar extends React.Component{
 
   render(){
     let { languages, activeLanguage } = this.props;
+    let path = window.location.pathname;
     let loginRoute = `/auth/${activeLanguage.code}`;
     let registerRoute = `/register/${activeLanguage.code}`;
     let registerAgencyRoute = `/registerAgency/${activeLanguage.code}`;
     let activeMenuItem = ['active', '', ''];
     let hamburgerBtn = "";
+    let logo = "";
+
+    if(!path.includes("organization-select")){
+      logo = <Link to={`/auth/${activeLanguage.code}`}><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" /></Link>;
+    }else{
+      logo = <img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" />;
+    }
 
     if(typeof this.props.portalUserList !== 'undefined' && this.props.portalUserList[0].status === "A"){
       hamburgerBtn = <HamburgerButton toggleNav={this.props.toggleNav} />;
@@ -48,7 +56,7 @@ class NavBar extends React.Component{
           <div className="row" style={{pading: 0, margin: 0, width: "100%"}}>
             <div className="col-lg-1">{hamburgerBtn}</div>
             <div className="col-lg-2 col-xs-6 col-sm-6">
-              <Link to={`/auth/${activeLanguage.code}`}><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" /></Link>
+            { logo }
             </div>
             <div className="col-xs-4 col-sm-4 language-container-xs">
               <div className="language">
