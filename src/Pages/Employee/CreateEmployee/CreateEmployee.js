@@ -1002,7 +1002,9 @@ let mapStateToProps = (state) => {
     skillsList: state.tempEdge.skillsList,
     countryRegionList: state.tempEdge.country_region_list,
     orgDepartmentList:
-      typeof state.tempEdge.orgDepartmentList !== 'undefined' && typeof state.tempEdge.orgDepartmentList.data.content !== 'undefined' ? state.tempEdge.orgDepartmentList.data.content : [],
+      typeof state.tempEdge.orgDepartmentList && state.tempEdge.orgDepartmentList !== 'undefined' && typeof state.tempEdge.orgDepartmentList.data.content !== 'undefined'
+        ? state.tempEdge.orgDepartmentList.data.content
+        : [],
     officeList: typeof state.tempEdge.officeList !== 'undefined' ? state.tempEdge.officeList : [],
     country: selector(state, 'country'),
     backgroundTest: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.backgroundTest : null,
