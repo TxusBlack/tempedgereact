@@ -13,6 +13,7 @@ import { tempedgeAPI, clearTempedgeStoreProp, getList } from '../../../Redux/act
 import types from '../../../Redux/actions/types';
 import OutcomeBar from '../../../components/common/OutcomeBar';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser';
+import ContainerBlue from '../../../components/common/Container/ContainerBlue';
 
 const requestUrl = '/api/person/saveList';
 const defaultCountry = 'United States';
@@ -49,21 +50,17 @@ class UploadEmployeeList extends React.Component {
       });
       if (saveEmployeeList.status === 200) {
         const { result } = saveEmployeeList.data;
-        const summary = { newEmployees: result.newEmployees, modEmployees: result.modEmployees, error: JSON.stringify(result.error) };
+        const summary = { newEmployees: result.newEmployees, modEmployees: result.modEmployees };
         if (saveEmployeeList.data.status === 200) {
           this.showSuccessResultBar('com.tempedge.msg.info.title.employeeCreated', summary);
-          this.resetForm();
-        } else if (saveEmployeeList.data.status !== 401) {
-          this.showWarningResultBar(saveEmployeeList.data.message);
         } else {
-          this.showErrorResultBar('com.tempedge.msg.person.tokeninvalid');
+          this.showWarningResultBar(saveEmployeeList.data.message, summary);
         }
-      } else if (saveEmployeeList.response && saveEmployeeList.response.status === 401) {
-        this.showErrorResultBar('com.tempedge.msg.person.tokeninvalid');
       } else {
         this.showErrorResultBar('com.tempedge.error.undefine');
       }
 
+      this.resetForm();
       clearTempedgeStoreProp('saveEmployeeList');
     }
 
@@ -83,6 +80,7 @@ class UploadEmployeeList extends React.Component {
   }
 
   onChange = (e) => {
+    this.hideResultBar();
     const [file] = e.target.files;
     const fileNameTextBox = this.fileNameTextBox.current;
 
@@ -100,7 +98,10 @@ class UploadEmployeeList extends React.Component {
       };
       // Read Blob as binary
       reader.readAsBinaryString(file);
-    } else {
+    } else if (file) {
+      this.setState(() => ({
+        btnDisabled: true
+      }));
       this.showWarningResultBar('com.tempedge.msg.info.title.incorrectFileExtension');
     }
   };
@@ -166,6 +167,12 @@ class UploadEmployeeList extends React.Component {
     }, 2000);
   }
 
+  hideResultBar() {
+    this.setState({
+      resultBar: ''
+    });
+  }
+
   showSuccessResultBar(translateId, customMessage) {
     this.showResultBar(translateId, 'success', customMessage);
   }
@@ -198,55 +205,40 @@ class UploadEmployeeList extends React.Component {
     const { btnDisabled, now, resultBar } = this.state;
     const { handleSubmit } = this.props;
 
-    return (
-      <div className="container-fluid login-container">
+    const bodyContainer = (
+      <form className="panel-body" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="row">
-          <div className="col-md-12">
-            <div className="login-form">
-              <div className="panel panel-default login-form-panel">
-                <div className="panel-heading login-header">
-                  <h2 className="text-center">
-                    <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
-                  </h2>
-                </div>
-                <form className="panel-body" onSubmit={handleSubmit(this.onSubmit)}>
-                  <div className="row">
-                    <div className="col-12">{resultBar}</div>
-                  </div>
+          <div className="col-12">{resultBar}</div>
+        </div>
 
-                  <div className="form-group row">
-                    <div className="col-12">
-                      <p className="text-left label-p">
-                        <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
-                      </p>
-                      <div className="input-group">
-                        <label htmlFor="employeeListFile" className="input-group-btn">
-                          <span className="btn department-list-button">
-                            <Translate id="com.tempedge.msg.label.choosefile" />
-                            <input id="employeeListFile" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".xlsx, .xls" />
-                          </span>
-                        </label>
-                        <br />
-                        <div className="w-100">
-                          <p className="text-left" ref={this.fileNameTextBox} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <ProgressBar animated now={now} label={`${now}%`} />
-                  <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
-                      <Translate id="com.tempedge.msg.label.upload" />
-                    </button>
-                  </div>
-                </form>
-                <div className="panel-footer login-footer" />
+        <div className="form-group row">
+          <div className="col-12">
+            <p className="text-left label-p">
+              <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
+            </p>
+            <div className="input-group">
+              <label htmlFor="employeeListFile" className="input-group-btn">
+                <span className="btn department-list-button">
+                  <Translate id="com.tempedge.msg.label.choosefile" />
+                  <input id="employeeListFile" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".xlsx, .xls" />
+                </span>
+              </label>
+              <br />
+              <div className="w-100">
+                <p className="text-left" ref={this.fileNameTextBox} />
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <ProgressBar animated now={now} label={`${now}%`} />
+        <div className="form-group">
+          <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
+            <Translate id="com.tempedge.msg.label.upload" />
+          </button>
+        </div>
+      </form>
     );
+    return <ContainerBlue title="com.tempedge.msg.label.uploadEmployeeList" children={bodyContainer} width="40%" />;
   }
 }
 
