@@ -76,7 +76,7 @@ class CreateEmployee extends Component {
     let maritalStatus = [];
 
     await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId: 1 }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
     await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
     parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
@@ -1001,7 +1001,8 @@ let mapStateToProps = (state) => {
   return {
     skillsList: state.tempEdge.skillsList,
     countryRegionList: state.tempEdge.country_region_list,
-    orgDepartmentList: typeof state.tempEdge.orgDepartmentList !== 'undefined' ? state.tempEdge.orgDepartmentList : [],
+    orgDepartmentList:
+      typeof state.tempEdge.orgDepartmentList !== 'undefined' && typeof state.tempEdge.orgDepartmentList.data.content !== 'undefined' ? state.tempEdge.orgDepartmentList.data.content : [],
     officeList: typeof state.tempEdge.officeList !== 'undefined' ? state.tempEdge.officeList : [],
     country: selector(state, 'country'),
     backgroundTest: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.backgroundTest : null,
