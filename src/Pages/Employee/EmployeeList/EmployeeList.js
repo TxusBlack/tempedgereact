@@ -15,7 +15,7 @@ class EmployeeList extends Component {
     this.state = {
       tablePage: 0,
       filterBy: {},
-      data: [],
+      data: []
     };
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
@@ -31,15 +31,14 @@ class EmployeeList extends Component {
   }
 
   render() {
-    const { onClickARow } = this.props;
-    return <PaginatedTable apiUrl={api_url} title="com.tempedge.msg.label.employeeList" onClickARow={onClickARow} />;
+    return <PaginatedTable apiUrl={api_url} title="com.tempedge.msg.label.employeeList" />;
   }
 }
 
 EmployeeList.propTypes = {
   //Typechecking With PropTypes, will run on its own, no need to do anything else, separate library since React 16, wasn't the case before on 14 or 15
   //Action, does the Fetch part from the posts API
-  tempedgeAPI: PropTypes.func.isRequired, //Action, does the Fetch part from the posts API
+  tempedgeAPI: PropTypes.func.isRequired //Action, does the Fetch part from the posts API
 };
 
 export default withLocalize(connect(null, { push, tempedgeAPI })(EmployeeList));

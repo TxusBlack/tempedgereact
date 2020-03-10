@@ -13,7 +13,7 @@ class Table extends Component {
 
     this.state = {
       data: [],
-      pageSize: [20, 50, 100],
+      pageSize: [20, 50, 100]
     };
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
@@ -34,8 +34,8 @@ class Table extends Component {
   };
 
   render() {
-    const { onClickARow } = this.props;
-    const tableClassname = onClickARow ? 'table-hover' : 'table-striped';
+    const { onClickRows, multipleRows } = this.props;
+    const tableClassname = onClickRows ? 'table-hover' : 'table-striped';
     let columns = this.props.data.columns;
     let content = this.props.data ? this.props.data.data : '';
 
@@ -77,7 +77,7 @@ class Table extends Component {
               })
             : 'NO COLUMNS'}
 
-          {content ? <TBody data={content.content} columns={columns} onClickARow={onClickARow} /> : 'NO RECORDS FOUND'}
+          {content ? <TBody data={content.content} columns={columns} onClickRows={onClickRows} multipleRows={multipleRows} /> : 'NO RECORDS FOUND'}
         </table>
       </div>
     );

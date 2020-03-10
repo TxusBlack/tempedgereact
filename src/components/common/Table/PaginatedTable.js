@@ -63,24 +63,28 @@ class PaginatedTable extends Component {
 
   render() {
     let data =
-      typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined' && typeof this.props.paginatorList !== 'undefined'
+      typeof this.props.payload === 'undefined' &&
+      typeof this.props.apiUrl !== 'undefined' &&
+      typeof this.props.paginatorList !== 'undefined' &&
+      this.props.paginatorList.data &&
+      this.props.paginatorList.data.result
         ? this.props.paginatorList.data.result
         : this.props.payload;
     let title = this.props.title;
-    const { onClickARow } = this.props;
+    const { onClickRows, multipleRows } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Container title={title} btns={data && data.data ? <TPaginator changePage={this.changePage} /> : ''}>
           {data ? (
             <div className="col-12">
-              <Table data={data} applyFilter={this.applyFilter} onClickARow={onClickARow} />
+              <Table data={data} applyFilter={this.applyFilter} onClickRows={onClickRows} multipleRows={multipleRows} />
             </div>
           ) : (
             'NO RECORDS FOUND'
           )}
         </Container>
-      </React.Fragment>
+      </>
     );
   }
 }

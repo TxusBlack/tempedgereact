@@ -1,6 +1,7 @@
 :root {
-  --normal-blue: #3EB7E9;
-  --success-result-bar-bkg-color: #98FB98;
+  --normal-blue: #3eb7e9;
+  --tempedge-orange: #eb8d34;
+  --success-result-bar-bkg-color: #98fb98;
   --success-result-bar-font-color: #008000;
   --error-result-bar-bkg-color: #ff9999;
   --error-result-bar-font-color: #ff0000;

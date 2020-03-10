@@ -93,11 +93,11 @@ body {
 }
 
 .facemash-modal {
-  background: #565656;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .facemash-modal .modal-dialog {
-  max-width: 90%;
+  min-width: 500px;
   margin: 1.75rem auto;
 }
 
@@ -150,7 +150,7 @@ body {
   border-color: #a94442 !important;
 }
 
-.tempEdge-dropdown-input-box.has-error-dropdown div{
+.tempEdge-dropdown-input-box.has-error-dropdown div {
   border-color: #a94442 !important;
 }
 
@@ -340,7 +340,8 @@ ul.menu-ul li:hover a:after {
 input:invalid {
   border-color: red;
 }
-.face-tile, .face-tile img{
+.face-tile,
+.face-tile img {
   width: 100%;
   min-height: 24rem;
   margin: auto;
@@ -1339,7 +1340,7 @@ form div.list .list-item:last-child button {
   min-height: 6.6rem;
 }
 
-.table-header-left{
+.table-header-left {
   font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
@@ -1383,16 +1384,15 @@ form div.list .list-item:last-child button {
   color: black;
 }
 
-
 /********TAB STYLE*******************************/
-.formPanel{
+.formPanel {
   padding: 2rem 2rem 0 2rem;
   width: 100%;
   margin: 2rem;
   font-size: 1.6rem;
 }
 
-.formPanelBody{
+.formPanelBody {
   padding: 3rem;
   width: 100%;
   font-size: 1.6rem;
@@ -1448,7 +1448,7 @@ form div.list .list-item:last-child button {
   border: 2px solid #888888;
 }
 /**********************************************/
-@media screen and (max-width: 1201px){
+@media screen and (max-width: 1201px) {
   .hamburger-btn {
     left: 4rem;
   }
@@ -1630,14 +1630,32 @@ form div.list .list-item:last-child button {
   }
 }
 
-.symbol-button{
+.symbol-button {
   background-color: var(--normal-blue);
   color: white;
   width: 100%;
-  border-radius: 1.6rem;    
+  border-radius: 1.6rem;
   min-width: 32px;
   max-width: 60px;
 }
-.symbol-button:hover{
-  color: white;  
+.symbol-button:hover {
+  color: white;
+}
+
+.table-hover tbody tr:hover,
+.table-hover .table-active:hover {
+  cursor: pointer;
+  background-color: #ffae64;
+  color: white;
+}
+
+.table-active,
+.table-active > td,
+.table-active > th {
+  background-color: var(--tempedge-orange);
+  color: white;
+}
+
+.modal-lg {
+  max-width: 1200px;
 }
