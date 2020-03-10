@@ -165,7 +165,7 @@ let mapStateToProps = (state) => {
   }
 
   return({
-    status: (state.tempEdge.login !== "" && state.tempEdge.login.portalUserList.length > 0)? state.tempEdge.login.portalUserList[0].status: null,
+    status: (state.tempEdge.login !== 'undefined' || typeof state.tempEdge.login.portalUserList !== 'undefined')? null: state.tempEdge.login.portalUserList[0].status,
     rememberme: rememberUser
   });
 }

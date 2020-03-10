@@ -2,14 +2,12 @@ import types from './types';
 
 import history from '../../history.js';
 import Axios from 'axios';
-//import ls from 'local-storage'
 import httpService from '../../utils/services/httpService/httpService';
 
 let baseUrlTempEdge = `http://100.1.147.42:9191`;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {
-    //'dispatch', courtesy of the Thunk middleware so we can call it directly
     httpService
       .getAuthToken('/oauth/token', data)
       .then((res) => {
@@ -17,6 +15,7 @@ export let doLogin = (url, data) => {
         data.IPAddress = window.location.hostname;
 
         sessionStorage.setItem('access_token', token);
+
         Axios({
           url: baseUrlTempEdge + url,
           method: 'get',
@@ -29,8 +28,6 @@ export let doLogin = (url, data) => {
             browser: 'WEB'
           }
         }).then(async (response) => {
-          sessionStorage.setItem('leftNavMenu', JSON.stringify(response.data.result.portalUserList[0].user.roles[0].menu));
-
           dispatch({
             type: types.LOGIN,
             payload: response.data.result
@@ -43,30 +40,11 @@ export let doLogin = (url, data) => {
           if (agencyList.length < 1) {
             history.push(`/error/${lang[2]}`);
           } else if (agencyList.length === 1) {
-            sessionStorage.setItem('agency', JSON.stringify(response.data.result.portalUserList[0]));
+            let org = agencyList[0];
 
-            if (response.data.result.portalUserList[0].status === 'A' && response.data.result.portalUserList[0].organizationEntity.status === 'A') {
-              history.push(`/dashboard/${lang[2]}`);
-            } else if (
-              response.data.result.portalUserList[0].status === 'P' &&
-              response.data.result.portalUserList[0].organizationEntity.status === 'A' /*&& response.data.result.portalUserList[0].userRoleId >= 4*/
-            ) {
-              history.push(`/pending/user/${lang[2]}`);
-            } else if (response.data.result.portalUserList[0].status === 'P' && response.data.result.portalUserList[0].organizationEntity.status === 'P') {
-              history.push(`/pending/agency/${lang[2]}`);
-            } else if (response.data.result.portalUserList[0].status === 'D' && response.data.result.portalUserList[0].organizationEntity.status === 'A') {
-              history.push(`/denied/user/${lang[2]}`);
-              //history.push(`/register/${lang[2]}`);
-            } else if (response.data.result.portalUserList[0].status === 'D' && response.data.result.portalUserList[0].organizationEntity.status === 'D') {
-              history.push(`/denied/agency/${lang[2]}`);
-              //history.push(`/registerAgency/${lang[2]}`);
-            } else if (response.data.result.portalUserList[0].status === 'ERROR') {
-              history.push(`/error/${lang[2]}`);
-            } else {
-              history.push(`/auth/${lang[2]}`);
-            }
+            validateOrg(org);
           } else if (agencyList.length > 1) {
-            history.push(`/dashboard/${lang[2]}`);
+            history.push(`/organization-select/${lang[2]}`);
           }
         });
       })
@@ -79,11 +57,48 @@ export let doLogin = (url, data) => {
   };
 };
 
+export let doLogout = (lang) => {
+  return (dispatch) => {
+    dispatch({
+      type: types.LOGOUT,
+      payload: {}
+    });
+
+    history.push(`/auth/${lang}`);
+  };
+};
+
+export let validateOrg = (org) => {
+  let lang = window.location.pathname;
+  lang = lang.split('/');
+  let leftMenuNav = JSON.parse(JSON.stringify(org.user.roles[0].menu));
+
+  sessionStorage.setItem('agency', JSON.stringify(org));
+  sessionStorage.setItem('leftNavMenu', JSON.stringify(leftMenuNav));
+
+  if (org.status === 'A' && org.organizationEntity.status === 'A') {
+    history.push(`/dashboard/${lang[2]}`);
+  } else if (org.status === 'P' && org.organizationEntity.status === 'A') {
+    history.push(`/pending/user/${lang[2]}`);
+  } else if (org.status === 'P' && org.organizationEntity.status === 'P') {
+    history.push(`/pending/agency/${lang[2]}`);
+  } else if (org.status === 'D' && org.organizationEntity.status === 'A') {
+    history.push(`/denied/user/${lang[2]}`);
+    //history.push(`/register/${lang[2]}`);
+  } else if (org.status === 'D' && org.organizationEntity.status === 'D') {
+    history.push(`/denied/agency/${lang[2]}`);
+    //history.push(`/registerAgency/${lang[2]}`);
+  } else if (org.status === 'ERROR') {
+    history.push(`/error/${lang[2]}`);
+  } else {
+    history.push(`/auth/${lang[2]}`);
+  }
+};
+
 export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
-    console.log('Req: ', data);
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -96,7 +111,6 @@ export let tempedgeAPI = (url, data, actionName) => {
       }
     })
       .then((response) => {
-        console.log('Res: ', response);
         dispatch({
           type: actionName,
           payload: response
@@ -181,9 +195,7 @@ export let getListSafe = (url, data, actionName) => {
       params: { access_token: token }
     };
 
-    console.log('getListSafe req: ', data);
     Axios.post(baseUrlTempEdge + url, data, options).then((response) => {
-      console.log('getListSafe res: ', response);
       dispatch({
         type: actionName,
         payload: response.data.result
