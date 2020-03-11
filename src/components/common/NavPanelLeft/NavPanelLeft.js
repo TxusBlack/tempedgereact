@@ -1,5 +1,5 @@
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withLocalize, Translate } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { Link } from 'react-router-dom';
@@ -50,20 +50,20 @@ class NavPanelLeft extends React.Component {
               </span>
             </div>
           </div>
-          <h4 className="row panel-user-img-name">
+          <div className="row panel-user-img-name">
             <div className="col-lg-4">
               <img src={user} className="usr-img" alt="user" />
             </div>
             <h4 className="col-lg-8">
               <h4>{this.props.firstName + ' ' + this.props.lastName}</h4>
             </h4>
-          </h4>
+          </div>
           <ul>
             {leftNavMenu !== ''
               ? leftNavMenu.map((item, index) => {
                   return (
-                    <Link to={`${item.optionPath}/${this.props.activeLanguage.code} `}>
-                      <li onClick={this.toggleNav}>{item.optionName} </li>
+                    <Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} onClick={this.toggleNav}>
+                      <li>{item.optionName} </li>
                     </Link>
                   );
                 })
@@ -71,12 +71,14 @@ class NavPanelLeft extends React.Component {
           </ul>
         </div>
         <Footer
-          textColor="#2d2d2d"
-          background="#fff"
           content={
-            <p onClick={this.signOut}>
-              <Link to="/">Sign Out</Link>
-            </p>
+            <Link to={`/auth/${this.props.activeLanguage.code}`} onClick={this.signOut}>
+              <ul>
+                <li>
+                  <Translate id="com.tempedge.msg.info.signOut" />
+                </li>
+              </ul>
+            </Link>
           }
         />
       </nav>
