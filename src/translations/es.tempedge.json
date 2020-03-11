@@ -220,5 +220,6 @@
   "com.tempedge.msg.info.title.password_changed"                      : "Contraseña cambiada",
   "com.tempedge.msg.info.body.password_changed"                       : "Tu contraseña ha sido cambiada con éxito",
   "com.tempedge.msg.info.title.invalid_password"                      : "Contraseña inválida",
-  "com.tempedge.msg.info.body.invalid_password"                       : "Revisa tu contraseña actual por favor"
+  "com.tempedge.msg.info.body.invalid_password"                       : "Revisa tu contraseña actual por favor",
+  "com.tempedge.button.accept"                                        : "Aceptar"
 }

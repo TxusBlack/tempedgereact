@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { push } from 'connected-react-router';
-import { withLocalize } from 'react-localize-redux';
+import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 
@@ -67,9 +67,13 @@ class TBody extends Component {
     const { multipleRows } = this.props;
     if (multipleRows) {
       return (
-        <button type="button" onClick={() => this.getSelectedRowsData()} className="btn btn-primary btn-block" disabled={this.state.btnDisabled}>
-          Add
-        </button>
+        <div className="row float-center">
+          <div className="col-6 offset-3">
+            <button type="button" onClick={() => this.getSelectedRowsData()} className="btn btn-primary btn-block btn-sm" disabled={this.state.btnDisabled}>
+              <Translate id="com.tempedge.button.accept" />
+            </button>
+          </div>
+        </div>
       );
     }
     return '';
@@ -111,7 +115,11 @@ class TBody extends Component {
             </p>
           )}
         </tbody>
-        {this.renderButton()}
+        <tfoot>
+          <tr>
+            <td colSpan="2">{this.renderButton()}</td>
+          </tr>
+        </tfoot>
       </>
     );
   }
