@@ -25,18 +25,11 @@ class PaginatedTable extends Component {
   }
 
   componentWillMount() {
-    let payload = { orgId: this.state.orgId, filterBy: {} };
+    let payload = { orgId: this.state.orgId, filterBy: { personType: '1' } };
     if (typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined') {
       payload.data = this.props.payload;
       this.props.tempedgeAPI(this.props.apiUrl, payload, types.TEMPEDGE_LIST);
     }
-  }
-
-  componentDidMount() {
-    let agency = JSON.parse(sessionStorage.getItem('agency'));
-    this.setState({
-      orgId: agency.organizationEntity.orgId
-    });
   }
 
   changePage = (myPage) => {

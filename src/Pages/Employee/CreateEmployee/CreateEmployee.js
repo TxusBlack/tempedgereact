@@ -461,7 +461,7 @@ class CreateEmployee extends Component {
       let data = {
         temporalInfo: true,
         skills: skills,
-        orgId: this.state.organizationEntity.orgId,
+        orgId: this.state.agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
