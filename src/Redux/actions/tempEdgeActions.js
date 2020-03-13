@@ -7,10 +7,10 @@ import httpService from '../../utils/services/httpService/httpService';
 let baseUrlTempEdge = `http://100.1.147.42:9191`;
 
 export let doLogin = (url, data) => {
-  return dispatch => {
+  return (dispatch) => {
     httpService
       .getAuthToken('/oauth/token', data)
-      .then(res => {
+      .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;
 
@@ -39,16 +39,16 @@ export let doLogin = (url, data) => {
 
           if (agencyList.length < 1) {
             history.push(`/error/${lang[2]}`);
-          }else if(agencyList.length === 1){
+          } else if (agencyList.length === 1) {
             let org = agencyList[0];
 
             validateOrg(org);
-          }else if(agencyList.length > 1){
+          } else if (agencyList.length > 1) {
             history.push(`/organization-select/${lang[2]}`);
           }
         });
       })
-      .catch(error => {
+      .catch((error) => {
         let lang = window.location.pathname;
         lang = lang.split('/');
 
@@ -65,38 +65,38 @@ export let doLogout = (lang) => {
     });
 
     history.push(`/auth/${lang}`);
-  }
-}
+  };
+};
 
 export let validateOrg = (org) => {
   let lang = window.location.pathname;
-  lang = lang.split("/");
+  lang = lang.split('/');
   let leftMenuNav = JSON.parse(JSON.stringify(org.user.roles[0].menu));
 
   sessionStorage.setItem('agency', JSON.stringify(org));
   sessionStorage.setItem('leftNavMenu', JSON.stringify(leftMenuNav));
 
-  if(org.status === "A" && org.organizationEntity.status === "A"){
+  if (org.status === 'A' && org.organizationEntity.status === 'A') {
     history.push(`/dashboard/${lang[2]}`);
-  }else if(org.status === "P"  && org.organizationEntity.status === "A"){
+  } else if (org.status === 'P' && org.organizationEntity.status === 'A') {
     history.push(`/pending/user/${lang[2]}`);
-  }else if(org.status === "P"  && org.organizationEntity.status === "P"){
+  } else if (org.status === 'P' && org.organizationEntity.status === 'P') {
     history.push(`/pending/agency/${lang[2]}`);
-  }else if(org.status === "D"  && org.organizationEntity.status === "A"){
+  } else if (org.status === 'D' && org.organizationEntity.status === 'A') {
     history.push(`/denied/user/${lang[2]}`);
     //history.push(`/register/${lang[2]}`);
-  }else if(org.status === "D"  && org.organizationEntity.status === "D"){
+  } else if (org.status === 'D' && org.organizationEntity.status === 'D') {
     history.push(`/denied/agency/${lang[2]}`);
     //history.push(`/registerAgency/${lang[2]}`);
-  }else if(org.status === "ERROR"){
+  } else if (org.status === 'ERROR') {
     history.push(`/error/${lang[2]}`);
-  }else{
+  } else {
     history.push(`/auth/${lang[2]}`);
   }
-}
+};
 
 export let tempedgeAPI = (url, data, actionName) => {
-  return dispatch => {
+  return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
     Axios({
@@ -109,22 +109,24 @@ export let tempedgeAPI = (url, data, actionName) => {
       params: {
         access_token: token
       }
-    }).then((response) => {
-      dispatch({
-        type: actionName,
-        payload: response
+    })
+      .then((response) => {
+        dispatch({
+          type: actionName,
+          payload: response
+        });
       })
-    }).catch(err => {
-      dispatch({
-        type: actionName,
-        payload: err
+      .catch((err) => {
+        dispatch({
+          type: actionName,
+          payload: err
+        });
       });
-    });
-  }
+  };
 };
 
 export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
-  return dispatch => {
+  return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
     let formData = new FormData();
     let jsonse = JSON.stringify(data);
@@ -148,13 +150,13 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
     };
 
     Axios(options)
-      .then(response => {
+      .then((response) => {
         dispatch({
           type: actionName,
           payload: actionName !== types.VALIDATE_PERSON && actionName !== types.PERSON_SAVE && actionName !== types.CREATE_CLIENT ? response.data.result : response
         });
       })
-      .catch(err => {
+      .catch((err) => {
         dispatch({
           type: actionName,
           payload: err
@@ -163,8 +165,8 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
   };
 };
 
-export let clearTempedgeStoreProp = actionProp => {
-  return dispatch => {
+export let clearTempedgeStoreProp = (actionProp) => {
+  return (dispatch) => {
     dispatch({
       type: types.CLEAR_PROP,
       payload: actionProp
@@ -172,8 +174,8 @@ export let clearTempedgeStoreProp = actionProp => {
   };
 };
 
-export let clearErrorField = actionProp => {
-  return dispatch => {
+export let clearErrorField = (actionProp) => {
+  return (dispatch) => {
     dispatch({
       type: types.CLEAR_ERROR_FIELD,
       payload: {
@@ -185,7 +187,7 @@ export let clearErrorField = actionProp => {
 };
 
 export let getListSafe = (url, data, actionName) => {
-  return dispatch => {
+  return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
     let options = {
@@ -193,7 +195,7 @@ export let getListSafe = (url, data, actionName) => {
       params: { access_token: token }
     };
 
-    Axios.post(baseUrlTempEdge + url, data, options).then(response => {
+    Axios.post(baseUrlTempEdge + url, data, options).then((response) => {
       dispatch({
         type: actionName,
         payload: response.data.result
@@ -203,8 +205,8 @@ export let getListSafe = (url, data, actionName) => {
 };
 
 export let getList = (url, actionName) => {
-  return dispatch => {
-    httpService.get(url).then(response => {
+  return (dispatch) => {
+    httpService.get(url).then((response) => {
       dispatch({
         type: actionName,
         payload: response.data.result
@@ -214,7 +216,7 @@ export let getList = (url, actionName) => {
 };
 
 export let storeFormPageNumber = (formName, position) => {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
       type: types.SAVE_FORM_POSITION,
       payload: {
@@ -226,8 +228,8 @@ export let storeFormPageNumber = (formName, position) => {
 };
 
 export let getFilters = (url, data, actionName) => {
-  return dispatch => {
-    httpService.get(url).then(response => {
+  return (dispatch) => {
+    httpService.get(url).then((response) => {
       dispatch({
         type: actionName,
         payload: response.data.result
@@ -236,8 +238,8 @@ export let getFilters = (url, data, actionName) => {
   };
 };
 
-export let saveDepartmentList = deptList => {
-  return dispatch => {
+export let saveDepartmentList = (deptList) => {
+  return (dispatch) => {
     dispatch({
       type: types.SAVE_DEPARTMENTS_LIST,
       payload: deptList
@@ -245,8 +247,8 @@ export let saveDepartmentList = deptList => {
   };
 };
 
-export let savePositionsList = positionsList => {
-  return dispatch => {
+export let savePositionsList = (positionsList) => {
+  return (dispatch) => {
     dispatch({
       type: types.SAVE_POSITIONS_LIST,
       payload: positionsList
@@ -254,8 +256,8 @@ export let savePositionsList = positionsList => {
   };
 };
 
-export let saveToPositionsList = newPos => {
-  return dispatch => {
+export let saveToPositionsList = (newPos) => {
+  return (dispatch) => {
     dispatch({
       type: types.SAVE_TO_POSITIONS_LIST,
       payload: newPos
@@ -263,8 +265,8 @@ export let saveToPositionsList = newPos => {
   };
 };
 
-export let removeFromDepartmentList = index => {
-  return dispatch => {
+export let removeFromDepartmentList = (index) => {
+  return (dispatch) => {
     dispatch({
       type: types.REMOVE_FROM_DEPARTMENTS_LIST,
       payload: index
@@ -272,8 +274,8 @@ export let removeFromDepartmentList = index => {
   };
 };
 
-export let setErrorField = fieldName => {
-  return dispatch => {
+export let setErrorField = (fieldName) => {
+  return (dispatch) => {
     dispatch({
       type: types.SET_ERROR_FIELD,
       payload: fieldName
@@ -281,8 +283,8 @@ export let setErrorField = fieldName => {
   };
 };
 
-export let removeErrorField = fieldName => {
-  return dispatch => {
+export let removeErrorField = (fieldName) => {
+  return (dispatch) => {
     dispatch({
       type: types.REMOVE_ERROR_FIELD,
       payload: fieldName
@@ -291,7 +293,7 @@ export let removeErrorField = fieldName => {
 };
 
 export let saveBillRates = (rate, type) => {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
       type: type,
       payload: rate
