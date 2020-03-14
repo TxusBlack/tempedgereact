@@ -3,48 +3,47 @@ import ReactDOM from 'react-dom';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
-import { Field, reduxForm, change, formValueSelector, reset, initialize } from 'redux-form';
-import { date } from 'redux-form-validators';
-import InputBox from '../../../components/common/InputBox/InputBox.js';
-import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
-import DropdownList from 'react-widgets/lib/DropdownList'; //DO NOT REMOVE or it will break
-import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker'; //DO NOT REMOVE or it will break
+import { Field, reduxForm, change, formValueSelector, initialize } from 'redux-form';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
+import Form from 'react-bootstrap/Form';
+import Stepper from 'react-stepper-horizontal';
+import DropdownList from '../../../components/common/Dropdown/DropdownList';
+import ToggleSwitch from '../../../components/common/ToggleSwitch/ToggleSwitch';
+import Datepicker from '../../../components/common/Datepicker/Datepicker';
 import types from '../../../Redux/actions/types.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
 import { tempedgeAPI, tempedgeMultiPartApi, clearTempedgeStoreProp, clearErrorField, getList, getListSafe } from '../../../Redux/actions/tempEdgeActions';
-import Container from '../../../components/common/Container/Container';
-import Form from 'react-bootstrap/Form';
-import Stepper from 'react-stepper-horizontal';
 import Validate from '../../Validations/Validations';
 import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
+import InputBox from '../../../components/common/InputBox/InputBox.js';
 
-const $ = window.$;
+const { $ } = window;
 
 momentLocaliser(moment);
+
+const defaultCountry = { name: 'United States', countryId: 234 };
+const defaultRegion = { name: 'New Jersey', regionId: 4134 };
 
 class CreateEmployee extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activePage: 3,
+      getCountryList: false,
       prevCountry: '',
-      country_list: [],
+      countryList: [],
       regionsList: [],
       orgDepartmentList: [],
       officeList: [],
       steps: [{ title: '' }, { title: '' }, { title: '' }, { title: '' }],
       genders: [],
       mounted: false,
-      getCountryList: false,
-      countryListRendered: 0,
       drugTest: [],
       backgroundTest: [],
       documents: null,
@@ -60,7 +59,7 @@ class CreateEmployee extends Component {
       chkResult: [[], [], [], []],
       errorPanel: [{}, {}, {}, {}],
       tabRequiredFields: [
-        ['temporarydata', 'office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
+        ['office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
         ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
@@ -91,14 +90,14 @@ class CreateEmployee extends Component {
     let defaultDate = new Date(backDate);
     this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
 
-    await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
-    await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
-    await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
-    await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
-    await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text());
-    await backgroundTest.push($(ReactDOM.findDOMNode(this.refs.backgroundtestNegativeOption)).text());
-    await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusAffirmativeOption)).text());
-    await maritalStatus.push($(ReactDOM.findDOMNode(this.refs.maritalstatusNegativeOption)).text());
+    await gendersTranslate.push({ value: 0, gender: $(ReactDOM.findDOMNode(this.refs.maleOption)).text() });
+    await gendersTranslate.push({ value: 1, gender: $(ReactDOM.findDOMNode(this.refs.femaleOption)).text() });
+    await drugTest.push({ value: 0, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text() });
+    await drugTest.push({ value: 1, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text() });
+    await backgroundTest.push({ value: 0, backgroundTest: $(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text() });
+    await backgroundTest.push({ value: 1, backgroundTest: $(ReactDOM.findDOMNode(this.refs.backgroundtestNegativeOption)).text() });
+    await maritalStatus.push({ value: 0, maritalStatus: $(ReactDOM.findDOMNode(this.refs.maritalstatusAffirmativeOption)).text() });
+    await maritalStatus.push({ value: 1, maritalStatus: $(ReactDOM.findDOMNode(this.refs.maritalstatusNegativeOption)).text() });
 
     this.setState(() => ({
       mounted: true,
@@ -123,12 +122,15 @@ class CreateEmployee extends Component {
     }));
   };
 
-  componentDidUpdate = async (prevProps, prevState) => {
-    if (this.state.getCountryList === false) {
-      if (typeof this.props.country_region_list !== 'undefined') {
+  componentDidUpdate = async (prevProps) => {
+    const { getCountryList } = this.state;
+    const { countryRegionList } = this.props;
+    if (getCountryList === false) {
+      if (typeof countryRegionList !== 'undefined') {
         this.setState(() => ({
           getCountryList: true
         }));
+        this.setCountryList(defaultCountry, defaultRegion);
       }
     }
 
@@ -155,6 +157,38 @@ class CreateEmployee extends Component {
       this.addTranslationsForActiveLanguage();
     }
   };
+
+  onChangeCountry(country) {
+    const { countryRegionList } = this.props;
+    const { prevCountry } = this.state;
+
+    if (typeof country.name !== 'undefined') {
+      if (prevCountry !== country.name) {
+        if (typeof countryRegionList !== 'undefined' && countryRegionList.length > 0) {
+          this.setCountryList(country);
+        }
+      }
+    }
+  }
+
+  async setCountryList(countrySelected, regionSelected) {
+    const country = countrySelected || { name: '', countryId: '' };
+    const region = regionSelected || { name: '', regionId: '' };
+    const { countryRegionList, dispatch } = this.props;
+
+    if (typeof countryRegionList !== 'undefined') {
+      const countryList = CountryRegionParser.getCountryList(countryRegionList).country_list;
+      const regionsList = await CountryRegionParser.getRegionList(countryRegionList, country.name);
+      dispatch(change('NewEmployee', 'country', country));
+      dispatch(change('NewEmployee', 'state', region));
+      dispatch(change('NewEmployee', 'joblocation', ''));
+      this.setState(() => ({
+        countryList,
+        regionsList,
+        prevCountry: country.name
+      }));
+    }
+  }
 
   componentWillReceiveProps = async (nextProps) => {
     if (typeof nextProps.errorFields !== 'undefined') {
@@ -205,47 +239,6 @@ class CreateEmployee extends Component {
         chkResult: chkResult,
         errorPanel: errorPanel
       }));
-    }
-
-    if (typeof nextProps.country_region_list !== 'undefined') {
-      if (this.state.getCountryList) {
-        let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
-        let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, 'United States');
-        let states = await regionsList.map((state, index) => {
-          return state.name;
-        });
-
-        this.props.dispatch(change('NewEmployee', 'country', { name: 'United States', countryId: 234 }));
-        this.props.dispatch(change('NewEmployee', 'state', { name: 'New Jersey', countryId: 4134 }));
-
-        this.setState(
-          () => ({
-            countryListRendered: this.state.countryListRendered + 1,
-            country_list: list,
-            regionsList: states
-          }),
-          async () => {
-            let regionsList = [];
-
-            regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, typeof nextProps.country === 'undefined' ? 'United States' : nextProps.country.name);
-
-            this.props.dispatch(change('NewEmployee', 'joblocationDropdown', ''));
-            this.setState({
-              countryListRendered: this.state.countryListRendered + 1,
-              prevCountry: typeof nextProps.country === 'undefined' ? 'United States' : nextProps.country.name,
-              region_list: regionsList
-            });
-          }
-        );
-      }
-    }
-
-    if (typeof nextProps.country !== 'undefined') {
-      if (this.state.prevCountry !== nextProps.country.name) {
-        if (typeof this.props.country_region_list !== 'undefined' && this.props.country_region_list.length > 0) {
-          this.props.dispatch(change('NewEmployee', 'state', ''));
-        }
-      }
     }
 
     if (nextProps.savePerson !== null) {
@@ -459,25 +452,25 @@ class CreateEmployee extends Component {
       }
     }).then((skills) => {
       let data = {
-        temporalInfo: true,
+        temporalInfo: formValues.temporarydata ? true : false,
         skills: skills,
         orgId: this.state.agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
-        backgroundtest: formValues.backgroundTestDropdown === 'Yes' ? true : false,
+        backgroundtest: formValues.backgroundTest.backgroundTest === 'Yes' ? true : false,
         birthDay: moment(formValues.birthday_, 'YYYY-MM-DD'),
         cellPhone: formValues.phone,
         city: formValues.city.toUpperCase(),
         country: formValues.country.countryId,
-        drugTest: formValues.drugTestDropdown === 'Yes' ? true : false,
+        drugTest: formValues.drugTest.drugTest === 'Yes' ? true : false,
         drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
-        email: formValues.email,
+        email: formValues.email_,
         empDepartment: formValues.department.orgDepartmentCode,
-        firstName: formValues.firstName.toUpperCase(),
-        gender: formValues.gender === 'Male' ? 'M' : 'F',
-        hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
         employeeId: formValues.employeeid,
+        firstName: formValues.firstName.toUpperCase(),
+        gender: formValues.gender.gender === 'Male' ? 'M' : 'F',
+        hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
         identification: formValues.ssn,
         lastName: formValues.lastName.toUpperCase(),
         maritalStatus: formValues.maritalstatusDropdown ? 0 : 1,
@@ -517,6 +510,7 @@ class CreateEmployee extends Component {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
         }
       );
+      debugger;
     });
   };
 
@@ -580,7 +574,7 @@ class CreateEmployee extends Component {
         <label className="control-label" style={{ marginBottom: 5 }}>
           <Translate id="com.tempedge.msg.label.date" />
         </label>
-        <Field name="drugTestDate" type="text" placeholder="Drug Test Date" category="person" component={DateTime} validate={date()} />
+        <Field name="drugTestDate" type="text" placeholder="Drug Test Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
       </div>
     );
 
@@ -589,7 +583,7 @@ class CreateEmployee extends Component {
         <label className="control-label" style={{ marginBottom: 5 }}>
           <Translate id="com.tempedge.msg.label.date" />
         </label>
-        <Field name="backgroundTestDate" type="text" placeholder="Background Test Date" category="person" component={DateTime} validate={date()} />
+        <Field name="backgroundTestDate" type="text" placeholder="Background Test Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
       </div>
     );
 
@@ -638,23 +632,23 @@ class CreateEmployee extends Component {
                 <div className="tab-content formPanelBody" style={{ background: '#ffff' }}>
                   <div className="tab-pane fade show active" id="tab1" role="tabpanel">
                     <div className="form-group row">
-                      <div className="col-10 col-md-5 col-lg-4">
+                      <div className="col-3 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.tempdata" />
                         </label>
-                        <Field name="temporarydata" type="text" placeholder="Temporary Data" category="person" component={InputBox} />
+                        <Field name="temporarydata" category="person" checked={false} component={ToggleSwitch} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.office" />
                         </label>
-                        <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={Dropdown} />
+                        <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={DropdownList} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.department" />
                         </label>
-                        <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={Dropdown} />
+                        <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={DropdownList} />
                       </div>
                     </div>
                     <div className="form-group row">
@@ -674,7 +668,7 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.hiredate" />
                         </label>
-                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" component={DateTime} validate={date()} />
+                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
                       </div>
                     </div>
                     <div className="form-group row">
@@ -703,7 +697,7 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.birthday" />
                         </label>
-                        <Field name="birthday_" type="text" category="person" component={DateTime} validate={date()} />
+                        <Field name="birthday_" type="text" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">Age</label>
@@ -719,7 +713,7 @@ class CreateEmployee extends Component {
                         <span style={{ display: 'none' }} ref="femaleOption">
                           <Translate id="com.tempedge.msg.label.gender.female" />
                         </span>
-                        <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={Dropdown} />
+                        <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={DropdownList} />
                       </div>
                     </div>
                   </div>
@@ -744,7 +738,15 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.country" />
                         </label>
-                        <Field name="country" data={this.state.country_list} valueField="countryId" textField="name" category="agency" component={Dropdown} />
+                        <Field
+                          name="country"
+                          data={this.state.countryList}
+                          onChange={(e) => this.onChangeCountry(e)}
+                          valueField="countryId"
+                          textField="name"
+                          category="agency"
+                          component={DropdownList}
+                        />
                       </div>
                     </div>
                     <div className="form-group row">
@@ -772,7 +774,7 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.state" />
                         </label>
-                        <Field name="state" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
+                        <Field name="state" data={this.state.regionsList} valueField="regionId" textField="name" category="person" component={DropdownList} />
                       </div>
                       <div className="col10 col-md-5 col-lg-4">
                         <label className="control-label">
@@ -826,7 +828,35 @@ class CreateEmployee extends Component {
                   </div>
                   <div className="tab-pane fade" id="tab6" role="tabpanel">
                     <div className="row">
-                      <div className="col-md-8" style={{ borderRight: '1px solid #d7d7d7' }}>
+                      <div className="col-md-4" style={{ borderRight: '1px solid #d7d7d7' }}>
+                        <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
+                          <label className="control-label" style={{ marginBottom: 5 }}>
+                            <Translate id="com.tempedge.msg.label.joblocation" />
+                          </label>
+                          <Field name="joblocation" data={this.state.regionsList} valueField="regionId" textField="name" category="person" component={DropdownList} />
+                        </div>
+
+                        <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
+                          <label className="control-label" style={{ marginBottom: 5 }}>
+                            <Translate id="com.tempedge.msg.label.maritalstatus" />
+                          </label>
+                          <span style={{ display: 'none' }} ref="maritalstatusAffirmativeOption">
+                            <Translate id="com.tempedge.msg.label.single" />
+                          </span>
+                          <span style={{ display: 'none' }} ref="maritalstatusNegativeOption">
+                            <Translate id="com.tempedge.msg.label.married" />
+                          </span>
+                          <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="maritalStatus" category="person" component={DropdownList} />
+                        </div>
+
+                        <div style={{ width: '60%', margin: 'auto' }}>
+                          <label className="control-label" style={{ marginBottom: 5 }}>
+                            <Translate id="com.tempedge.msg.label.numberofallowances" />
+                          </label>
+                          <Field name="numberofallowances" type="text" placeholder="Number of allowances" category="person" component={InputBox} />
+                        </div>
+                      </div>
+                      <div className="col-md-8">
                         <div className="row">
                           <div className="col-md-6">
                             <div style={{ width: '80%', margin: 'auto', marginBottom: 10 }}>
@@ -839,10 +869,10 @@ class CreateEmployee extends Component {
                               <span style={{ display: 'none' }} ref="drugtestNegativeOption">
                                 <Translate id="com.tempedge.msg.label.negative" />
                               </span>
-                              <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="Drug Test" category="person" component={Dropdown} />
+                              <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="drugTest" category="person" component={DropdownList} />
                             </div>
-                            {typeof this.props.drugTest === 'string' ? (
-                              this.props.drugTest === 'Yes' || this.props.drugTest === 'Si' ? (
+                            {this.props.drugTest && typeof this.props.drugTest.drugTest === 'string' ? (
+                              this.props.drugTest.drugTest === 'Yes' || this.props.drugTest.drugTest === 'Si' ? (
                                 drugTestDate
                               ) : (
                                 <div style={{ height: 77 }}></div>
@@ -863,10 +893,10 @@ class CreateEmployee extends Component {
                               <span style={{ display: 'none' }} ref="backgroundtestNegativeOption">
                                 <Translate id="com.tempedge.msg.label.negative" />
                               </span>
-                              <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="Background Test" category="person" component={Dropdown} />
+                              <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="backgroundTest" category="person" component={DropdownList} />
                             </div>
-                            {typeof this.props.backgroundTest === 'string' ? (
-                              this.props.backgroundTest === 'Yes' || this.props.backgroundTest === 'Si' ? (
+                            {this.props.backgroundTest && typeof this.props.backgroundTest.backgroundTest === 'string' ? (
+                              this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si' ? (
                                 backgroundTestDate
                               ) : (
                                 <div style={{ height: 77 }}></div>
@@ -920,34 +950,6 @@ class CreateEmployee extends Component {
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-4">
-                        <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
-                          <label className="control-label" style={{ marginBottom: 5 }}>
-                            <Translate id="com.tempedge.msg.label.joblocation" />
-                          </label>
-                          <Field name="joblocation" data={this.state.region_list} valueField="regionId" textField="name" category="person" component={Dropdown} />
-                        </div>
-
-                        <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
-                          <label className="control-label" style={{ marginBottom: 5 }}>
-                            <Translate id="com.tempedge.msg.label.maritalstatus" />
-                          </label>
-                          <span style={{ display: 'none' }} ref="maritalstatusAffirmativeOption">
-                            <Translate id="com.tempedge.msg.label.single" />
-                          </span>
-                          <span style={{ display: 'none' }} ref="maritalstatusNegativeOption">
-                            <Translate id="com.tempedge.msg.label.married" />
-                          </span>
-                          <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="Marital Status" category="person" component={Dropdown} />
-                        </div>
-
-                        <div style={{ width: '60%', margin: 'auto' }}>
-                          <label className="control-label" style={{ marginBottom: 5 }}>
-                            <Translate id="com.tempedge.msg.label.numberofallowances" />
-                          </label>
-                          <Field name="numberofallowances" type="text" placeholder="Number of allowances" category="person" component={InputBox} />
-                        </div>
-                      </div>
                     </div>
                   </div>
 
@@ -985,7 +987,9 @@ CreateEmployee.propTypes = {
   getListSafe: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
-  clearErrorField: PropTypes.func.isRequired
+  clearErrorField: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  countryRegionList: PropTypes.array
 };
 
 CreateEmployee = reduxForm({
@@ -998,8 +1002,8 @@ let mapStateToProps = (state) => {
   let selector = formValueSelector('NewEmployee'); // <-- same as form name
   return {
     skillsList: state.tempEdge.skillsList,
-    country_region_list: state.tempEdge.country_region_list,
-    orgDepartmentList: typeof state.tempEdge.orgDepartmentList !== 'undefined' ? state.tempEdge.orgDepartmentList.data.content : [],
+    countryRegionList: state.tempEdge.country_region_list,
+    orgDepartmentList: state.tempEdge.orgDepartmentList && state.tempEdge.orgDepartmentList.data ? state.tempEdge.orgDepartmentList.data.content : [],
     officeList: typeof state.tempEdge.officeList !== 'undefined' ? state.tempEdge.officeList : [],
     country: selector(state, 'country'),
     backgroundTest: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.backgroundTest : null,
