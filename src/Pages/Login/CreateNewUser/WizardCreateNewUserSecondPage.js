@@ -34,10 +34,10 @@ class WizardCreateNewUserSecondPage extends Component {
       menu: [],
       modifiedOn: null,
       name: 'CLIENT',
-      roleId: 4,
+      roleId: 4
     };
 
-    this.props.dispatch(change('CreateNewUser', 'agencyrole', defaultRoleName));
+    if (!this.props.role.name) this.props.dispatch(change('CreateNewUser', 'agencyrole', defaultRoleName));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -52,13 +52,13 @@ class WizardCreateNewUserSecondPage extends Component {
   onChange = (recaptchaToken) => {
     this.setState({
       reCaptchaToken: recaptchaToken,
-      btnDisabled: false,
+      btnDisabled: false
     });
   };
 
   setCaptchaRef = (ref) => {
     this.setState({
-      captchaRef: React.createRef(ref),
+      captchaRef: React.createRef(ref)
     });
   };
 
@@ -182,20 +182,20 @@ class WizardCreateNewUserSecondPage extends Component {
 }
 
 WizardCreateNewUserSecondPage.propTypes = {
-  change: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired
 };
 
 WizardCreateNewUserSecondPage = reduxForm({
   form: 'CreateNewUser', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
   // forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  validate: Validate,
+  validate: Validate
 })(WizardCreateNewUserSecondPage);
 
 let mapStateToProps = (state) => {
   return {
     role_list: state.tempEdge.role_list,
-    role: typeof state.form.CreateNewUser.values === 'undefined' ? '' : typeof state.form.CreateNewUser.values.agencyrole !== 'undefined' ? state.form.CreateNewUser.values.agencyrole : '',
+    role: typeof state.form.CreateNewUser.values === 'undefined' ? '' : typeof state.form.CreateNewUser.values.agencyrole !== 'undefined' ? state.form.CreateNewUser.values.agencyrole : ''
   };
 };
 
