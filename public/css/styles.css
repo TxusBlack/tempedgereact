@@ -1645,7 +1645,7 @@ form div.list .list-item:last-child button {
 .table-hover tbody tr:hover,
 .table-hover .table-active:hover {
   cursor: pointer;
-  background-color: #ffae64;
+  background-color: var(--tempedge-light-orange);
   color: white;
 }
 

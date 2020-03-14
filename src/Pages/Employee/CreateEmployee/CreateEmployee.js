@@ -122,7 +122,7 @@ class CreateEmployee extends Component {
 
   createDepartmentsTable() {
     const { orgDepartmentList, country_list } = this.state;
-    const departmentsTable = <DepartmentList onClickRows={(e) => this.setInputValue(e)} />;
+    const departmentsTable = <DepartmentList onClickRows={(e) => this.setInputValue(e)} />; // If you want to select multiple rows add 'multipleRows' property
     this.setState({
       departmentsTable
     });
