@@ -510,29 +510,6 @@ class CreateEmployee extends Component {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
         }
       );
-      debugger;
-    });
-  };
-
-  convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      // Select the very first file from list
-      let fileToLoad = file;
-      // FileReader function for read the file.
-      let fileReader = new FileReader();
-      let base64;
-
-      // Convert data to base64
-      fileReader.readAsDataURL(fileToLoad);
-
-      // Onload of file read the file content
-      fileReader.onload = function(fileLoadedEvent) {
-        base64 = fileLoadedEvent.target.result;
-        base64 = base64.replace('data:application/pdf;base64,', '');
-
-        // return base 64 data
-        resolve(base64);
-      };
     });
   };
 
