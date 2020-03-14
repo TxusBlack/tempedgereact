@@ -1,17 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
+import PropTypes from 'prop-types';
+import '../../../assets/styles/components/ResultBar.css';
 
-class OutcomeBar extends React.Component {
-  render() {
-    return (
-      <div className={this.props.classApplied}>
-        <p>
-          <Translate id={this.props.translateId} data={this.props.customData} options={{ renderInnerHtml: true }} />
-        </p>
-      </div>
-    );
-  }
-}
+const OutcomeBar = (props) => {
+  const { classApplied, translateId, customData } = props;
+  return (
+    <div className={classApplied}>
+      <p>
+        <Translate id={translateId} data={customData} options={{ renderInnerHtml: true }} />
+      </p>
+    </div>
+  );
+};
+
+OutcomeBar.propTypes = {
+  classApplied: PropTypes.string.isRequired,
+  translateId: PropTypes.string.isRequired
+};
 
 export default withLocalize(connect(null, {})(OutcomeBar));

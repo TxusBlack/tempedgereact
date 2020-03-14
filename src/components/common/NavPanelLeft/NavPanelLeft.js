@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import user from './assets/user.png';
+import { doLogout } from "../../../Redux/actions/tempEdgeActions.js"
 
 class NavPanelLeft extends React.Component{
   constructor(props){
@@ -28,8 +29,11 @@ class NavPanelLeft extends React.Component{
   }
 
   signOut = () => {
+    let { activeLanguage } = this.props;
+    
     sessionStorage.clear();
     this.toggleNav();
+    this.props.doLogout(activeLanguage.code);
   }
 
   render(){
@@ -71,4 +75,4 @@ let mapStateToProps = (state) => {
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { push })(NavPanelLeft));
+export default withLocalize(connect(mapStateToProps, { push, doLogout })(NavPanelLeft));

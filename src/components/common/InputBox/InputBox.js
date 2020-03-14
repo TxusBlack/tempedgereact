@@ -30,18 +30,18 @@ let renderInput = (formProps) => {
       input = <input className="form-control tempEdge-input-box" type="password" rows="2" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
   }else{
     if(formProps.active !== "disabled")
-      input = <input className="form-control tempEdge-input-box" type="text" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />
+      input = <input className="form-control tempEdge-input-box" type="text" maxLength={formProps.maxlength} placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />
     else
       input = <input className="form-control tempEdge-input-box" type="text" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" disabled />
   }
 
   if(formProps.meta.form === "NewEmployee"){
-    if(formProps.meta.error && formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched){
+    if(formProps.meta.error && formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched && typeof formProps.errorFields !== 'undefined'){
       let found = formProps.errorFields.indexOf(formProps.input.name);
       if(found === -1){
         formProps.setErrorField(formProps.input.name);
       }
-    }else if(typeof formProps.meta.error === 'undefined' && !formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched){
+    }else if(typeof formProps.meta.error === 'undefined' && !formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched && typeof formProps.errorFields !== 'undefined'){
       let found = formProps.errorFields.indexOf(formProps.input.name);
       if(found > -1){
         formProps.removeErrorField(formProps.input.name);

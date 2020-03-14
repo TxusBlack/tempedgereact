@@ -9,7 +9,7 @@ class Container extends Component {
 
     constructor(props) {
         super(props);
-        
+
         ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
     componentDidUpdate(prevProps, prevState) {
@@ -20,6 +20,7 @@ class Container extends Component {
             ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
         }
     }
+
     render() {
         return (
             <div>
@@ -28,7 +29,7 @@ class Container extends Component {
                         <Translate id={this.props.title} />
                     </div>
                     <div className="row container-form">
-                        {this.props.children} 
+                        {this.props.children}
                     </div>
                     <div className="">
                         {this.props.btns}

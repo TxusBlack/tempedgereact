@@ -13,7 +13,6 @@ import NavBar from './components/common/NavBar/NavBar';
 import NavPanelLeft from './components/common/NavPanelLeft/NavPanelLeft.js';
 import BackgroundFade from './components/common/NavPanelLeft/BackgroundFade.js';
 import Footer from './components/common/Footer/Footer';
-import HomePage from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import CreateNewUser from './Pages/Login/CreateNewUser/CreateNewUser';
 import CreateNewAgency from './Pages/Login/CreateNewAgency/CreateNewAgency';
@@ -30,14 +29,15 @@ import CreateEmployee from './Pages/Employee/CreateEmployee/CreateEmployee';
 import ClientList from './Pages/Client/ClientList/ClientList';
 import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
-import AgencyList from './Pages/Agencies/AgencySelect/AgencySelectList';
+import OrgList from './Pages/Organization/OrgSelect/OrgSelectList';
+import ChangePassword from './Pages/ChangePassword/ChangePassword';
 
 import UpdloadEmployeeList from './Pages/Employee/UploadEmployeeList/UpdloadEmployeeList';
 
 window.recaptchaOptions = {
   lang: 'en',
   useRecaptchaNet: false,
-  removeOnUnmount: true,
+  removeOnUnmount: true
 };
 
 class App extends React.Component {
@@ -60,12 +60,12 @@ class App extends React.Component {
 
     let languages = [
       { name: 'English', code: 'en' },
-      { name: 'Spanish', code: 'es' },
+      { name: 'Spanish', code: 'es' }
     ];
 
     let options = {
       defaultLanguage: defaultLanguage,
-      renderToStaticMarkup: renderToStaticMarkup,
+      renderToStaticMarkup: renderToStaticMarkup
     };
 
     let footerContent = (
@@ -89,16 +89,15 @@ class App extends React.Component {
                 <NavPanelLeft toggleNav={this.togglePanelNav} show={this.state.panelNavShow} />
                 {backgroundFade}
                 <Switch>
-                  <Route exact path="/" component={() => <HomePage lang={defaultLanguage} />} />
                   <Route exact path="/auth/:lang" component={Login} />
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
+                  <PrivateRoute exact path="/user/changePass/:lang" component={ChangePassword} />
                   <PrivateRoute exact path="/client/new/:lang" component={CreateNewClient} />
                   <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <PrivateRoute exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
                   <PrivateRoute exact path="/upload/:lang" component={UploadFile} />
-                  <PrivateRoute exact path="/profile/:lang" component={UpdloadEmployeeList} />
-
+                  <PrivateRoute exact path="/employee/uploadlist/:lang" component={UpdloadEmployeeList} />
                   <Route exact path="/pending/user/:lang" component={Error} />
                   <Route exact path="/pending/agency/:lang" component={Error} />
                   <Route exact path="/denied/user/:lang" component={Error} />
@@ -108,6 +107,7 @@ class App extends React.Component {
                   <Route exact path="/denied/agency/:lang" component={Error} />
                   <Route exact path="/error/:lang" component={Error} />
                   <PrivateRoute exact path="/dashboard/:lang" component={Dashboard} />
+                  <PrivateRoute exact path="/organization-select/:lang" component={OrgList} />
                   <PrivateRoute exact path="/intpayroll/new/:lang" component={NewInternalPayroll} />
                 </Switch>
               </div>

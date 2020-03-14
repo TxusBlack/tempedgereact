@@ -13,6 +13,11 @@ export default function(state = initialState, action) {
         ...state,
         login: action.payload
       };
+    case types.LOGOUT:
+      return {
+        ...state,
+        login: action.payload
+      };
     case types.GET_COUNTRY_REGION_LIST:
       return {
         ...state,
@@ -191,6 +196,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         saveEmployeeList: action.payload
+      };
+    case types.CHANGE_PASSWORD:
+      return {
+        ...state,
+        changePassword: action.payload
       };
     default:
       return state;
