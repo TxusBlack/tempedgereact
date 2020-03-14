@@ -73,7 +73,6 @@
   "com.tempedge.msg.label.validatedpersonlist"                        : "Employee Validation",
   "com.tempedge.msg.label.hiredate"                                   : "Hiredate",
   "com.tempedge.error.invaliddata"                                    : "Invalid Data",
-  "com.tempedge.error.undefine"                                       : "Server Error",
   "com.tempedge.msg.person.newclient"                                 : "New client created.",
   "com.tempedge.error.passwordnomatch"                                : "Password does not match.",
   "com.tempedge.error.phonenumberrequired"                            : "Phone number is required.",
@@ -217,9 +216,19 @@
   "com.tempedge.msg.label.orgdepartment"                              : "Department code",
   "com.tempedge.msg.label.orgdeptname"                                : "Department name",
   "com.tempedge.table.title.label.departmentList"                     : "Department list",
+  "com.tempedge.msg.label.uploadEmployeeList"                         : "Upload employee list",
+  "com.tempedge.msg.label.upload"                                     : "Upload",
+  "com.tempedge.msg.info.title.employeeCreated"                       : "Process Complete! <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees}",
+  "com.tempedge.msg.info.body.employeeCreated"                        : "The employee list has been saved successfully.",
+  "com.tempedge.error.person.partialsave"                             : "Partial save. <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees}",
+  "com.tempedge.msg.info.title.incorrectFileExtension"                : "Please, select a file with one of these extensions: .xlsx or .xls",
+  "com.tempedge.msg.info.title.emptyFile"                             : "Your file is empty, please make sure your file has at least one record.",
+  "com.tempedge.msg.info.title.errorProcessingFile"                   : "There was an error processing your excel file, please check that It has the columns correctly.",
+  "com.tempedge.error.network"                                        : "Network error. Please check your internet connection.",
   "com.tempedge.msg.info.title.password_changed"                      : "Password changed",
   "com.tempedge.msg.info.body.password_changed"                       : "Your password has been changed successful",
   "com.tempedge.msg.info.title.invalid_password"                      : "Invalid current password",
   "com.tempedge.msg.info.body.invalid_password"                       : "Please, check your current password",
-  "com.tempedge.button.accept"                                        : "Ok"
+  "com.tempedge.button.accept"                                        : "Ok",
+  "com.tempedge.msg.info.signOut"                                     : "SIGN OUT"
 }
