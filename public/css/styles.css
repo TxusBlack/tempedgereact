@@ -72,6 +72,9 @@ body {
 
 .tempEdge-input-box,
 .tempEdge-dropdown-input-box,
+.tempEdge-dateTimePicker-input-box,
+.tempEdge-input-box,
+.tempEdge-dropdown-input-box,
 .tempEdge-dateTimePicker-input-box {
   font-size: 13px;
 }
@@ -1125,13 +1128,12 @@ form div.list .list-item:last-child button {
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  width: 70%;
   margin: auto;
-  //margin-bottom: 37.6rem;
 }
 
 .department-list-button:hover {
   cursor: pointer;
+  color: white;
 }
 
 .client-dpt-btn-edit-delete {
@@ -1627,4 +1629,13 @@ form div.list .list-item:last-child button {
   .create-client {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
+}
+.progress {
+  height: 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 1.6rem;
+}
+
+.progress-bar {
+  background-color: var(--normal-blue);
 }

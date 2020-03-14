@@ -14,19 +14,29 @@ class TPaginator extends Component {
     }
   }
 
-  onClickChangePage = (myPage) =>{
-    if(!myPage || myPage < 1) {
-      myPage =1;
-    } else if(myPage > this.props.totalPages) {
-      myPage = this.props.totalPages;
+  onClickChangePage = (myPage, op) => {
+    let page = myPage;
+
+    if(op === "next"){
+      page = myPage
+    }else{
+      page = myPage-1;
     }
 
-    console.log(myPage);
-    this.props.changePage(myPage-1);
+    if(!page || page < 0) {
+      page = 0;
+    }else if(page > 2 && op === "next"){
+      page =  page-1;
+    }
+
+    if(page > this.props.totalPages-1) {
+      page = this.props.totalPages - 1;
+    }
+
+    this.props.changePage(page);
   }
 
   renderBtns = (totalPages, aPage) => {
-
     let btns = 0;
     let prevBtn = this.state.prevBtn;
     let nextBtn = this.state.nextBtn;
@@ -58,7 +68,7 @@ class TPaginator extends Component {
     if (prevBtn) {
       paginator.push(
         <button type="submit" className="btn "
-            onClick={()=>this.onClickChangePage(aPage-1)}
+            onClick={()=>this.onClickChangePage(aPage-1, "prev")}
             style={{ borderRadius: 25, margin: '0 3px', backgroundColor: "#888888", color: "#FFF", padding: "5px 30px" }}>
 
           Prev
@@ -70,11 +80,11 @@ class TPaginator extends Component {
 
       for (let i = initPage; i < btns; i++) {
         let btnClass = '#888888';
-        if(i==aPage){
+        if(i === aPage || (i === 1 && aPage === 0)){
           btnClass='#0088CC'
         }
         paginator.push(
-          <button type="submit" className="btn  " onClick={()=>this.onClickChangePage(i)} style={{ borderRadius: 50, margin: '0 3px', backgroundColor: btnClass, color: "#FFF" }}>
+          <button type="submit" className="btn  " onClick={()=>this.onClickChangePage(i, null)} style={{ borderRadius: 50, margin: '0 3px', backgroundColor: btnClass, color: "#FFF" }}>
             {i}
           </button>
         )
@@ -84,7 +94,7 @@ class TPaginator extends Component {
 
     if (nextBtn) {
       paginator.push(
-        <button type="submit" className="btn " onClick={()=>this.onClickChangePage(aPage+1)} style={{ borderRadius: 25, margin: '0 3px', backgroundColor: "#0088CC", color: "#FFF", padding: "5px 30px" }}>
+        <button type="submit" className="btn " onClick={()=>this.onClickChangePage(aPage+1, "next")} style={{ borderRadius: 25, margin: '0 3px', backgroundColor: "#0088CC", color: "#FFF", padding: "5px 30px" }}>
           Next
         </button>
       );
@@ -94,9 +104,8 @@ class TPaginator extends Component {
   }
 
   render() {
-
     let totalPages = this.props.totalPages ? this.props.totalPages : 1;
-    let actualPage = this.props.actualPage +1;
+    let actualPage = this.props.actualPage? this.props.actualPage +1: 0;
 
     return (
 
@@ -114,8 +123,8 @@ class TPaginator extends Component {
 let mapStatetoProps = (state) => {
   return {    //rootReducer calls 'postReducer' which returns an object with previous(current) state and new data(items) onto a prop called 'posts' as we specified below
     paginatorList: state.tempEdge.paginatorList,    //'posts', new prop in component 'Posts'. 'state.postReducer', the object where our reducer is saved in the redux state, must have same name as the reference
-    totalPages : (typeof state.tempEdge.paginatorList !== 'undefined') ? state.tempEdge.paginatorList.data.totalPages: null,
-    actualPage : (typeof state.tempEdge.paginatorList !== 'undefined') ? state.tempEdge.paginatorList.data.number: null,
+    totalPages : (typeof state.tempEdge.paginatorList !== 'undefined') ? state.tempEdge.paginatorList.data.result.data.totalPages: null,
+    actualPage : (typeof state.tempEdge.paginatorList !== 'undefined') ? state.tempEdge.paginatorList.data.result.data.number: null,
   }
 }
 
