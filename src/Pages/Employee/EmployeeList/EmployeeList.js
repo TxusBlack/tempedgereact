@@ -14,7 +14,9 @@ class EmployeeList extends Component {
     super(props);
     this.state = {
       tablePage: 0,
-      filterBy: {},
+      filterBy: {
+        personType: '1'
+      },
       data: []
     };
 
@@ -31,7 +33,7 @@ class EmployeeList extends Component {
   }
 
   render() {
-    return <PaginatedTable apiUrl={api_url} title="com.tempedge.msg.label.employeeList" />;
+    return <PaginatedTable apiUrl={api_url} filterBy={this.state.filterBy} title="com.tempedge.msg.label.employeeList" />;
   }
 }
 

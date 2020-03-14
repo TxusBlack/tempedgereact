@@ -8,7 +8,7 @@ import ActiveLanguageAddTranslation from '../../../components/common/ActiveLangu
 import Container from '../../../components/common/Container/Container';
 import ContainerBlue from '../../../components/common/Container/ContainerBlue';
 import TPaginator from '../../../components/common/Table/TPaginator';
-import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
+import { tempedgeAPI, clearTempedgeStoreProp } from '../../../Redux/actions/tempEdgeActions';
 import Table from '../../../components/common/Table/Table.js';
 
 class PaginatedTable extends Component {
@@ -24,7 +24,14 @@ class PaginatedTable extends Component {
   }
 
   componentWillMount() {
-    let payload = { orgId: 1, filterBy: {} };
+    this.props.clearTempedgeStoreProp('paginatorList');
+
+    this.setState(() => ({
+      filterBy: this.props.filterBy ? this.props.filterBy : {}
+    }));
+
+    let payload = { orgId: 1, filterBy: this.props.filterBy ? this.props.filterBy : {} };
+
     if (typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined') {
       payload.data = this.props.payload;
       this.props.tempedgeAPI(this.props.apiUrl, payload, types.TEMPEDGE_LIST);
@@ -74,7 +81,7 @@ class PaginatedTable extends Component {
     const { onClickRows, multipleRows } = this.props;
 
     return (
-      <>
+      <React.Fragment>
         <Container title={title} btns={data && data.data ? <TPaginator changePage={this.changePage} /> : ''}>
           {data ? (
             <div className="col-12">
@@ -84,7 +91,7 @@ class PaginatedTable extends Component {
             'NO RECORDS FOUND'
           )}
         </Container>
-      </>
+      </React.Fragment>
     );
   }
 }
@@ -92,11 +99,13 @@ class PaginatedTable extends Component {
 PaginatedTable.propTypes = {
   //Typechecking With PropTypes, will run on its own, no need to do anything else, separate library since React 16, wasn't the case before on 14 or 15
   //Action, does the Fetch part from the posts API
-  tempedgeAPI: PropTypes.func.isRequired //Action, does the Fetch part from the posts API
+  tempedgeAPI: PropTypes.func.isRequired, //Action, does the Fetch part from the posts API
+  clearTempedgeStoreProp: PropTypes.func.isRequired
 };
+
 let mapStatetoProps = (state) => ({
   //rootReducer calls 'postReducer' which returns an object with previous(current) state and new data(items) onto a prop called 'posts' as we specified below
   paginatorList: state.tempEdge.paginatorList //'posts', new prop in component 'Posts'. 'state.postReducer', the object where our reducer is saved in the redux state, must have same name as the reference
 });
 
-export default withLocalize(connect(mapStatetoProps, { push, tempedgeAPI })(PaginatedTable));
+export default withLocalize(connect(mapStatetoProps, { push, tempedgeAPI, clearTempedgeStoreProp })(PaginatedTable));
