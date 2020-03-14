@@ -225,5 +225,6 @@
   "com.tempedge.msg.info.title.password_changed"                      : "Password changed",
   "com.tempedge.msg.info.body.password_changed"                       : "Your password has been changed successful",
   "com.tempedge.msg.info.title.invalid_password"                      : "Invalid current password",
-  "com.tempedge.msg.info.body.invalid_password"                       : "Please, check your current password"
+  "com.tempedge.msg.info.body.invalid_password"                       : "Please, check your current password",
+  "com.tempedge.msg.info.signOut"                                     : "SIGN OUT"
 }

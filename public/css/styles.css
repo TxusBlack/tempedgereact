@@ -398,7 +398,7 @@ input:invalid {
 
 /* Left Nav Panel */
 .panel-nav-left {
-  position: absolute;
+  position: fixed;
   height: 100%;
   background: #ffff;
   box-shadow: 0.1rem 0 0.7rem rgba(0, 0, 0, 0.5);
@@ -423,8 +423,8 @@ input:invalid {
 .panel-nav-left .footer p {
   padding: 0;
   text-align: left;
-  margin-bottom: 0;
-  margin-top: 0.3rem;
+  margin: 0.3rem 0.2rem 0 0.2rem;
+  color: #2d2d2d;
 }
 
 .panel-nav-left .footer p a,
@@ -439,14 +439,13 @@ input:invalid {
 .panel-nav-left ul {
   list-style: none;
   margin-bottom: 0;
-  padding-top: 1.5rem;
   padding-left: 0;
 }
 
 .panel-nav-left li {
   margin: 0;
   padding-left: 2.5rem;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
