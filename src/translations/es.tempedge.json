@@ -128,7 +128,6 @@
   "com.tempedge.msg.label.information"                                : "Información",
   "com.tempedge.msg.person.tokeninvalid"                              : "La sesión a expirado.",
   "com.tempedge.error.agency.agencyrolerequired"                      : "Por favor ingrese rol.",
-  "com.tempedge.error.undefine"                                       : "Error de Sistema.",
   "com.tempedge.error.agency.agencyorganizationrequired"              : "Por favor ingrese nombre de organizacion.",
   "com.tempedge.error.agency.agencyclientrequired"                    : "Por favor ingrese nombre de cliente.",
   "com.tempedge.error.agency.agencydropdownrequired"                  : "Opcion de agencia es requerida.",
@@ -214,8 +213,18 @@
   "com.tempedge.msg.info.msg.success"                                 : "Transacción Exitosa!",
   "com.tempedge.error.emailalreadyexist"                              : "Email a sido registrado previamente.",
   "com.tempedge.error.useralreadyexist"                               : "El Usuario ya existe.",
+  "com.tempedge.msg.label.uploadEmployeeList"                         : "Subir lista de empleados",
+  "com.tempedge.msg.label.upload"                                     : "Subir",
+  "com.tempedge.msg.info.title.employeeCreated"                       : "Transacción Exitosa! <br/>Nuevos empleados: ${newEmployees} <br/> Empleados modificados: ${modEmployees}",
+  "com.tempedge.msg.info.body.employeeCreated"                        : "La lista de empleados ha sido guardada con éxito.",
+  "com.tempedge.error.person.partialsave"                             : "Guardado parcial. <br/>Nuevos empleados: ${newEmployees} <br/> Empleados modificados: ${modEmployees}",
+  "com.tempedge.msg.info.title.incorrectFileExtension"                : "Por favor selecciona un archivo con extensión .xlsx o .xls",
+  "com.tempedge.msg.info.title.emptyFile"                             : "Archivo vacío. Por favor asegúrate que tu archivo contiene almenos un registro.",
+  "com.tempedge.msg.info.title.errorProcessingFile"                   : "Hubo un error procesando tu archivo de excel, por favor revisa que éste tiene las columnas correctamente.",
+  "com.tempedge.error.network"                                        : "Error de red. POr favor revisa tu conexión a internet.",
   "com.tempedge.msg.info.title.password_changed"                      : "Contraseña cambiada",
   "com.tempedge.msg.info.body.password_changed"                       : "Tu contraseña ha sido cambiada con éxito",
   "com.tempedge.msg.info.title.invalid_password"                      : "Contraseña inválida",
-  "com.tempedge.msg.info.body.invalid_password"                       : "Revisa tu contraseña actual por favor"
+  "com.tempedge.msg.info.body.invalid_password"                       : "Revisa tu contraseña actual por favor",
+  "com.tempedge.msg.info.signOut"                                     : "CERRAR SESIÓN"
 }
