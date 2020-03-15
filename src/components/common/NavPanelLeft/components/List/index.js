@@ -87,7 +87,7 @@ class List extends React.Component{
               (this.state.subMenu[item.category])? (
                 <ul style={{ paddingTop: 0 }}>
                   {item.children.map((child, j) => {
-                    return <li onClick={() => this.onClickRedirect(`${child.optionPath}/${activeLanguage} `, child.parent)}><span>{child.optionName}</span></li>
+                    return <li onClick={() => this.onClickRedirect(`${child.optionPath}/${activeLanguage} `, child.parent)} style={{cursor: "pointer"}}><span>{child.optionName}</span></li>
                   })}
                 </ul>
               ): ""
