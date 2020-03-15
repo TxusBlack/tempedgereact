@@ -1,5 +1,4 @@
 import types from './types';
-
 import history from '../../history.js';
 import Axios from 'axios';
 import httpService from '../../utils/services/httpService/httpService';

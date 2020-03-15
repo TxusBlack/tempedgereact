@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import user from './assets/user.png';
-import { doLogout } from "../../../Redux/actions/tempEdgeActions.js"
+import { doLogout } from "../../../Redux/actions/tempEdgeActions.js";
+import List from "./components/List";
 
 class NavPanelLeft extends React.Component{
   constructor(props){
@@ -30,7 +31,7 @@ class NavPanelLeft extends React.Component{
 
   signOut = () => {
     let { activeLanguage } = this.props;
-    
+
     sessionStorage.clear();
     this.toggleNav();
     this.props.doLogout(activeLanguage.code);
@@ -56,11 +57,7 @@ class NavPanelLeft extends React.Component{
               <h4>{this.props.firstName + " " + this.props.lastName}</h4>
             </div>
           </div>
-          <ul>
-            {(leftNavMenu !== '')? leftNavMenu.map((item, index) => {
-              return <li onClick={this.toggleNav}><Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} style={{marginLeft: 40}}>{item.optionName}</Link></li>;
-            }): ""}
-          </ul>
+          <List onClick={this.toggleNav} list={leftNavMenu} activeLanguage={this.props.activeLanguage.code} />
         </div>
         <Footer textColor="#2d2d2d" background="#fff" content={<p onClick={this.signOut}><Link to="/">Sign Out</Link></p>} />
       </nav>
