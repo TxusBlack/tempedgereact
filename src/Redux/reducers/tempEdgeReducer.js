@@ -3,7 +3,8 @@ import types from '../actions/types';
 let initialState = {
   login: '',
   errorFields: [],
-  lastRemoved: ''
+  lastRemoved: '',
+  lang: {}
 }
 
 export default function(state = initialState, action){
@@ -196,6 +197,11 @@ export default function(state = initialState, action){
       return {
         ...state,
         changePassword: action.payload,
+      }
+    case types.GET_LANGUAGE:
+      return {
+        ...state,
+        lang: action.payload
       }
     default:
       return state;

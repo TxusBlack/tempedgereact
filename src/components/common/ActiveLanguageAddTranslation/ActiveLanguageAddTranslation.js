@@ -1,17 +1,20 @@
-//Done this way below, there's no delay between laguange text switch
-import translationsEN from '../../../translations/en.tempedge.json';
-import translationsES from '../../../translations/es.tempedge.json';
+import { store } from '../../../store/store';
+import { getList } from '../../../Redux/actions/tempEdgeActions';
+import types from '../../../Redux/actions/types';
 
-let addTranslationsForActiveLanguage = (activeLanguage, addTranslationForLanguage) => {
-  let translations = translationsEN;      //Default to English
+let addTranslationsForActiveLanguage = async (activeLanguage, addTranslationForLanguage) => {
+
+  await store.dispatch(getList('/api/dictionary/listAll', types.GET_LANGUAGE));
+  const state = store.getState();
+  let translations = state.tempEdge.lang.english;      //Default to English
 
   //Can add more languages if ever needed
   switch(activeLanguage.code){
     case 'en':
-      translations = translationsEN;
+      translations = state.tempEdge.lang.english;
       break;
     case 'es':
-      translations = translationsES;
+      translations = state.tempEdge.lang.spanish;
       break;
     default:
   }
