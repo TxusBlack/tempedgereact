@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import Validate from '../Validations/Validations';
 import { tempedgeAPI } from '../../Redux/actions/tempEdgeActions';
 import PropTypes from 'prop-types';
-import { reduxForm, Field } from 'redux-form';
-import InputBox from '../../components/common/InputBox/InputBox';
+import { reduxForm } from 'redux-form';
 
 class ProfilePage extends Component {
 
@@ -19,7 +18,7 @@ class ProfilePage extends Component {
   _getProfileInfo = async () => {
     const profile = await JSON.parse(sessionStorage.getItem('agency'));
     this.setState({ profile: profile });
-    console.log('profile', this.state.profile);
+    // console.log('profile', this.state.profile);
   }
 
   onSubmit = async (formValues) => {
