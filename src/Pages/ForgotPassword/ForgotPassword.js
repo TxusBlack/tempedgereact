@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
+import { store } from '../../store/store';
 
 class ForgotPassword extends React.Component{
   constructor(props) {
@@ -22,15 +23,17 @@ class ForgotPassword extends React.Component{
 
   addTranslationsForActiveLanguage() {
     const {activeLanguage} = this.props;
+    const state = store.getState();
 
     if (!activeLanguage) {
       return;
     }
 
-    import(`../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
-      });
+    if (activeLanguage.code === 'es') {
+      this.props.addTranslationForLanguage(state.tempEdge.lang.spanish, activeLanguage.code)
+    } else {
+      this.props.addTranslationForLanguage(state.tempEdge.lang.english, activeLanguage.code)
+    }
   }
 
   renderError(formProps){
