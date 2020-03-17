@@ -136,7 +136,6 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
     formData.append('personEntity', blob);
     formData.append('document', fileArray.documents);
     formData.append('resume', fileArray.resume);
-    data.base64Dco = data.base64Resume = null;
 
     let options = {
       headers: {

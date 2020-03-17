@@ -46,8 +46,6 @@ class CreateEmployee extends Component {
       mounted: false,
       drugTest: [],
       backgroundTest: [],
-      documents: null,
-      resume: null,
       maritalStatus: [],
       modal: '',
       paginatedTable: '',
@@ -65,6 +63,10 @@ class CreateEmployee extends Component {
         ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
       ]
     };
+    this.resumeLabel = React.createRef();
+    this.documentLabel = React.createRef();
+    this.resumeFileInput = React.createRef();
+    this.documentFileInput = React.createRef();
 
     this.addTranslationsForActiveLanguage();
   }
@@ -114,10 +116,7 @@ class CreateEmployee extends Component {
     this.props.clearErrorField();
     this.props.clearTempedgeStoreProp('savePerson');
     this.props.clearTempedgeStoreProp('validatePerson');
-
-    this.setState(() => ({
-      announcementBar: ''
-    }));
+    this.resetFileFields();
   };
 
   componentDidUpdate = async (prevProps) => {
@@ -251,7 +250,7 @@ class CreateEmployee extends Component {
               </div>
             )
           }),
-          () => this.props.reset()
+          () => this.componentWillUnmount()
         );
 
         this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
@@ -404,44 +403,56 @@ class CreateEmployee extends Component {
     }
   };
 
-  onChange = (file, ref) => {
+  static setFileLabel(file, labelRef) {
+    const fileName = file ? file.name.replace(/\\|\//g, '') : '';
+    labelRef.current.textContent = fileName;
+  }
+
+  resetFileFields() {
+    this.documentFileInput.current.value = '';
+    this.resumeFileInput.current.value = '';
+    this.documentLabel.current.textContent = '';
+    this.resumeLabel.current.textContent = '';
+  }
+
+  onChangeFile = (e, labelRef) => {
+    const [file] = e.target.files;
+    const inputName = e.target.getAttribute('name');
     this.setState(() => ({
       announcementBar: ''
     }));
+    this.constructor.setFileLabel(null, labelRef);
 
     if (file) {
-      if (file.type === 'application/pdf') {
-        const readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs[ref]));
-        const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
-        if (file.size <= maxSizeAllowedForFiles) {
-          const reader = new FileReader();
-          readOnlyTextBox.text(fileName);
-          reader.readAsBinaryString(file); // Read Blob as binary
-
-          // Event Listener for when a file is selected to be uploaded
-          reader.onload = (event) => {
-            // (on_file_select_event)
-            const data = event.target.result; // 'result' if not 'null', contains the contents of the file as a binary string
-            const stateName = ref === 'fileInputDocuments' ? 'documents' : 'resume';
-
-            /* Update state */
+      if (file.size <= maxSizeAllowedForFiles) {
+        if (inputName === 'documentFile') {
+          if (file.type !== 'application/pdf') {
             this.setState(() => ({
-              [stateName]: {
-                name: file.name,
-                data
-              }
+              announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.pdfInvalidFileType" />
             }));
-          };
-        } else {
+            e.target.value = '';
+          } else {
+            this.constructor.setFileLabel(file, labelRef);
+          }
+        } else if (
+          file.type !== 'application/pdf' &&
+          file.type !== 'application/msword' &&
+          file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' &&
+          inputName === 'resumeFile'
+        ) {
           this.setState(() => ({
-            announcementBar: (
-              <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.maxSizeAllowedForFiles" customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }} />
-            )
+            announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.invalidFileType" />
           }));
+          e.target.value = '';
+        } else {
+          this.constructor.setFileLabel(file, labelRef);
         }
       } else {
+        e.target.value = '';
         this.setState(() => ({
-          announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.invalidFileType" />
+          announcementBar: (
+            <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.maxSizeAllowedForFiles" customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }} />
+          )
         }));
       }
     }
@@ -451,6 +462,8 @@ class CreateEmployee extends Component {
     let skills = [];
     let counter = 0;
     let fomrValueLen = Object.keys(formValues).length;
+    const documentFile = this.documentFileInput.current.files[0];
+    const resumeFile = this.resumeFileInput.current.files[0];
 
     let agency = sessionStorage.getItem('agency');
     agency = JSON.parse(agency);
@@ -513,14 +526,14 @@ class CreateEmployee extends Component {
       };
 
       const fileArray = {};
-      if (this.state.documents !== null) {
-        fileArray.documents = new Blob([this.state.documents.data], { type: 'application/pdf' });
-        data.docExt = this.state.documents.name.split('.').pop();
+      if (documentFile) {
+        fileArray.documents = documentFile;
+        data.docExt = documentFile.name.split('.').pop();
       }
 
-      if (this.state.resume !== null) {
-        fileArray.resume = new Blob([this.state.resume.data], { type: 'application/pdf' });
-        data.resumeExt = this.state.resume.name.split('.').pop();
+      if (resumeFile) {
+        fileArray.resume = resumeFile;
+        data.resumeExt = resumeFile.name.split('.').pop();
       }
 
       this.setState(
@@ -916,11 +929,18 @@ class CreateEmployee extends Component {
                                 <label className="input-group-btn" style={{ width: '100%', textAlign: 'center' }}>
                                   <span className="btn department-list-button">
                                     <Translate id="com.tempedge.msg.label.choosefile" />
-                                    <input type="file" onChange={(e) => this.onChange(e.target.files[0], 'fileInputDocuments')} style={{ display: 'none' }} accept=".pdf" />
+                                    <input
+                                      ref={this.documentFileInput}
+                                      type="file"
+                                      name="documentFile"
+                                      onChange={(e) => this.onChangeFile(e, this.documentLabel)}
+                                      style={{ display: 'none' }}
+                                      accept=".pdf"
+                                    />
                                   </span>
                                 </label>
                                 <br />
-                                <p ref="fileInputDocuments" style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
+                                <p ref={this.documentLabel} style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
                               </div>
                             </div>
                           </div>
@@ -935,15 +955,17 @@ class CreateEmployee extends Component {
                                   <span className="btn department-list-button">
                                     <Translate id="com.tempedge.msg.label.choosefile" />
                                     <input
+                                      ref={this.resumeFileInput}
+                                      name="resumeFile"
                                       type="file"
-                                      onChange={(e) => this.onChange(e.target.files[0], 'fileInputResume')}
+                                      onChange={(e) => this.onChangeFile(e, this.resumeLabel)}
                                       style={{ display: 'none' }}
-                                      accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .pdf"
+                                      accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
                                     />
                                   </span>
                                 </label>
                                 <br />
-                                <p ref="fileInputResume" style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
+                                <p ref={this.resumeLabel} style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }} />
                               </div>
                             </div>
                           </div>
