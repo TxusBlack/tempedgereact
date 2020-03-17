@@ -4,7 +4,7 @@ let initialState = {
   login: '',
   errorFields: [],
   lastRemoved: '',
-  lang: {}
+  lang: null
 }
 
 export default function(state = initialState, action){
