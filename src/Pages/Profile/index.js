@@ -18,7 +18,7 @@ class ProfilePage extends Component {
 
   _getProfileInfo = async () => {
     const profile = await JSON.parse(sessionStorage.getItem('agency'));
-    this.setState({ profile: profile.user });
+    this.setState({ profile: profile });
     console.log('profile', this.state.profile);
   }
 
@@ -48,41 +48,37 @@ class ProfilePage extends Component {
                     profile &&
                     <div>
                       <div className="form-group row">
-                        <div className="col-12">
+                        <div className="col-6">
                           <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.firstname" />
+                            <Translate id="com.tempedge.msg.label.firstname" />: {profile.user.firstName || '-'}
                           </p>
-                          <Field name="firstName" value={profile.firstName} placeholder={profile.firstName} active="disabled" type="text" category="person" component={InputBox} />
+                        </div>
+                        <div className="col-6">
+                          <p className="text-left label-p">
+                            <Translate id="com.tempedge.msg.label.middlename" />: {profile.user.middleName || '-'}
+                          </p>
                         </div>
                       </div>
                       <div className="form-group row">
-                        <div className="col-12">
+                        <div className="col-6">
                           <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.middlename" />
+                            <Translate id="com.tempedge.msg.label.lastname" />: {profile.user.lastName || '-'}
                           </p>
-                          <Field name="middleName" value={profile.middleName} placeholder={profile.middleName} active="disabled" type="text" category="person" component={InputBox} />
+                        </div>
+                        <div className="col-6">
+                          <p className="text-left label-p">
+                            <Translate id="com.tempedge.msg.label.email" />: {profile.user.email || '-'}
+                          </p>
                         </div>
                       </div>
                       <div className="form-group row">
-                        <div className="col-12">
-                          <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.lastname" />
-                          </p>
-                          <Field name="lastName" value={profile.lastName} placeholder={profile.lastName} active="disabled" type="text" category="person" component={InputBox} />
+                        <div className="col-6">
+                          <p className="text-left label-p">ID: {profile.user.identification || '-'}</p>
                         </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-12">
+                        <div className="col-6">
                           <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.email" />
+                            <Translate id="com.tempedge.msg.label.organization" />: {profile.organizationEntity.organizationName || '-'}
                           </p>
-                          <Field name="email" value={profile.email} placeholder={profile.email} active="disabled" type="text" category="person" component={InputBox} />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-12">
-                          <p className="text-left label-p">ID</p>
-                          <Field name="identification" value={profile.identification} placeholder={profile.identification} active="disabled" type="text" category="person" component={InputBox} />
                         </div>
                       </div>
                     </div>
