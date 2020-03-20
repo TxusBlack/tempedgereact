@@ -21,10 +21,13 @@ import Validate from '../../Validations/Validations';
 import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
+import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
+import DepartmentList from '../../Department/DepartmentList/DepartmentList';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import { notify } from 'reapop';
 
 const { $ } = window;
+const api_url = '/api/orgdepartment/findAll';
 
 momentLocaliser(moment);
 
@@ -68,6 +71,9 @@ class CreateEmployee extends Component {
       error: false
     };
 
+    this.departmentInput = React.createRef();
+    this.tbodyRef = React.createRef();
+
     this.addTranslationsForActiveLanguage();
   }
 
@@ -78,7 +84,7 @@ class CreateEmployee extends Component {
     let maritalStatus = [];
 
     await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe(api_url, { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
     await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
     parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
@@ -117,6 +123,22 @@ class CreateEmployee extends Component {
       announcementBar: ''
     }));
   };
+
+  createDepartmentsTable() {
+    const departmentsTable = <DepartmentList onClickRows={(e) => this.setInputValue(e)} />; // If you want to select multiple rows add 'multipleRows' property
+    this.setState({
+      departmentsTable
+    });
+  }
+
+  setInputValue(selectedData) {
+    const [orgDepartmentId, departmentSelected] = selectedData[0];
+    this.props.dispatch(change('NewEmployee', 'department', departmentSelected));
+    this.setState({
+      orgDepartmentId
+    });
+    this.toggleModalOnOff();
+  }
 
   componentDidUpdate = async (prevProps) => {
     const { getCountryList } = this.state;
@@ -464,25 +486,27 @@ class CreateEmployee extends Component {
     }).then((skills) => {
       let data = {
         temporalInfo: formValues.temporarydata ? true : false,
-        skills: skills,
+        skills,
         orgId: agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
-        backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
+        backgroundTestDate: formValues.backgroundTest.backgroundTest === 'Yes' ? moment(formValues.backgroundTestDate, 'YYYY-MM-DD') : null,
         backgroundtest: formValues.backgroundTest.backgroundTest === 'Yes' ? true : false,
         birthDay: moment(formValues.birthday_, 'YYYY-MM-DD'),
         cellPhone: formValues.phone,
         city: formValues.city.toUpperCase(),
         country: formValues.country.countryId,
+
         drugTest: formValues.drugTest.drugTest === 'Yes' ? true : false,
-        drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
+        drugTestDate: formValues.drugTest.drugTest === 'Yes' ? moment(formValues.drugTestDate, 'YYYY-MM-DD') : null,
+        empDepartment: this.state.orgDepartmentId || formValues.department,
         email: formValues.email_,
-        empDepartment: formValues.department.orgDepartmentCode,
-        employeeid: formValues.employeeid,
+        employeeId: formValues.employeeid,
         firstName: formValues.firstName.toUpperCase(),
         gender: formValues.gender.gender === 'Male' ? 'M' : 'F',
         hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
         identification: formValues.ssn,
+
         lastName: formValues.lastName.toUpperCase(),
         maritalStatus: formValues.maritalstatusDropdown ? 0 : 1,
         middleName: formValues.middleName_ ? formValues.middleName_.toUpperCase() : '',
@@ -492,7 +516,7 @@ class CreateEmployee extends Component {
         usrCreatedBy: agency.portalUserConfId,
         zipcode: formValues.zip,
         docExt: null,
-        resumExt: null,
+        resumeExt: null,
         personType: {
           personTypeId: 1 // ** TODO **
         },
@@ -501,7 +525,7 @@ class CreateEmployee extends Component {
         }
       };
 
-      var fileArray = {};
+      let fileArray = {};
       if (this.state.documents !== null) {
         fileArray.documents = new Blob([this.state.documents.data], { type: 'application/pdf' });
         data.docExt = this.state.documents.name.split('.').pop();
@@ -509,7 +533,7 @@ class CreateEmployee extends Component {
 
       if (this.state.resume !== null) {
         fileArray.resume = new Blob([this.state.resume.data], { type: 'application/pdf' });
-        data.resumExt = this.state.resume.name.split('.').pop();
+        data.resumeExt = this.state.resume.name.split('.').pop();
       }
 
       this.setState(
@@ -579,11 +603,16 @@ class CreateEmployee extends Component {
     });
   }
 
+  openModal() {
+    this.createDepartmentsTable();
+    this.toggleModalOnOff(); // Open or close Modal
+  }
+
   render() {
     let key = this.state.key;
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
-
+    let modal = <ModalSimple content={this.state.departmentsTable} open={this.state.showModal} onClose={() => this.onClose()} modalSize="modal-sm" />;
     if (typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)) {
       sortedSkillList = this.props.skillsList.sort((a, b) => {
         let x = a.skill;
@@ -660,7 +689,7 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.tempdata" />
                         </label>
-                        <Field name="temporarydata" category="person" checked={false} component={ToggleSwitch} />
+                        <Field name="temporarydata" category="person" checked component={ToggleSwitch} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
@@ -672,7 +701,27 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.department" />
                         </label>
-                        <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={DropdownList} />
+                        <div className="row">
+                          <div className="col-9 col-md-8 col-lg-9">
+                            <Translate>
+                              {({ translate }) => (
+                                <Field
+                                  name="department"
+                                  placeholder={translate('com.tempedge.msg.label.department')}
+                                  category="person"
+                                  component={InputBox}
+                                  ref={this.departmentInput}
+                                  className="form-control tempEdge-input-box"
+                                />
+                              )}
+                            </Translate>
+                          </div>
+                          <div className="col-3 col-md-4 col-lg-3 text-right">
+                            <button className="btn symbol-button" type="button" onClick={() => this.openModal()}>
+                              +
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="form-group row">
@@ -997,6 +1046,7 @@ class CreateEmployee extends Component {
           </div>
         </div>
         {this.state.modal}
+        {modal}
       </div>
     );
   }

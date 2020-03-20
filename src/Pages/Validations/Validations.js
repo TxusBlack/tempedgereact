@@ -55,10 +55,6 @@ let validate = (formValues) => {
   //   errors.gender = 'Please select a gender.';
   // }
 
-  if (!formValues.temporarydata) {
-    errors.temporarydata = 'Please enter temporary data.';
-  }
-
   if (!formValues.office) {
     errors.office = 'Please enter office.';
   }
