@@ -8,9 +8,7 @@ import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList'; //DO NOT REMOVE or it will break
 import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'; //DO NOT REMOVE or it will break
-
 import Datepicker from '../../../components/common/Datepicker/Datepicker';
-
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
@@ -18,6 +16,7 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
 const $ = window.$;
 
@@ -30,7 +29,7 @@ class WizardCreateNewUserFirstPage extends Component {
     this.addTranslationsForActiveLanguage();
   }
 
-  state = { mounted: false, genders: [] };
+  state = { mounted: false, genders: [], error: false };
 
   componentDidMount() {
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewUser1));
@@ -52,7 +51,19 @@ class WizardCreateNewUserFirstPage extends Component {
   }
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
 
     let gendersTranslate = [];
     gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
@@ -64,6 +75,19 @@ class WizardCreateNewUserFirstPage extends Component {
       }));
     }
   };
+
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
 
   render() {
     let signInRoute = `/auth/${this.props.activeLanguage.code}`;
@@ -189,4 +213,4 @@ WizardCreateNewUserFirstPage = reduxForm({
   validate: Validate
 })(WizardCreateNewUserFirstPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewUserFirstPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewUserFirstPage));

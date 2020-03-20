@@ -9,25 +9,26 @@ import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
+import { notify } from 'reapop';
 
 const $ = window.$;
 
-class WizardCreateNewAgencyFifthPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencyFifthPage extends Component {
+  constructor(props) {
     super(props);
 
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, salespersonlabels: '' }
+  state = { mounted: false, salespersonlabels: '', error: false }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
       mounted: true
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
@@ -37,38 +38,50 @@ class WizardCreateNewAgencyFifthPage extends Component{
   }
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel !== '') {
+    if (this.state.mounted && phonelabel !== '') {
       this.setState({
         salespersonlabels: phonelabel
       });
     }
   }
 
-  renderError(formProps){
-    let fieldId='';
+  renderError(formProps) {
+    let fieldId = '';
 
-    if(typeof formProps.input !== 'undefined'){
-      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
-        if(formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1){
-           if(formProps.input.name.indexOf("salespersonfirstname") !== -1){
-             fieldId = `com.tempedge.error.person.firstNamerequired`;
-           }else if(formProps.input.name.indexOf("salespersonlastname") !== -1){
-             fieldId = `com.tempedge.error.person.lastNamerequired`;
-           }else if(formProps.input.name.indexOf("salespersongenre") !== -1){
-             fieldId = `com.tempedge.error.person.genderrequired`;
-           }else if(formProps.input.name.indexOf("salespersonphonenumber") !== -1){
-             fieldId = `com.tempedge.error.phonenumberrequired`;
+    if (typeof formProps.input !== 'undefined') {
+      if (formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== '') {
+        if (formProps.input.name.indexOf("recruitmentofficesalespersons") !== -1) {
+          if (formProps.input.name.indexOf("salespersonfirstname") !== -1) {
+            fieldId = `com.tempedge.error.person.firstNamerequired`;
+          } else if (formProps.input.name.indexOf("salespersonlastname") !== -1) {
+            fieldId = `com.tempedge.error.person.lastNamerequired`;
+          } else if (formProps.input.name.indexOf("salespersongenre") !== -1) {
+            fieldId = `com.tempedge.error.person.genderrequired`;
+          } else if (formProps.input.name.indexOf("salespersonphonenumber") !== -1) {
+            fieldId = `com.tempedge.error.phonenumberrequired`;
           }
         }
       }
 
-      if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
-        return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
+      if (formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined') {
+        return (
+          <p style={{ color: '#a94442' }}><Translate id={fieldId}>{formProps.meta.error}</Translate></p>
         );
       }
     }
@@ -77,7 +90,7 @@ class WizardCreateNewAgencyFifthPage extends Component{
   renderSalesPersonInputs = (formProps) => {
     let recruitment_office = formProps.label.split(" ");
 
-    if(formProps.fields.length < 1){
+    if (formProps.fields.length < 1) {
       formProps.fields.push({});
     }
 
@@ -88,18 +101,18 @@ class WizardCreateNewAgencyFifthPage extends Component{
         <div className="col-md-2">
           <label className="control-label">{recruitment_office[2]}</label>
           <div className="gender-radio-group">
-            <label style={{paddingRight: 7}}><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="male" fields={formProps.fields} component="input" /><span className="radio-label" style={{fontWeight: "normal"}}>{recruitment_office[3]}</span></label>
-            <label><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="female" fields={formProps.fields} component="input" /><span className="radio-label" style={{fontWeight: "normal"}}>{recruitment_office[4]}</span></label>
+            <label style={{ paddingRight: 7 }}><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="male" fields={formProps.fields} component="input" /><span className="radio-label" style={{ fontWeight: "normal" }}>{recruitment_office[3]}</span></label>
+            <label><Field name={`${salesPerson}.salespersongenre`} type="radio" index={index} value="female" fields={formProps.fields} component="input" /><span className="radio-label" style={{ fontWeight: "normal" }}>{recruitment_office[4]}</span></label>
           </div>
         </div>
         <Field name={`${salesPerson}.salespersonphonenumber`} type="text" placeholder="xxx-xxx-xxxx" index={index} label={recruitment_office[5]} fields={formProps.fields} component={this.renderInput} />
       </div>
     ));
 
-    return(
+    return (
       <React.Fragment>
         <div>
-          { block }
+          {block}
           <div>
             <div className="row">
               <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
@@ -111,15 +124,15 @@ class WizardCreateNewAgencyFifthPage extends Component{
   }
 
   renderInput = (formProps) => {
-    let colClass = (formProps.input.name === "agencyname")? "col-md-12": "col-md-3";
-    colClass = (formProps.label === "Phone" || formProps.label === "Telefono")? "col-md-4": colClass;
-    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
-    let inputClass = ((formProps.label === "Phone" || formProps.label === "Telefono"))? "form-control tempEdge-input-box agency-phone-delete": "form-control tempEdge-input-box";
+    let colClass = (formProps.input.name === "agencyname") ? "col-md-12" : "col-md-3";
+    colClass = (formProps.label === "Phone" || formProps.label === "Telefono") ? "col-md-4" : colClass;
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched) ? 'has-error' : ''}`;
+    let inputClass = ((formProps.label === "Phone" || formProps.label === "Telefono")) ? "form-control tempEdge-input-box agency-phone-delete" : "form-control tempEdge-input-box";
 
-    return(
+    return (
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span>: '' }
+        {(formProps.label === "Phone" || formProps.label === "Telefono") ? <span className="pull-right delete-btn" title="Remove Salesman" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> : ''}
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
@@ -128,20 +141,33 @@ class WizardCreateNewAgencyFifthPage extends Component{
     );
   }
 
-  render(){
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
     let { handleSubmit } = this.props;
 
-    return(
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
                   <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
                 </div>
               </div>
@@ -183,4 +209,4 @@ WizardCreateNewAgencyFifthPage = reduxForm({
   validate: Validate
 })(WizardCreateNewAgencyFifthPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewAgencyFifthPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewAgencyFifthPage));

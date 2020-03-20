@@ -7,22 +7,35 @@ import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
-class WizardCreateNewAgencySeventhPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencySeventhPage extends Component {
+  constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
-  state= { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
+  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true, error: false }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
@@ -38,30 +51,43 @@ class WizardCreateNewAgencySeventhPage extends Component{
   setCaptchaRef = (ref) => {
     this.setState(
       () => {
-        return{
+        return {
           captchaRef: React.createRef(ref)
         }
-    });
+      });
   }
 
   generateCaptcha = (formProps) => {
     return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
 
-  render(){
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
     console.log("Seventh Page");
 
-    return(
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
-                  <label className="control-label pull-right" style={{paddingTop: 8}}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
+                  <label className="control-label pull-right" style={{ paddingTop: 8 }}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" active="disabled" component={InputBox} />
                 </div>
               </div>
@@ -131,4 +157,4 @@ WizardCreateNewAgencySeventhPage = reduxForm({
   validate: Validate
 })(WizardCreateNewAgencySeventhPage);
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencySeventhPage));
+export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewAgencySeventhPage));

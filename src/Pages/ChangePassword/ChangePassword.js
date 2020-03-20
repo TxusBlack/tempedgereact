@@ -11,16 +11,29 @@ import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguage
 import { tempedgeAPI, clearTempedgeStoreProp } from '../../Redux/actions/tempEdgeActions';
 import types from '../../Redux/actions/types';
 import OutcomeBar from '../../components/common/OutcomeBar';
+import { notify } from 'reapop';
 
 const requestUrl = '/api/user/changePassword';
 
 class ChangePassword extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { btnDisabled: true, submitted: 0 };
+    this.state = { btnDisabled: true, submitted: 0, error: false };
     const { activeLanguage } = this.props;
     const { addTranslationForLanguage } = this.props;
-    ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
+    ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -47,7 +60,7 @@ class ChangePassword extends React.Component {
 
     if (hasActiveLanguageChanged) {
       push(`/auth/${activeLanguage.code}`);
-      ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
@@ -104,6 +117,19 @@ class ChangePassword extends React.Component {
     const { reset, clearTempedgeStoreProp } = this.props;
     reset('ChangePassword'); // Reset form fields all to empty
     clearTempedgeStoreProp('changePassword');
+  }
+
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
   }
 
   render() {
@@ -198,4 +224,4 @@ ChangePassword = reduxForm({
   validate: Validate,
 })(ChangePassword);
 
-export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, reset, clearTempedgeStoreProp })(ChangePassword));
+export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, reset, clearTempedgeStoreProp, notify })(ChangePassword));

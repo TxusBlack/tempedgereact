@@ -11,6 +11,7 @@ import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations.js';
+import { notify } from 'reapop';
 
 const $ = window.$;
 
@@ -18,10 +19,22 @@ class WizardCreateNewUserSecondPage extends Component {
   constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
-  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true };
+  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true, error: false };
 
   componentDidMount() {
     let parent = $(ReactDOM.findDOMNode(this.refs.userConfigContainer));
@@ -45,7 +58,7 @@ class WizardCreateNewUserSecondPage extends Component {
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/register/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
@@ -65,6 +78,19 @@ class WizardCreateNewUserSecondPage extends Component {
   generateCaptcha = (formProps) => {
     return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   };
+
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
 
   render() {
     let roleName = typeof this.props.role.name !== 'undefined' ? this.props.role.name : '';
@@ -123,15 +149,15 @@ class WizardCreateNewUserSecondPage extends Component {
                         <Translate id="com.tempedge.msg.label.client"></Translate>
                       </label>
                     ) : (
-                      <label className="control-label">
-                        <Translate id="com.tempedge.msg.label.office"></Translate>
-                      </label>
-                    )}
+                        <label className="control-label">
+                          <Translate id="com.tempedge.msg.label.office"></Translate>
+                        </label>
+                      )}
                     {roleName.indexOf('CLIENT') > -1 ? (
                       <Field name="agencyclient" type="text" placeholder="Enter Client" category="agency" component={InputBox} />
                     ) : (
-                      <Field name="agencyoffice" type="text" placeholder="Enter Office" category="agency" component={InputBox} />
-                    )}
+                        <Field name="agencyoffice" type="text" placeholder="Enter Office" category="agency" component={InputBox} />
+                      )}
                   </div>
                 </div>
                 {roleName.indexOf('CLIENT') < 0 ? (
@@ -144,8 +170,8 @@ class WizardCreateNewUserSecondPage extends Component {
                     </div>
                   </div>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
                 <div className="row">
                   <div className="captcha-container" style={{ marginTop: 40, marginLeft: '1.5rem' }}>
                     <div className="center-block captcha-panel" style={{ width: '304px' }}>
@@ -199,4 +225,4 @@ let mapStateToProps = (state) => {
   };
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change })(WizardCreateNewUserSecondPage));
+export default withLocalize(connect(mapStateToProps, { push, change, notify })(WizardCreateNewUserSecondPage));

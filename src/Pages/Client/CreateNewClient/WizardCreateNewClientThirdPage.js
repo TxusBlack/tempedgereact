@@ -9,45 +9,71 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
-class WizardCreateNewUserThirdPage extends Component{
-  constructor(props){
+class WizardCreateNewUserThirdPage extends Component {
+  constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
-  state= { mounted: false, resultBar: "" }
+  state = { mounted: false, resultBar: "", error: false }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState(() => ({
       mounted: true
     }));
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if(hasActiveLanguageChanged){
+    if (hasActiveLanguageChanged) {
       this.props.push(`/client/new/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
   componentWillReceiveProps = () => {
-    if(this.props.resultBar !== ""){
+    if (this.props.resultBar !== "") {
       this.setState(() => ({
         resultBar: this.props.resultBar
       }));
     }
   }
 
-  render(){
-    return(
-      <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
+    return (
+      <div className="sign-up-wrapper" style={{ margin: 0 }} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
         {this.props.resultBar}
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{ paddingBottom: "0px" }}>
           <div className="row new-client-form">
             <div className="col-lg-8 client-col">
               <div className="create-client">
@@ -88,22 +114,22 @@ class WizardCreateNewUserThirdPage extends Component{
                         </div>
                       </div>
                     </div>
-                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4 dept-col">
-                <div className="department-list">
-                  <div className="department-list-header">
-                    <h2>Department List</h2>
-                  </div>
-                  <div className="department-list-contents">
-                    <div>
-                      { (!this.props.renderAddBtnDirty)? this.props.renderAddBtn(): <div>{this.props.departmentList}{this.props.addDeptBtn}</div> }
-                    </div>
+            </div>
+            <div className="col-lg-4 dept-col">
+              <div className="department-list">
+                <div className="department-list-header">
+                  <h2>Department List</h2>
+                </div>
+                <div className="department-list-contents">
+                  <div>
+                    {(!this.props.renderAddBtnDirty) ? this.props.renderAddBtn() : <div>{this.props.departmentList}{this.props.addDeptBtn}</div>}
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </form>
       </div>
@@ -118,4 +144,4 @@ WizardCreateNewUserThirdPage = reduxForm({
   validate: Validate
 })(WizardCreateNewUserThirdPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewUserThirdPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewUserThirdPage));

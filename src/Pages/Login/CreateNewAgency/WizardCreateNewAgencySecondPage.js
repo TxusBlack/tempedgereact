@@ -8,20 +8,34 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
-class WizardCreateNewAgencySecondPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencySecondPage extends Component {
+  constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
   state = {
     country_list: [],
-    region_list: []
+    region_list: [],
+    error: false
   }
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
 
     this.setState({
@@ -29,23 +43,23 @@ class WizardCreateNewAgencySecondPage extends Component{
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if (hasActiveLanguageChanged){
+    if (hasActiveLanguageChanged) {
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
-  componentWillReceiveProps = async(nextProps) => {
-    if(typeof nextProps.country === 'undefined'){
+  componentWillReceiveProps = async (nextProps) => {
+    if (typeof nextProps.country === 'undefined') {
       let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
 
       this.setState({
         region_list: regionsList
       });
-    }else{
+    } else {
       let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
 
       this.setState({
@@ -54,20 +68,33 @@ class WizardCreateNewAgencySecondPage extends Component{
     }
   }
 
-  render(){
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
     let { handleSubmit } = this.props;
 
-    return(
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
                   <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" category="agency" component={InputBox} />
                 </div>
               </div>
@@ -146,10 +173,10 @@ WizardCreateNewAgencySecondPage = reduxForm({
 let mapStateToProps = (state) => {
   let selector = formValueSelector('CreateNewAgency'); // <-- same as form name
 
-  return({
+  return ({
     country_region_list: state.tempEdge.country_region_list,
     country: selector(state, 'agencycountry')
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencySecondPage));
+export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewAgencySecondPage));

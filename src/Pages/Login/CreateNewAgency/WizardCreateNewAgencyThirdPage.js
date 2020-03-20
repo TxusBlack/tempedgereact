@@ -8,26 +8,27 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
 const $ = window.$;
 
-class WizardCreateNewAgencyThirdPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencyThirdPage extends Component {
+  constructor(props) {
     super(props);
 
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, phonelabels: '' }
+  state = { mounted: false, phonelabels: '', error: false }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
       mounted: true,
       phonelabels: 'Phone: Extension: Phone Type'
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
@@ -37,29 +38,54 @@ class WizardCreateNewAgencyThirdPage extends Component{
   }
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel !== '') {
+    if (this.state.mounted && phonelabel !== '') {
       this.setState({
         phonelabels: phonelabel
       });
     }
   }
 
-  render(){
-    return(
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
                   <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
                 </div>
               </div>
@@ -101,4 +127,4 @@ WizardCreateNewAgencyThirdPage = reduxForm({
   validate: Validate
 })(WizardCreateNewAgencyThirdPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewAgencyThirdPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewAgencyThirdPage));

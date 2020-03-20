@@ -57,14 +57,13 @@ export let doLogin = (url, data) => {
   };
 };
 
-export let doLogout = (lang, params = null) => {
+export let doLogout = (lang) => {
   return (dispatch) => {
     dispatch({
       type: types.LOGOUT,
       payload: {}
     });
-
-    params ? history.push(`/auth/${lang}`, params) : history.push(`/auth/${lang}`);
+    history.push(`/auth/${lang}`);
   };
 };
 

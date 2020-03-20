@@ -14,15 +14,26 @@ import { notify } from 'reapop';
 import { doLogin } from '../../Redux/actions/tempEdgeActions';
 import httpService from '../../utils/services/httpService/httpService.js';
 
-
 class Login extends Component {
   constructor(props, context) {
     super(props, context);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
-  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
+  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true, error: false }
 
   componentDidMount = () => {
     document.title = "ProStaff";
@@ -34,18 +45,6 @@ class Login extends Component {
           this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
         }
       });
-
-    // Get error
-    if (this.props.location.state.err) {
-      // this.fireNotification('Error', this.props.location.state.err, 'error');
-      return (
-        <Translate>
-          {({ translate }) => (
-            this.fireNotification('Error', translate(this.props.location.state.err), 'error')
-          )}
-        </Translate>
-      )
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -53,7 +52,7 @@ class Login extends Component {
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/auth/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
@@ -137,7 +136,7 @@ class Login extends Component {
                     <Link to={forgotPasswordRoute} className="pull-right forgot-password"><Translate id="com.tempedge.msg.label.password_retrieve"></Translate></Link>
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.sign_in"></Translate></button>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled || this.state.error}><Translate id="com.tempedge.msg.label.sign_in"></Translate></button>
                   </div>
                 </form>
                 <div className="captcha-container">
@@ -178,7 +177,8 @@ let mapStateToProps = (state) => {
 
   return ({
     status: (state.tempEdge.login !== 'undefined' || typeof state.tempEdge.login.portalUserList !== 'undefined') ? null : state.tempEdge.login.portalUserList[0].status,
-    rememberme: rememberUser
+    rememberme: rememberUser,
+    tempEdge: state.tempEdge
   });
 }
 

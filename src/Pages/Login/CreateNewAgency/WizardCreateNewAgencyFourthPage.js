@@ -9,69 +9,82 @@ import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
 import deleteIcon from "./assets/delete.png"; // Tell Webpack this JS file uses this image
 import addIcon from "./assets/plus.png";
+import { notify } from 'reapop';
 
 const $ = window.$;
 const selector = formValueSelector('CreateNewAgency');
 
-class WizardCreateNewAgencyFourthPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencyFourthPage extends Component {
+  constructor(props) {
     super(props);
 
     this.addTranslationsForActiveLanguage();
   }
 
-  state= { mounted: false, phonelabels: '' }
+  state = { mounted: false, phonelabels: '', error: false }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
       mounted: true
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if (hasActiveLanguageChanged){
+    if (hasActiveLanguageChanged) {
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
   }
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
-    if(this.state.mounted && phonelabel !== ''){
+    if (this.state.mounted && phonelabel !== '') {
       this.setState({
         phonelabels: phonelabel
       });
     }
   }
 
-  renderError(formProps){
-    let fieldId='';
+  renderError(formProps) {
+    let fieldId = '';
 
-    if(typeof formProps.input !== 'undefined'){
-      if(formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== ''){
-        if(formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1){
-           if(formProps.input.name.indexOf("officeName") !== -1){
-             fieldId = `com.tempedge.error.officeNamerequired`;
-           }else if(formProps.input.name.indexOf("address") !== -1){
-             fieldId = `com.tempedge.error.addressrequired`;
-           }else if(formProps.input.name.indexOf("city") !== -1){
-             fieldId = `com.tempedge.error.cityrequired`;
-           }else if(formProps.input.name.indexOf("zip") !== -1){
-             fieldId = `com.tempedge.error.zipcoderequired`;
-           }else if(formProps.input.name.indexOf("phonenumber") !== -1){
-             fieldId = `com.tempedge.error.phonenumberrequired`;
+    if (typeof formProps.input !== 'undefined') {
+      if (formProps.index != null || typeof formProps.index != 'undefined' || formProps.index !== '') {
+        if (formProps.input.name.indexOf("recruitmentofficephonenumbers") !== -1) {
+          if (formProps.input.name.indexOf("officeName") !== -1) {
+            fieldId = `com.tempedge.error.officeNamerequired`;
+          } else if (formProps.input.name.indexOf("address") !== -1) {
+            fieldId = `com.tempedge.error.addressrequired`;
+          } else if (formProps.input.name.indexOf("city") !== -1) {
+            fieldId = `com.tempedge.error.cityrequired`;
+          } else if (formProps.input.name.indexOf("zip") !== -1) {
+            fieldId = `com.tempedge.error.zipcoderequired`;
+          } else if (formProps.input.name.indexOf("phonenumber") !== -1) {
+            fieldId = `com.tempedge.error.phonenumberrequired`;
           }
         }
       }
 
-      if(formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined'){
-        return(
-          <p style={{color: '#a94442'}}><Translate id={fieldId}/></p>
+      if (formProps.meta.touched && formProps.meta.error && typeof formProps.meta.error !== 'undefined') {
+        return (
+          <p style={{ color: '#a94442' }}><Translate id={fieldId} /></p>
         );
       }
     }
@@ -80,18 +93,18 @@ class WizardCreateNewAgencyFourthPage extends Component{
   renderPhoneNumberInputs = (formProps) => {
     let recruitment_office = formProps.label.split(" ");
 
-    if(this.props.activeLanguage.code === 'en'){
-      recruitment_office[0] = (recruitment_office[0] === 'OfficeName')? 'Office Name': '';
-    }else if(this.props.activeLanguage.code === 'es'){
-      recruitment_office[0] = (recruitment_office[0] === 'NombredeOficina')? 'Nombre de Oficina': '';
+    if (this.props.activeLanguage.code === 'en') {
+      recruitment_office[0] = (recruitment_office[0] === 'OfficeName') ? 'Office Name' : '';
+    } else if (this.props.activeLanguage.code === 'es') {
+      recruitment_office[0] = (recruitment_office[0] === 'NombredeOficina') ? 'Nombre de Oficina' : '';
     }
 
-    if(formProps.fields.length < 1){
+    if (formProps.fields.length < 1) {
       formProps.fields.push({});
     }
 
     let block = formProps.fields.map((recruitmentOffice, index) => {
-      return(
+      return (
         <div key={index} className="recruitment-office-row">
           <div className="row">
             <Field name={`${recruitmentOffice}.officeName`} type="text" placeholder="Office Name" index={index} label={recruitment_office[0]} fields={formProps.fields} component={this.renderInput} />
@@ -109,23 +122,23 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
     let addBtn = (
       <div className="row">
-        <div className="col-md-12" style={{padding: 0}}>
+        <div className="col-md-12" style={{ padding: 0 }}>
           <span className="center-block pull-right add-fieldArray-btn" onClick={() => formProps.fields.push({})}><img src={addIcon} alt="addIcon" /></span>
         </div>
       </div>
     );
 
-    return(
+    return (
       <React.Fragment>
         <div className="clearfix recruiting-office-phone">
-          <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox"/>
-          <label className="checkbox-inline" style={{padding: 8, fontSize: 13.5}}>
+          <Field name="recruitingofficecheckbox" id="recruitingoffice" component="input" type="checkbox" />
+          <label className="checkbox-inline" style={{ padding: 8, fontSize: 13.5 }}>
             <Translate id="com.tempedge.msg.label.recruitingoffice">Recruiting Office</Translate>
           </label>
         </div>
         <div>
-          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? block: '' }
-          { (!this.props.checkbox || typeof this.props.checkbox === 'undefined')? addBtn: ''}
+          {(!this.props.checkbox || typeof this.props.checkbox === 'undefined') ? block : ''}
+          {(!this.props.checkbox || typeof this.props.checkbox === 'undefined') ? addBtn : ''}
         </div>
       </React.Fragment>
     );
@@ -133,25 +146,25 @@ class WizardCreateNewAgencyFourthPage extends Component{
 
   renderInput = (formProps) => {
     let colClass;
-    let errorClass = `${(formProps.meta.error && formProps.meta.touched)? 'has-error': ''}`;
-    let inputClass = (formProps.label === "Phone" || formProps.label === "Telefono")? "form-control tempEdge-input-box agency-phone-delete": "form-control tempEdge-input-box";
+    let errorClass = `${(formProps.meta.error && formProps.meta.touched) ? 'has-error' : ''}`;
+    let inputClass = (formProps.label === "Phone" || formProps.label === "Telefono") ? "form-control tempEdge-input-box agency-phone-delete" : "form-control tempEdge-input-box";
     let deleteIconClass = "pull-right delete-btn";
 
-    if(formProps.input.name.indexOf("officeName") !== -1){
+    if (formProps.input.name.indexOf("officeName") !== -1) {
       colClass = "col-md-4";
-    }else if(formProps.input.name.indexOf("address") !== -1){
+    } else if (formProps.input.name.indexOf("address") !== -1) {
       colClass = "col-md-8";
       inputClass = "form-control tempEdge-input-box agency-phone-delete";
-    }else if(formProps.input.name === "agencyname"){
+    } else if (formProps.input.name === "agencyname") {
       colClass = "col-md-12";
-    }else{
+    } else {
       colClass = "col-md-4";
     }
 
-    return(
+    return (
       <div className={colClass}>
         <label className="control-label">{formProps.label}</label>
-        { (formProps.label === "Phone" || formProps.label === "Telefono")? <span className={deleteIconClass} title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span>: '' }
+        {(formProps.label === "Phone" || formProps.label === "Telefono") ? <span className={deleteIconClass} title="Remove Agency" onClick={() => formProps.fields.remove(formProps.index)}><img className="delete-icon" src={deleteIcon} alt="deleteIcon" /></span> : ''}
         <div className={errorClass}>
           <input className={inputClass} placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
           {this.renderError(formProps)}
@@ -160,18 +173,31 @@ class WizardCreateNewAgencyFourthPage extends Component{
     );
   }
 
-  render(){
-    return(
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
                   <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
                 </div>
               </div>
@@ -219,4 +245,4 @@ WizardCreateNewAgencyFourthPage = connect(
   })
 )(WizardCreateNewAgencyFourthPage)
 
-export default withLocalize(connect(null, { push })(WizardCreateNewAgencyFourthPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewAgencyFourthPage));

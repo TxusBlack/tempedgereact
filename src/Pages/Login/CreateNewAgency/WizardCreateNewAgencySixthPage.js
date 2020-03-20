@@ -7,32 +7,58 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
-class WizardCreateNewAgencySixthPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencySixthPage extends Component {
+  constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
   }
 
-  state= { mounted: false }
+  state = { mounted: false, error: false }
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     this.setState({
       mounted: true
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
     }
   }
 
-  render(){
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
+
+  render() {
     let weekdays = [
       { day: "Monday", value: "1" },
       { day: "Tuesday", value: "2" },
@@ -43,17 +69,17 @@ class WizardCreateNewAgencySixthPage extends Component{
       { day: "Sunday", value: "0" }
     ];
 
-    return(
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
-                  <label className="control-label pull-right" style={{paddingTop: 8}}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
+                  <label className="control-label pull-right" style={{ paddingTop: 8 }}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" category="agency" component={InputBox} />
                 </div>
               </div>
@@ -106,9 +132,9 @@ WizardCreateNewAgencySixthPage = reduxForm({
 })(WizardCreateNewAgencySixthPage);
 
 let mapStateToProps = (state) => {
-  return{
+  return {
     funding_list: state.tempEdge.funding_list,
   };
 }
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencySixthPage));
+export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewAgencySixthPage));

@@ -22,6 +22,7 @@ import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
+import { notify } from 'reapop';
 
 const { $ } = window;
 
@@ -63,7 +64,8 @@ class CreateEmployee extends Component {
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
         ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
-      ]
+      ],
+      error: false
     };
 
     this.addTranslationsForActiveLanguage();
@@ -367,7 +369,19 @@ class CreateEmployee extends Component {
   };
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+      this.setState({ error: false })
+    }).catch(err => {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.fireNotification('Error',
+          this.props.activeLanguage.code === 'en'
+            ? 'It is not posible to proccess this transaction. Please try again later'
+            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+          'error'
+        );
+      }
+    });
 
     let gendersTranslate = [];
     let drugTest = [];
@@ -523,7 +537,7 @@ class CreateEmployee extends Component {
       fileReader.readAsDataURL(fileToLoad);
 
       // Onload of file read the file content
-      fileReader.onload = function(fileLoadedEvent) {
+      fileReader.onload = function (fileLoadedEvent) {
         base64 = fileLoadedEvent.target.result;
         base64 = base64.replace('data:application/pdf;base64,', '');
 
@@ -551,6 +565,19 @@ class CreateEmployee extends Component {
     //this.props.dispatch(reset('NewEmployee'));
     this.toggleModalOnOff(); //Close Modal
   };
+
+  fireNotification = (title, message, status) => {
+    let { notify } = this.props;
+
+    notify({
+      title,
+      message,
+      status,
+      position: 'br',
+      dismissible: true,
+      dismissAfter: 3000
+    });
+  }
 
   render() {
     let key = this.state.key;
@@ -789,33 +816,33 @@ class CreateEmployee extends Component {
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                              let listLen = this.props.skillsList.length;
+                            let listLen = this.props.skillsList.length;
 
-                              if (index < (listLen - 1) / 2) {
-                                return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                  </div>
-                                );
-                              }
-                            })
+                            if (index < (listLen - 1) / 2) {
+                              return (
+                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                </div>
+                              );
+                            }
+                          })
                           : ''}
                       </div>
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                              let listLen = this.props.skillsList.length;
+                            let listLen = this.props.skillsList.length;
 
-                              if (index > (listLen - 1) / 2) {
-                                return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                  </div>
-                                );
-                              }
-                            })
+                            if (index > (listLen - 1) / 2) {
+                              return (
+                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                </div>
+                              );
+                            }
+                          })
                           : ''}
                       </div>
                     </div>
@@ -872,11 +899,11 @@ class CreateEmployee extends Component {
                               this.props.drugTest.drugTest === 'Yes' || this.props.drugTest.drugTest === 'Si' ? (
                                 drugTestDate
                               ) : (
-                                <div style={{ height: 77 }}></div>
-                              )
+                                  <div style={{ height: 77 }}></div>
+                                )
                             ) : (
-                              <div style={{ height: 77 }}></div>
-                            )}
+                                <div style={{ height: 77 }}></div>
+                              )}
                           </div>
 
                           <div className="col-md-6">
@@ -896,11 +923,11 @@ class CreateEmployee extends Component {
                               this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si' ? (
                                 backgroundTestDate
                               ) : (
-                                <div style={{ height: 77 }}></div>
-                              )
+                                  <div style={{ height: 77 }}></div>
+                                )
                             ) : (
-                              <div style={{ height: 77 }}></div>
-                            )}
+                                <div style={{ height: 77 }}></div>
+                              )}
                           </div>
                         </div>
                         <hr style={{ margin: '40px 0 25px 0' }} />
@@ -1014,4 +1041,4 @@ let mapStateToProps = (state) => {
   };
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee));
+export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField, notify })(CreateEmployee));
