@@ -1,56 +1,128 @@
 import React, { Component } from 'react';
 import { push } from 'connected-react-router';
-import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 
 class TBody extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      btnDisabled: true
+    };
+    this.tBody = React.createRef();
+    const { activeLanguage, addTranslationForLanguage } = this.props;
+    ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
+  }
 
-    constructor(props) {
-        super(props);
+  componentDidUpdate(prevProps) {
+    const { activeLanguage, push, addTranslationForLanguage } = this.props;
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
 
-        ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    if (hasActiveLanguageChanged) {
+      push(`/employee/${activeLanguage.code}`);
+      ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
     }
+  }
 
-    componentDidUpdate(prevProps, prevState) {
-        const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+  getSelectedRowsData() {
+    const tableData = [];
+    const { onClickRows } = this.props;
+    if (this.tBody.current) {
+      const selectedRows = this.tBody.current.querySelectorAll('tr.table-active');
+      selectedRows.forEach((row, index) => {
+        tableData.push([]);
+        row.querySelectorAll('td').forEach((td) => {
+          tableData[index].push(td.textContent);
+        });
+      });
+      onClickRows(tableData);
+    }
+  }
 
-        if (hasActiveLanguageChanged) {
-            this.props.push(`/employee/${this.props.activeLanguage.code}`);
-            ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+  selectRows(e) {
+    const { multipleRows, onClickRows } = this.props;
+    if (onClickRows) {
+      const { currentTarget } = e;
+      const { parentNode } = currentTarget;
+
+      currentTarget.classList.toggle('table-active');
+      const selectedRows = parentNode.querySelectorAll('tr.table-active');
+
+      if (multipleRows) {
+        let btnDisabled = true;
+        if (selectedRows.length > 0) {
+          btnDisabled = false;
         }
+        this.setState({
+          btnDisabled
+        });
+      } else {
+        this.getSelectedRowsData();
+      }
     }
+  }
 
+  renderButton() {
+    const { multipleRows } = this.props;
+    if (multipleRows) {
+      return (
+        <div className="row float-center">
+          <div className="col-6 offset-3">
+            <button type="button" onClick={() => this.getSelectedRowsData()} className="btn btn-primary btn-block btn-sm" disabled={this.state.btnDisabled}>
+              <Translate id="com.tempedge.button.accept" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return '';
+  }
 
-    render() {
-        let data = this.props.data;
-        let columns = this.props.columns;
-
-        return (
-            <tbody>
-                {
-                    data && data.length>0 ? data.map(row => {
+  render() {
+    const { data, columns } = this.props;
+    return (
+      <>
+        <tbody ref={this.tBody}>
+          {data && data.length > 0 ? (
+            data.map((row) => {
+              return (
+                <tr className="tableRow" onClick={(e) => this.selectRows(e)}>
+                  {columns
+                    ? columns.map((col, index) => {
                         return (
-                            <tr className='tableRow'>
-                                {columns ? columns.map((col , index) => {
-                                    return (
-                                        <td className={
-                                            index===0 ? "table-content ":
-                                            index===(columns.length-1) ? "table-content" :
-                                            "table-content " + (col.hide !== "undefined" && col.hide != null ? " d-none d-"+col.hide+"-table-cell" : "")
-                                        }style={col.maxFieldSize>0 ? {maxWidth: col.maxFieldSize}:{}}>{row[col.field]}  </td>
-                                    )
-                                }) : "NO RECORDS FOUND!"
-                                }
-                            </tr>
-                        )
-                    }) : <p><br></br>NO RECORDS FOUND!</p>
-                }
-            </tbody>
-        );
-    }
+                          <td
+                            className={
+                              index === 0
+                                ? 'table-content '
+                                : index === columns.length - 1
+                                ? 'table-content'
+                                : 'table-content ' + (col.hide !== 'undefined' && col.hide != null ? ' d-none d-' + col.hide + '-table-cell' : '')
+                            }
+                            style={col.maxFieldSize > 0 ? { maxWidth: col.maxFieldSize } : {}}>
+                            {row[col.field]}{' '}
+                          </td>
+                        );
+                      })
+                    : 'NO RECORDS FOUND!'}
+                </tr>
+              );
+            })
+          ) : (
+            <p>
+              <br />
+              NO RECORDS FOUND!
+            </p>
+          )}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan="2">{this.renderButton()}</td>
+          </tr>
+        </tfoot>
+      </>
+    );
+  }
 }
-
 
 export default withLocalize(connect(null, { push })(TBody));

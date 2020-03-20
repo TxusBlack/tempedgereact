@@ -72,6 +72,9 @@ body {
 
 .tempEdge-input-box,
 .tempEdge-dropdown-input-box,
+.tempEdge-dateTimePicker-input-box,
+.tempEdge-input-box,
+.tempEdge-dropdown-input-box,
 .tempEdge-dateTimePicker-input-box {
   font-size: 13px;
 }
@@ -93,11 +96,11 @@ body {
 }
 
 .facemash-modal {
-  background: #565656;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .facemash-modal .modal-dialog {
-  max-width: 90%;
+  min-width: 500px;
   margin: 1.75rem auto;
 }
 
@@ -150,7 +153,7 @@ body {
   border-color: #a94442 !important;
 }
 
-.tempEdge-dropdown-input-box.has-error-dropdown div{
+.tempEdge-dropdown-input-box.has-error-dropdown div {
   border-color: #a94442 !important;
 }
 
@@ -340,7 +343,8 @@ ul.menu-ul li:hover a:after {
 input:invalid {
   border-color: red;
 }
-.face-tile, .face-tile img{
+.face-tile,
+.face-tile img {
   width: 100%;
   min-height: 24rem;
   margin: auto;
@@ -394,7 +398,7 @@ input:invalid {
 
 /* Left Nav Panel */
 .panel-nav-left {
-  position: absolute;
+  position: fixed;
   height: 100%;
   background: #ffff;
   box-shadow: 0.1rem 0 0.7rem rgba(0, 0, 0, 0.5);
@@ -419,8 +423,8 @@ input:invalid {
 .panel-nav-left .footer p {
   padding: 0;
   text-align: left;
-  margin-bottom: 0;
-  margin-top: 0.3rem;
+  margin: 0.3rem 0.2rem 0 0.2rem;
+  color: #2d2d2d;
 }
 
 .panel-nav-left .footer p a,
@@ -435,14 +439,13 @@ input:invalid {
 .panel-nav-left ul {
   list-style: none;
   margin-bottom: 0;
-  padding-top: 1.5rem;
   padding-left: 0;
 }
 
 .panel-nav-left li {
   margin: 0;
   padding-left: 2.5rem;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
@@ -1125,13 +1128,12 @@ form div.list .list-item:last-child button {
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  width: 70%;
   margin: auto;
-  //margin-bottom: 37.6rem;
 }
 
 .department-list-button:hover {
   cursor: pointer;
+  color: white;
 }
 
 .client-dpt-btn-edit-delete {
@@ -1339,7 +1341,7 @@ form div.list .list-item:last-child button {
   min-height: 6.6rem;
 }
 
-.table-header-left{
+.table-header-left {
   font-size: 1.6rem;
   font-weight: normal;
   font-style: normal;
@@ -1383,16 +1385,15 @@ form div.list .list-item:last-child button {
   color: black;
 }
 
-
 /********TAB STYLE*******************************/
-.formPanel{
+.formPanel {
   padding: 2rem 2rem 0 2rem;
   width: 100%;
   margin: 2rem;
   font-size: 1.6rem;
 }
 
-.formPanelBody{
+.formPanelBody {
   padding: 3rem;
   width: 100%;
   font-size: 1.6rem;
@@ -1448,7 +1449,7 @@ form div.list .list-item:last-child button {
   border: 2px solid #888888;
 }
 /**********************************************/
-@media screen and (max-width: 1201px){
+@media screen and (max-width: 1201px) {
   .hamburger-btn {
     left: 4rem;
   }
@@ -1628,4 +1629,44 @@ form div.list .list-item:last-child button {
   .create-client {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
+}
+
+.symbol-button {
+  background-color: var(--normal-blue);
+  color: white;
+  width: 100%;
+  border-radius: 1.6rem;
+  min-width: 32px;
+  max-width: 60px;
+}
+.symbol-button:hover {
+  color: white;
+}
+
+.table-hover tbody tr:hover,
+.table-hover .table-active:hover {
+  cursor: pointer;
+  background-color: var(--tempedge-light-orange);
+  color: white;
+}
+
+.table-active,
+.table-active > td,
+.table-active > th {
+  background-color: var(--tempedge-orange);
+  color: white;
+}
+
+.modal-lg {
+  max-width: 1200px;
+}
+
+.progress {
+  height: 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 1.6rem;
+}
+
+.progress-bar {
+  background-color: var(--normal-blue);
 }

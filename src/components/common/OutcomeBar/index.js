@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import PropTypes from 'prop-types';
-
 import '../../../assets/styles/components/ResultBar.css';
 
 const OutcomeBar = (props) => {

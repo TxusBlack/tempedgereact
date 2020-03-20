@@ -21,10 +21,13 @@ import Validate from '../../Validations/Validations';
 import Modal from '../../../Modals/Modal/Modal.js';
 import normalizePhone from '../../Normalizers/normalizePhone.js';
 import normalizeSSN from '../../Normalizers/normalizeSSN.js';
+import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
+import DepartmentList from '../../Department/DepartmentList/DepartmentList';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
 import OutcomeBar from '../../../components/common/OutcomeBar';
 
 const { $ } = window;
+const api_url = '/api/orgdepartment/findAll';
 const defaultCountry = { name: 'United States', countryId: 234 };
 const defaultRegion = { name: 'New Jersey', regionId: 4134 };
 const maxSizeAllowedForFiles = 1e7; // Equals to 10MB -> 10 000 000 bytes
@@ -68,6 +71,9 @@ class CreateEmployee extends Component {
     this.resumeFileInput = React.createRef();
     this.documentFileInput = React.createRef();
 
+    this.departmentInput = React.createRef();
+    this.tbodyRef = React.createRef();
+
     this.addTranslationsForActiveLanguage();
   }
 
@@ -81,7 +87,7 @@ class CreateEmployee extends Component {
     let maritalStatus = [];
 
     await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe(api_url, { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
     await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
     parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
@@ -118,6 +124,22 @@ class CreateEmployee extends Component {
     this.props.clearTempedgeStoreProp('validatePerson');
     this.resetFileFields();
   };
+
+  createDepartmentsTable() {
+    const departmentsTable = <DepartmentList onClickRows={(e) => this.setInputValue(e)} />; // If you want to select multiple rows add 'multipleRows' property
+    this.setState({
+      departmentsTable
+    });
+  }
+
+  setInputValue(selectedData) {
+    const [orgDepartmentId, departmentSelected] = selectedData[0];
+    this.props.dispatch(change('NewEmployee', 'department', departmentSelected));
+    this.setState({
+      orgDepartmentId
+    });
+    this.toggleModalOnOff();
+  }
 
   componentDidUpdate = async (prevProps) => {
     const { getCountryList } = this.state;
@@ -451,7 +473,11 @@ class CreateEmployee extends Component {
         e.target.value = '';
         this.setState(() => ({
           announcementBar: (
-            <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.maxSizeAllowedForFiles" customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }} />
+            <OutcomeBar
+              classApplied="announcement-bar warning"
+              translateId="com.tempedge.warning.maxSizeAllowedForFiles"
+              customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }}
+            />
           )
         }));
       }
@@ -488,12 +514,12 @@ class CreateEmployee extends Component {
     }).then((skills) => {
       let data = {
         temporalInfo: formValues.temporarydata ? true : false,
-        skills: skills,
+        skills,
         orgId: agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
-        backgroundTestDate: moment(formValues.backgroundTestDate, 'YYYY-MM-DD'),
-        backgroundtest: formValues.backgroundTest && formValues.backgroundTest.backgroundTest === 'Yes' ? true : false,
+        backgroundTestDate: formValues.backgroundTest.backgroundTest === 'Yes' ? moment(formValues.backgroundTestDate, 'YYYY-MM-DD') : null,
+        backgroundtest: formValues.backgroundTest.backgroundTest === 'Yes' ? true : false,
         birthDay: moment(formValues.birthday_, 'YYYY-MM-DD'),
         cellPhone: formValues.phone,
         city: formValues.city.toUpperCase(),
@@ -501,12 +527,13 @@ class CreateEmployee extends Component {
         drugTest: formValues.drugTest && formValues.drugTest.drugTest === 'Yes' ? true : false,
         drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
         email: formValues.email_,
-        empDepartment: formValues.department.orgDepartmentCode,
+        empDepartment: this.state.orgDepartmentId || formValues.department,
         employeeId: formValues.employeeid,
         firstName: formValues.firstName.toUpperCase(),
         gender: formValues.gender.gender === 'Male' ? 'M' : 'F',
         hireDate: moment(formValues.hireDate_, 'YYYY-MM-DD'),
         identification: formValues.ssn,
+
         lastName: formValues.lastName.toUpperCase(),
         maritalStatus: formValues.maritalstatusDropdown ? 0 : 1,
         middleName: formValues.middleName_ ? formValues.middleName_.toUpperCase() : '',
@@ -567,11 +594,16 @@ class CreateEmployee extends Component {
     this.toggleModalOnOff(); //Close Modal
   };
 
+  openModal() {
+    this.createDepartmentsTable();
+    this.toggleModalOnOff(); // Open or close Modal
+  }
+
   render() {
     let key = this.state.key;
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
-
+    let modal = <ModalSimple content={this.state.departmentsTable} open={this.state.showModal} onClose={() => this.onClose()} modalSize="modal-sm" />;
     if (typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)) {
       sortedSkillList = this.props.skillsList.sort((a, b) => {
         let x = a.skill;
@@ -601,7 +633,16 @@ class CreateEmployee extends Component {
 
     return (
       <div style={{ marginBottom: 20 }}>
-        <Stepper steps={this.state.steps} activeStep={key} activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
+        <Stepper
+          steps={this.state.steps}
+          activeStep={key}
+          activeColor="#eb8d34"
+          completeColor="#8cb544"
+          defaultBarColor="#eb8d34"
+          completeBarColor="#8cb544"
+          barStyle="solid"
+          circleFontSize={16}
+        />
         <div
           style={{
             padding: '3rem',
@@ -648,7 +689,7 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.tempdata" />
                         </label>
-                        <Field name="temporarydata" category="person" checked={false} component={ToggleSwitch} />
+                        <Field name="temporarydata" category="person" checked component={ToggleSwitch} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
@@ -660,7 +701,27 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.department" />
                         </label>
-                        <Field name="department" data={this.state.orgDepartmentList} valueField="orgDepartmentId" textField="name" category="person" component={DropdownList} />
+                        <div className="row">
+                          <div className="col-9 col-md-8 col-lg-9">
+                            <Translate>
+                              {({ translate }) => (
+                                <Field
+                                  name="department"
+                                  placeholder={translate('com.tempedge.msg.label.department')}
+                                  category="person"
+                                  component={InputBox}
+                                  ref={this.departmentInput}
+                                  className="form-control tempEdge-input-box"
+                                />
+                              )}
+                            </Translate>
+                          </div>
+                          <div className="col-3 col-md-4 col-lg-3 text-right">
+                            <button className="btn symbol-button" type="button" onClick={() => this.openModal()}>
+                              +
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="form-group row">
@@ -858,7 +919,14 @@ class CreateEmployee extends Component {
                           <span style={{ display: 'none' }} ref="maritalstatusNegativeOption">
                             <Translate id="com.tempedge.msg.label.married" />
                           </span>
-                          <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="maritalStatus" category="person" component={DropdownList} />
+                          <Field
+                            name="maritalstatusDropdown"
+                            data={this.state.maritalStatus}
+                            valueField="value"
+                            textField="maritalStatus"
+                            category="person"
+                            component={DropdownList}
+                          />
                         </div>
 
                         <div style={{ width: '60%', margin: 'auto' }}>
@@ -905,7 +973,14 @@ class CreateEmployee extends Component {
                               <span style={{ display: 'none' }} ref="backgroundtestNegativeOption">
                                 <Translate id="com.tempedge.msg.label.negative" />
                               </span>
-                              <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="backgroundTest" category="person" component={DropdownList} />
+                              <Field
+                                name="backgroundTest"
+                                data={this.state.backgroundTest}
+                                valueField="value"
+                                textField="backgroundTest"
+                                category="person"
+                                component={DropdownList}
+                              />
                             </div>
                             {this.props.backgroundTest && typeof this.props.backgroundTest.backgroundTest === 'string' ? (
                               this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si' ? (
@@ -994,6 +1069,7 @@ class CreateEmployee extends Component {
           </div>
         </div>
         {this.state.modal}
+        {modal}
       </div>
     );
   }
@@ -1038,4 +1114,6 @@ let mapStateToProps = (state) => {
   };
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee));
+export default withLocalize(
+  connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee)
+);
