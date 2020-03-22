@@ -13,10 +13,19 @@ import { push } from 'connected-react-router';
 import { notify } from 'reapop';
 import { doLogin } from '../../Redux/actions/tempEdgeActions';
 import httpService from '../../utils/services/httpService/httpService.js';
+import OutcomeBar from '../../components/common/OutcomeBar/index.js';
 
 class Login extends Component {
   constructor(props, context) {
     super(props, context);
+
+    this.state = {
+      resultBar: null,
+      captchaRef: null,
+      reCaptchaToken: '',
+      btnDisabled: true,
+      error: false
+    };
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
       this.setState({ error: false })
@@ -29,11 +38,10 @@ class Login extends Component {
             : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
           'error'
         );
+        this.showResultBar(err, 'error');
       }
     });
   }
-
-  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true, error: false }
 
   componentDidMount = () => {
     document.title = "ProStaff";
@@ -105,10 +113,17 @@ class Login extends Component {
     });
   }
 
+  showResultBar(translateId, messageType) {
+    this.setState({
+      resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} />,
+    });
+  }
+
   render() {
-    let { activeLanguage } = this.props;
-    let forgotPasswordRoute = `/resetpassword/${activeLanguage.code}`;
-    let registerRoute = `/register/${activeLanguage.code}`;
+    const { activeLanguage } = this.props;
+    const { resultBar } = this.state;
+    const forgotPasswordRoute = `/resetpassword/${activeLanguage.code}`;
+    const registerRoute = `/register/${activeLanguage.code}`;
 
     return (
       <div className="container-fluid login-container">
@@ -116,6 +131,12 @@ class Login extends Component {
           <div className="col-md-12">
             <div className="login-form">
               <div className="panel panel-default login-form-panel">
+                {
+                  resultBar &&
+                  <div className="form-group row">
+                    <div className="col-12">{resultBar}</div>
+                  </div>
+                }
                 <div className="panel-heading login-header">
                   <h2 className="text-center"><Translate id="com.tempedge.msg.label.sign_in"></Translate></h2>
                 </div>
