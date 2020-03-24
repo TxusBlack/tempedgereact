@@ -1287,6 +1287,7 @@ form div.list .list-item:last-child button {
   align-content: center;
   border-radius: 16px;
   margin-bottom: 0;
+  box-shadow: 0 0.2rem 0.78rem 0.02rem rgba(104, 104, 104, 0.2);
 }
 
 .main-form-panel-inputs {

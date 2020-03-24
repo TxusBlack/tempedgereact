@@ -32,7 +32,7 @@ class ProfilePage extends Component {
     const { profile } = this.state;
     const { handleSubmit } = this.props;
     return (
-      <div className="container-fluid login-container">
+      <div className="container-fluid login-container" style={{ width: '80vw' }}>
         <div className="row">
           <div className="col-md-12">
             <div className="login-form">
@@ -45,42 +45,50 @@ class ProfilePage extends Component {
                 <form className="panel-body" onSubmit={handleSubmit(this.onSubmit)}>
                   {
                     profile &&
-                    <div>
-                      <div className="form-group row">
-                        <div className="col-6">
-                          <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.firstname" />: {profile.user.firstName || '-'}
-                          </p>
-                        </div>
-                        <div className="col-6">
-                          <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.middlename" />: {profile.user.middleName || '-'}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-6">
-                          <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.lastname" />: {profile.user.lastName || '-'}
-                          </p>
-                        </div>
-                        <div className="col-6">
-                          <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.email" />: {profile.user.email || '-'}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-6">
-                          <p className="text-left label-p">ID: {profile.user.identification || '-'}</p>
-                        </div>
-                        <div className="col-6">
-                          <p className="text-left label-p">
-                            <Translate id="com.tempedge.msg.label.organization" />: {profile.organizationEntity.organizationName || '-'}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                    <table className="table table-striped">
+                      <tbody>
+                        <tr className="tableRow">
+                          <td className="table-content" style={{ width: '50%' }}>
+                            <Translate id="com.tempedge.msg.label.firstname" />
+                          </td>
+                          <td className="table-content" style={{ width: '50%' }}>
+                            {profile.user.firstName || '-'}
+                          </td>
+                        </tr>
+                        <tr className="tableRow">
+                          <td className="table-content" style={{ width: '50%' }}>
+                            <Translate id="com.tempedge.msg.label.middlename" />
+                          </td>
+                          <td className="table-content" style={{ width: '50%' }}>
+                            {profile.user.middleName || '-'}
+                          </td>
+                        </tr>
+                        <tr className="tableRow">
+                          <td className="table-content" style={{ width: '50%' }}>
+                            <Translate id="com.tempedge.msg.label.lastname" />
+                          </td>
+                          <td className="table-content" style={{ width: '50%' }}>
+                            {profile.user.lastName || '-'}
+                          </td>
+                        </tr>
+                        <tr className="tableRow">
+                          <td className="table-content" style={{ width: '50%' }}>
+                            <Translate id="com.tempedge.msg.label.email" />
+                          </td>
+                          <td className="table-content" style={{ width: '50%' }}>
+                            {profile.user.email || '-'}
+                          </td>
+                        </tr>
+                        <tr className="tableRow">
+                          <td className="table-content" style={{ width: '50%' }}>
+                            <Translate id="com.tempedge.msg.label.organization" />
+                          </td>
+                          <td className="table-content" style={{ width: '50%' }}>
+                            {profile.user.identification || '-'}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   }
                 </form>
                 <div className="end-container">
@@ -99,12 +107,6 @@ ProfilePage.propTypes = {
   tempedgeAPI: PropTypes.func.isRequired,
   clearTempedgeStoreProp: PropTypes.func.isRequired,
 };
-
-// const mapStateToProps = (state) => {
-//   return {
-//     changePassword: state.tempEdge.changePassword ? state.tempEdge.changePassword : null,
-//   };
-// };
 
 ProfilePage = reduxForm({
   form: 'changePassword',
