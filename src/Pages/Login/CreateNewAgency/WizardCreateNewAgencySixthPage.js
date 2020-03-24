@@ -13,22 +13,10 @@ class WizardCreateNewAgencySixthPage extends Component {
   constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
-      this.setState({ error: false })
-    }).catch(err => {
-      if (!this.state.error) {
-        this.setState({ error: true });
-        this.fireNotification('Error',
-          this.props.activeLanguage.code === 'en'
-            ? 'It is not posible to proccess this transaction. Please try again later'
-            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
-          'error'
-        );
-      }
-    });
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  state = { mounted: false, error: false }
+  state = { mounted: false }
 
   componentDidMount = async () => {
     this.setState({
@@ -41,21 +29,8 @@ class WizardCreateNewAgencySixthPage extends Component {
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
-  }
-
-  fireNotification = (title, message, status) => {
-    let { notify } = this.props;
-
-    notify({
-      title,
-      message,
-      status,
-      position: 'br',
-      dismissible: true,
-      dismissAfter: 3000
-    });
   }
 
   render() {

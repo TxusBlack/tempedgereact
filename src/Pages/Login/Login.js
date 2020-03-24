@@ -32,13 +32,7 @@ class Login extends Component {
     }).catch(err => {
       if (!this.state.error) {
         this.setState({ error: true });
-        this.fireNotification('Error',
-          this.props.activeLanguage.code === 'en'
-            ? 'It is not posible to proccess this transaction. Please try again later'
-            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
-          'error'
-        );
-        this.showResultBar(err, 'error');
+        this.showResultBar(err, 'fail');
       }
     });
   }
@@ -131,16 +125,14 @@ class Login extends Component {
           <div className="col-md-12">
             <div className="login-form">
               <div className="panel panel-default login-form-panel">
-                {
-                  resultBar &&
-                  <div className="form-group row">
-                    <div className="col-12">{resultBar}</div>
-                  </div>
-                }
                 <div className="panel-heading login-header">
                   <h2 className="text-center"><Translate id="com.tempedge.msg.label.sign_in"></Translate></h2>
                 </div>
                 <form className="panel-body" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                  <div className="form-group row">
+                    <div className="col-12">{resultBar}</div>
+                  </div>
+
                   <div className="form-group">
                     <p className="text-left label-p"><Translate id="com.tempedge.msg.label.username"></Translate></p>
                     <Field name="username" type="text" placeholder="Enter username" category="person" component={InputBox} />

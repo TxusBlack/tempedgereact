@@ -21,7 +21,7 @@ class WizardCreateNewAgencyFourthPage extends Component {
     this.addTranslationsForActiveLanguage();
   }
 
-  state = { mounted: false, phonelabels: '', error: false }
+  state = { mounted: false, phonelabels: '' }
 
   componentDidMount() {
     this.setState({
@@ -39,19 +39,7 @@ class WizardCreateNewAgencyFourthPage extends Component {
   }
 
   addTranslationsForActiveLanguage = async () => {
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
-      this.setState({ error: false })
-    }).catch(err => {
-      if (!this.state.error) {
-        this.setState({ error: true });
-        this.fireNotification('Error',
-          this.props.activeLanguage.code === 'en'
-            ? 'It is not posible to proccess this transaction. Please try again later'
-            : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
-          'error'
-        );
-      }
-    });
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
     let phonelabel = $(ReactDOM.findDOMNode(this.refs.phonelabel)).text();
 
@@ -171,19 +159,6 @@ class WizardCreateNewAgencyFourthPage extends Component {
         </div>
       </div>
     );
-  }
-
-  fireNotification = (title, message, status) => {
-    let { notify } = this.props;
-
-    notify({
-      title,
-      message,
-      status,
-      position: 'br',
-      dismissible: true,
-      dismissAfter: 3000
-    });
   }
 
   render() {
