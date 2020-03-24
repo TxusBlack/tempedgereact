@@ -18,7 +18,7 @@ class ProfilePage extends Component {
   _getProfileInfo = async () => {
     const profile = await JSON.parse(sessionStorage.getItem('agency'));
     this.setState({ profile: profile });
-    // console.log('profile', this.state.profile);
+    console.log('profile', this.state.profile);
   }
 
   onSubmit = async (formValues) => {
@@ -84,7 +84,7 @@ class ProfilePage extends Component {
                             <Translate id="com.tempedge.msg.label.organization" />
                           </td>
                           <td className="table-content" style={{ width: '50%' }}>
-                            {profile.user.identification || '-'}
+                            {profile.organizationEntity.organizationName || '-'}
                           </td>
                         </tr>
                       </tbody>
