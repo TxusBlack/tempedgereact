@@ -8,7 +8,7 @@ let addTranslationsForActiveLanguage = async (activeLanguage, addTranslationForL
   return new Promise(async (resolve, reject) => {
     try {
       let state = store.getState();
-      if (!state.tempEdge.lang) await store.dispatch(getList('api/dictionary/listAll', types.GET_LANGUAGE));
+      if (!state.tempEdge.lang) await store.dispatch(getList('/api/dictionary/listAll', types.GET_LANGUAGE));
       state = store.getState();
       let translations = state.tempEdge.lang.english;      //Default to English
 
