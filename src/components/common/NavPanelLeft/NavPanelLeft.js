@@ -1,24 +1,24 @@
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withLocalize, Translate } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { Link } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import user from './assets/user.png';
-import { doLogout } from "../../../Redux/actions/tempEdgeActions.js"
+import { doLogout } from '../../../Redux/actions/tempEdgeActions.js';
 
-class NavPanelLeft extends React.Component{
-  constructor(props){
+class NavPanelLeft extends React.Component {
+  constructor(props) {
     super(props);
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if(hasActiveLanguageChanged) {
+    if (hasActiveLanguageChanged) {
       this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
@@ -26,53 +26,71 @@ class NavPanelLeft extends React.Component{
 
   toggleNav = () => {
     this.props.toggleNav();
-  }
+  };
 
   signOut = () => {
     let { activeLanguage } = this.props;
-    
+
     sessionStorage.clear();
     this.toggleNav();
     this.props.doLogout(activeLanguage.code);
-  }
+  };
 
-  render(){
-    let panelClass = (this.props.show)? "panel-nav-left show": "panel-nav-left";
-    let leftNavMenu = (typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null)? JSON.parse(sessionStorage.getItem('leftNavMenu')): "";
+  render() {
+    let panelClass = this.props.show ? 'panel-nav-left show' : 'panel-nav-left';
+    let leftNavMenu = typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null ? JSON.parse(sessionStorage.getItem('leftNavMenu')) : '';
 
-    return(
+    return (
       <nav className={panelClass}>
         <div>
           <div className="row close-btn-row">
             <div className="col-lg-12">
-              <span onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right">&times;</span>
+              <span onClick={this.toggleNav} className="panel-nav-left-close-btn pull-right">
+                &times;
+              </span>
             </div>
           </div>
           <div className="row panel-user-img-name">
             <div className="col-lg-4">
               <img src={user} className="usr-img" alt="user" />
             </div>
-            <div className="col-lg-8">
-              <h4>{this.props.firstName + " " + this.props.lastName}</h4>
-            </div>
+            <h4 className="col-lg-8">
+              <h4>{this.props.firstName + ' ' + this.props.lastName}</h4>
+            </h4>
           </div>
           <ul>
-            {(leftNavMenu !== '')? leftNavMenu.map((item, index) => {
-              return <li onClick={this.toggleNav}><Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} style={{marginLeft: 40}}>{item.optionName}</Link></li>;
-            }): ""}
+            {leftNavMenu !== ''
+              ? leftNavMenu.map((item, index) => {
+                  return (
+                    <Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} onClick={this.toggleNav}>
+                      <li>{item.optionName} </li>
+                    </Link>
+                  );
+                })
+              : ''}
           </ul>
         </div>
-        <Footer textColor="#2d2d2d" background="#fff" content={<p onClick={this.signOut}><Link to="/">Sign Out</Link></p>} />
+        <Footer
+          content={
+            <Link to={`/auth/${this.props.activeLanguage.code}`} onClick={this.signOut}>
+              <ul>
+                <li>
+                  <Translate id="com.tempedge.msg.info.signOut" />
+                </li>
+              </ul>
+            </Link>
+          }
+        />
       </nav>
     );
   }
 }
 
 let mapStateToProps = (state) => {
-  return({
-    firstName: (typeof state.tempEdge.login.portalUserList !== 'undefined')? state.tempEdge.login.portalUserList[0].user.firstName:  "",
-    lastName: (typeof state.tempEdge.login.portalUserList !== 'undefined')? state.tempEdge.login.portalUserList[0].user.lastName:  ""
-  });
-}
+  return {
+    firstName: typeof state.tempEdge.login.portalUserList !== 'undefined' ? state.tempEdge.login.portalUserList[0].user.firstName : '',
+    lastName: typeof state.tempEdge.login.portalUserList !== 'undefined' ? state.tempEdge.login.portalUserList[0].user.lastName : ''
+  };
+};
 
 export default withLocalize(connect(mapStateToProps, { push, doLogout })(NavPanelLeft));
