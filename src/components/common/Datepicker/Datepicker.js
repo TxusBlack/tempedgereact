@@ -15,6 +15,7 @@ const Datepicker = (formProps) => {
         selected={moment(input.value).isValid() ? new Date(input.value) : null}
         onBlur={input.onBlur}
         className={formProps.customClass}
+        maxDate={new Date(2050, 11, 31)}
         showMonthDropdown
         showYearDropdown
         dateFormat="MM/dd/yyyy"
