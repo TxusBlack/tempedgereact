@@ -18,7 +18,7 @@ class ProfilePage extends Component {
   _getProfileInfo = async () => {
     const profile = await JSON.parse(sessionStorage.getItem('agency'));
     this.setState({ profile: profile });
-    console.log('profile', this.state.profile);
+    // console.log('profile', this.state.profile);
   }
 
   onSubmit = async (formValues) => {
@@ -30,7 +30,7 @@ class ProfilePage extends Component {
 
   render() {
     const { profile } = this.state;
-    const { handleSubmit } = this.props;
+    const { handleSubmit, portalUserList } = this.props;
     return (
       <div className="container-fluid login-container" style={{ width: '80vw' }}>
         <div className="row">
@@ -84,7 +84,12 @@ class ProfilePage extends Component {
                             <Translate id="com.tempedge.msg.label.organization" />
                           </td>
                           <td className="table-content" style={{ width: '50%' }}>
-                            {profile.organizationEntity.organizationName || '-'}
+                            {/* {profile.organizationEntity.organizationName || '-'} */}
+                            {
+                              portalUserList.map((item, key) => {
+                                return (key === portalUserList.length - 1) ? item.organizationEntity.organizationName : `${item.organizationEntity.organizationName}, `
+                              })
+                            }
                           </td>
                         </tr>
                       </tbody>
@@ -102,6 +107,13 @@ class ProfilePage extends Component {
   }
 }
 
+let mapStateToProps = (state) => {
+  console.log(state.tempEdge.login.portalUserList);
+  return {
+    portalUserList: state.tempEdge.login.portalUserList
+  }
+}
+
 ProfilePage.propTypes = {
   reset: PropTypes.func.isRequired,
   tempedgeAPI: PropTypes.func.isRequired,
@@ -113,4 +125,4 @@ ProfilePage = reduxForm({
   validate: Validate,
 })(ProfilePage);
 
-export default withLocalize(connect(null, { tempedgeAPI })(ProfilePage));
+export default withLocalize(connect(mapStateToProps, { tempedgeAPI })(ProfilePage));
