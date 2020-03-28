@@ -24,14 +24,14 @@ import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
 import DepartmentList from '../../Department/DepartmentList/DepartmentList';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
+import OutcomeBar from '../../../components/common/OutcomeBar';
 
 const { $ } = window;
 const api_url = '/api/orgdepartment/findAll';
-
-momentLocaliser(moment);
-
 const defaultCountry = { name: 'United States', countryId: 234 };
 const defaultRegion = { name: 'New Jersey', regionId: 4134 };
+const maxSizeAllowedForFiles = 1e7; // Equals to 10MB -> 10 000 000 bytes
+momentLocaliser(moment);
 
 class CreateEmployee extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class CreateEmployee extends Component {
       getCountryList: false,
       prevCountry: '',
       countryList: [],
-      regionsList: [],
+      regionList: [],
       orgDepartmentList: [],
       officeList: [],
       steps: [{ title: '' }, { title: '' }, { title: '' }, { title: '' }],
@@ -49,8 +49,6 @@ class CreateEmployee extends Component {
       mounted: false,
       drugTest: [],
       backgroundTest: [],
-      documents: null,
-      resume: null,
       maritalStatus: [],
       modal: '',
       paginatedTable: '',
@@ -68,6 +66,10 @@ class CreateEmployee extends Component {
         ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
       ]
     };
+    this.resumeLabel = React.createRef();
+    this.documentLabel = React.createRef();
+    this.resumeFileInput = React.createRef();
+    this.documentFileInput = React.createRef();
 
     this.departmentInput = React.createRef();
     this.tbodyRef = React.createRef();
@@ -76,6 +78,9 @@ class CreateEmployee extends Component {
   }
 
   componentDidMount = async () => {
+    this.setState(() => ({
+      announcementBar: ''
+    }));
     let gendersTranslate = [];
     let drugTest = [];
     let backgroundTest = [];
@@ -116,10 +121,8 @@ class CreateEmployee extends Component {
     this.props.reset();
     this.props.clearErrorField();
     this.props.clearTempedgeStoreProp('savePerson');
-
-    this.setState(() => ({
-      announcementBar: ''
-    }));
+    this.props.clearTempedgeStoreProp('validatePerson');
+    this.resetFileFields();
   };
 
   createDepartmentsTable() {
@@ -194,13 +197,13 @@ class CreateEmployee extends Component {
 
     if (typeof countryRegionList !== 'undefined') {
       const countryList = CountryRegionParser.getCountryList(countryRegionList).country_list;
-      const regionsList = await CountryRegionParser.getRegionList(countryRegionList, country.name);
+      const regionList = await CountryRegionParser.getRegionList(countryRegionList, country.name);
       dispatch(change('NewEmployee', 'country', country));
       dispatch(change('NewEmployee', 'state', region));
       dispatch(change('NewEmployee', 'joblocation', ''));
       this.setState(() => ({
         countryList,
-        regionsList,
+        regionList,
         prevCountry: country.name
       }));
     }
@@ -269,8 +272,10 @@ class CreateEmployee extends Component {
               </div>
             )
           }),
-          () => this.props.reset()
+          () => this.componentWillUnmount()
         );
+
+        this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
       } else {
         //Validation Failed
         this.setState(() => ({
@@ -282,10 +287,12 @@ class CreateEmployee extends Component {
             </div>
           )
         }));
+
+        this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
       }
     }
 
-    if (nextProps.validatePerson !== null) {
+    if (nextProps.validatePerson !== null && nextProps.validatePerson.data) {
       if (nextProps.validatePerson.data.status === 409) {
         if (nextProps.validatePerson.data.code === 'TE-E07') {
           //Validation Found multiple records with similar fields
@@ -418,36 +425,71 @@ class CreateEmployee extends Component {
     }
   };
 
-  onChange = (file, ref) => {
-    let readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs[ref]));
-    let fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+  static setFileLabel(file, labelRef) {
+    const fileName = file ? file.name.replace(/\\|\//g, '') : '';
+    labelRef.current.textContent = fileName;
+  }
 
-    readOnlyTextBox.text(fileName);
+  resetFileFields() {
+    this.documentFileInput.current.value = '';
+    this.resumeFileInput.current.value = '';
+    this.documentLabel.current.textContent = '';
+    this.resumeLabel.current.textContent = '';
+  }
 
-    let reader = new FileReader();
+  onChangeFile = (e, labelRef) => {
+    const [file] = e.target.files;
+    const inputName = e.target.getAttribute('name');
+    this.setState(() => ({
+      announcementBar: ''
+    }));
+    this.constructor.setFileLabel(null, labelRef);
 
-    reader.readAsBinaryString(file); //Read Blob as binary
-
-    //Event Listener for when a file is selected to be uploaded
-    reader.onload = (event) => {
-      //(on_file_select_event)
-      let data = event.target.result; //'result' if not 'null', contains the contents of the file as a binary string
-      let stateName = ref === 'fileInputDocuments' ? 'documents' : 'resume';
-
-      /* Update state */
-      this.setState(() => ({
-        [stateName]: {
-          name: file.name,
-          data: data
+    if (file) {
+      if (file.size <= maxSizeAllowedForFiles) {
+        if (inputName === 'documentFile') {
+          if (file.type !== 'application/pdf') {
+            this.setState(() => ({
+              announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.pdfInvalidFileType" />
+            }));
+            e.target.value = '';
+          } else {
+            this.constructor.setFileLabel(file, labelRef);
+          }
+        } else if (
+          file.type !== 'application/pdf' &&
+          file.type !== 'application/msword' &&
+          file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' &&
+          inputName === 'resumeFile'
+        ) {
+          this.setState(() => ({
+            announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.invalidFileType" />
+          }));
+          e.target.value = '';
+        } else {
+          this.constructor.setFileLabel(file, labelRef);
         }
-      }));
-    };
+      } else {
+        e.target.value = '';
+        this.setState(() => ({
+          announcementBar: (
+            <OutcomeBar
+              classApplied="announcement-bar warning"
+              translateId="com.tempedge.warning.maxSizeAllowedForFiles"
+              customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }}
+            />
+          )
+        }));
+      }
+    }
   };
 
   onSubmit = async (formValues) => {
     let skills = [];
     let counter = 0;
     let fomrValueLen = Object.keys(formValues).length;
+    const documentFile = this.documentFileInput.current.files[0];
+    const resumeFile = this.resumeFileInput.current.files[0];
 
     let agency = sessionStorage.getItem('agency');
     agency = JSON.parse(agency);
@@ -482,11 +524,10 @@ class CreateEmployee extends Component {
         cellPhone: formValues.phone,
         city: formValues.city.toUpperCase(),
         country: formValues.country.countryId,
-
-        drugTest: formValues.drugTest.drugTest === 'Yes' ? true : false,
-        drugTestDate: formValues.drugTest.drugTest === 'Yes' ? moment(formValues.drugTestDate, 'YYYY-MM-DD') : null,
-        empDepartment: this.state.orgDepartmentId || formValues.department,
+        drugTest: formValues.drugTest && formValues.drugTest.drugTest === 'Yes' ? true : false,
+        drugTestDate: moment(formValues.drugTestDate, 'YYYY-MM-DD'),
         email: formValues.email_,
+        empDepartment: this.state.orgDepartmentId || formValues.department,
         employeeId: formValues.employeeid,
         firstName: formValues.firstName.toUpperCase(),
         gender: formValues.gender.gender === 'Male' ? 'M' : 'F',
@@ -511,15 +552,15 @@ class CreateEmployee extends Component {
         }
       };
 
-      let fileArray = {};
-      if (this.state.documents !== null) {
-        fileArray.documents = new Blob([this.state.documents.data], { type: 'application/pdf' });
-        data.docExt = this.state.documents.name.split('.').pop();
+      const fileArray = {};
+      if (documentFile) {
+        fileArray.documents = documentFile;
+        data.docExt = documentFile.name.split('.').pop();
       }
 
-      if (this.state.resume !== null) {
-        fileArray.resume = new Blob([this.state.resume.data], { type: 'application/pdf' });
-        data.resumeExt = this.state.resume.name.split('.').pop();
+      if (resumeFile) {
+        fileArray.resume = resumeFile;
+        data.resumeExt = resumeFile.name.split('.').pop();
       }
 
       this.setState(
@@ -592,7 +633,16 @@ class CreateEmployee extends Component {
 
     return (
       <div style={{ marginBottom: 20 }}>
-        <Stepper steps={this.state.steps} activeStep={key} activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
+        <Stepper
+          steps={this.state.steps}
+          activeStep={key}
+          activeColor="#eb8d34"
+          completeColor="#8cb544"
+          defaultBarColor="#eb8d34"
+          completeBarColor="#8cb544"
+          barStyle="solid"
+          circleFontSize={16}
+        />
         <div
           style={{
             padding: '3rem',
@@ -797,7 +847,7 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.state" />
                         </label>
-                        <Field name="state" data={this.state.regionsList} valueField="regionId" textField="name" category="person" component={DropdownList} />
+                        <Field name="state" data={this.state.regionList} valueField="regionId" textField="name" category="person" component={DropdownList} />
                       </div>
                       <div className="col10 col-md-5 col-lg-4">
                         <label className="control-label">
@@ -856,7 +906,7 @@ class CreateEmployee extends Component {
                           <label className="control-label" style={{ marginBottom: 5 }}>
                             <Translate id="com.tempedge.msg.label.joblocation" />
                           </label>
-                          <Field name="joblocation" data={this.state.regionsList} valueField="regionId" textField="name" category="person" component={DropdownList} />
+                          <Field name="joblocation" data={this.state.regionList} valueField="regionId" textField="name" category="person" component={DropdownList} />
                         </div>
 
                         <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
@@ -869,7 +919,14 @@ class CreateEmployee extends Component {
                           <span style={{ display: 'none' }} ref="maritalstatusNegativeOption">
                             <Translate id="com.tempedge.msg.label.married" />
                           </span>
-                          <Field name="maritalstatusDropdown" data={this.state.maritalStatus} valueField="value" textField="maritalStatus" category="person" component={DropdownList} />
+                          <Field
+                            name="maritalstatusDropdown"
+                            data={this.state.maritalStatus}
+                            valueField="value"
+                            textField="maritalStatus"
+                            category="person"
+                            component={DropdownList}
+                          />
                         </div>
 
                         <div style={{ width: '60%', margin: 'auto' }}>
@@ -916,7 +973,14 @@ class CreateEmployee extends Component {
                               <span style={{ display: 'none' }} ref="backgroundtestNegativeOption">
                                 <Translate id="com.tempedge.msg.label.negative" />
                               </span>
-                              <Field name="backgroundTest" data={this.state.backgroundTest} valueField="value" textField="backgroundTest" category="person" component={DropdownList} />
+                              <Field
+                                name="backgroundTest"
+                                data={this.state.backgroundTest}
+                                valueField="value"
+                                textField="backgroundTest"
+                                category="person"
+                                component={DropdownList}
+                              />
                             </div>
                             {this.props.backgroundTest && typeof this.props.backgroundTest.backgroundTest === 'string' ? (
                               this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si' ? (
@@ -940,11 +1004,18 @@ class CreateEmployee extends Component {
                                 <label className="input-group-btn" style={{ width: '100%', textAlign: 'center' }}>
                                   <span className="btn department-list-button">
                                     <Translate id="com.tempedge.msg.label.choosefile" />
-                                    <input type="file" onChange={(e) => this.onChange(e.target.files[0], 'fileInputDocuments')} style={{ display: 'none' }} accept=".pdf" />
+                                    <input
+                                      ref={this.documentFileInput}
+                                      type="file"
+                                      name="documentFile"
+                                      onChange={(e) => this.onChangeFile(e, this.documentLabel)}
+                                      style={{ display: 'none' }}
+                                      accept=".pdf"
+                                    />
                                   </span>
                                 </label>
                                 <br />
-                                <p ref="fileInputDocuments" style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
+                                <p ref={this.documentLabel} style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
                               </div>
                             </div>
                           </div>
@@ -959,15 +1030,17 @@ class CreateEmployee extends Component {
                                   <span className="btn department-list-button">
                                     <Translate id="com.tempedge.msg.label.choosefile" />
                                     <input
+                                      ref={this.resumeFileInput}
+                                      name="resumeFile"
                                       type="file"
-                                      onChange={(e) => this.onChange(e.target.files[0], 'fileInputResume')}
+                                      onChange={(e) => this.onChangeFile(e, this.resumeLabel)}
                                       style={{ display: 'none' }}
-                                      accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .pdf"
+                                      accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
                                     />
                                   </span>
                                 </label>
                                 <br />
-                                <p ref="fileInputResume" style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }}></p>
+                                <p ref={this.resumeLabel} style={{ margin: '20px auto 0 auto', background: '#ffff', border: 'none', textAlign: 'center' }} />
                               </div>
                             </div>
                           </div>
@@ -1041,4 +1114,6 @@ let mapStateToProps = (state) => {
   };
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee));
+export default withLocalize(
+  connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee)
+);
