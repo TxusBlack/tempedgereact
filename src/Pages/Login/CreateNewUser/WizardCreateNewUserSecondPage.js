@@ -11,6 +11,7 @@ import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations.js';
+import { notify } from 'reapop';
 
 const $ = window.$;
 
@@ -123,15 +124,15 @@ class WizardCreateNewUserSecondPage extends Component {
                         <Translate id="com.tempedge.msg.label.client"></Translate>
                       </label>
                     ) : (
-                      <label className="control-label">
-                        <Translate id="com.tempedge.msg.label.office"></Translate>
-                      </label>
-                    )}
+                        <label className="control-label">
+                          <Translate id="com.tempedge.msg.label.office"></Translate>
+                        </label>
+                      )}
                     {roleName.indexOf('CLIENT') > -1 ? (
                       <Field name="agencyclient" type="text" placeholder="Enter Client" category="agency" component={InputBox} />
                     ) : (
-                      <Field name="agencyoffice" type="text" placeholder="Enter Office" category="agency" component={InputBox} />
-                    )}
+                        <Field name="agencyoffice" type="text" placeholder="Enter Office" category="agency" component={InputBox} />
+                      )}
                   </div>
                 </div>
                 {roleName.indexOf('CLIENT') < 0 ? (
@@ -144,8 +145,8 @@ class WizardCreateNewUserSecondPage extends Component {
                     </div>
                   </div>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
                 <div className="row">
                   <div className="captcha-container" style={{ marginTop: 40, marginLeft: '1.5rem' }}>
                     <div className="center-block captcha-panel" style={{ width: '304px' }}>
@@ -199,4 +200,4 @@ let mapStateToProps = (state) => {
   };
 };
 
-export default withLocalize(connect(mapStateToProps, { push, change })(WizardCreateNewUserSecondPage));
+export default withLocalize(connect(mapStateToProps, { push, change, notify })(WizardCreateNewUserSecondPage));

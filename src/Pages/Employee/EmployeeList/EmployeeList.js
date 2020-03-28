@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
+import { notify } from 'reapop';
 
 const api_url = '/api/person/list';
 
@@ -15,10 +16,10 @@ class EmployeeList extends Component {
     this.state = {
       tablePage: 0,
       filterBy: {
-        personType: '1'
+        personType: "1"
       },
       data: []
-    };
+    }
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
@@ -43,4 +44,4 @@ EmployeeList.propTypes = {
   tempedgeAPI: PropTypes.func.isRequired //Action, does the Fetch part from the posts API
 };
 
-export default withLocalize(connect(null, { push, tempedgeAPI })(EmployeeList));
+export default withLocalize(connect(null, { push, tempedgeAPI, notify })(EmployeeList));

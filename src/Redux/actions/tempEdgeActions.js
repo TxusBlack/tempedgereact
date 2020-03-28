@@ -63,7 +63,6 @@ export let doLogout = (lang) => {
       type: types.LOGOUT,
       payload: {}
     });
-
     history.push(`/auth/${lang}`);
   };
 };
@@ -205,12 +204,11 @@ export let getListSafe = (url, data, actionName) => {
 };
 
 export let getList = (url, actionName) => {
-  return (dispatch) => {
-    httpService.get(url).then((response) => {
-      dispatch({
-        type: actionName,
-        payload: response.data.result
-      });
+  return async (dispatch) => {
+    const response = await httpService.get(url);
+    dispatch({
+      type: actionName,
+      payload: response.data.result
     });
   };
 };

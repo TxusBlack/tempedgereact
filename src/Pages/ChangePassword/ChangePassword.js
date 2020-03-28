@@ -11,6 +11,7 @@ import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguage
 import { tempedgeAPI, clearTempedgeStoreProp } from '../../Redux/actions/tempEdgeActions';
 import types from '../../Redux/actions/types';
 import OutcomeBar from '../../components/common/OutcomeBar';
+import { notify } from 'reapop';
 
 const requestUrl = '/api/user/changePassword';
 
@@ -43,11 +44,11 @@ class ChangePassword extends React.Component {
       }
     }
 
-    const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      push(`/auth/${activeLanguage.code}`);
-      ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
+      this.props.push(`/user/changePass/${this.props.activeLanguage.code}`);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
 
@@ -198,4 +199,4 @@ ChangePassword = reduxForm({
   validate: Validate,
 })(ChangePassword);
 
-export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, reset, clearTempedgeStoreProp })(ChangePassword));
+export default withLocalize(connect(mapStateToProps, { tempedgeAPI, push, reset, clearTempedgeStoreProp, notify })(ChangePassword));

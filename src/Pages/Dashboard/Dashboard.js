@@ -7,14 +7,19 @@ import { Field, reduxForm } from 'redux-form';
 import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import InputBox from '../../components/common/InputBox/InputBox.js';
 import Validate from '../Validations/Validations';
+import { notify } from 'reapop';
 
-class GenericDashboard extends React.Component{
-  constructor(props){
+class GenericDashboard extends React.Component {
+  constructor(props) {
     super(props);
+    this.state = {
+      error: false
+    }
+    
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
@@ -23,17 +28,17 @@ class GenericDashboard extends React.Component{
     }
   }
 
-  render(){
-    let body =(
+  render() {
+    let body = (
       <div>
-        <h4 style={{textAlign: "center"}}>Dashboard Body</h4>
-        <p style={{textAlign: "center"}}>Content for Dashboard....</p>
+        <h4 style={{ textAlign: "center" }}>Dashboard Body</h4>
+        <p style={{ textAlign: "center" }}>Content for Dashboard....</p>
       </div>
     );
 
-    let footer = <p style={{textAlign: "center"}}>Here you can add a footer ot buttons.</p>
+    let footer = <p style={{ textAlign: "center" }}>Here you can add a footer ot buttons.</p>
 
-    return(
+    return (
       <ContainerBlue title="com.tempedge.msg.label.dashboard" children={body} btns={footer} />
     )
   }
@@ -46,4 +51,4 @@ GenericDashboard = reduxForm({
   validate: Validate
 })(GenericDashboard);
 
-export default withLocalize(connect(null, { push })(GenericDashboard));
+export default withLocalize(connect(null, { push, notify })(GenericDashboard));
