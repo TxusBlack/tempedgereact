@@ -8,16 +8,18 @@ let renderInput = (formProps) => {
   let errorClass = `${(formProps.meta.error && formProps.meta.touched) ? 'has-error' : ''}`;
   let input = null;
 
-  let value = formProps.input.value;
+  let { value, name, maxLength } = formProps.input;
   let phoneNumRegX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
   let timeRegX = new RegExp(/^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/g);
 
-  if (formProps.input.name === 'username') {
+  if (name === 'username') {
     value = formProps.input.value;
-  } else if (typeof formProps.input.value !== 'undefined') {
-    value = formProps.input.value.toUpperCase();
-    if (formProps.input.name === 'firstName' || formProps.input.name === 'middleName_' || formProps.input.name === 'lastName') {
-      value = formProps.input.value.replace(/[^a-zA-Z]+/g, '');
+  } else if (typeof value !== 'undefined') {
+    value = value.toUpperCase();
+    if (name === 'firstName' || name === 'middleName_' || name === 'lastName') {
+      value = value.replace(/[^a-zA-Z]+/g, '');
+    } else if (name === 'employeeid') {
+      value = value.slice(0, 8);
     }
   } else if (timeRegX.test(value)) {
     value = value.toString();
