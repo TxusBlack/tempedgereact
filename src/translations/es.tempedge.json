@@ -229,6 +229,9 @@
   "com.tempedge.msg.info.body.password_changed"                       : "Tu contraseña ha sido cambiada con éxito",
   "com.tempedge.msg.info.title.invalid_password"                      : "Contraseña inválida",
   "com.tempedge.msg.info.body.invalid_password"                       : "Revisa tu contraseña actual por favor",
+  "com.tempedge.warning.maxSizeAllowedForFiles"                       : "El tamaño máximo permitido para archivos es ${maxSizeAllowedForFiles} megabytes.",
+  "com.tempedge.warning.pdfInvalidFileType"                           : "Formato de archivo no válido. Solo se permiten archivos en formato PDF.",
+  "com.tempedge.warning.invalidFileType"                              : "Formato de archivo no válido. Solo se permiten archivos con extensión .pdf, .doc y .docx.",
   "com.tempedge.button.accept"                                        : "Aceptar",
   "com.tempedge.msg.info.signOut"                                     : "CERRAR SESIÓN"
 }
