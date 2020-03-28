@@ -8,7 +8,7 @@ let renderInput = (formProps) => {
   let errorClass = `${(formProps.meta.error && formProps.meta.touched) ? 'has-error' : ''}`;
   let input = null;
 
-  let { value, name, maxLength } = formProps.input;
+  let { value, name } = formProps.input;
   let phoneNumRegX = new RegExp(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g);
   let timeRegX = new RegExp(/^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$/g);
 
