@@ -24,6 +24,7 @@ import normalizeSSN from '../../Normalizers/normalizeSSN.js';
 import ModalSimple from '../../../Modals/ModalSimple/ModalSimple.js';
 import DepartmentList from '../../Department/DepartmentList/DepartmentList';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
+import { notify } from 'reapop';
 import OutcomeBar from '../../../components/common/OutcomeBar';
 
 const { $ } = window;
@@ -402,7 +403,7 @@ class CreateEmployee extends Component {
   };
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
     let gendersTranslate = [];
     let drugTest = [];
@@ -575,6 +576,29 @@ class CreateEmployee extends Component {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
         }
       );
+      debugger;
+    });
+  };
+
+  convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      // Select the very first file from list
+      let fileToLoad = file;
+      // FileReader function for read the file.
+      let fileReader = new FileReader();
+      let base64;
+
+      // Convert data to base64
+      fileReader.readAsDataURL(fileToLoad);
+
+      // Onload of file read the file content
+      fileReader.onload = function (fileLoadedEvent) {
+        base64 = fileLoadedEvent.target.result;
+        base64 = base64.replace('data:application/pdf;base64,', '');
+
+        // return base 64 data
+        resolve(base64);
+      };
     });
   };
 
@@ -868,33 +892,33 @@ class CreateEmployee extends Component {
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                              let listLen = this.props.skillsList.length;
+                            let listLen = this.props.skillsList.length;
 
-                              if (index < (listLen - 1) / 2) {
-                                return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                  </div>
-                                );
-                              }
-                            })
+                            if (index < (listLen - 1) / 2) {
+                              return (
+                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                </div>
+                              );
+                            }
+                          })
                           : ''}
                       </div>
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                              let listLen = this.props.skillsList.length;
+                            let listLen = this.props.skillsList.length;
 
-                              if (index > (listLen - 1) / 2) {
-                                return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                  </div>
-                                );
-                              }
-                            })
+                            if (index > (listLen - 1) / 2) {
+                              return (
+                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                </div>
+                              );
+                            }
+                          })
                           : ''}
                       </div>
                     </div>
@@ -958,11 +982,11 @@ class CreateEmployee extends Component {
                               this.props.drugTest.drugTest === 'Yes' || this.props.drugTest.drugTest === 'Si' ? (
                                 drugTestDate
                               ) : (
-                                <div style={{ height: 77 }}></div>
-                              )
+                                  <div style={{ height: 77 }}></div>
+                                )
                             ) : (
-                              <div style={{ height: 77 }}></div>
-                            )}
+                                <div style={{ height: 77 }}></div>
+                              )}
                           </div>
 
                           <div className="col-md-6">
@@ -989,11 +1013,11 @@ class CreateEmployee extends Component {
                               this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si' ? (
                                 backgroundTestDate
                               ) : (
-                                <div style={{ height: 77 }}></div>
-                              )
+                                  <div style={{ height: 77 }}></div>
+                                )
                             ) : (
-                              <div style={{ height: 77 }}></div>
-                            )}
+                                <div style={{ height: 77 }}></div>
+                              )}
                           </div>
                         </div>
                         <hr style={{ margin: '40px 0 25px 0' }} />
@@ -1118,5 +1142,5 @@ let mapStateToProps = (state) => {
 };
 
 export default withLocalize(
-  connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField })(CreateEmployee)
+  connect(mapStateToProps, { push, change, initialize, getList, tempedgeAPI, tempedgeMultiPartApi, getListSafe, clearTempedgeStoreProp, clearErrorField, notify })(CreateEmployee)
 );

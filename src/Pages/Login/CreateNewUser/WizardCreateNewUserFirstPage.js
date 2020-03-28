@@ -8,9 +8,7 @@ import Dropdown from '../../../components/common/Dropdown/Dropdown.js';
 import DropdownList from 'react-widgets/lib/DropdownList'; //DO NOT REMOVE or it will break
 import DateTime from '../../../components/common/DateTimePicker/DateTimePicker.js';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'; //DO NOT REMOVE or it will break
-
 import Datepicker from '../../../components/common/Datepicker/Datepicker';
-
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
@@ -18,6 +16,7 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
 const $ = window.$;
 
@@ -52,7 +51,7 @@ class WizardCreateNewUserFirstPage extends Component {
   }
 
   addTranslationsForActiveLanguage = async () => {
-    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
     let gendersTranslate = [];
     gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
@@ -189,4 +188,4 @@ WizardCreateNewUserFirstPage = reduxForm({
   validate: Validate
 })(WizardCreateNewUserFirstPage);
 
-export default withLocalize(connect(null, { push })(WizardCreateNewUserFirstPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewUserFirstPage));

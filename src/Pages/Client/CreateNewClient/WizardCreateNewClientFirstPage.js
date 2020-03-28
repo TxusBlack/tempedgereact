@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
 class WizardCreateNewUserFirstPage extends Component {
   constructor(props) {
@@ -230,8 +231,9 @@ let mapStateToProps = (state) => {
 
   return {
     clientDepartments: clientdepartments,
-    salesmanList: state.tempEdge.salesmanList && state.tempEdge.salesmanList.data && state.tempEdge.salesmanList.data.result ? state.tempEdge.salesmanList.data.result.content : []
+    salesmanList:
+      state.tempEdge.salesmanList && state.tempEdge.salesmanList.data && state.tempEdge.salesmanList.data.result ? state.tempEdge.salesmanList.data.result.content : []
   };
 };
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewUserFirstPage));
+export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewUserFirstPage));

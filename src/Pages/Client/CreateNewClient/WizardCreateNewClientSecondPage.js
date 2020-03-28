@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form';
 import InputBox from '../../../components/common/InputBox/InputBox.js';
-
 import DropdownList from '../../../components/common/Dropdown/DropdownList';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser.js';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
@@ -10,9 +9,10 @@ import { connect } from 'react-redux';
 import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
-class WizardCreateNewUserSecondPage extends Component{
-  constructor(props){
+class WizardCreateNewUserSecondPage extends Component {
+  constructor(props) {
     super(props);
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
@@ -24,7 +24,7 @@ class WizardCreateNewUserSecondPage extends Component{
     region_list: []
   }
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     let list = await CountryRegionParser.getCountryList(this.props.country_region_list).country_list;
 
     this.setState(() => ({
@@ -35,23 +35,23 @@ class WizardCreateNewUserSecondPage extends Component{
     //this.props.setDepartmentList(<FieldArray name="clientdepartments" type="text" component={this.renderClientDepartments} />);
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
-    if(hasActiveLanguageChanged){
+    if (hasActiveLanguageChanged) {
       this.props.push(`/client/new/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
 
-  componentWillReceiveProps = async(nextProps) => {
-    if(typeof nextProps.country === 'undefined' || nextProps.country === ''){
+  componentWillReceiveProps = async (nextProps) => {
+    if (typeof nextProps.country === 'undefined' || nextProps.country === '') {
       let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, "United States");
 
       this.setState({
         region_list: regionsList
       });
-    }else{
+    } else {
       let regionsList = await CountryRegionParser.getRegionList(this.props.country_region_list, nextProps.country.name);
 
       this.setState({
@@ -60,48 +60,48 @@ class WizardCreateNewUserSecondPage extends Component{
     }
   }
 
-  render(){
+  render() {
     let countryList = this.state.country_list;
     let regionList = this.state.region_list;
 
-    return(
-      <div className="sign-up-wrapper" style={{margin: 0}} ref="createNewUser1">
+    return (
+      <div className="sign-up-wrapper" style={{ margin: 0 }} ref="createNewUser1">
         <h2 className="text-center page-title-new-client"><Translate id="com.tempedge.msg.label.createNewClient"></Translate></h2>
         {this.props.resultBar}
-          <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{paddingBottom: "0px"}}>
-            <div className="row new-client-form">
-              <div className="col-lg-8 client-col">
-                <div className="create-client">
-                  <div className="new-client-header">
-                    <h2>Create Client</h2>
-                  </div>
-                  <div className="new-clients-contents">
-                    <div className="client-contents">
-                      <div className="form-group row">
-                        <div className="col-md-4">
-                          <label className="control-label"><Translate id="com.tempedge.msg.label.country"></Translate></label>
-                          <Field name="clientcountry" data={countryList} valueField="countryId" textField="name" category="agency" component={DropdownList} />
-                        </div>
-                        <div className="col-md-8">
-                          <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
-                          <Field name="clientaddress" type="text" placeholder="Enter Address" category="agency" component={InputBox} />
-                        </div>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block" style={{ paddingBottom: "0px" }}>
+          <div className="row new-client-form">
+            <div className="col-lg-8 client-col">
+              <div className="create-client">
+                <div className="new-client-header">
+                  <h2>Create Client</h2>
+                </div>
+                <div className="new-clients-contents">
+                  <div className="client-contents">
+                    <div className="form-group row">
+                      <div className="col-md-4">
+                        <label className="control-label"><Translate id="com.tempedge.msg.label.country"></Translate></label>
+                        <Field name="clientcountry" data={countryList} valueField="countryId" textField="name" category="agency" component={DropdownList} />
                       </div>
+                      <div className="col-md-8">
+                        <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
+                        <Field name="clientaddress" type="text" placeholder="Enter Address" category="agency" component={InputBox} />
+                      </div>
+                    </div>
 
-                      <div className="form-group row bottom-row">
-                        <div className="col-md-4">
-                          <label className="control-label"><Translate id="com.tempedge.msg.label.city"></Translate></label>
-                          <Field name="clientcity" type="text" placeholder="Enter City" category="agency" component={InputBox} />
-                        </div>
-                        <div className="col-md-4">
-                          <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
-                          <Field name="clientstate" data={regionList} valueField="regionId" textField="name" category="agency" component={DropdownList} />
-                        </div>
-                        <div className="col-md-4">
-                          <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode"></Translate></label>
-                          <Field name="clientzipcode" type="text" placeholder="Enter Zip Code" category="agency" component={InputBox} />
-                        </div>
+                    <div className="form-group row bottom-row">
+                      <div className="col-md-4">
+                        <label className="control-label"><Translate id="com.tempedge.msg.label.city"></Translate></label>
+                        <Field name="clientcity" type="text" placeholder="Enter City" category="agency" component={InputBox} />
                       </div>
+                      <div className="col-md-4">
+                        <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
+                        <Field name="clientstate" data={regionList} valueField="regionId" textField="name" category="agency" component={DropdownList} />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode"></Translate></label>
+                        <Field name="clientzipcode" type="text" placeholder="Enter Zip Code" category="agency" component={InputBox} />
+                      </div>
+                    </div>
 
                     <div className="new-clients-footer">
                       <div className="prev-next-btns-agency row">
@@ -126,7 +126,7 @@ class WizardCreateNewUserSecondPage extends Component{
 
                 <div className="department-list-contents">
                   <div>
-                    { (!this.props.renderAddBtnDirty)? this.props.renderAddBtn(): <div>{this.props.departmentList}{this.props.addDeptBtn}</div> }
+                    {(!this.props.renderAddBtnDirty) ? this.props.renderAddBtn() : <div>{this.props.departmentList}{this.props.addDeptBtn}</div>}
                   </div>
                 </div>
               </div>
@@ -148,10 +148,10 @@ WizardCreateNewUserSecondPage = reduxForm({
 let mapStateToProps = (state) => {
   let selector = formValueSelector('CreateNewClient'); // <-- same as form name
 
-  return({
+  return ({
     country_region_list: state.tempEdge.country_region_list,
     country: selector(state, 'clientcountry')
   });
 }
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewUserSecondPage));
+export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewUserSecondPage));
