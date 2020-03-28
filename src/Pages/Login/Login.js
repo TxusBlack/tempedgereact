@@ -37,16 +37,25 @@ class Login extends Component {
     });
   }
 
-  componentDidMount = () => {
-    document.title = "ProStaff";
-    let token = sessionStorage.getItem('access_token');
+  componentDidMount = async () => {
+    try {
+      document.title = "ProStaff";
+      let token = sessionStorage.getItem('access_token');
+      await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+      this.setState({ error: false });
+      httpService.tokenValidation("/oauth/check_token", token)
+        .then(response => {
+          if (typeof response !== 'undefined' && response.error !== "invalid_token") {
+            this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
+          }
+        });
+    } catch (err) {
+      if (!this.state.error) {
+        this.setState({ error: true });
+        this.showResultBar(err, 'fail');
+      }
+    }
 
-    httpService.tokenValidation("/oauth/check_token", token)
-      .then(response => {
-        if (typeof response !== 'undefined' && response.error !== "invalid_token") {
-          this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
-        }
-      });
   }
 
   componentDidUpdate(prevProps, prevState) {
