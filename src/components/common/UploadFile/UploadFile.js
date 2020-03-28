@@ -1,17 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import XLSX from 'xlsx';
+import { store } from '../../../store/store';
 
 const $ = window.$;
 
-class UploadFile extends React.Component{
+class UploadFile extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     this.addTranslationsForActiveLanguage();
   }
 
-  state ={ workSheet: null };
+  state = { workSheet: null };
 
   componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
@@ -23,22 +24,24 @@ class UploadFile extends React.Component{
   }
 
   addTranslationsForActiveLanguage() {
-    const {activeLanguage} = this.props;
+    const { activeLanguage } = this.props;
+    const state = store.getState();
 
     if (!activeLanguage) {
       return;
     }
 
-    import(`../../../translations/${activeLanguage.code}.tempedge.json`)
-      .then(translations => {
-        this.props.addTranslationForLanguage(translations, activeLanguage.code)
-      });
+    if (activeLanguage.code === 'es') {
+      this.props.addTranslationForLanguage(state.tempEdge.lang.spanish, activeLanguage.code)
+    } else {
+      this.props.addTranslationForLanguage(state.tempEdge.lang.english, activeLanguage.code)
+    }
   }
 
   onChange = (file) => {
     let readOnlyTextBox = $(ReactDOM.findDOMNode(this.refs.fileInputName));
 
-    if( readOnlyTextBox.length )
+    if (readOnlyTextBox.length)
       readOnlyTextBox.val(file.name.replace(/\\/g, '/').replace(/.*\//, ''));
 
     let reader = new FileReader();
@@ -49,7 +52,7 @@ class UploadFile extends React.Component{
     reader.onload = (event) => { //(on_file_select_event)
       /* Parse data */
       let binaryData = event.target.result;   //'result' if not 'null', contains the contents of the file as a binary string
-      let workbook = XLSX.read(binaryData, {type:'binary'});    //Contains all worksheets
+      let workbook = XLSX.read(binaryData, { type: 'binary' });    //Contains all worksheets
 
       /* Get first worksheet */
       let sheetName = workbook.SheetNames[0];          //Name for first worksheet
@@ -70,15 +73,15 @@ class UploadFile extends React.Component{
     //AJAX POST CALL to send file to SERVER as a Blob
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="col-lg-6 col-sm-6 col-12">
         <h4>Upload File</h4>
         <form onSubmit={this.onSubmit}>
           <div className="input-group">
             <label className="input-group-btn">
               <span className="btn btn-primary">
-                Browse&hellip; <input type="file" onChange={(e) => this.onChange(e.target.files[0])}  style={{display: "none"}} />
+                Browse&hellip; <input type="file" onChange={(e) => this.onChange(e.target.files[0])} style={{ display: "none" }} />
               </span>
             </label>
             <input type="text" className="form-control" ref="fileInputName" readOnly />
