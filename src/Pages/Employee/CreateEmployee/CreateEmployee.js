@@ -699,19 +699,19 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.firstname" />
                         </label>
-                        <Field name="firstName" type="text" placeholder="First Name" category="person" component={InputBox} />
+                        <Field name="firstName" type="text" placeholder="First Name" category="person" pattern="[a-zA-Z]*" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.middlename"></Translate>
                         </label>
-                        <Field name="middleName_" type="text" placeholder="Middle Name" category="person" component={InputBox} />
+                        <Field name="middleName_" type="text" placeholder="Middle Name" category="person" pattern="[a-zA-Z]*" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.lastname"></Translate>
                         </label>
-                        <Field name="lastName" type="text" placeholder="Last Name" category="person" component={InputBox} />
+                        <Field name="lastName" type="text" placeholder="Last Name" category="person" pattern="[a-zA-Z]*" component={InputBox} />
                       </div>
                     </div>
 
@@ -819,7 +819,7 @@ class CreateEmployee extends Component {
 
                               if (index < (listLen - 1) / 2) {
                                 return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
                                     <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
                                     <span style={{ paddingLeft: 10 }}>{item.skill}</span>
                                   </div>
@@ -835,7 +835,7 @@ class CreateEmployee extends Component {
 
                               if (index > (listLen - 1) / 2) {
                                 return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
                                     <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
                                     <span style={{ paddingLeft: 10 }}>{item.skill}</span>
                                   </div>
