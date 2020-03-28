@@ -44,10 +44,10 @@ class ChangePassword extends React.Component {
       }
     }
 
-    const hasActiveLanguageChanged = prevProps.activeLanguage !== activeLanguage;
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
-      push(`/auth/${activeLanguage.code}`);
+      this.props.push(`/user/changePass/${this.props.activeLanguage.code}`);
       ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
