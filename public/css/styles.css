@@ -96,11 +96,11 @@ body {
 }
 
 .facemash-modal {
-  background: #565656;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .facemash-modal .modal-dialog {
-  max-width: 90%;
+  min-width: 500px;
   margin: 1.75rem auto;
 }
 
@@ -1630,6 +1630,37 @@ form div.list .list-item:last-child button {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
 }
+
+.symbol-button {
+  background-color: var(--normal-blue);
+  color: white;
+  width: 100%;
+  border-radius: 1.6rem;
+  min-width: 32px;
+  max-width: 60px;
+}
+.symbol-button:hover {
+  color: white;
+}
+
+.table-hover tbody tr:hover,
+.table-hover .table-active:hover {
+  cursor: pointer;
+  background-color: var(--tempedge-light-orange);
+  color: white;
+}
+
+.table-active,
+.table-active > td,
+.table-active > th {
+  background-color: var(--tempedge-orange);
+  color: white;
+}
+
+.modal-lg {
+  max-width: 1200px;
+}
+
 .progress {
   height: 1.5rem;
   font-size: 1.25rem;
@@ -1638,4 +1669,8 @@ form div.list .list-item:last-child button {
 
 .progress-bar {
   background-color: var(--normal-blue);
+}
+
+p {
+  word-break: break-all;
 }

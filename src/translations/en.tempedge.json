@@ -213,6 +213,9 @@
   "com.tempedge.msg.info.msg.success"                                 : "Process Complete!",
   "com.tempedge.error.emailalreadyexist"                              : "Email registered already.",
   "com.tempedge.error.useralreadyexist"                               : "User already Exists.",
+  "com.tempedge.msg.label.orgdepartment"                              : "Department code",
+  "com.tempedge.msg.label.orgdeptname"                                : "Department name",
+  "com.tempedge.table.title.label.departmentList"                     : "Department list",
   "com.tempedge.msg.label.uploadEmployeeList"                         : "Upload employee list",
   "com.tempedge.msg.label.upload"                                     : "Upload",
   "com.tempedge.msg.info.title.employeeCreated"                       : "Process Complete! <br/> New employees: ${newEmployees} <br/> Modified employees: ${modEmployees}",
@@ -226,5 +229,9 @@
   "com.tempedge.msg.info.body.password_changed"                       : "Your password has been changed successful",
   "com.tempedge.msg.info.title.invalid_password"                      : "Invalid current password",
   "com.tempedge.msg.info.body.invalid_password"                       : "Please, check your current password",
+  "com.tempedge.warning.maxSizeAllowedForFiles"                       : "The maximum size allowed for files is ${maxSizeAllowedForFiles} megabytes.",
+  "com.tempedge.warning.pdfInvalidFileType"                           : "Invalid file format. Only PDF files are allowed.",
+  "com.tempedge.warning.invalidFileType"                              : "Invalid file format. Only .pdf, .doc and .docx extensions are allowed.",
+  "com.tempedge.button.accept"                                        : "Ok",
   "com.tempedge.msg.info.signOut"                                     : "SIGN OUT"
 }
