@@ -889,9 +889,7 @@ class CreateEmployee extends Component {
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-<<<<<<< HEAD
                               let listLen = this.props.skillsList.length;
-
                               if (index < (listLen - 1) / 2) {
                                 return (
                                   <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
@@ -901,27 +899,12 @@ class CreateEmployee extends Component {
                                 );
                               }
                             })
-=======
-                            let listLen = this.props.skillsList.length;
-
-                            if (index < (listLen - 1) / 2) {
-                              return (
-                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                </div>
-                              );
-                            }
-                          })
->>>>>>> firstversion
                           : ''}
                       </div>
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-<<<<<<< HEAD
                               let listLen = this.props.skillsList.length;
-
                               if (index > (listLen - 1) / 2) {
                                 return (
                                   <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
@@ -931,19 +914,6 @@ class CreateEmployee extends Component {
                                 );
                               }
                             })
-=======
-                            let listLen = this.props.skillsList.length;
-
-                            if (index > (listLen - 1) / 2) {
-                              return (
-                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                </div>
-                              );
-                            }
-                          })
->>>>>>> firstversion
                           : ''}
                       </div>
                     </div>
