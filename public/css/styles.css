@@ -1670,3 +1670,7 @@ form div.list .list-item:last-child button {
 .progress-bar {
   background-color: var(--normal-blue);
 }
+
+p {
+  word-break: break-all;
+}

@@ -11,15 +11,16 @@
 }
 
 .success {
-  background-color: #98fb98;
-  color: #008000;
+  background-color: var(--success-result-bar-bkg-color);
+  color: var(--success-result-bar-font-color);
 }
+
 .warning {
   background-color: #fff3cd;
   color: #856404;
 }
 
 .fail {
-  background-color: #ff9999;
-  color: #ff0000;
+  background-color: var(--error-result-bar-bkg-color);
+  color: var(--error-result-bar-font-color);
 }

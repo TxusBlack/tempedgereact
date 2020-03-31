@@ -22,10 +22,22 @@ class NewInternalPayroll extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            error: false
         }
 
-        ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+        ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => {
+            this.setState({ error: false })
+        }).catch(err => {
+            if (!this.state.error) {
+                this.setState({ error: true });
+                this.fireNotification('Error',
+                    this.props.activeLanguage.code === 'en'
+                        ? 'It is not posible to proccess this transaction. Please try again later'
+                        : 'En este momento no podemos procesar esta transacción. Por favor intente mas tarde.',
+                    'error'
+                );
+            }
+        });
     }
 
     componentDidMount = async () => {
@@ -40,7 +52,7 @@ class NewInternalPayroll extends Component {
 
         if (hasActiveLanguageChanged) {
             this.props.push(`/intpayroll/new/${this.props.activeLanguage.code}`);
-            ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+            ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage).then(() => this.setState({ error: false }));
         }
 
 
@@ -329,6 +341,19 @@ class NewInternalPayroll extends Component {
         //TODO when save, go to internal payroll list
         this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
 
+    }
+
+    fireNotification = (title, message, status) => {
+        let { notify } = this.props;
+
+        notify({
+            title,
+            message,
+            status,
+            position: 'br',
+            dismissible: true,
+            dismissAfter: 3000
+        });
     }
 
     render() {

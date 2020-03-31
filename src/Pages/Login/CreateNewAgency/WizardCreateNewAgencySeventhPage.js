@@ -7,17 +7,18 @@ import { withLocalize, Translate } from 'react-localize-redux';
 import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
+import { notify } from 'reapop';
 
-class WizardCreateNewAgencySeventhPage extends Component{
-  constructor(props){
+class WizardCreateNewAgencySeventhPage extends Component {
+  constructor(props) {
     super(props);
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  state= { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
+  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
 
     if (hasActiveLanguageChanged) {
@@ -38,30 +39,30 @@ class WizardCreateNewAgencySeventhPage extends Component{
   setCaptchaRef = (ref) => {
     this.setState(
       () => {
-        return{
+        return {
           captchaRef: React.createRef(ref)
         }
-    });
+      });
   }
 
   generateCaptcha = (formProps) => {
     return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
   }
-
-  render(){
+  
+  render() {
     console.log("Seventh Page");
 
-    return(
+    return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{paddingBottom: "0px"}}>
+        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
           <div className="form-group row row-agency-name">
             <div className="col-md-6">
               <div className="row">
                 <div className="col-md-2">
-                  <label className="control-label pull-right" style={{paddingTop: 8}}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
+                  <label className="control-label pull-right" style={{ paddingTop: 8 }}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
                 </div>
-                <div className="col-md-8" style={{paddingLeft: 0, paddingRight: 71}}>
+                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
                   <Field name="agencyname" type="text" placeholder="Agency Name" active="disabled" component={InputBox} />
                 </div>
               </div>
@@ -131,4 +132,4 @@ WizardCreateNewAgencySeventhPage = reduxForm({
   validate: Validate
 })(WizardCreateNewAgencySeventhPage);
 
-export default withLocalize(connect(mapStateToProps, { push })(WizardCreateNewAgencySeventhPage));
+export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewAgencySeventhPage));
