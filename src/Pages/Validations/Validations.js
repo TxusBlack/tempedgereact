@@ -115,6 +115,10 @@ let validate = (formValues) => {
     errors.backgroundTestDate = 'Background check date is required.';
   }
 
+  if (!formValues.backgroundTest) {
+    errors.backgroundTest = 'Background check is required.';
+  }
+
   if (!formValues.joblocation) {
     errors.joblocation = 'Job location required.';
   }
