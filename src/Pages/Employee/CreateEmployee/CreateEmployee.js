@@ -889,31 +889,31 @@ class CreateEmployee extends Component {
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                              let listLen = this.props.skillsList.length;
-                              if (index < (listLen - 1) / 2) {
-                                return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
-                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                  </div>
-                                );
-                              }
-                            })
+                            let listLen = this.props.skillsList.length;
+                            if (index < (listLen - 1) / 2) {
+                              return (
+                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
+                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                </div>
+                              );
+                            }
+                          })
                           : ''}
                       </div>
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                              let listLen = this.props.skillsList.length;
-                              if (index > (listLen - 1) / 2) {
-                                return (
-                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
-                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                  </div>
-                                );
-                              }
-                            })
+                            let listLen = this.props.skillsList.length;
+                            if (index > (listLen - 1) / 2) {
+                              return (
+                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }} key={index}>
+                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                </div>
+                              );
+                            }
+                          })
                           : ''}
                       </div>
                     </div>
@@ -1076,12 +1076,12 @@ class CreateEmployee extends Component {
                   <div className="prev-next-btns-agency row" style={{ marginTop: 30 }}>
                     <div className="col-md-5 offset-md-1">
                       <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>
-                        Cancel
+                        <Translate id="com.tempedge.msg.label.cancel" />
                       </button>
                     </div>
                     <div className="col-md-5">
                       <button type="submit" className="btn btn-primary btn-block register-save-btn next">
-                        Save
+                        <Translate id="com.tempedge.msg.label.save" />
                       </button>
                     </div>
                   </div>
