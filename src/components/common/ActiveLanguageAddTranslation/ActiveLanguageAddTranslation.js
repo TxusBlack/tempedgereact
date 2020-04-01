@@ -37,14 +37,11 @@ let addTranslationsForActiveLanguage = async (activeLanguage, addTranslationForL
         default:
       }
 
-      console.log('1');
-
       // if (!activeLanguage) {
       //   return;
       // }
 
       addTranslationForLanguage(translations, activeLanguage.code);
-      console.log('2');
       resolve();
     } catch (error) {
       let translations = translationsEN;
