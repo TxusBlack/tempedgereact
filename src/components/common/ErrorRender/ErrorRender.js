@@ -44,6 +44,12 @@ let renderError = (props) => {
       case "Country is required.":
         fieldId = "com.tempedge.error.countryrequired";
         break;
+      case 'Email field is required.':
+        fieldId = 'com.tempedge.error.person.emailrequired';
+        break;
+      case 'Invalid email address.':
+        fieldId = 'com.tempedge.error.person.emailrequired';
+        break;
       default:
     }
 
