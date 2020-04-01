@@ -20,6 +20,8 @@ let renderInput = (formProps) => {
       value = value.replace(/[^a-zA-Z]+/g, '');
     } else if (name === 'employeeid') {
       value = value.slice(0, 8);
+    } else if (name === 'zip') {
+      value = value.replace(/[^\d]/g, '').slice(0, 8);
     }
   } else if (timeRegX.test(value)) {
     value = value.toString();
