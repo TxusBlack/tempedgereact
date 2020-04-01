@@ -79,8 +79,8 @@ let validate = (formValues) => {
     errors.hireDate_ = 'Hire date required.';
   }
 
-  if (!formValues.phone) {
-    errors.phone = 'Please enter phone number';
+  if (!formValues.phone || formValues.phone.length < 14) {
+    errors.phone = 'Please enter a phone number.';
   }
 
   if (!formValues.country) {
