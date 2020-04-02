@@ -26,10 +26,10 @@ class WizardCreateNewUserFirstPage extends Component {
   constructor(props) {
     super(props);
 
-    this.addTranslationsForActiveLanguage();
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
   }
 
-  state = { mounted: false, genders: [] };
+  state = { mounted: false };
 
   componentDidMount() {
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewUser1));
@@ -46,137 +46,115 @@ class WizardCreateNewUserFirstPage extends Component {
 
     if (hasActiveLanguageChanged) {
       this.props.push(`/register/${this.props.activeLanguage.code}`);
-      this.addTranslationsForActiveLanguage();
     }
   }
-
-  addTranslationsForActiveLanguage = async () => {
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
-
-    let gendersTranslate = [];
-    gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
-    gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
-
-    if (this.state.mounted && gendersTranslate.length !== 0) {
-      this.setState(() => ({
-        genders: gendersTranslate
-      }));
-    }
-  };
 
   render() {
     let signInRoute = `/auth/${this.props.activeLanguage.code}`;
 
     return (
-      <div className='sign-up-wrapper' style={{ margin: 0 }} ref='createNewUser1'>
-        <h2 className='text-center page-title-register'>
-          <Translate id='com.tempedge.msg.label.sign_up'></Translate>
-        </h2>
-        <h3 className='text-center page-subtitle page-subtitle-register'>
-          <Translate id='com.tempedge.msg.label.sign_up.subtitle'></Translate>
-        </h3>
-        <div className='panel register-form-panel'>
-          <div className='panel-heading register-header'>
-            <h2 className='text-center'>
-              <Translate id='com.tempedge.msg.label.accountinformation'></Translate>
-            </h2>
-          </div>
-        </div>
-        <div className='register-form-panel-inputs'>
-          <form className='panel-body form-horizontal center-block register-form' onSubmit={this.props.handleSubmit(this.props.onSubmit)} style={{ paddingBottom: '0px' }}>
-            <div className='form-group row'>
-              {this.props.errata}
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.firstname'></Translate>
-                </label>
-                <Field name='firstName' type='text' placeholder='First Name' category='person' component={InputBox} />
+      <div className="sign-up-wrapper" style={{ margin: 0 }} ref="createNewUser1">
+        <Translate>
+          {({ translate }) => (
+            <>
+              <h2 className="text-center page-title-register">{translate('com.tempedge.msg.label.sign_up')}</h2>
+              <h3 className="text-center page-subtitle page-subtitle-register">{translate('com.tempedge.msg.label.sign_up.subtitle')}</h3>
+              <div className="panel register-form-panel">
+                <div className="panel-heading register-header">
+                  <h2 className="text-center">{translate('com.tempedge.msg.label.accountinformation')}</h2>
+                </div>
               </div>
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.middlename'></Translate>
-                </label>
-                <Field name='middleName' type='text' placeholder='Middle Name' category='person' component={InputBox} />
-              </div>
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.lastname'></Translate>
-                </label>
-                <Field name='lastName' type='text' placeholder='Last Name' category='person' component={InputBox} />
-              </div>
-            </div>
+              <div className="register-form-panel-inputs">
+                <form className="panel-body form-horizontal center-block register-form" onSubmit={this.props.handleSubmit(this.props.onSubmit)} style={{ paddingBottom: '0px' }}>
+                  <div className="form-group row">
+                    {this.props.errata}
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.firstname')}</label>
+                      <Field name="firstName" type="text" placeholder={translate('com.tempedge.msg.label.firstname')} category="person" component={InputBox} />
+                    </div>
 
-            <div className='form-group row'>
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.gender' />
-                </label>
-                <span style={{ display: 'none' }} ref='maleOption'>
-                  <Translate id='com.tempedge.msg.label.gender.male' />
-                </span>
-                <span style={{ display: 'none' }} ref='femaleOption'>
-                  <Translate id='com.tempedge.msg.label.gender.female' />
-                </span>
-                <Field id='genderDropdown' name='gender' data={this.state.genders} valueField='value' textField='gender' category='person' component={Dropdown} />
-              </div>
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.email' />
-                </label>
-                <Field name='email' type='email' placeholder='Email' category='person' component={InputBox} />
-              </div>
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.birthday' />
-                </label>
-                <Field name='birthday' type='text' category='person' customClass='form-control tempEdge-input-box' component={Datepicker} />
-              </div>
-            </div>
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.middlename')}</label>
+                      <Field name="middleName" type="text" placeholder={translate('com.tempedge.msg.label.middlename')} category="person" component={InputBox} />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.lastname')}</label>
+                      <Field name="lastName" type="text" placeholder={translate('com.tempedge.msg.label.lastname')} category="person" component={InputBox} />
+                    </div>
+                  </div>
 
-            <div className='form-group row'>
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.username' />
-                </label>
-                <Field name='username' type='text' placeholder='Enter username' category='person' component={InputBox} />
-              </div>
+                  <div className="form-group row">
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.gender')}</label>
+                      <Field
+                        id="genderDropdown"
+                        name="gender"
+                        data={[translate('com.tempedge.msg.label.gender.male'), translate('com.tempedge.msg.label.gender.female')]}
+                        valueField="value"
+                        textField="gender"
+                        category="person"
+                        component={Dropdown}
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.email')}</label>
+                      <Field name="email" type="email" placeholder={translate('com.tempedge.msg.label.email')} category="person" component={InputBox} />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.birthday')}</label>
+                      <Field
+                        name="birthday"
+                        type="text"
+                        placeholder={translate('com.tempedge.msg.label.birthday')}
+                        category="person"
+                        customClass="form-control tempEdge-input-box"
+                        component={Datepicker}
+                      />
+                    </div>
+                  </div>
 
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.password' />
-                </label>
-                <Field name='initialpassword' type='password' placeholder='Enter password' category='person' component={InputBox} />
-              </div>
+                  <div className="form-group row">
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.username')}</label>
+                      <Field name="username" type="text" placeholder={translate('com.tempedge.msg.label.username')} category="person" component={InputBox} />
+                    </div>
 
-              <div className='col-md-4'>
-                <label className='control-label'>
-                  <Translate id='com.tempedge.msg.label.confirmpassword' />
-                </label>
-                <Field name='confirmpassword' type='password' placeholder='Confirm password' category='person' component={InputBox} />
-              </div>
-            </div>
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.password')}</label>
+                      <Field name="initialpassword" type="password" placeholder={translate('com.tempedge.msg.label.password')} category="person" component={InputBox} />
+                    </div>
 
-            <div className='form-group prev-next-btns'>
-              <div className='col-md-6 offset-md-3'>
-                <button type='submit' className='btn btn-primary btn-block register-save-btn next' disabled={this.props.invalid || this.props.submiting || this.props.pristine}>
-                  <Translate id='com.tempedge.msg.label.next'></Translate>
-                </button>
+                    <div className="col-md-4">
+                      <label className="control-label">{translate('com.tempedge.msg.label.confirmpassword')}</label>
+                      <Field name="confirmpassword" type="password" placeholder={translate('com.tempedge.msg.label.confirmpassword')} category="person" component={InputBox} />
+                    </div>
+                  </div>
+
+                  <div className="form-group prev-next-btns">
+                    <div className="col-md-6 offset-md-3">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-block register-save-btn next"
+                        disabled={this.props.invalid || this.props.submiting || this.props.pristine}>
+                        {translate('com.tempedge.msg.label.next')}
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
-            </div>
-          </form>
-        </div>
-        <div className='panel-footer register-footer'>
-          <div className='pull-right'>
-            <span className='no-account-query'>
-              <Translate id='com.tempedge.msg.label.account_exists'></Translate>
-            </span>
-            <span className='sign-in-link'>
-              <Link className='create-account' to={signInRoute}>
-                <Translate id='com.tempedge.msg.label.sign_in'></Translate>
-              </Link>
-            </span>
-          </div>
-        </div>
+              <div className="panel-footer register-footer">
+                <div className="pull-right">
+                  <span className="no-account-query">{translate('com.tempedge.msg.label.account_exists')}</span>
+                  <span className="sign-in-link">
+                    <Link className="create-account" to={signInRoute}>
+                      {translate('com.tempedge.msg.label.sign_in')}
+                    </Link>
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+        </Translate>
       </div>
     );
   }

@@ -38,7 +38,7 @@ class CreateNewUser extends Component {
     this.setState({ page: this.state.page - 1 });
   }
 
-  onSubmit = async formValues => {
+  onSubmit = async (formValues) => {
     let response = {
       orgName: formValues.agencyorganization,
       username: formValues.username,
@@ -61,7 +61,7 @@ class CreateNewUser extends Component {
 
     httpService
       .post('/api/user/save', response)
-      .then(res => {
+      .then((res) => {
         this.setState(
           () => ({
             message: <Translate id={res.data.message} />
@@ -71,7 +71,7 @@ class CreateNewUser extends Component {
           }
         );
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('error: ', err);
         this.fireNotification();
       });
@@ -79,12 +79,11 @@ class CreateNewUser extends Component {
 
   fireNotification = (status = null) => {
     let { notify } = this.props;
-    let title = 'Sign Up Information Submitted';
     let message = $('#response-translated').text();
     let errata = (
-      <div className='col-md-12'>
-        <div className='row'>
-          <div className='col-md-4' style={{ backgroundColor: '#f2dede', borderColor: '#eed3d7', color: '#b94a48', padding: 20 }}>
+      <div className="col-md-12">
+        <div className="row">
+          <div className="col-md-4" style={{ backgroundColor: '#f2dede', borderColor: '#eed3d7', color: '#b94a48', padding: 20 }}>
             <ul>
               <li>{message}</li>
             </ul>
@@ -109,7 +108,7 @@ class CreateNewUser extends Component {
     }
 
     notify({
-      title: title,
+      title: <Translate id="com.tempedge.msg.label.signUpInformationSubmitted" />,
       message: message,
       status: statusCode,
       position: 'br',
@@ -126,14 +125,23 @@ class CreateNewUser extends Component {
     let { page, steps } = this.state;
 
     return (
-      <div className='wizard-create-agency'>
-        <Stepper steps={steps} activeStep={page - 1} activeColor='#eb8d34' completeColor='#8cb544' defaultBarColor='#eb8d34' completeBarColor='#8cb544' barStyle='solid' circleFontSize={16} />
-        <div className='wizard-wrapper'>
+      <div className="wizard-create-agency">
+        <Stepper
+          steps={steps}
+          activeStep={page - 1}
+          activeColor="#eb8d34"
+          completeColor="#8cb544"
+          defaultBarColor="#eb8d34"
+          completeBarColor="#8cb544"
+          barStyle="solid"
+          circleFontSize={16}
+        />
+        <div className="wizard-wrapper">
           {page === 1 && <WizardCreateNewUserFirstPage onSubmit={this.nextPage} errata={this.state.errata} {...this.props} />}
           {page === 2 && <WizardCreateNewUserSecondPage previousPage={this.previousPage} onSubmit={this.onSubmit} {...this.props} />}
         </div>
         {
-          <div id='response-translated' style={{ display: 'none' }}>
+          <div id="response-translated" style={{ display: 'none' }}>
             {this.state.message}
           </div>
         }
