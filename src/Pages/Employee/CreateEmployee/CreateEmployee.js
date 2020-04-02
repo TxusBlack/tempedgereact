@@ -100,8 +100,8 @@ class CreateEmployee extends Component {
     let defaultDate = new Date(backDate);
     this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
 
-    await gendersTranslate.push({ value: 0, gender: $(ReactDOM.findDOMNode(this.refs.maleOption)).text() });
-    await gendersTranslate.push({ value: 1, gender: $(ReactDOM.findDOMNode(this.refs.femaleOption)).text() });
+    gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male")});
+    gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female")});
     await drugTest.push({ value: 0, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text() });
     await drugTest.push({ value: 1, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text() });
     await backgroundTest.push({ value: 0, backgroundTest: $(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text() });
@@ -397,15 +397,18 @@ class CreateEmployee extends Component {
   };
 
   addTranslationsForActiveLanguage = async () => {
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
 
     let gendersTranslate = [];
     let drugTest = [];
     let backgroundTest = [];
     let maritalStatus = [];
 
-    await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.maleOption)).text());
-    await gendersTranslate.push($(ReactDOM.findDOMNode(this.refs.femaleOption)).text());
+    gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male")});
+    gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female")});
+
+    console.log('update', gendersTranslate);
+    console.log('update.', this.props.translate("com.tempedge.msg.label.gender.male"));
 
     await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
     await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
@@ -804,12 +807,6 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.gender" />
                         </label>
-                        <span style={{ display: 'none' }} ref="maleOption">
-                          <Translate id="com.tempedge.msg.label.gender.male" />
-                        </span>
-                        <span style={{ display: 'none' }} ref="femaleOption">
-                          <Translate id="com.tempedge.msg.label.gender.female" />
-                        </span>
                         <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={DropdownList} />
                       </div>
                     </div>
