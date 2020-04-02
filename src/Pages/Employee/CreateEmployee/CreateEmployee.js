@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
-import { Field, reduxForm, change, formValueSelector, initialize } from 'redux-form';
+import { Field, reduxForm, reset, change, formValueSelector, initialize } from 'redux-form';
 import moment from 'moment';
 import momentLocaliser from 'react-widgets-moment';
 import { connect } from 'react-redux';
@@ -79,6 +79,16 @@ class CreateEmployee extends Component {
   }
 
   componentDidMount = async () => {
+    await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+    await this.props.getListSafe(api_url, { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
+    let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
+    parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
+    await this.props.getListSafe('/api/person/skillList', { orgId: 1 }, types.SKILLS_LIST);
+    this.initialStates();
+  };
+
+  initialStates = async () => {
     this.setState(() => ({
       announcementBar: ''
     }));
@@ -87,21 +97,13 @@ class CreateEmployee extends Component {
     let backgroundTest = [];
     let maritalStatus = [];
 
-    await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe(api_url, { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
-    await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
-    let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
-    parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
-
-    await this.props.getListSafe('/api/person/skillList', { orgId: 1 }, types.SKILLS_LIST);
-
     let todaysDate = new Date();
     let backDate = todaysDate.setFullYear(todaysDate.getFullYear() - 18);
     let defaultDate = new Date(backDate);
     this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
 
-    gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male")});
-    gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female")});
+    gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male") });
+    gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female") });
     await drugTest.push({ value: 0, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text() });
     await drugTest.push({ value: 1, drugTest: $(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text() });
     await backgroundTest.push({ value: 0, backgroundTest: $(ReactDOM.findDOMNode(this.refs.backgroundtestAffirmativeOption)).text() });
@@ -116,7 +118,7 @@ class CreateEmployee extends Component {
       backgroundTest: backgroundTest,
       maritalStatus: maritalStatus
     }));
-  };
+  }
 
   componentWillUnmount = () => {
     this.props.reset();
@@ -321,13 +323,13 @@ class CreateEmployee extends Component {
             let btns = (
               <div className="prev-next-btns-agency row" style={{ width: '-webkit-fill-available' }}>
                 <div className="col-md-5 offset-md-1">
-                  <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={() => this.onClose()}>
-                    Cancel
+                  <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={() => this.cancel()}>
+                    <Translate id="com.tempedge.msg.label.cancel" />
                   </button>
                 </div>
                 <div className="col-md-5">
                   <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={() => save()}>
-                    Save
+                    <Translate id="com.tempedge.msg.label.save" />
                   </button>
                 </div>
               </div>
@@ -404,8 +406,8 @@ class CreateEmployee extends Component {
     let backgroundTest = [];
     let maritalStatus = [];
 
-    gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male")});
-    gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female")});
+    gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male") });
+    gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female") });
 
     await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
     await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
@@ -613,9 +615,14 @@ class CreateEmployee extends Component {
   };
 
   //Close Modal
-  onClose = () => {
-    //this.props.dispatch(reset('NewEmployee'));
-    this.toggleModalOnOff(); //Close Modal
+  cancel = (value) => {
+    if (value) {
+      this.toggleModalOnOff(); //Close Modal
+    } else {
+      console.log('cancel');
+      this.props.reset();
+      this.initialStates();
+    }
   };
 
   openModal() {
@@ -627,7 +634,7 @@ class CreateEmployee extends Component {
     let key = this.state.key;
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
-    let modal = <ModalSimple content={this.state.departmentsTable} open={this.state.showModal} onClose={() => this.onClose()} modalSize="modal-sm" />;
+    let modal = <ModalSimple content={this.state.departmentsTable} open={this.state.showModal} onClose={() => this.cancel(true)} modalSize="modal-sm" />;
     if (typeof this.props.skillsList !== 'undefined' && Array.isArray(this.props.skillsList)) {
       sortedSkillList = this.props.skillsList.sort((a, b) => {
         let x = a.skill;
@@ -1069,7 +1076,7 @@ class CreateEmployee extends Component {
                   <hr />
                   <div className="prev-next-btns-agency row" style={{ marginTop: 30 }}>
                     <div className="col-md-5 offset-md-1">
-                      <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>
+                      <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={() => this.cancel()}>
                         <Translate id="com.tempedge.msg.label.cancel" />
                       </button>
                     </div>
@@ -1108,6 +1115,7 @@ CreateEmployee.propTypes = {
 CreateEmployee = reduxForm({
   form: 'NewEmployee', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
+  enableReinitialize: true,
   validate: Validate
 })(CreateEmployee);
 
