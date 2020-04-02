@@ -407,9 +407,6 @@ class CreateEmployee extends Component {
     gendersTranslate.push({ value: 0, gender: await this.props.translate("com.tempedge.msg.label.gender.male")});
     gendersTranslate.push({ value: 1, gender: await this.props.translate("com.tempedge.msg.label.gender.female")});
 
-    console.log('update', gendersTranslate);
-    console.log('update.', this.props.translate("com.tempedge.msg.label.gender.male"));
-
     await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestAffirmativeOption)).text());
     await drugTest.push($(ReactDOM.findDOMNode(this.refs.drugtestNegativeOption)).text());
 
