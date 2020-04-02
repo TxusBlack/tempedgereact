@@ -51,9 +51,9 @@ let validate = (formValues) => {
     errors.email_ = 'Invalid email address.';
   }
 
-  // if(!formValues.gender){
-  //   errors.gender = 'Please select a gender.';
-  // }
+  if(!formValues.gender){
+    errors.gender = 'Please select a gender.';
+  }
 
   if (!formValues.office) {
     errors.office = 'Please enter office.';

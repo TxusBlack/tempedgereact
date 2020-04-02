@@ -281,11 +281,12 @@ class CreateEmployee extends Component {
         this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
       } else {
         //Validation Failed
+        // console.log('invalid', nextProps.savePerson.data);
         this.setState(() => ({
           announcementBar: (
             <div className="announcement-bar fail">
               <p>
-                <Translate id={this.state.validateMsg} />
+                <Translate id={this.state.validateMsg || nextProps.savePerson.data.message} />
               </p>
             </div>
           )
@@ -575,7 +576,7 @@ class CreateEmployee extends Component {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
         }
       );
-      debugger;
+      // debugger;
     });
   };
 
