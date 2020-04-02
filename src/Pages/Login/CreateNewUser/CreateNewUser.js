@@ -108,7 +108,7 @@ class CreateNewUser extends Component {
     }
 
     notify({
-      title: <Translate id="com.tempedge.msg.label.signUpInformationSubmitted" />,
+      title: <Translate id="com.tempedge.msg.label.signupinformationsubmitted" />,
       message: message,
       status: statusCode,
       position: 'br',

@@ -86,7 +86,7 @@ class WizardCreateNewUserSecondPage extends Component {
                 {translate('com.tempedge.msg.label.userconfiguration')}
               </h2>
               <h3 className="text-center page-subtitle" style={{ marginTop: 0 }}>
-                {translate('com.tempedge.msg.label.tellUsMore')}
+                {translate('com.tempedge.msg.label.tellusmore')}
               </h3>
               <form
                 name="newUser"
