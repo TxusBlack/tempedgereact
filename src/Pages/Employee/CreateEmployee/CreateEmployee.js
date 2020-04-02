@@ -616,13 +616,15 @@ class CreateEmployee extends Component {
 
   //Close Modal
   cancel = (value) => {
-    if (value) {
-      this.toggleModalOnOff(); //Close Modal
-    } else {
-      console.log('cancel');
-      this.props.reset();
-      this.initialStates();
-    }
+    // if (value) {
+    //   this.toggleModalOnOff(); //Close Modal
+    // } else {
+    //   this.props.reset();
+    //   this.initialStates();
+    // }
+    if (value) this.toggleModalOnOff(); //Close Modal
+    this.props.reset();
+    this.initialStates();
   };
 
   openModal() {
