@@ -38,7 +38,8 @@ class NavPanelLeft extends React.Component {
 
   render() {
     let panelClass = this.props.show ? 'panel-nav-left show' : 'panel-nav-left';
-    let leftNavMenu = typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null ? JSON.parse(sessionStorage.getItem('leftNavMenu')) : '';
+    let leftNavMenu =
+      typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null ? JSON.parse(sessionStorage.getItem('leftNavMenu')) : '';
 
     return (
       <nav className={panelClass}>
@@ -75,7 +76,7 @@ class NavPanelLeft extends React.Component {
             <Link to={`/auth/${this.props.activeLanguage.code}`} onClick={this.signOut}>
               <ul>
                 <li>
-                  <Translate id="com.tempedge.msg.info.signOut" />
+                  <Translate id="com.tempedge.msg.label.signout" />
                 </li>
               </ul>
             </Link>
