@@ -64,7 +64,9 @@ class NavPanelLeft extends React.Component {
               ? leftNavMenu.map((item, index) => {
                   return (
                     <Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} onClick={this.toggleNav}>
-                      <li>{item.optionName} </li>
+                      <li>
+                        <Translate id={item.optionName} />
+                      </li>
                     </Link>
                   );
                 })
