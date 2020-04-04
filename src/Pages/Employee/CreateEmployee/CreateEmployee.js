@@ -178,6 +178,21 @@ class CreateEmployee extends Component {
       this.props.push(`/employee/new/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
     }
+
+    // Date formated
+    if (this.props.birthday && this.props.birthday != null) {
+      if (String(this.props.birthday).match(/\//ig) && String(this.props.birthday).indexOf('/')) {
+        let spl = String(this.props.birthday).split('/');
+        if (spl[2]) {
+          let todaysDate = new Date();
+          if (spl[2] < todaysDate.getFullYear() - 18 || spl[2] > todaysDate.getFullYear() - 100) {
+            let backDate = todaysDate.setFullYear(todaysDate.getFullYear() - 18);
+            let defaultDate = new Date(backDate);
+            this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
+          }
+        }
+      }
+    }
   };
 
   onChangeCountry(country) {
