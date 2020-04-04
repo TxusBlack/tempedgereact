@@ -31,6 +31,7 @@ import Dashboard from './Pages/Dashboard/Dashboard.js';
 import NewInternalPayroll from './Pages/InternalPayroll/NewInternalPayroll/NewInternalPayroll';
 import OrgList from './Pages/Organization/OrgSelect/OrgSelectList';
 import ChangePassword from './Pages/ChangePassword/ChangePassword';
+import ProfilePage from './Pages/Profile';
 
 import UpdloadEmployeeList from './Pages/Employee/UploadEmployeeList/UpdloadEmployeeList';
 
@@ -93,6 +94,7 @@ class App extends React.Component {
                   <Route exact path="/register/:lang" component={CreateNewUser} />
                   <Route exact path="/registerAgency/:lang" component={CreateNewAgency} />
                   <PrivateRoute exact path="/user/changePass/:lang" component={ChangePassword} />
+                  <PrivateRoute exact path="/profile/:lang" component={ProfilePage} />
                   <PrivateRoute exact path="/client/new/:lang" component={CreateNewClient} />
                   <PrivateRoute exact path="/resetpassword/:lang" component={ForgotPassword} />
                   <PrivateRoute exact path="/snapshot-desktop/:lang" component={FaceMashDesktop} />
