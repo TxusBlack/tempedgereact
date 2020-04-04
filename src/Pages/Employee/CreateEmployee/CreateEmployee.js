@@ -1164,7 +1164,7 @@ let mapStateToProps = (state) => {
     birthday: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.birthday_ : null,
     hiredate: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.hireDate_ : null,
     validatePerson: typeof state.tempEdge.validatePerson !== 'undefined' ? state.tempEdge.validatePerson : null,
-    skillErr: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.syncErrors.skills : null,
+    skillErr: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.syncErrors ? state.form.NewEmployee.syncErrors.skills : null : null,
     savePerson: typeof state.tempEdge.savePerson !== 'undefined' ? state.tempEdge.savePerson : null,
     errorFields: state.tempEdge.errorFields,
     lastRemoved: state.tempEdge.lastRemoved
