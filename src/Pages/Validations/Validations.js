@@ -108,7 +108,7 @@ let validate = (formValues) => {
   }
 
   if (!formValues.drugTestDate) {
-    errors.drugTestDate = 'Drug test date is required.';
+    // errors.drugTestDate = 'Drug test date is required.';
   }
 
   if (!formValues.backgroundTestDate) {
@@ -116,7 +116,7 @@ let validate = (formValues) => {
   }
 
   if (!formValues.backgroundTest) {
-    errors.backgroundTest = 'Background check is required.';
+    // errors.backgroundTest = 'Background check is required.';
   }
 
   if (!formValues.joblocation) {
