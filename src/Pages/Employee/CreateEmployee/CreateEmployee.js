@@ -192,8 +192,15 @@ class CreateEmployee extends Component {
           }
         }
       }
+    } else {
+      if (typeof this.props.birthday === 'undefined') {
+        let todaysDate = new Date();
+        let backDate = todaysDate.setFullYear(todaysDate.getFullYear() - 18);
+        let defaultDate = new Date(backDate);
+        this.props.dispatch(change('NewEmployee', 'birthday_', defaultDate));
+      }
     }
-  };
+  }
 
   onChangeCountry(country) {
     const { countryRegionList } = this.props;
