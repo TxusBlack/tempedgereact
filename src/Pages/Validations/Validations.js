@@ -46,7 +46,7 @@ let validate = (formValues) => {
   }
 
   if (!formValues.email_) {
-    errors.email_ = 'Email field is required.';
+    // errors.email_ = 'Email field is required.';
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email_)) {
     errors.email_ = 'Invalid email address.';
   }
