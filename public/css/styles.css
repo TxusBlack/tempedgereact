@@ -1685,3 +1685,8 @@ p {
 .input-group .btn {
   max-height: 0px;
 }
+
+.has-error + .input-group-append .btn {
+  border: 1px solid rgb(169, 68, 66);
+  border-left-color: var(--tempedge-green);
+}
