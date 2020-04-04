@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import Validate from '../Validations/Validations';
+import ActiveLanguageAddTranslation from '../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import { tempedgeAPI } from '../../Redux/actions/tempEdgeActions';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
@@ -12,6 +13,16 @@ class ProfilePage extends Component {
     super(props);
     this.state = {
       profile: null
+    }
+    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+
+    if (hasActiveLanguageChanged) {
+      this.props.history.push(`/profile/${this.props.activeLanguage.code}`);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
     }
   }
 
