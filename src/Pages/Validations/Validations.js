@@ -371,6 +371,25 @@ let validate = (formValues) => {
     }
   }
 
+  // Error Tab Skills
+  if (formValues != null || formValues.indexOf('data-skill-id-') > -1) {
+    let err = true;
+    for (let f in formValues) {
+      if (f.length >= 14) {
+        if (f.slice(0, 14) !== 'data-skill-id-') {
+          err = true;
+        } else {
+          if (formValues[f]) {
+            if (err) err = false;
+          }
+        }
+      } else {
+        err = true;
+      }
+    }
+    errors.skills = err;
+  }
+
   return errors;
 };
 

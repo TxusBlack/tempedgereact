@@ -263,6 +263,12 @@ class CreateEmployee extends Component {
         }
       });
 
+      if (nextProps.skillErr) {
+        chkResult[2].push({});
+      } else {
+        chkResult[2] = [];
+      }
+
       this.state.tabRequiredFields[3].map((field) => {
         let found = nextProps.errorFields.indexOf(field);
 
@@ -277,6 +283,7 @@ class CreateEmployee extends Component {
 
       errorPanel[0] = chkResult[0].length > 0 ? { border: '2px solid red', borderTopLeftRadius: '1.6rem' } : {};
       errorPanel[1] = chkResult[1].length > 0 ? { border: '2px solid red' } : {};
+      errorPanel[2] = chkResult[2].length > 0 ? { border: '2px solid red' } : {};
       errorPanel[3] = chkResult[3].length > 0 ? { border: '2px solid red', borderTopRightRadius: '1.6rem' } : {};
 
       this.setState(() => ({
@@ -303,7 +310,6 @@ class CreateEmployee extends Component {
         this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
       } else {
         //Validation Failed
-        // console.log('invalid', nextProps.savePerson.data);
         this.setState(() => ({
           announcementBar: (
             <div className="announcement-bar fail">
@@ -727,7 +733,7 @@ class CreateEmployee extends Component {
                     </a>
                   </li>
                   <li className="nav-item panel" onClick={() => this.setState({ key: 2 })}>
-                    <a className="nav-link" data-toggle="tab" href="#tab4">
+                    <a className="nav-link" style={this.state.errorPanel[2]} data-toggle="tab" href="#tab4">
                       Skills
                     </a>
                   </li>
@@ -1157,6 +1163,7 @@ let mapStateToProps = (state) => {
     birthday: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.birthday_ : null,
     hiredate: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.values.hireDate_ : null,
     validatePerson: typeof state.tempEdge.validatePerson !== 'undefined' ? state.tempEdge.validatePerson : null,
+    skillErr: typeof state.form.NewEmployee !== 'undefined' && typeof state.form.NewEmployee.values !== 'undefined' ? state.form.NewEmployee.syncErrors.skills : null,
     savePerson: typeof state.tempEdge.savePerson !== 'undefined' ? state.tempEdge.savePerson : null,
     errorFields: state.tempEdge.errorFields,
     lastRemoved: state.tempEdge.lastRemoved
