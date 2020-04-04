@@ -737,7 +737,7 @@ class CreateEmployee extends Component {
                             active="disabled"
                           />
                           <div className="input-group-append">
-                            <button className="btn btn-green" type="button" onClick={() => this.openModal()}>
+                            <button className="btn btn-green" title={translate('com.tempedge.msg.label.viewdepartmentlist')} type="button" onClick={() => this.openModal()}>
                               +
                             </button>
                           </div>
