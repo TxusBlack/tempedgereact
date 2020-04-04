@@ -1631,18 +1631,6 @@ form div.list .list-item:last-child button {
   }
 }
 
-.symbol-button {
-  background-color: var(--normal-blue);
-  color: white;
-  width: 100%;
-  border-radius: 1.6rem;
-  min-width: 32px;
-  max-width: 60px;
-}
-.symbol-button:hover {
-  color: white;
-}
-
 .table-hover tbody tr:hover,
 .table-hover .table-active:hover {
   cursor: pointer;
@@ -1673,4 +1661,27 @@ form div.list .list-item:last-child button {
 
 p {
   word-break: break-all;
+}
+
+.square-right-side {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.btn-green {
+  background-color: var(--tempedge-green);
+  border-radius: 1.6rem;
+  color: white;
+}
+
+.btn-green:hover {
+  color: white;
+}
+
+.input-group > div:first-child {
+  width: calc(100% - 25px);
+}
+
+.input-group .btn {
+  max-height: 0px;
 }
