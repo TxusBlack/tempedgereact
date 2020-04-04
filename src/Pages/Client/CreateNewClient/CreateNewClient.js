@@ -363,7 +363,7 @@ class CreateNewClient extends Component {
     let addDtpBtn = (
       <React.Fragment>
         <div style={{height: 10}}></div>
-        <p className="department-list-button center-block" onClick={() => this.renderDepartmentModal()}>Add Departments</p>
+        <p className="department-list-button center-block" onClick={() => this.renderDepartmentModal()}><Translate id="com.tempedge.msg.label.adddepartment" /></p>
       </React.Fragment>
     );
 

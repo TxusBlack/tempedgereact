@@ -53,36 +53,38 @@ class WizardCreateNewUserThirdPage extends Component {
             <div className="col-lg-8 client-col">
               <div className="create-client">
                 <div className="new-client-header">
-                  <h2>Create Client</h2>
+                  <h2>
+                    <Translate id="com.tempedge.msg.label.createNewClient" />
+                  </h2>
                 </div>
                 <div className="new-clients-contents">
                   <div className="client-contents">
                     <div className="form-group row">
                       <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.lastname"></Translate></label>
-                        <Field name="clientlastName" type="text" placeholder="Enter Last Name" category="client" component={InputBox} />
+                        <Field name="clientlastName" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterlastname')} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.firstname"></Translate></label>
-                        <Field name="clientfirstName" type="text" placeholder="Enter First Name" category="client" component={InputBox} />
+                        <Field name="clientfirstName" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entername')} category="client" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="form-group row bottom-row">
                       <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.clientcontactphone"></Translate></label>
-                        <Field name="clientcontactphone" type="text" placeholder="Enter Contact Phone" category="client" component={InputBox} />
+                        <Field name="clientcontactphone" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entercontactphone')} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-6">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.clientcontactcellphone"></Translate></label>
-                        <Field name="clientcontactcellphone" type="text" placeholder="Enter Contact Cell Phone" category="client" component={InputBox} />
+                        <Field name="clientcontactcellphone" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entercontactcellphone')} category="client" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="new-clients-footer">
                       <div className="prev-next-btns-agency row">
                         <div className="col-md-5 offset-md-1">
-                          <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+                          <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}><Translate id="com.tempedge.msg.label.back"></Translate></button>
                         </div>
                         <div className="col-md-5">
                           <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.submit"></Translate></button>
@@ -96,7 +98,9 @@ class WizardCreateNewUserThirdPage extends Component {
             <div className="col-lg-4 dept-col">
               <div className="department-list">
                 <div className="department-list-header">
-                  <h2>Department List</h2>
+                  <h2>
+                    <Translate id="com.tempedge.msg.label.departmentlist" />
+                  </h2>
                 </div>
                 <div className="department-list-contents">
                   <div>
