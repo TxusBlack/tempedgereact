@@ -1679,11 +1679,12 @@ p {
 }
 
 .input-group > div:first-child {
-  width: calc(100% - 25px);
+  width: calc(100% - 41px);
 }
 
 .input-group .btn {
   max-height: 0px;
+  padding: 0 16px;
 }
 
 .has-error + .input-group-append .btn {
