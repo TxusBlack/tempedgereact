@@ -5,9 +5,9 @@ let initialState = {
   errorFields: [],
   lastRemoved: '',
   lang: null
-}
+};
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case types.LOGIN:
       return {
@@ -185,8 +185,7 @@ export default function(state = initialState, action) {
     case types.GET_ACTIVITY_LIST:
       return {
         ...state,
-        errorFields: errorFieldsArray,
-        lastRemoved: action.payload
+        activityList: action.payload
       };
     case types.GET_SALESMAN_LIST:
       return {
@@ -201,13 +200,13 @@ export default function(state = initialState, action) {
     case types.CHANGE_PASSWORD:
       return {
         ...state,
-        changePassword: action.payload,
-      }
+        changePassword: action.payload
+      };
     case types.GET_LANGUAGE:
       return {
         ...state,
         lang: action.payload
-      }
+      };
     default:
       return state;
   }
