@@ -299,11 +299,11 @@ class NewInternalPayroll extends Component {
   };
 
   fireNotification = () => {
-    let { notify, translate } = this.props;
+    let { notify } = this.props;
 
     notify({
-      title: translate('com.tempedge.msg.label.timesheetsaved'),
-      message: translate('com.tempedge.msg.label.youclickedsubmitbutton'),
+      title: 'Thimesheet Saved',
+      message: 'You clicked on the Submit button',
       status: 'success',
       position: 'br',
       dismissible: true,
