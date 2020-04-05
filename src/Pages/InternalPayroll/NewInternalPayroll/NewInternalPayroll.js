@@ -393,7 +393,7 @@ class NewInternalPayroll extends Component {
                       {translate('com.tempedge.msg.label.sat')} <br></br> {this.state.sat ? this.state.sat : ''}
                     </th>
                     <th className="table-header-mid text-center">
-                      {translate('com.tempedge.msg.label.dom')} <br></br> {this.state.sun ? this.state.sun : ''}
+                      {translate('com.tempedge.msg.label.sun')} <br></br> {this.state.sun ? this.state.sun : ''}
                     </th>
                     <th className="table-header-right text-center">{translate('com.tempedge.msg.label.total')}</th>
                   </tr>
