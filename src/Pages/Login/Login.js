@@ -100,7 +100,7 @@ class Login extends Component {
 
     await this.props.doLogin('/api/login', values);
 
-    this.fireNotification(this.props.translate('com.tempedge.msg.info.msg.loginsuccess'), 'success');
+    this.fireNotification(this.props.translate('com.tempedge.msg.info.msg.success'), 'success');
   }
 
   fireNotification = (message, status) => {
