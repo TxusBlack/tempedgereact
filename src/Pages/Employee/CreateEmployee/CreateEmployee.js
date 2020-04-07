@@ -64,8 +64,9 @@ class CreateEmployee extends Component {
         ['office', 'department', 'ssn', 'employeeid', 'hireDate_', 'firstName', 'lastName', 'birthday_', 'gender'],
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
-        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances'],
+        ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
       ],
+      agency: JSON.parse(sessionStorage.getItem('agency'))
     };
     this.resumeLabel = React.createRef();
     this.documentLabel = React.createRef();
@@ -79,8 +80,9 @@ class CreateEmployee extends Component {
   }
 
   componentDidMount = async () => {
+    const { orgId } = this.state.agency.organizationEntity;
     this.setState(() => ({
-      announcementBar: '',
+      announcementBar: ''
     }));
     let gendersTranslate = [];
     let drugTest = [];
@@ -88,12 +90,12 @@ class CreateEmployee extends Component {
     let maritalStatus = [];
 
     await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe(api_url, { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
-    await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
+    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe('/api/office/findAll', { orgId }, types.GET_OFFICE_LIST);
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
     parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
 
-    await this.props.getListSafe('/api/person/skillList', { orgId: 1 }, types.SKILLS_LIST);
+    await this.props.getListSafe('/api/person/skillList', { orgId }, types.SKILLS_LIST);
 
     let todaysDate = new Date();
     let backDate = todaysDate.setFullYear(todaysDate.getFullYear() - 18);
@@ -114,22 +116,26 @@ class CreateEmployee extends Component {
       genders: gendersTranslate,
       drugTest: drugTest,
       backgroundTest: backgroundTest,
-      maritalStatus: maritalStatus,
+      maritalStatus: maritalStatus
     }));
   };
 
   componentWillUnmount = () => {
-    this.props.reset();
-    this.props.clearErrorField();
-    this.props.clearTempedgeStoreProp('savePerson');
-    this.props.clearTempedgeStoreProp('validatePerson');
+    const { reset, clearErrorField, clearTempedgeStoreProp } = this.props;
+    reset();
+    clearErrorField();
+    clearTempedgeStoreProp('savePerson');
+    clearTempedgeStoreProp('orgDepartmentList');
+    clearTempedgeStoreProp('officeList');
+    clearTempedgeStoreProp('skillList');
+    clearTempedgeStoreProp('validatePerson');
     this.resetFileFields();
   };
 
   createDepartmentsTable() {
     const departmentsTable = <DepartmentList onClickRows={(e) => this.setInputValue(e)} />; // If you want to select multiple rows add 'multipleRows' property
     this.setState({
-      departmentsTable,
+      departmentsTable
     });
   }
 
@@ -137,7 +143,7 @@ class CreateEmployee extends Component {
     const [orgDepartmentId, departmentSelected] = selectedData[0];
     this.props.dispatch(change('NewEmployee', 'department', departmentSelected));
     this.setState({
-      orgDepartmentId,
+      orgDepartmentId
     });
     this.toggleModalOnOff();
   }
@@ -148,7 +154,7 @@ class CreateEmployee extends Component {
     if (getCountryList === false) {
       if (typeof countryRegionList !== 'undefined') {
         this.setState(() => ({
-          getCountryList: true,
+          getCountryList: true
         }));
         this.setCountryList(defaultCountry, defaultRegion);
       }
@@ -157,7 +163,7 @@ class CreateEmployee extends Component {
     if (this.state.orgDepartmentList.length === 0 && Array.isArray(this.props.orgDepartmentList)) {
       if (this.props.orgDepartmentList.length > 0) {
         this.setState(() => ({
-          orgDepartmentList: this.props.orgDepartmentList,
+          orgDepartmentList: this.props.orgDepartmentList
         }));
       }
     }
@@ -165,7 +171,7 @@ class CreateEmployee extends Component {
     if (this.state.officeList.length === 0 && Array.isArray(this.props.officeList)) {
       if (this.props.officeList.length > 0) {
         this.setState(() => ({
-          officeList: this.props.officeList,
+          officeList: this.props.officeList
         }));
       }
     }
@@ -205,7 +211,7 @@ class CreateEmployee extends Component {
       this.setState(() => ({
         countryList,
         regionList,
-        prevCountry: country.name,
+        prevCountry: country.name
       }));
     }
   }
@@ -257,7 +263,7 @@ class CreateEmployee extends Component {
 
       this.setState(() => ({
         chkResult: chkResult,
-        errorPanel: errorPanel,
+        errorPanel: errorPanel
       }));
     }
 
@@ -271,7 +277,7 @@ class CreateEmployee extends Component {
                   <Translate id="com.tempedge.msg.person.newperson" />
                 </p>
               </div>
-            ),
+            )
           }),
           () => this.componentWillUnmount()
         );
@@ -286,7 +292,7 @@ class CreateEmployee extends Component {
                 <Translate id={this.state.validateMsg} />
               </p>
             </div>
-          ),
+          )
         }));
 
         this.props.clearTempedgeStoreProp('savePerson'); // I added this to avoid a loop
@@ -304,7 +310,7 @@ class CreateEmployee extends Component {
 
               this.setState(
                 () => ({
-                  validateMsg: nextProps.validatePerson.data.message,
+                  validateMsg: nextProps.validatePerson.data.message
                 }),
                 () => {
                   this.toggleModalOnOff();
@@ -335,18 +341,18 @@ class CreateEmployee extends Component {
 
             this.setState(
               () => ({
-                showModal: !this.state.showModal,
+                showModal: !this.state.showModal
               }),
               () => {
                 this.setState(() => ({
-                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />,
+                  modal: <Modal content={paginatedTable} buttons={btns} open={this.state.showModal} />
                 }));
               }
             );
 
             this.setState(() => ({
               paginatedTable: paginatedTable,
-              btns: btns,
+              btns: btns
             }));
           } else {
             //Validation Failed
@@ -357,7 +363,7 @@ class CreateEmployee extends Component {
                     <Translate id={nextProps.validatePerson.data.message} />
                   </p>
                 </div>
-              ),
+              )
             }));
           }
         } else {
@@ -369,7 +375,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            ),
+            )
           }));
         }
       } else if (nextProps.validatePerson.data.status === 500) {
@@ -381,7 +387,7 @@ class CreateEmployee extends Component {
                   <Translate id={nextProps.validatePerson.data.message} />
                 </p>
               </div>
-            ),
+            )
           }));
         }
       } else if (nextProps.validatePerson.data.status === 200) {
@@ -421,7 +427,7 @@ class CreateEmployee extends Component {
         genders: gendersTranslate,
         drugTest: drugTest,
         backgroundTest: backgroundTest,
-        maritalStatus: maritalStatus,
+        maritalStatus: maritalStatus
       }));
     }
   };
@@ -442,7 +448,7 @@ class CreateEmployee extends Component {
     const [file] = e.target.files;
     const inputName = e.target.getAttribute('name');
     this.setState(() => ({
-      announcementBar: '',
+      announcementBar: ''
     }));
     this.constructor.setFileLabel(null, labelRef);
 
@@ -451,7 +457,7 @@ class CreateEmployee extends Component {
         if (inputName === 'documentFile') {
           if (file.type !== 'application/pdf') {
             this.setState(() => ({
-              announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.pdfInvalidFileType" />,
+              announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.pdfInvalidFileType" />
             }));
             e.target.value = '';
           } else {
@@ -464,7 +470,7 @@ class CreateEmployee extends Component {
           inputName === 'resumeFile'
         ) {
           this.setState(() => ({
-            announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.invalidFileType" />,
+            announcementBar: <OutcomeBar classApplied="announcement-bar warning" translateId="com.tempedge.warning.invalidFileType" />
           }));
           e.target.value = '';
         } else {
@@ -479,7 +485,7 @@ class CreateEmployee extends Component {
               translateId="com.tempedge.warning.maxSizeAllowedForFiles"
               customData={{ maxSizeAllowedForFiles: maxSizeAllowedForFiles / 1000000 }}
             />
-          ),
+          )
         }));
       }
     }
@@ -492,9 +498,6 @@ class CreateEmployee extends Component {
     const documentFile = this.documentFileInput.current.files[0];
     const resumeFile = this.resumeFileInput.current.files[0];
 
-    let agency = sessionStorage.getItem('agency');
-    agency = JSON.parse(agency);
-
     return new Promise((resolve, reject) => {
       for (let prop in formValues) {
         let id = null;
@@ -502,7 +505,7 @@ class CreateEmployee extends Component {
         if (prop.indexOf('data-skill-id-') > -1) {
           id = prop.match(/(\d+)/);
           skills.push({
-            skillId: parseInt(id[0]),
+            skillId: parseInt(id[0])
           });
         }
 
@@ -515,8 +518,8 @@ class CreateEmployee extends Component {
     }).then((skills) => {
       let data = {
         temporalInfo: formValues.temporarydata ? true : false,
-        skills,
-        orgId: agency.organizationEntity.orgId,
+        skills: skills,
+        orgId: this.state.agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: formValues.backgroundTest.backgroundTest === 'Yes' ? moment(formValues.backgroundTestDate, 'YYYY-MM-DD') : null,
@@ -541,16 +544,16 @@ class CreateEmployee extends Component {
         phone: formValues.phone,
         region: formValues.state.regionId,
         taxRegion: formValues.joblocation.regionId,
-        usrCreatedBy: agency.portalUserConfId,
+        usrCreatedBy: this.state.agency.portalUserConfId,
         zipcode: formValues.zip,
         docExt: null,
         resumeExt: null,
         personType: {
-          personTypeId: 1, // ** TODO **
+          personTypeId: 1 // ** TODO **
         },
         office: {
-          officeId: formValues.office.officeId,
-        },
+          officeId: formValues.office.officeId
+        }
       };
 
       const fileArray = {};
@@ -567,7 +570,7 @@ class CreateEmployee extends Component {
       this.setState(
         () => ({
           formData: { ...data },
-          fileArray,
+          fileArray
         }),
         () => {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
@@ -608,7 +611,7 @@ class CreateEmployee extends Component {
   toggleModalOnOff = () => {
     this.setState({
       showModal: !this.state.showModal,
-      modal: '',
+      modal: ''
     });
   };
 
@@ -678,7 +681,7 @@ class CreateEmployee extends Component {
             borderBottomLeftRadius: '1.6rem',
             borderBottomRightRadius: '1.6rem',
             backgroundColor: '#ffff',
-            margin: 'auto',
+            margin: 'auto'
           }}>
           {this.state.announcementBar}
           <div className="tabs-stepper-wrapper register-form-panel-inputs" ref="createNewEmployee1" style={{ margin: 'auto', padding: 0 }}>
@@ -1106,13 +1109,13 @@ CreateEmployee.propTypes = {
   clearTempedgeStoreProp: PropTypes.func.isRequired,
   clearErrorField: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
-  countryRegionList: PropTypes.array,
+  countryRegionList: PropTypes.array
 };
 
 CreateEmployee = reduxForm({
   form: 'NewEmployee', //                 <------ form name
   destroyOnUnmount: false, //        <------ preserve form data
-  validate: Validate,
+  validate: Validate
 })(CreateEmployee);
 
 let mapStateToProps = (state) => {
@@ -1130,7 +1133,7 @@ let mapStateToProps = (state) => {
     validatePerson: typeof state.tempEdge.validatePerson !== 'undefined' ? state.tempEdge.validatePerson : null,
     savePerson: typeof state.tempEdge.savePerson !== 'undefined' ? state.tempEdge.savePerson : null,
     errorFields: state.tempEdge.errorFields,
-    lastRemoved: state.tempEdge.lastRemoved,
+    lastRemoved: state.tempEdge.lastRemoved
   };
 };
 
