@@ -267,11 +267,11 @@ class CreateEmployee extends Component {
         }
       });
 
-      if (nextProps.skillErr) {
-        chkResult[2].push({});
-      } else {
-        chkResult[2] = [];
-      }
+      // if (nextProps.skillErr) {
+      //   chkResult[2].push({});
+      // } else {
+      //   chkResult[2] = [];
+      // }
 
       this.state.tabRequiredFields[3].map((field) => {
         let found = nextProps.errorFields.indexOf(field);
@@ -287,7 +287,7 @@ class CreateEmployee extends Component {
 
       errorPanel[0] = chkResult[0].length > 0 ? { border: '2px solid red', borderTopLeftRadius: '1.6rem' } : {};
       errorPanel[1] = chkResult[1].length > 0 ? { border: '2px solid red' } : {};
-      errorPanel[2] = chkResult[2].length > 0 ? { border: '2px solid red' } : {};
+      // errorPanel[2] = chkResult[2].length > 0 ? { border: '2px solid red' } : {};
       errorPanel[3] = chkResult[3].length > 0 ? { border: '2px solid red', borderTopRightRadius: '1.6rem' } : {};
 
       this.setState(() => ({
@@ -430,6 +430,26 @@ class CreateEmployee extends Component {
       }
     }
   };
+
+  checkSkillsErr = () => {
+    // Error panel skills
+
+    let chkResult = [...this.state.chkResult];
+    let errorPanel = [...this.state.errorPanel];
+
+    if (this.props.skillErr) {
+      chkResult[2].push({});
+    } else {
+      chkResult[2] = [];
+    }
+
+    errorPanel[2] = chkResult[2].length > 0 ? { border: '2px solid red' } : {};
+
+    this.setState(() => ({
+      chkResult: chkResult,
+      errorPanel: errorPanel
+    }));
+  }
 
   addTranslationsForActiveLanguage = async () => {
     await ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
@@ -1113,7 +1133,7 @@ class CreateEmployee extends Component {
                       </button>
                     </div>
                     <div className="col-md-5">
-                      <button type="submit" className="btn btn-primary btn-block register-save-btn next">
+                      <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={() => this.checkSkillsErr()}>
                         <Translate id="com.tempedge.msg.label.save" />
                       </button>
                     </div>
