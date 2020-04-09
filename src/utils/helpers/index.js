@@ -23,6 +23,18 @@ let redirectOnLogin = (agency) => {
   }
 }
 
+let findByProp = (a, id, fieldName) => {
+  return a.findIndex(x => x[fieldName] === id);
+};
+
+let findAllByProp = (objArry, id, fieldName) => {
+  return objArry.filter(obj => {
+    return obj[fieldName] === id;
+  });
+};
+
 export default {
-  redirectOnLogin
+  redirectOnLogin,
+  findByProp,
+  findAllByProp
 }
