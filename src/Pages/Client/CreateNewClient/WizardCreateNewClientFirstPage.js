@@ -87,7 +87,7 @@ class WizardCreateNewUserFirstPage extends Component {
                     <div className="form-group row">
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.company"></Translate></label>
-                        <Field name="company" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entercompany')} category="client" component={InputBox} />
+                        <Field name="company" type="text" placeholder={this.props.translate('com.tempedge.error.agency.fundingCompanydropdownrequired')} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.salesman"></Translate></label>
@@ -102,48 +102,48 @@ class WizardCreateNewUserFirstPage extends Component {
                     <div className="form-group row">
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.workCompCode"></Translate></label>
-                        <Field name="workCompCode" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterworkcompcode')} category="client" component={InputBox} />
+                        <Field name="workCompCode" type="text" placeholder={this.props.translate("com.tempedge.error.client.workCompCoderequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.workCompRate"></Translate></label>
-                        <Field name="workCompRate" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterworkcomprate')} category="client" component={InputBox} />
+                        <Field name="workCompRate" type="text" placeholder={this.props.translate("com.tempedge.error.client.workCompRaterequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.companyInitials"></Translate></label>
-                        <Field name="companyInitials" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entercompanyinitials')} category="client" component={InputBox} />
+                        <Field name="companyInitials" type="text" placeholder={this.props.translate("com.tempedge.error.agency.fundingCompanydropdownrequired")} category="client" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="form-group row">
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.attnTo"></Translate></label>
-                        <Field name="attnTo" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterattnto')} category="client" component={InputBox} />
+                        <Field name="attnTo" type="text" placeholder={this.props.translate("com.tempedge.error.client.attnTorequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.email"></Translate></label>
-                        <Field name="email" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enteremail')} category="person" component={InputBox} />
+                        <Field name="email" type="text" placeholder={this.props.translate("com.tempedge.error.person.emailrequired")} category="person" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.comments"></Translate></label>
-                        <Field name="comments" type="textarea" placeholder={this.props.translate('com.tempedge.msg.label.entercomments')} category="client" component={InputBox} />
+                        <Field name="comments" type="textarea" placeholder={this.props.translate("com.tempedge.msg.label.comments")} category="client" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="form-group row bottom-row">
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.markupClient"></Translate></label>
-                        <Field name="markupClient" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entermarkupclient')} category="client" component={InputBox} />
+                        <Field name="markupClient" type="text" placeholder={this.props.translate("com.tempedge.error.client.markupClientrequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.otMarkupClient"></Translate></label>
-                        <Field name="otMarkupClient" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterotmarkupclient')} category="client" component={InputBox} />
+                        <Field name="otMarkupClient" type="text" placeholder={this.props.translate("com.tempedge.error.client.otMarkupClientrequired")} category="client" component={InputBox} />
                       </div>
                     </div>
                   </div>
                   <div className="new-clients-footer">
                     <div className="prev-next-btns-agency row">
                       <div className="col-md-5 offset-md-1">
-                        <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}><Translate id="com.tempedge.msg.label.back"></Translate></button>
+                        <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}><Translate id="com.tempedge.msg.label.cancel"></Translate></button>
                       </div>
                       <div className="col-md-5">
                         <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.next"></Translate></button>

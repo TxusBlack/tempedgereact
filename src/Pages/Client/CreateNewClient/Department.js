@@ -231,7 +231,7 @@ class Department extends React.Component{
             <div className="row">
               <div className="col-md-8" style={{paddingLeft: 15, paddingRight: 71}}>
                 <label className="control-label"><Translate id="com.tempedge.msg.label.deptName"></Translate></label>
-                <Field name="departmentname" type="text" placeholder={this.props.translate('com.tempedge.msg.label.deptname')} category="client" component={InputBox} />
+                <Field name="departmentname" type="text" placeholder={this.props.translate("com.tempedge.error.client.departmentnamerequired")} category="client" component={InputBox} />
               </div>
             </div>
           </div>
@@ -249,29 +249,29 @@ class Department extends React.Component{
                         <div className="form-group row">
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.position"></Translate></label>
-                            <Field name="position" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterposition')} category="client" component={InputBox} />
+                            <Field name="position" type="text" placeholder={this.props.translate("com.tempedge.error.client.positionrequired")} category="client" component={InputBox} />
                           </div>
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.description"></Translate></label>
-                            <Field name="description" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterdescription')} category="client" component={InputBox} />
+                            <Field name="description" type="text" placeholder={this.props.translate("com.tempedge.error.client.descriptionrequired")} category="client" component={InputBox} />
                           </div>
                         </div>
 
                         <div className="form-group row">
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.markup"></Translate></label>
-                            <Field name="markup" type="text" placeholder={this.props.translate('com.tempedge.msg.label.entermarkupclient')} category="client" component={InputBox} />
+                            <Field name="markup" type="text" placeholder={this.props.translate("com.tempedge.error.client.markuprequired")} category="client" component={InputBox} />
                           </div>
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.OtMarkup"></Translate></label>
-                            <Field name="otmarkup" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterotmarkupclient')} category="client" component={InputBox} />
+                            <Field name="otmarkup" type="text" placeholder={this.props.translate("com.tempedge.error.client.otMarkupClientrequired")} category="client" component={InputBox} />
                           </div>
                         </div>
 
                         <div className="form-group row">
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.payRate"></Translate></label>
-                            <Field name="payRate" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enterpayrate')} category="client" component={InputBox} />
+                            <Field name="payRate" type="text" placeholder={this.props.translate("com.tempedge.error.client.payRaterequired")} category="client" component={InputBox} />
                           </div>
                           <div className="col-md-4">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.billRate"></Translate></label>
@@ -286,22 +286,22 @@ class Department extends React.Component{
                         <div className="form-group row">
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.regularSchedule"></Translate></label>
-                            <Field name="timeIn" type="text" placeholder={this.props.translate('com.tempedge.msg.label.timein')} category="client" component={InputBox} />
+                            <Field name="timeIn" type="text" placeholder={this.props.translate("com.tempedge.error.client.timeInrequired")} category="client" component={InputBox} />
                           </div>
                           <div className="col-md-6">
                             <label className="control-label">&nbsp;</label>
-                            <Field name="timeOut" type="text" placeholder={this.props.translate('com.tempedge.msg.label.timeout')} category="person" component={InputBox} />
+                            <Field name="timeOut" type="text" placeholder={this.props.translate("com.tempedge.error.person.timeOutrequired")} category="person" component={InputBox} />
                           </div>
                         </div>
 
                         <div className="form-group row">
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.employeeContact"></Translate></label>
-                            <Field name="employeeContact" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enteremployeecontact')} category="client" component={InputBox} />
+                            <Field name="employeeContact" type="text" placeholder={this.props.translate("com.tempedge.error.client.employeeContactrequired")} category="client" component={InputBox} />
                           </div>
                           <div className="col-md-6">
                             <label className="control-label"><Translate id="com.tempedge.msg.label.contactPhone"></Translate></label>
-                            <Field name="contactPhone" type="text" placeholder={this.props.translate('com.tempedge.msg.label.enteremployeecontact')} category="client" component={InputBox} />
+                            <Field name="contactPhone" type="text" placeholder={this.props.translate("com.tempedge.error.client.contactPhonerequired")} category="client" component={InputBox} />
                           </div>
                         </div>
                       </div>

@@ -300,9 +300,9 @@ class CreateNewClient extends Component {
                 <table className="table table-borderless">
                   <thead>
                     <tr>
-                      <th>Position</th>
-                      <th>Markup</th>
-                      <th>OT Markup</th>
+                      <th><Translate id="com.tempedge.msg.label.position" /></th>
+                      <th><Translate id="com.tempedge.msg.label.markup" /></th>
+                      <th><Translate id="com.tempedge.msg.label.OtMarkup" /></th>
                     </tr>
                   </thead>
                   <tbody>
