@@ -55,6 +55,10 @@ body {
   margin-bottom: 2.5rem;
 }
 
+.end-container {
+  margin-bottom: 2.5rem;
+}
+
 .captcha-panel {
   margin-top: 0;
   margin: auto;
@@ -96,11 +100,11 @@ body {
 }
 
 .facemash-modal {
-  background: #565656;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .facemash-modal .modal-dialog {
-  max-width: 90%;
+  min-width: 500px;
   margin: 1.75rem auto;
 }
 
@@ -589,7 +593,8 @@ input:invalid {
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  margin: 6% 0 0 0;
+  /* margin: 6% 0 0 0; */
+  margin: 20px 0 0 0;
   min-height: 20rem;
   align-items: center;
 }
@@ -1302,6 +1307,7 @@ form div.list .list-item:last-child button {
   align-content: center;
   border-radius: 16px;
   margin-bottom: 0;
+  box-shadow: 0 0.2rem 0.78rem 0.02rem rgba(104, 104, 104, 0.2);
 }
 
 .main-form-panel-inputs {
@@ -1650,6 +1656,37 @@ form div.list .list-item:last-child button {
     padding: 0 2.2rem 2.5rem 2.2rem;
   }
 }
+
+.symbol-button {
+  background-color: var(--normal-blue);
+  color: white;
+  width: 100%;
+  border-radius: 1.6rem;
+  min-width: 32px;
+  max-width: 60px;
+}
+.symbol-button:hover {
+  color: white;
+}
+
+.table-hover tbody tr:hover,
+.table-hover .table-active:hover {
+  cursor: pointer;
+  background-color: var(--tempedge-light-orange);
+  color: white;
+}
+
+.table-active,
+.table-active > td,
+.table-active > th {
+  background-color: var(--tempedge-orange);
+  color: white;
+}
+
+.modal-lg {
+  max-width: 1200px;
+}
+
 .progress {
   height: 1.5rem;
   font-size: 1.25rem;
@@ -1658,4 +1695,8 @@ form div.list .list-item:last-child button {
 
 .progress-bar {
   background-color: var(--normal-blue);
+}
+
+p {
+  word-break: break-all;
 }

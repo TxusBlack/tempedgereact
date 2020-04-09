@@ -17,7 +17,14 @@ const OutcomeBar = (props) => {
 
 OutcomeBar.propTypes = {
   classApplied: PropTypes.string.isRequired,
-  translateId: PropTypes.string.isRequired
+  translateId: PropTypes.string.isRequired,
+  customData: PropTypes.shape({
+    data: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
+  })
+};
+
+OutcomeBar.defaultProps = {
+  customData: { data: '' }
 };
 
 export default withLocalize(connect(null, {})(OutcomeBar));

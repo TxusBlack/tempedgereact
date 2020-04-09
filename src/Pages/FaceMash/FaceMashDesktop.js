@@ -10,10 +10,10 @@ import httpService from '../../utils/services/httpService/httpService.js';
 import { notify } from 'reapop';
 
 let canvas_width = 461;
-let canvas_height: 343;
+let canvas_height = 343;
 
 class FaceMashDesktop extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
@@ -29,7 +29,7 @@ class FaceMashDesktop extends React.Component {
     showModal: false
   };
 
-  componentDidMount(){
+  componentDidMount() {
     let canvas = document.getElementById('canvas');
     let context = canvas.getContext('2d');
     //let tracker = new window.tracking.ObjectTracker("face");      //Tracker, canvas and context are needed to turn off the camera on componentUnmount
@@ -48,7 +48,7 @@ class FaceMashDesktop extends React.Component {
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     //this.state.trackerTask.events_.stopVideoFeed[0]();
   }
 
@@ -61,10 +61,10 @@ class FaceMashDesktop extends React.Component {
     let currentImage = this.webcam.getScreenshot();
 
     //If there's less than 3 images on the list only
-    if(this.state.imgCollection.length < 3){
+    if (this.state.imgCollection.length < 3) {
       this.setState({
         currentImage: currentImage
-      },() => {
+      }, () => {
         this.toggleModalOnOff();    //Open Modal
       });
     }
@@ -110,7 +110,7 @@ class FaceMashDesktop extends React.Component {
 
   //Close Modal
   onClose = (choice) => {
-    if(choice === "keep"){
+    if (choice === "keep") {
       this.mountPic();    //Mount image to wall and add the images collection
     }
 
@@ -144,9 +144,9 @@ class FaceMashDesktop extends React.Component {
       facingMode: "user"
     };
 
-    let tempEdgeSubmitShow = (this.state.imgCollection.length < 3)? '': <button className="btn btn-primary phone-num-btn-submit center-block" onClick={this.onSubmit}>Save</button>;
+    let tempEdgeSubmitShow = (this.state.imgCollection.length < 3) ? '' : <button className="btn btn-primary phone-num-btn-submit center-block" onClick={this.onSubmit}>Save</button>;
 
-    let modalContent = <img src={this.state.currentImage} style={{width: "100%"}} alt="User Pic" />;
+    let modalContent = <img src={this.state.currentImage} style={{ width: "100%" }} alt="User Pic" />;
     let modalBtns = (
       <React.Fragment>
         <button type="button" className="btn btn-primary close-btn" data-dismiss="modal" onClick={() => this.onClose("keep")}>Keep</button>
@@ -154,12 +154,12 @@ class FaceMashDesktop extends React.Component {
       </React.Fragment>
     );
 
-    return(
+    return (
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-5">
-            <div style={{height:40}}></div>
-            <div style={{position: "relative", height: videoConstraints.height}} className="center-block">
+            <div style={{ height: 40 }}></div>
+            <div style={{ position: "relative", height: videoConstraints.height }} className="center-block">
               <Webcam className="center-block facemash"
                 audio={false}
                 height={`${videoConstraints.height}`}
@@ -169,13 +169,13 @@ class FaceMashDesktop extends React.Component {
                 width="90%"
                 videoConstraints={videoConstraints}
               />
-              <canvas id="canvas" width="90%" height="359" style={{position: "absolute", top: 0}}></canvas>
+              <canvas id="canvas" width="90%" height="359" style={{ position: "absolute", top: 0 }}></canvas>
             </div>
-            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture} style={{marginTop: -4}}>Capture photo</button>
+            <button className="btn btn-default phone-num-btn-close center-block" onClick={this.capture} style={{ marginTop: -4 }}>Capture photo</button>
             {tempEdgeSubmitShow}
           </div>
           <div className="col-md-7">
-            <div style={{padding:40, minHeight:'calc(100vh - 130px)'}}>
+            <div style={{ padding: 40, minHeight: 'calc(100vh - 130px)' }}>
               <div className="row">
                 {this.state.picWall}
               </div>

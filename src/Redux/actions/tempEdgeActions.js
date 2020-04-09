@@ -62,7 +62,6 @@ export let doLogout = (lang) => {
       type: types.LOGOUT,
       payload: {}
     });
-
     history.push(`/auth/${lang}`);
   };
 };
@@ -98,6 +97,7 @@ export let tempedgeAPI = (url, data, actionName) => {
   return (dispatch) => {
     let token = sessionStorage.getItem('access_token');
 
+    console.log('Req: ', data);
     Axios({
       url: baseUrlTempEdge + url,
       method: 'post',
@@ -132,12 +132,8 @@ export let tempedgeMultiPartApi = (url, data, fileArray, actionName) => {
     let blob = new Blob([jsonse], { type: 'application/json' });
 
     formData.append('personEntity', blob);
-    if (fileArray && fileArray.length > 0) {
-      formData.append('personEntity', blob);
-      formData.append('document', fileArray.documents);
-      formData.append('resume', fileArray.resume);
-      data.base64Dco = data.base64Resume = null;
-    }
+    formData.append('document', fileArray.documents);
+    formData.append('resume', fileArray.resume);
 
     let options = {
       headers: {
@@ -207,12 +203,11 @@ export let getListSafe = (url, data, actionName) => {
 };
 
 export let getList = (url, actionName) => {
-  return (dispatch) => {
-    httpService.get(url).then((response) => {
-      dispatch({
-        type: actionName,
-        payload: response.data.result
-      });
+  return async (dispatch) => {
+    const response = await httpService.get(url);
+    dispatch({
+      type: actionName,
+      payload: response.data.result
     });
   };
 };
