@@ -1685,7 +1685,7 @@ p {
 }
 
 .input-group > div:first-child {
-  width: calc(100% - 33px);
+  width: calc(100% - 34px);
 }
 
 .input-group .btn {
