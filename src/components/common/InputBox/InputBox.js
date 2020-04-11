@@ -31,17 +31,35 @@ let renderInput = (formProps) => {
     value = value.toString();
   }
 
-  // console.log('name of InputBoxes', formProps.input.name, formProps.input.value);
-
-  if (formProps.type === "textarea")
-    input = <textarea className="form-control tempEdge-input-box" rows="4" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />
-  else if (formProps.type === "password") {
-    input = <input className="form-control tempEdge-input-box" type="password" rows="2" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />
+  if (formProps.type === 'textarea')
+    input = <textarea className="form-control tempEdge-input-box" rows="4" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />;
+  else if (formProps.type === 'password') {
+    input = <input className="form-control tempEdge-input-box" type="password" rows="2" placeholder={formProps.placeholder} {...formProps.input} autoComplete="off" />;
   } else {
-    if (formProps.active !== "disabled")
-      input = <input className="form-control tempEdge-input-box" type="text" maxLength={formProps.maxlength} placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" />
+    if (formProps.active !== 'disabled')
+      input = (
+        <input
+          className={`form-control tempEdge-input-box ${formProps.customClass}`}
+          type="text"
+          maxLength={formProps.maxlength}
+          placeholder={formProps.placeholder}
+          {...formProps.input}
+          value={value}
+          autoComplete="off"
+        />
+      );
     else
-      input = <input className="form-control tempEdge-input-box" type="text" placeholder={formProps.placeholder} {...formProps.input} value={value} autoComplete="off" disabled />
+      input = (
+        <input
+          className={`form-control tempEdge-input-box ${formProps.customClass}`}
+          type="text"
+          placeholder={formProps.placeholder}
+          {...formProps.input}
+          value={value}
+          autoComplete="off"
+          disabled
+        />
+      );
   }
 
   if (formProps.meta.form === "NewEmployee") {
@@ -50,7 +68,13 @@ let renderInput = (formProps) => {
       if (found === -1) {
         formProps.setErrorField(formProps.input.name);
       }
-    } else if (typeof formProps.meta.error === 'undefined' && !formProps.meta.invalid && !formProps.meta.active && formProps.meta.touched && typeof formProps.errorFields !== 'undefined') {
+    } else if (
+      typeof formProps.meta.error === 'undefined' &&
+      !formProps.meta.invalid &&
+      !formProps.meta.active &&
+      formProps.meta.touched &&
+      typeof formProps.errorFields !== 'undefined'
+    ) {
       let found = formProps.errorFields.indexOf(formProps.input.name);
       if (found > -1) {
         formProps.removeErrorField(formProps.input.name);
@@ -64,12 +88,11 @@ let renderInput = (formProps) => {
       <ErrorRender {...formProps} />
     </div>
   );
-}
+};
 
 let InputBox = (props) => {
-
   return renderInput(props);
-}
+};
 
 InputBox.propTypes = {
   setErrorField: PropTypes.func.isRequired,
@@ -81,6 +104,5 @@ let mapStateToProps = (state) => {
     errorFields: state.tempEdge.errorFields
   });
 };
-
 
 export default connect(mapStateToProps, { setErrorField, removeErrorField })(InputBox);
