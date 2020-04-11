@@ -7,6 +7,7 @@ import Footer from '../Footer/Footer';
 import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 import user from './assets/user.png';
 import { doLogout } from '../../../Redux/actions/tempEdgeActions.js';
+import List from './components/List';
 
 class NavPanelLeft extends React.Component {
   constructor(props) {
@@ -40,7 +41,6 @@ class NavPanelLeft extends React.Component {
     let panelClass = this.props.show ? 'panel-nav-left show' : 'panel-nav-left';
     let leftNavMenu =
       typeof sessionStorage.getItem('leftNavMenu') !== 'undefined' && sessionStorage.getItem('leftNavMenu') !== null ? JSON.parse(sessionStorage.getItem('leftNavMenu')) : '';
-
     return (
       <nav className={panelClass}>
         <div>
@@ -59,19 +59,7 @@ class NavPanelLeft extends React.Component {
               <h4>{this.props.firstName + ' ' + this.props.lastName}</h4>
             </h4>
           </div>
-          <ul>
-            {leftNavMenu !== ''
-              ? leftNavMenu.map((item, index) => {
-                  return (
-                    <Link to={`${item.optionPath}/${this.props.activeLanguage.code} `} onClick={this.toggleNav}>
-                      <li>
-                        <Translate id={item.optionName} />
-                      </li>
-                    </Link>
-                  );
-                })
-              : ''}
-          </ul>
+          <List onClick={this.toggleNav} list={leftNavMenu} activeLanguage={this.props.activeLanguage.code} />
         </div>
         <Footer
           content={
