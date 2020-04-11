@@ -65,7 +65,8 @@ class CreateEmployee extends Component {
         ['phone', 'country', 'address', 'city', 'state', 'zip'],
         [],
         ['drugTestDate', 'backgroundTestDate', 'joblocation', 'maritalstatusDropdown', 'numberofallowances']
-      ]
+      ],
+      agency: JSON.parse(sessionStorage.getItem('agency'))
     };
     this.resumeLabel = React.createRef();
     this.documentLabel = React.createRef();
@@ -79,6 +80,7 @@ class CreateEmployee extends Component {
   }
 
   componentDidMount = async () => {
+    const { orgId } = this.state.agency.organizationEntity;
     this.setState(() => ({
       announcementBar: ''
     }));
@@ -88,12 +90,12 @@ class CreateEmployee extends Component {
     let maritalStatus = [];
 
     await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe(api_url, { orgId: 1, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
-    await this.props.getListSafe('/api/office/findAll', { orgId: 1 }, types.GET_OFFICE_LIST);
+    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe('/api/office/findAll', { orgId }, types.GET_OFFICE_LIST);
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
     parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
 
-    await this.props.getListSafe('/api/person/skillList', { orgId: 1 }, types.SKILLS_LIST);
+    await this.props.getListSafe('/api/person/skillList', { orgId }, types.SKILLS_LIST);
 
     let todaysDate = new Date();
     let backDate = todaysDate.setFullYear(todaysDate.getFullYear() - 18);
@@ -119,10 +121,14 @@ class CreateEmployee extends Component {
   };
 
   componentWillUnmount = () => {
-    this.props.reset();
-    this.props.clearErrorField();
-    this.props.clearTempedgeStoreProp('savePerson');
-    this.props.clearTempedgeStoreProp('validatePerson');
+    const { reset, clearErrorField, clearTempedgeStoreProp } = this.props;
+    reset();
+    clearErrorField();
+    clearTempedgeStoreProp('savePerson');
+    clearTempedgeStoreProp('orgDepartmentList');
+    clearTempedgeStoreProp('officeList');
+    clearTempedgeStoreProp('skillList');
+    clearTempedgeStoreProp('validatePerson');
     this.resetFileFields();
   };
 
@@ -492,9 +498,6 @@ class CreateEmployee extends Component {
     const documentFile = this.documentFileInput.current.files[0];
     const resumeFile = this.resumeFileInput.current.files[0];
 
-    let agency = sessionStorage.getItem('agency');
-    agency = JSON.parse(agency);
-
     return new Promise((resolve, reject) => {
       for (let prop in formValues) {
         let id = null;
@@ -515,8 +518,8 @@ class CreateEmployee extends Component {
     }).then((skills) => {
       let data = {
         temporalInfo: formValues.temporarydata ? true : false,
-        skills,
-        orgId: agency.organizationEntity.orgId,
+        skills: skills,
+        orgId: this.state.agency.organizationEntity.orgId,
         address: formValues.address.toUpperCase(),
         address2: typeof formValues.address2_ !== 'undefined' ? formValues.address2_.toUpperCase() : '',
         backgroundTestDate: formValues.backgroundTest.backgroundTest === 'Yes' ? moment(formValues.backgroundTestDate, 'YYYY-MM-DD') : null,
@@ -541,7 +544,7 @@ class CreateEmployee extends Component {
         phone: formValues.phone,
         region: formValues.state.regionId,
         taxRegion: formValues.joblocation.regionId,
-        usrCreatedBy: agency.portalUserConfId,
+        usrCreatedBy: this.state.agency.portalUserConfId,
         zipcode: formValues.zip,
         docExt: null,
         resumeExt: null,
@@ -624,6 +627,7 @@ class CreateEmployee extends Component {
   }
 
   render() {
+    const { translate } = this.props;
     let key = this.state.key;
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
@@ -721,27 +725,22 @@ class CreateEmployee extends Component {
                         </label>
                         <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={DropdownList} />
                       </div>
-                      <div className="col-10 col-md-5 col-lg-4">
+                      <div className="form-group col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.department" />
                         </label>
-                        <div className="row">
-                          <div className="col-9 col-md-8 col-lg-9">
-                            <Translate>
-                              {({ translate }) => (
-                                <Field
-                                  name="department"
-                                  placeholder={translate('com.tempedge.msg.label.department')}
-                                  category="person"
-                                  component={InputBox}
-                                  ref={this.departmentInput}
-                                  className="form-control tempEdge-input-box"
-                                />
-                              )}
-                            </Translate>
-                          </div>
-                          <div className="col-3 col-md-4 col-lg-3 text-right">
-                            <button className="btn symbol-button" type="button" onClick={() => this.openModal()}>
+                        <div className="input-group">
+                          <Field
+                            name="department"
+                            placeholder={translate('com.tempedge.msg.label.department')}
+                            category="person"
+                            component={InputBox}
+                            customClass="square-right-side"
+                            ref={this.departmentInput}
+                            active="disabled"
+                          />
+                          <div className="input-group-append">
+                            <button className="btn btn-green" title={translate('com.tempedge.msg.label.viewdepartmentlist')} type="button" onClick={() => this.openModal()}>
                               +
                             </button>
                           </div>
@@ -889,33 +888,33 @@ class CreateEmployee extends Component {
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                            let listLen = this.props.skillsList.length;
+                              let listLen = this.props.skillsList.length;
 
-                            if (index < (listLen - 1) / 2) {
-                              return (
-                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                </div>
-                              );
-                            }
-                          })
+                              if (index < (listLen - 1) / 2) {
+                                return (
+                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                  </div>
+                                );
+                              }
+                            })
                           : ''}
                       </div>
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
                           ? sortedSkillList.map((item, index) => {
-                            let listLen = this.props.skillsList.length;
+                              let listLen = this.props.skillsList.length;
 
-                            if (index > (listLen - 1) / 2) {
-                              return (
-                                <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
-                                  <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
-                                  <span style={{ paddingLeft: 10 }}>{item.skill}</span>
-                                </div>
-                              );
-                            }
-                          })
+                              if (index > (listLen - 1) / 2) {
+                                return (
+                                  <div style={{ width: '60%', margin: 'auto', marginBottom: 5 }}>
+                                    <Field name={`data-skill-id-${item.skillId}`} data-skill-id={item.skillId} component="input" type="checkbox" />
+                                    <span style={{ paddingLeft: 10 }}>{item.skill}</span>
+                                  </div>
+                                );
+                              }
+                            })
                           : ''}
                       </div>
                     </div>
@@ -979,11 +978,11 @@ class CreateEmployee extends Component {
                               this.props.drugTest.drugTest === 'Yes' || this.props.drugTest.drugTest === 'Si' ? (
                                 drugTestDate
                               ) : (
-                                  <div style={{ height: 77 }}></div>
-                                )
-                            ) : (
                                 <div style={{ height: 77 }}></div>
-                              )}
+                              )
+                            ) : (
+                              <div style={{ height: 77 }}></div>
+                            )}
                           </div>
 
                           <div className="col-md-6">
@@ -1010,11 +1009,11 @@ class CreateEmployee extends Component {
                               this.props.backgroundTest.backgroundTest === 'Yes' || this.props.backgroundTest.backgroundTest === 'Si' ? (
                                 backgroundTestDate
                               ) : (
-                                  <div style={{ height: 77 }}></div>
-                                )
-                            ) : (
                                 <div style={{ height: 77 }}></div>
-                              )}
+                              )
+                            ) : (
+                              <div style={{ height: 77 }}></div>
+                            )}
                           </div>
                         </div>
                         <hr style={{ margin: '40px 0 25px 0' }} />

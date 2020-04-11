@@ -17,7 +17,8 @@ class PaginatedTable extends Component {
     this.state = {
       tablePage: 0,
       filterBy: {},
-      data: []
+      data: [],
+      orgId: JSON.parse(sessionStorage.getItem('agency')).organizationEntity.orgId
     };
 
     ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
@@ -30,7 +31,7 @@ class PaginatedTable extends Component {
       filterBy: this.props.filterBy ? this.props.filterBy : {}
     }));
 
-    let payload = { orgId: 1, filterBy: this.props.filterBy ? this.props.filterBy : {} };
+    let payload = { orgId: this.state.orgId, filterBy: this.props.filterBy ? this.props.filterBy : { personType: '1' } };
 
     if (typeof this.props.payload === 'undefined' && typeof this.props.apiUrl !== 'undefined') {
       payload.data = this.props.payload;
@@ -41,7 +42,7 @@ class PaginatedTable extends Component {
   changePage = (myPage) => {
     this.setState({ tablePage: myPage });
     let payload = {
-      orgId: 1,
+      orgId: this.state.orgId,
       page: myPage,
       filterBy: this.state.filterBy
     };
@@ -60,7 +61,7 @@ class PaginatedTable extends Component {
     this.props.tempedgeAPI(
       this.props.apiUrl,
       {
-        orgId: 1,
+        orgId: this.state.orgId,
         page: this.state.tablePage,
         filterBy: filter
       },
