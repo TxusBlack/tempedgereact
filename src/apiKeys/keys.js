@@ -1,5 +1,5 @@
 let keys = {
-  RECAPTCHA_SITE_KEY: "6LeNHJQUAAAAAGGyE1lwqW3bdQJESUGruo57kb89"
+  RECAPTCHA_SITE_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY
 }
 
 export default keys;

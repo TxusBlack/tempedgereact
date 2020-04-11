@@ -2,8 +2,8 @@ import Axios from 'axios';
 import FormData from 'form-data';
 import config from '../../../env/env.js';
 
-let baseUrlTempEdge = `http://100.1.147.42:9191`; //***Must change this URL in the actions file as well***
-let baseUrlFaceRecognition = `http://100.1.147.42:9191`;
+let baseUrlTempEdge = process.env.REACT_APP_BASE_URL_TEMPEDGE; //***Must change this URL in the actions file as well***
+let baseUrlFaceRecognition = process.env.REACT_APP_BASE_URL_FACERE_COGNITION;
 
 function dataURLtoFile(dataurl, filename) {
   var arr = dataurl.split(','),
