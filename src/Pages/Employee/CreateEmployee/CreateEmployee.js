@@ -328,12 +328,12 @@ class CreateEmployee extends Component {
               <div className="prev-next-btns-agency row" style={{ width: '-webkit-fill-available' }}>
                 <div className="col-md-5 offset-md-1">
                   <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={() => this.onClose()}>
-                    Cancel
+                    <Translate id="com.tempedge.msg.label.cancel" />
                   </button>
                 </div>
                 <div className="col-md-5">
                   <button type="submit" className="btn btn-primary btn-block register-save-btn next" onClick={() => save()}>
-                    Save
+                    <Translate id="com.tempedge.msg.label.save" />
                   </button>
                 </div>
               </div>
@@ -627,6 +627,7 @@ class CreateEmployee extends Component {
   }
 
   render() {
+    const { translate } = this.props;
     let key = this.state.key;
     let sortedSkillList = undefined;
     let birthDay = this.props.birthday !== null ? moment().diff(this.props.birthday, 'years', false) : '';
@@ -645,7 +646,7 @@ class CreateEmployee extends Component {
         <label className="control-label" style={{ marginBottom: 5 }}>
           <Translate id="com.tempedge.msg.label.date" />
         </label>
-        <Field name="drugTestDate" type="text" placeholder="Drug Test Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
+        <Field name="drugTestDate" type="text" placeholder={translate("com.tempedge.msg.label.drugtestdate")} category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
       </div>
     );
 
@@ -654,7 +655,7 @@ class CreateEmployee extends Component {
         <label className="control-label" style={{ marginBottom: 5 }}>
           <Translate id="com.tempedge.msg.label.date" />
         </label>
-        <Field name="backgroundTestDate" type="text" placeholder="Background Test Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
+        <Field name="backgroundTestDate" type="text" placeholder={translate("com.tempedge.msg.label.backgroundtestdate")} category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
       </div>
     );
 
@@ -689,22 +690,22 @@ class CreateEmployee extends Component {
                 <ul className="nav nav-panel">
                   <li className="nav-item first-panel " onClick={() => this.setState({ key: 0 })}>
                     <a className="nav-link active" style={this.state.errorPanel[0]} data-toggle="tab" href="#tab1">
-                      Info
+                      <Translate id="com.tempedge.msg.label.information" />
                     </a>
                   </li>
                   <li className="nav-item panel" onClick={() => this.setState({ key: 1 })}>
                     <a className="nav-link" style={this.state.errorPanel[1]} data-toggle="tab" href="#tab2">
-                      Contact
+                      <Translate id="com.tempedge.msg.label.contact" />
                     </a>
                   </li>
                   <li className="nav-item panel" onClick={() => this.setState({ key: 2 })}>
                     <a className="nav-link" data-toggle="tab" href="#tab4">
-                      Skills
+                      <Translate id="com.tempedge.msg.label.skills" />
                     </a>
                   </li>
                   <li className="nav-item last-panel" onClick={() => this.setState({ key: 3 })}>
                     <a className="nav-link" style={this.state.errorPanel[3]} data-toggle="tab" href="#tab6">
-                      Misc
+                      <Translate id="com.tempedge.msg.label.misc" />
                     </a>
                   </li>
                 </ul>
@@ -722,11 +723,11 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.office" />
                         </label>
-                        <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={DropdownList} />
+                        <Field name="office" data={this.state.officeList} valueField="officeId" textField="name" category="person" component={DropdownList} placeholder={translate("com.tempedge.msg.label.select")} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
-                          <Translate id="com.tempedge.msg.label.department" />
+                          <Translate id="com.tempedge.msg.label.orgdepartment" />
                         </label>
                         <div className="row">
                           <div className="col-9 col-md-8 col-lg-9">
@@ -734,7 +735,7 @@ class CreateEmployee extends Component {
                               {({ translate }) => (
                                 <Field
                                   name="department"
-                                  placeholder={translate('com.tempedge.msg.label.department')}
+                                  placeholder={translate("com.tempedge.error.client.departmentnamerequired")}
                                   category="person"
                                   component={InputBox}
                                   ref={this.departmentInput}
@@ -754,21 +755,21 @@ class CreateEmployee extends Component {
                     <div className="form-group row">
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
-                          <Translate id="com.tempedge.msg.label.ssnonly" />
+                          <Translate id="com.tempedge.msg.label.ssn" />
                         </label>
-                        <Field name="ssn" type="text" placeholder="SSN" category="person" component={InputBox} normalize={normalizeSSN} />
+                        <Field name="ssn" type="text" placeholder={translate("com.tempedge.msg.label.ssn")} category="person" component={InputBox} normalize={normalizeSSN} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.employeeid" />
                         </label>
-                        <Field name="employeeid" type="text" placeholder="Employee ID" category="person" component={InputBox} />
+                        <Field name="employeeid" type="text" placeholder={translate("com.tempedge.msg.label.employeeid")} category="person" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.hiredate" />
                         </label>
-                        <Field name="hireDate_" type="text" placeholder="Hire Date" category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
+                        <Field name="hireDate_" type="text" placeholder={translate("com.tempedge.msg.label.hiredate")} category="person" customClass="form-control tempEdge-input-box" component={Datepicker} />
                       </div>
                     </div>
                     <div className="form-group row">
@@ -776,19 +777,19 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.firstname" />
                         </label>
-                        <Field name="firstName" type="text" placeholder="First Name" category="person" component={InputBox} />
+                        <Field name="firstName" type="text" placeholder={translate("com.tempedge.msg.label.firstname")} category="person" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.middlename"></Translate>
                         </label>
-                        <Field name="middleName_" type="text" placeholder="Middle Name" category="person" component={InputBox} />
+                        <Field name="middleName_" type="text" placeholder={translate("com.tempedge.msg.label.middlename")} category="person" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.lastname"></Translate>
                         </label>
-                        <Field name="lastName" type="text" placeholder="Last Name" category="person" component={InputBox} />
+                        <Field name="lastName" type="text" placeholder={translate("com.tempedge.msg.label.lastname")} category="person" component={InputBox} />
                       </div>
                     </div>
 
@@ -813,7 +814,7 @@ class CreateEmployee extends Component {
                         <span style={{ display: 'none' }} ref="femaleOption">
                           <Translate id="com.tempedge.msg.label.gender.female" />
                         </span>
-                        <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={DropdownList} />
+                        <Field id="genderDropdown" name="gender" data={this.state.genders} valueField="value" textField="gender" category="person" component={DropdownList} placeholder={translate("com.tempedge.msg.label.select")} />
                       </div>
                     </div>
                   </div>
@@ -823,13 +824,13 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.phone" />
                         </label>
-                        <Field name="phone" type="text" placeholder="Phone" category="person" component={InputBox} normalize={normalizePhone} />
+                        <Field name="phone" type="text" placeholder={translate("com.tempedge.msg.label.phone")} category="person" component={InputBox} normalize={normalizePhone} />
                       </div>
                       <div className="col-10 col-md-8">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.email" />
                         </label>
-                        <Field name="email_" type="text" placeholder="Email" category="person" component={InputBox} />
+                        <Field name="email_" type="text" placeholder={translate("com.tempedge.msg.label.email")} category="person" component={InputBox} />
                       </div>
                     </div>
 
@@ -846,6 +847,7 @@ class CreateEmployee extends Component {
                           textField="name"
                           category="agency"
                           component={DropdownList}
+                          placeholder={translate("com.tempedge.msg.label.select")}
                         />
                       </div>
                     </div>
@@ -854,13 +856,13 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.address" />
                         </label>
-                        <Field name="address" type="text" placeholder="Address" category="person" component={InputBox} />
+                        <Field name="address" type="text" placeholder={translate("com.tempedge.msg.label.address")} category="person" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.agencyaddress2" />
                         </label>
-                        <Field name="address2_" type="text" placeholder="Address 2" category="person" component={InputBox} />
+                        <Field name="address2_" type="text" placeholder={translate("com.tempedge.msg.label.agencyaddress2")} category="person" component={InputBox} />
                       </div>
                     </div>
                     <div className="form-group row">
@@ -868,19 +870,19 @@ class CreateEmployee extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.city" />
                         </label>
-                        <Field name="city" type="text" placeholder="City" category="person" component={InputBox} />
+                        <Field name="city" type="text" placeholder={translate("com.tempedge.msg.label.city")} category="person" component={InputBox} />
                       </div>
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.state" />
                         </label>
-                        <Field name="state" data={this.state.regionList} valueField="regionId" textField="name" category="person" component={DropdownList} />
+                        <Field name="state" data={this.state.regionList} valueField="regionId" textField="name" category="person" component={DropdownList} placeholder={translate("com.tempedge.msg.label.select")} />
                       </div>
                       <div className="col10 col-md-5 col-lg-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.agencyzipcode" />
                         </label>
-                        <Field name="zip" type="text" placeholder="Zip Code" category="person" component={InputBox} />
+                        <Field name="zip" type="text" placeholder={translate("com.tempedge.msg.label.agencyzipcode")} category="person" component={InputBox} />
                       </div>
                     </div>
                   </div>
@@ -933,7 +935,7 @@ class CreateEmployee extends Component {
                           <label className="control-label" style={{ marginBottom: 5 }}>
                             <Translate id="com.tempedge.msg.label.joblocation" />
                           </label>
-                          <Field name="joblocation" data={this.state.regionList} valueField="regionId" textField="name" category="person" component={DropdownList} />
+                          <Field name="joblocation" data={this.state.regionList} valueField="regionId" textField="name" category="person" component={DropdownList} placeholder={translate("com.tempedge.msg.label.select")} />
                         </div>
 
                         <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
@@ -953,6 +955,7 @@ class CreateEmployee extends Component {
                             textField="maritalStatus"
                             category="person"
                             component={DropdownList}
+                            placeholder={translate("com.tempedge.msg.label.select")}
                           />
                         </div>
 
@@ -960,7 +963,7 @@ class CreateEmployee extends Component {
                           <label className="control-label" style={{ marginBottom: 5 }}>
                             <Translate id="com.tempedge.msg.label.numberofallowances" />
                           </label>
-                          <Field name="numberofallowances" type="text" placeholder="Number of allowances" category="person" component={InputBox} />
+                          <Field name="numberofallowances" type="text" placeholder={translate("com.tempedge.msg.label.numberofallowances")} category="person" component={InputBox} />
                         </div>
                       </div>
                       <div className="col-md-8">
@@ -976,7 +979,7 @@ class CreateEmployee extends Component {
                               <span style={{ display: 'none' }} ref="drugtestNegativeOption">
                                 <Translate id="com.tempedge.msg.label.negative" />
                               </span>
-                              <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="drugTest" category="person" component={DropdownList} />
+                              <Field name="drugTest" data={this.state.drugTest} valueField="value" textField="drugTest" category="person" component={DropdownList} placeholder={translate("com.tempedge.msg.label.select")} />
                             </div>
                             {this.props.drugTest && typeof this.props.drugTest.drugTest === 'string' ? (
                               this.props.drugTest.drugTest === 'Yes' || this.props.drugTest.drugTest === 'Si' ? (
@@ -1007,6 +1010,7 @@ class CreateEmployee extends Component {
                                 textField="backgroundTest"
                                 category="person"
                                 component={DropdownList}
+                                placeholder={translate("com.tempedge.msg.label.select")}
                               />
                             </div>
                             {this.props.backgroundTest && typeof this.props.backgroundTest.backgroundTest === 'string' ? (
@@ -1081,12 +1085,12 @@ class CreateEmployee extends Component {
                   <div className="prev-next-btns-agency row" style={{ marginTop: 30 }}>
                     <div className="col-md-5 offset-md-1">
                       <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>
-                        Cancel
+                        <Translate id="com.tempedge.msg.label.cancel" />
                       </button>
                     </div>
                     <div className="col-md-5">
                       <button type="submit" className="btn btn-primary btn-block register-save-btn next">
-                        Save
+                        <Translate id="com.tempedge.msg.label.save" />
                       </button>
                     </div>
                   </div>

@@ -62,7 +62,7 @@ const DropdownList = (formProps) => {
         getOptionValue={(option) => `${option[formProps.valueField]} `}
         clearable
         styles={customStyles}
-        placeholder="Select"
+        placeholder={formProps.placeholder}
       />
       <ErrorRender {...formProps} />
     </div>

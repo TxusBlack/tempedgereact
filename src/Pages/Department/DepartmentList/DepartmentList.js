@@ -32,7 +32,7 @@ class DepartmentList extends Component {
 
   render() {
     const { onClickRows, multipleRows } = this.props;
-    return <PaginatedTable apiUrl={apiUrl} title="com.tempedge.table.title.label.departmentList" onClickRows={onClickRows} multipleRows={multipleRows} />;
+    return <PaginatedTable apiUrl={apiUrl} title="com.tempedge.msg.label.departmentlist" onClickRows={onClickRows} multipleRows={multipleRows} />;
   }
 }
 
