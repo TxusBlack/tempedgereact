@@ -151,6 +151,8 @@ class CreateEmployee extends Component {
   componentDidUpdate = async (prevProps) => {
     const { getCountryList } = this.state;
     const { countryRegionList } = this.props;
+    let chkResult = [...this.state.chkResult];
+    let errorPanel = [...this.state.errorPanel];
     if (getCountryList === false) {
       if (typeof countryRegionList !== 'undefined') {
         this.setState(() => ({
@@ -181,6 +183,19 @@ class CreateEmployee extends Component {
     if (hasActiveLanguageChanged) {
       this.props.push(`/employee/new/${this.props.activeLanguage.code}`);
       this.addTranslationsForActiveLanguage();
+    }
+
+    if (errorPanel[2]) {
+      if (errorPanel[2].border) {
+        if (!this.props.skillErr) {
+          chkResult[2] = [];
+          errorPanel[2] = chkResult[2].length > 0 ? { border: '2px solid red' } : {};
+          this.setState(() => ({
+            chkResult: chkResult,
+            errorPanel: errorPanel
+          }));
+        }
+      }
     }
 
     // Date formated
@@ -267,12 +282,6 @@ class CreateEmployee extends Component {
         }
       });
 
-      // if (nextProps.skillErr) {
-      //   chkResult[2].push({});
-      // } else {
-      //   chkResult[2] = [];
-      // }
-
       this.state.tabRequiredFields[3].map((field) => {
         let found = nextProps.errorFields.indexOf(field);
 
@@ -287,7 +296,6 @@ class CreateEmployee extends Component {
 
       errorPanel[0] = chkResult[0].length > 0 ? { border: '2px solid red', borderTopLeftRadius: '1.6rem' } : {};
       errorPanel[1] = chkResult[1].length > 0 ? { border: '2px solid red' } : {};
-      // errorPanel[2] = chkResult[2].length > 0 ? { border: '2px solid red' } : {};
       errorPanel[3] = chkResult[3].length > 0 ? { border: '2px solid red', borderTopRightRadius: '1.6rem' } : {};
 
       this.setState(() => ({
