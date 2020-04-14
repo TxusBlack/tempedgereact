@@ -100,14 +100,13 @@ class Login extends Component {
 
     await this.props.doLogin('/api/login', values);
 
-    this.fireNotification('Login Submitted', 'you clicked on the Submit button', 'success');
+    this.fireNotification(this.props.translate('com.tempedge.msg.info.msg.success'), 'success');
   }
 
-  fireNotification = (title, message, status) => {
+  fireNotification = (message, status) => {
     let { notify } = this.props;
 
     notify({
-      title,
       message,
       status,
       position: 'br',
