@@ -185,7 +185,7 @@ export default function (state = initialState, action) {
     case types.GET_ACTIVITY_LIST:
       return {
         ...state,
-        activityList: action.payload
+        activityList: action.payload // This comment on 13 abr. 2020
       };
     case types.GET_SALESMAN_LIST:
       return {
