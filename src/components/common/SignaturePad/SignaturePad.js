@@ -4,10 +4,22 @@
  */
 
 import React from 'react';
+import { push } from 'connected-react-router';
 import SignatureCanvas from 'react-signature-canvas';
+import { withLocalize } from 'react-localize-redux';
+import ActiveLanguageAddTranslation from '../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
 import '../../../assets/styles/components/SignaturePad.css';
 
 class SignaturePad extends React.Component {
+  componentDidUpdate(prevProps) {
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+
+    if (hasActiveLanguageChanged) {
+      push(`/user/changePass/${this.props.activeLanguage.code}`);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    }
+  }
+
   clearCanvas = () => {
     this.sigCanvas.clear();
   };
@@ -17,10 +29,11 @@ class SignaturePad extends React.Component {
     if (!this.sigCanvas.isEmpty()) {
       signature = this.sigCanvas.toDataURL();
     }
-    this.props.getSignature(signature);
+    this.props.getSignature && this.props.getSignature(signature);
   };
 
   render() {
+    const { translate } = this.props;
     return (
       <>
         <div className="row">
@@ -37,11 +50,11 @@ class SignaturePad extends React.Component {
         </div>
         <div className="row">
           <div className="col-12 text-right">
-            <button type="button" onClick={this.clearCanvas} className="btn btn-dark mr-2">
-              Clear
+            <button type="button" onClick={this.clearCanvas} className="btn btn-default mr-2">
+              {translate('com.tempedge.msg.label.getsignature')}
             </button>
             <button type="button" onClick={this.getSignature} className="btn btn-info">
-              Get signature
+              {translate('com.tempedge.msg.label.clear')}
             </button>
           </div>
         </div>
@@ -50,4 +63,4 @@ class SignaturePad extends React.Component {
   }
 }
 
-export default SignaturePad;
+export default withLocalize(SignaturePad);
