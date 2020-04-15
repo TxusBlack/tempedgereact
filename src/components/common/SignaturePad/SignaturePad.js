@@ -48,13 +48,15 @@ class SignaturePad extends React.Component {
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-12 text-right">
-            <button type="button" onClick={this.clearCanvas} className="btn btn-default mr-2">
-              {translate('com.tempedge.msg.label.getsignature')}
-            </button>
-            <button type="button" onClick={this.getSignature} className="btn btn-info">
+        <div className="row text-right">
+          <div className="col-6">
+            <button type="button" onClick={this.clearCanvas} className="btn btn-gray square-right-side">
               {translate('com.tempedge.msg.label.clear')}
+            </button>
+          </div>
+          <div className="col-6">
+            <button type="button" onClick={this.getSignature} className="btn btn-blue square-left-side">
+              {translate('com.tempedge.msg.label.getsignature')}
             </button>
           </div>
         </div>
