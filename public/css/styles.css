@@ -1694,6 +1694,28 @@ p {
   border-bottom-right-radius: 0 !important;
 }
 
+.btn-blue {
+  background-image: linear-gradient(54deg, #5abeec, #69c8f4);
+  border-radius: 1.6rem;
+  color: white;
+  width: 100%;
+}
+
+.btn-blue:hover {
+  color: white;
+}
+
+.btn-gray {
+  background-image: linear-gradient(315deg, var(--tempedge-gray), #c5c5c5);
+  border-color: var(--tempedge-gray);
+  border-radius: 1.6rem;
+  color: white;
+}
+
+.btn-gray:hover {
+  color: white;
+}
+
 .btn-green {
   background-color: var(--tempedge-green);
   border-radius: 1.6rem;
@@ -1702,6 +1724,16 @@ p {
 
 .btn-green:hover {
   color: white;
+}
+
+.btn.square-left-side {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn.square-right-side {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .input-group > div:first-child {
