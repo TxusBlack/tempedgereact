@@ -38,6 +38,7 @@ class CreateEmployee extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      key: 0,
       activePage: 3,
       getCountryList: false,
       prevCountry: '',
@@ -627,7 +628,8 @@ class CreateEmployee extends Component {
       this.setState(
         () => ({
           formData: { ...data },
-          fileArray
+          fileArray,
+          key: 0
         }),
         () => {
           this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
@@ -674,13 +676,13 @@ class CreateEmployee extends Component {
 
   //Close Modal
   cancel = (value) => {
-    // if (value) {
-    //   this.toggleModalOnOff(); //Close Modal
-    // } else {
-    //   this.props.reset();
-    //   this.initialStates();
-    // }
     if (value) this.toggleModalOnOff(); //Close Modal
+    
+    // document.getElementsByClassName('aTab1').click();
+    console.log(this.props.history.location.pathname);
+    // this.props.push(`/employee/new/${this.props.activeLanguage.code}#tab1`);
+
+    this.setState({ key: 0 });
     this.props.reset();
     this.initialStates();
   };
@@ -753,29 +755,34 @@ class CreateEmployee extends Component {
               <Form className="panel-body form-horizontal center-block" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                 <ul className="nav nav-panel">
                   <li className="nav-item first-panel " onClick={() => this.setState({ key: 0 })}>
-                    <a className="nav-link active" style={this.state.errorPanel[0]} data-toggle="tab" href="#tab1">
+                    {/* <a className="nav-link active" style={this.state.errorPanel[0]} data-toggle="tab" href="#tab1"> */}
+                    <a className={(this.state.key === 0) ? "nav-link active" : "nav-link"} style={this.state.errorPanel[0]} data-toggle="tab" href="#tab1">
                       Info
                     </a>
                   </li>
                   <li className="nav-item panel" onClick={() => this.setState({ key: 1 })}>
-                    <a className="nav-link" style={this.state.errorPanel[1]} data-toggle="tab" href="#tab2">
+                    {/* <a className="nav-link" style={this.state.errorPanel[1]} data-toggle="tab" href="#tab2"> */}
+                    <a className={(this.state.key === 1) ? "nav-link active" : "nav-link"} style={this.state.errorPanel[1]} data-toggle="tab" href="#tab2">
                       Contact
                     </a>
                   </li>
                   <li className="nav-item panel" onClick={() => this.setState({ key: 2 })}>
-                    <a className="nav-link" style={this.state.errorPanel[2]} data-toggle="tab" href="#tab4">
+                    {/* <a className="nav-link" style={this.state.errorPanel[2]} data-toggle="tab" href="#tab4"> */}
+                    <a className={(this.state.key === 2) ? "nav-link active" : "nav-link"} style={this.state.errorPanel[2]} data-toggle="tab" href="#tab4">
                       Skills
                     </a>
                   </li>
                   <li className="nav-item last-panel" onClick={() => this.setState({ key: 3 })}>
-                    <a className="nav-link" style={this.state.errorPanel[3]} data-toggle="tab" href="#tab6">
+                    {/* <a className="nav-link" style={this.state.errorPanel[3]} data-toggle="tab" href="#tab6"> */}
+                    <a className={(this.state.key === 3) ? "nav-link active" : "nav-link"} style={this.state.errorPanel[3]} data-toggle="tab" href="#tab6">
                       Misc
                     </a>
                   </li>
                 </ul>
 
                 <div className="tab-content formPanelBody" style={{ background: '#ffff' }}>
-                  <div className="tab-pane fade show active" id="tab1" role="tabpanel">
+                  {/* <div className="tab-pane fade show active" id="tab1" role="tabpanel"> */}
+                  <div className={(this.state.key === 0) ? "tab-pane fade show active" : "tab-pane fade"} id="tab1" role="tabpanel">
                     <div className="form-group row">
                       <div className="col-3 col-md-5 col-lg-4">
                         <label className="control-label">
@@ -871,7 +878,8 @@ class CreateEmployee extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="tab-pane fade" id="tab2" role="tabpanel">
+                  {/* <div className="tab-pane fade" id="tab2" role="tabpanel"> */}
+                  <div className={(this.state.key === 1) ? "tab-pane fade show active" : "tab-pane fade"} id="tab2" role="tabpanel">
                     <div className="form-group row">
                       <div className="col-10 col-md-5 col-lg-4">
                         <label className="control-label">
@@ -941,7 +949,8 @@ class CreateEmployee extends Component {
                   <div className="tab-pane fade" id="tab3" role="tabpanel">
                     tab 3 content...
                   </div>
-                  <div className="tab-pane fade" id="tab4" role="tabpanel">
+                  {/* <div className="tab-pane fade" id="tab4" role="tabpanel"> */}
+                  <div className={(this.state.key === 2) ? "tab-pane fade show active" : "tab-pane fade"} id="tab4" role="tabpanel">
                     <div className="row">
                       <div className="col-md-6">
                         {typeof sortedSkillList !== 'undefined'
@@ -978,7 +987,8 @@ class CreateEmployee extends Component {
                   <div className="tab-pane fade" id="tab5" role="tabpanel">
                     tab 3 content...
                   </div>
-                  <div className="tab-pane fade" id="tab6" role="tabpanel">
+                  {/* <div className="tab-pane fade" id="tab6" role="tabpanel"> */}
+                  <div className={(this.state.key === 3) ? "tab-pane fade show active" : "tab-pane fade"} id="tab6" role="tabpanel">
                     <div className="row">
                       <div className="col-md-4" style={{ borderRight: '1px solid #d7d7d7' }}>
                         <div style={{ width: '60%', margin: 'auto', marginBottom: 10 }}>
