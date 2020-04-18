@@ -73,7 +73,9 @@ class WizardCreateNewUserSecondPage extends Component {
             <div className="col-lg-8 client-col">
               <div className="create-client">
                 <div className="new-client-header">
-                  <h2>Create Client</h2>
+                  <h2>
+                    <Translate id="com.tempedge.msg.label.createNewClient" />
+                  </h2>
                 </div>
                 <div className="new-clients-contents">
                   <div className="client-contents">
@@ -84,14 +86,14 @@ class WizardCreateNewUserSecondPage extends Component {
                       </div>
                       <div className="col-md-8">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.agencyaddress"></Translate></label>
-                        <Field name="clientaddress" type="text" placeholder="Enter Address" category="agency" component={InputBox} />
+                        <Field name="clientaddress" type="text" placeholder={this.props.translate("com.tempedge.error.addressrequired")} category="agency" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="form-group row bottom-row">
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.city"></Translate></label>
-                        <Field name="clientcity" type="text" placeholder="Enter City" category="agency" component={InputBox} />
+                        <Field name="clientcity" type="text" placeholder={this.props.translate("com.tempedge.error.cityrequired")} category="agency" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.state"></Translate></label>
@@ -99,17 +101,17 @@ class WizardCreateNewUserSecondPage extends Component {
                       </div>
                       <div className="col-md-4">
                         <label className="control-label"><Translate id="com.tempedge.msg.label.agencyzipcode"></Translate></label>
-                        <Field name="clientzipcode" type="text" placeholder="Enter Zip Code" category="agency" component={InputBox} />
+                        <Field name="clientzipcode" type="text" placeholder={this.props.translate("com.tempedge.error.zipcoderequired")} category="agency" component={InputBox} />
                       </div>
                     </div>
 
                     <div className="new-clients-footer">
                       <div className="prev-next-btns-agency row">
                         <div className="col-md-5 offset-md-1">
-                          <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+                          <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}><Translate id="com.tempedge.msg.label.cancel" /></button>
                         </div>
                         <div className="col-md-5">
-                          <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.next">Next</Translate></button>
+                          <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}><Translate id="com.tempedge.msg.label.next" /></button>
                         </div>
                       </div>
                     </div>
@@ -121,7 +123,9 @@ class WizardCreateNewUserSecondPage extends Component {
             <div className="col-lg-4 dept-col">
               <div className="department-list">
                 <div className="department-list-header">
-                  <h2>Department List</h2>
+                  <h2>
+                    <Translate id="com.tempedge.msg.label.departmentlist" />
+                  </h2>
                 </div>
 
                 <div className="department-list-contents">
