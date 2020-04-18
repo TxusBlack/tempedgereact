@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import history from '../../../../../history.js';
+import { push } from 'connected-react-router';
+import { connect } from 'react-redux';
 import helpers from '../../../../../utils/helpers';
+import { withLocalize, Translate } from 'react-localize-redux';
+import ActiveLanguageAddTranslation from '../../../ActiveLanguageAddTranslation/ActiveLanguageAddTranslation.js';
 
 class List extends React.Component {
   constructor(props) {
@@ -11,6 +15,15 @@ class List extends React.Component {
       parentBackground: false,
       subMenu: []
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
+
+    if (hasActiveLanguageChanged) {
+      this.props.push(`/dashboard/${this.props.activeLanguage.code}`);
+      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    }
   }
 
   displaySubMenu = (e, index) => {
@@ -28,7 +41,7 @@ class List extends React.Component {
   };
 
   render() {
-    let { onClick, activeLanguage, list } = this.props;
+    let { onClick, activeLanguage, list, translate } = this.props;
     let parents = [];
     let children = [];
     let lista = Array.isArray(list) && list.length > 0 ? list : [];
@@ -77,7 +90,7 @@ class List extends React.Component {
         menu.push(
           <Link onClick={onClick} to={`${item.optionPath}/${activeLanguage} `} style={{ marginLeft: 0, cursor: 'pointer' }}>
             <li>
-              <span>{item.category}</span>
+              <span>{translate(item.category)}</span>
             </li>
           </Link>
         );
@@ -86,7 +99,7 @@ class List extends React.Component {
           <>
             <Link onClick={(e) => this.displaySubMenu(e, item.category)} style={{ cursor: 'pointer' }} to="#">
               <li className="d-flex justify-content-between">
-                {item.category}
+                {translate(item.category)}
                 <span className="down-arrow">﹀</span>
               </li>
             </Link>
@@ -95,7 +108,7 @@ class List extends React.Component {
                 {item.children.map((child, j) => {
                   return (
                     <li onClick={() => this.onClickRedirect(`${child.optionPath}/${activeLanguage} `, child.parent)} style={{ cursor: 'pointer' }}>
-                      <span>{child.optionName}</span>
+                      <span>{translate(child.optionName)}</span>
                     </li>
                   );
                 })}
@@ -115,5 +128,4 @@ class List extends React.Component {
     );
   }
 }
-
-export default List;
+export default withLocalize(connect(null, { push })(List));

@@ -70,9 +70,9 @@ class WizardCreateNewUserFirstPage extends Component {
   render() {
     let salesman = this.props.salesmanList;
     let payrollCycle = [
-      { payrollCycle: 'Monday - Sunday', payrollId: 1 },
-      { payrollCycle: 'Sunday - Saturday', payrollId: 0 },
-      { payrollCycle: 'Saturday - Friday', payrollId: -1 }
+      { payrollCycle: this.props.translate('com.tempedge.msg.label.mon') + " - " + this.props.translate('com.tempedge.msg.label.sun'), payrollId: 1 },
+      { payrollCycle: this.props.translate('com.tempedge.msg.label.sun') + " - " + this.props.translate('com.tempedge.msg.label.sat'), payrollId: 0 },
+      { payrollCycle: this.props.translate('com.tempedge.msg.label.sat') + " - " + this.props.translate('com.tempedge.msg.label.fri'), payrollId: -1 }
     ];
     return (
       <div className="sign-up-wrapper" style={{ margin: 0 }} ref="createNewUser1">
@@ -85,7 +85,9 @@ class WizardCreateNewUserFirstPage extends Component {
             <div className="col-lg-8 client-col">
               <div className="create-client">
                 <div className="new-client-header">
-                  <h2>Create Client</h2>
+                  <h2>
+                    <Translate id="com.tempedge.msg.label.createNewClient" />
+                  </h2>
                 </div>
 
                 <div className="new-clients-contents">
@@ -95,19 +97,19 @@ class WizardCreateNewUserFirstPage extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.company"></Translate>
                         </label>
-                        <Field name="company" type="text" placeholder="Enter Company" category="client" component={InputBox} />
+                        <Field name="company" type="text" placeholder={this.props.translate('com.tempedge.error.agency.fundingCompanydropdownrequired')} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.salesman"></Translate>
                         </label>
-                        <Field name="salesman" data={salesman} valueField="personId" textField="firstName" category="client" component={DropdownList} />
+                        <Field name="salesman" data={salesman} valueField="personId" textField="firstName" category="client" placeholder={this.props.translate('com.tempedge.msg.label.select')} component={DropdownList} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.payrollCycle"></Translate>
                         </label>
-                        <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" component={DropdownList} />
+                        <Field name="payrollCycle" data={payrollCycle} valueField="payrollId" textField="payrollCycle" category="client" placeholder={this.props.translate('com.tempedge.msg.label.select')} component={DropdownList} />
                       </div>
                     </div>
 
@@ -116,19 +118,19 @@ class WizardCreateNewUserFirstPage extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.workCompCode"></Translate>
                         </label>
-                        <Field name="workCompCode" type="text" placeholder="Enter Work Comp Code" category="client" component={InputBox} />
+                        <Field name="workCompCode" type="text" placeholder={this.props.translate("com.tempedge.error.client.workCompCoderequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.workCompRate"></Translate>
                         </label>
-                        <Field name="workCompRate" type="text" placeholder="Enter Work Comp Rate" category="client" component={InputBox} />
+                        <Field name="workCompRate" type="text" placeholder={this.props.translate("com.tempedge.error.client.workCompRaterequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.companyInitials"></Translate>
                         </label>
-                        <Field name="companyInitials" type="text" placeholder="Enter Company Initials" category="client" component={InputBox} />
+                        <Field name="companyInitials" type="text" placeholder={this.props.translate("com.tempedge.error.agency.fundingCompanydropdownrequired")} category="client" component={InputBox} />
                       </div>
                     </div>
 
@@ -137,19 +139,19 @@ class WizardCreateNewUserFirstPage extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.attnTo"></Translate>
                         </label>
-                        <Field name="attnTo" type="text" placeholder="Enter Attn to" category="client" component={InputBox} />
+                        <Field name="attnTo" type="text" placeholder={this.props.translate("com.tempedge.error.client.attnTorequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.email"></Translate>
                         </label>
-                        <Field name="email" type="text" placeholder="Enter Email" category="person" component={InputBox} />
+                        <Field name="email" type="text" placeholder={this.props.translate("com.tempedge.error.person.emailrequired")} category="person" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.comments"></Translate>
                         </label>
-                        <Field name="comments" type="textarea" placeholder="Enter Comments" category="client" component={InputBox} />
+                        <Field name="comments" type="textarea" placeholder={this.props.translate("com.tempedge.msg.label.comments")} category="client" component={InputBox} />
                       </div>
                     </div>
 
@@ -158,13 +160,13 @@ class WizardCreateNewUserFirstPage extends Component {
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.markupClient"></Translate>
                         </label>
-                        <Field name="markupClient" type="text" placeholder="Enter Markup" category="client" component={InputBox} />
+                        <Field name="markupClient" type="text" placeholder={this.props.translate("com.tempedge.error.client.markupClientrequired")} category="client" component={InputBox} />
                       </div>
                       <div className="col-md-4">
                         <label className="control-label">
                           <Translate id="com.tempedge.msg.label.otMarkupClient"></Translate>
                         </label>
-                        <Field name="otMarkupClient" type="text" placeholder="Enter OT Markup" category="client" component={InputBox} />
+                        <Field name="otMarkupClient" type="text" placeholder={this.props.translate("com.tempedge.error.client.otMarkupClientrequired")} category="client" component={InputBox} />
                       </div>
                     </div>
                   </div>
@@ -172,12 +174,12 @@ class WizardCreateNewUserFirstPage extends Component {
                     <div className="prev-next-btns-agency row">
                       <div className="col-md-5 offset-md-1">
                         <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>
-                          Back
+                          <Translate id="com.tempedge.msg.label.cancel"></Translate>
                         </button>
                       </div>
                       <div className="col-md-5">
                         <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid}>
-                          <Translate id="com.tempedge.msg.label.next">Next</Translate>
+                          <Translate id="com.tempedge.msg.label.next"></Translate>
                         </button>
                       </div>
                     </div>
@@ -189,7 +191,9 @@ class WizardCreateNewUserFirstPage extends Component {
             <div className="col-lg-4 dept-col">
               <div className="department-list">
                 <div className="department-list-header">
-                  <h2>Department List</h2>
+                  <h2>
+                    <Translate id="com.tempedge.msg.label.departmentlist" />
+                  </h2>
                 </div>
 
                 <div className="department-list-contents">
