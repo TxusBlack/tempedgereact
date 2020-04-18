@@ -32,7 +32,7 @@ class WizardCreateNewAgencySeventhPage extends Component {
     const [file] = e.target.files;
     const fileNameTextBox = this.fileNameTextBox.current;
 
-    console.log('file.type', file);
+    console.log('file img', file);
 
     if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png')) {
       if (file.size <= 1048576) {
@@ -98,10 +98,7 @@ class WizardCreateNewAgencySeventhPage extends Component {
   }
 
   render() {
-    console.log("Seventh Page");
-
     const { btnDisabled, now, resultBar } = this.state;
-
     return (
       <React.Fragment>
         <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.uploadlogo"></Translate></h2>
@@ -113,14 +110,11 @@ class WizardCreateNewAgencySeventhPage extends Component {
 
             <div className="form-group row">
               <div className="col-12">
-                <p className="text-left label-p">
-                  <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
-                </p>
                 <div className="input-group">
-                  <label htmlFor="employeeListFile" className="input-group-btn">
+                  <label htmlFor="logo" className="input-group-btn">
                     <span className="btn department-list-button">
                       <Translate id="com.tempedge.msg.label.choosefile" />
-                      <input id="employeeListFile" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".jpg, .jpeg, .png" />
+                      <input id="logo" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".jpg, .jpeg, .png" />
                     </span>
                   </label>
                   <br />
@@ -143,20 +137,10 @@ class WizardCreateNewAgencySeventhPage extends Component {
   }
 }
 
-let mapStateToProps = (state, ownProps) => {
-  return {
-    // address: state.form.CreateNewAgency.values.agencyaddress,
-    // city: state.form.CreateNewAgency.values.agencycity,
-    // recruitmentoffice: state.form.CreateNewAgency.values.recruitmentofficephonenumbers.length,
-    // phonenumbers: state.form.CreateNewAgency.values.recruitmentofficephonenumbers.length,
-    // salesmen: state.form.CreateNewAgency.values.recruitmentofficesalespersons.length
-  }
-};
-
 WizardCreateNewAgencySeventhPage = reduxForm({
   form: 'CreateNewAgency',
   destroyOnUnmount: false,
   validate: Validate
 })(WizardCreateNewAgencySeventhPage);
 
-export default withLocalize(connect(mapStateToProps, { push, notify })(WizardCreateNewAgencySeventhPage));
+export default withLocalize(connect(null, { push, notify })(WizardCreateNewAgencySeventhPage));

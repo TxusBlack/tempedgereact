@@ -101,7 +101,8 @@ class CreateNewAgency extends Component {
         },
         "officeEntityList": recruitmentOffices
       },
-      "phoneList": phoneList
+      "phoneList": phoneList,
+      "logo": formValues.logo
     }
 
     console.log("resp: ", response);
