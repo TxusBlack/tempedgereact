@@ -29,11 +29,6 @@ class NavBar extends React.Component {
         activeMenuItem[1] = '';
         activeMenuItem[2] = 'active';
         activeMenuItem[3] = '';
-      } else if (activePage === 'applynow') {
-        activeMenuItem[0] = '';
-        activeMenuItem[1] = '';
-        activeMenuItem[2] = '';
-        activeMenuItem[3] = 'active';
       }
     }
   }
@@ -44,7 +39,6 @@ class NavBar extends React.Component {
     let loginRoute = `/auth/${activeLanguage.code}`;
     let registerRoute = `/register/${activeLanguage.code}`;
     let registerAgencyRoute = `/registerAgency/${activeLanguage.code}`;
-    let applyNowRoute = `/applynow/${activeLanguage.code}`;
     let activeMenuItem = ['active', '', '', ''];
     let hamburgerBtn = "";
     let logo = "";
@@ -92,7 +86,6 @@ class NavBar extends React.Component {
                     <li className={activeMenuItem[0]}><Link to={loginRoute}><Translate id="com.tempedge.msg.label.sign_in" /></Link></li>
                     <li className={activeMenuItem[1]}><Link to={registerRoute}><Translate id="com.tempedge.msg.label.newuser" /></Link></li>
                     <li className={activeMenuItem[2]}><Link to={registerAgencyRoute}><Translate id="com.tempedge.msg.label.newagency" /></Link></li>
-                    <li className={activeMenuItem[3]}><Link to={applyNowRoute}><Translate id="com.tempedge.msg.label.applynow" /></Link></li>
                   </React.Fragment>
                 )}
               </ul>

@@ -8,106 +8,133 @@ import { push } from 'connected-react-router';
 import Captcha from '../../../components/common/Captcha/Captcha';
 import Validate from '../../Validations/Validations';
 import { notify } from 'reapop';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import OutcomeBar from '../../../components/common/OutcomeBar/index.js';
 
 class WizardCreateNewAgencySeventhPage extends Component {
   constructor(props) {
     super(props);
 
-    ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
-  }
-
-  state = { captchaRef: null, reCaptchaToken: '', btnDisabled: true }
-
-  componentDidUpdate(prevProps, prevState) {
-    const hasActiveLanguageChanged = prevProps.activeLanguage !== this.props.activeLanguage;
-
-    if (hasActiveLanguageChanged) {
-      this.props.push(`/registerAgency/${this.props.activeLanguage.code}`);
-      ActiveLanguageAddTranslation(this.props.activeLanguage, this.props.addTranslationForLanguage);
+    this.state = {
+      btnDisabled: true,
+      submitted: 0,
+      now: 0
     }
+
+    this.fileNameTextBox = React.createRef();
+    const { activeLanguage, addTranslationForLanguage } = this.props;
+    ActiveLanguageAddTranslation(activeLanguage, addTranslationForLanguage);
+    this.regionsList = null;
   }
 
-  onChange = (recaptchaToken) => {
-    console.log("recaptchaToken: ", recaptchaToken);
+  onChange = (e) => {
+    this.hideResultBar();
+    const [file] = e.target.files;
+    const fileNameTextBox = this.fileNameTextBox.current;
 
+    console.log('file.type', file);
+
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png')) {
+      if (file.size <= 1048576) {
+        const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
+        const reader = new FileReader();
+        fileNameTextBox.textContent = fileName;
+        // Event Listener for when a file is selected to be uploaded
+        reader.onload = (event) => {
+          const binaryString = event.target.result;
+          this.setState(() => ({
+            binaryString,
+            btnDisabled: false
+          }));
+        };
+        // Read Blob as binary
+        reader.readAsBinaryString(file);
+      } else {
+        this.setState(() => ({
+          btnDisabled: true
+        }));
+        this.showWarningResultBar("com.tempedge.error.fileerrorsize");
+      }
+    } else if (file) {
+      this.setState(() => ({
+        btnDisabled: true
+      }));
+      this.showWarningResultBar("com.tempedge.warn.fileerror");
+    }
+  };
+
+  showResultBar(translateId, messageType, customMessage) {
     this.setState({
-      reCaptchaToken: recaptchaToken,
-      btnDisabled: false
+      resultBar: <OutcomeBar classApplied={`announcement-bar ${messageType}`} translateId={translateId} customData={customMessage}></OutcomeBar>
+    });
+
+    setTimeout(() => {
+      this.changeProgressbar(0);
+    }, 2000);
+  }
+
+  hideResultBar() {
+    this.setState({
+      resultBar: ''
     });
   }
 
-  setCaptchaRef = (ref) => {
-    this.setState(
-      () => {
-        return {
-          captchaRef: React.createRef(ref)
-        }
-      });
+  showSuccessResultBar(translateId, customMessage) {
+    this.showResultBar(translateId, 'success', customMessage);
   }
 
-  generateCaptcha = (formProps) => {
-    return <Captcha formProps={formProps} setCaptchaRef={this.setCaptchaRef} onChange={this.onChange} />;
+  showWarningResultBar(translateId, customMessage) {
+    this.showResultBar(translateId, 'warning', customMessage);
   }
-  
+
+  showErrorResultBar(translateId, customMessage) {
+    this.showResultBar(translateId, 'fail', customMessage);
+  }
+
+  changeProgressbar(progress) {
+    this.setState({
+      now: progress
+    });
+  }
+
   render() {
     console.log("Seventh Page");
 
+    const { btnDisabled, now, resultBar } = this.state;
+
     return (
       <React.Fragment>
-        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
+        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.uploadlogo"></Translate></h2>
         <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
-          <div className="form-group row row-agency-name">
-            <div className="col-md-6">
-              <div className="row">
-                <div className="col-md-2">
-                  <label className="control-label pull-right" style={{ paddingTop: 8 }}><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
-                </div>
-                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
-                  <Field name="agencyname" type="text" placeholder="Agency Name" active="disabled" component={InputBox} />
-                </div>
-              </div>
+          <div className="container p-4">
+            <div className="row">
+              <div className="col-12">{resultBar}</div>
             </div>
-          </div>
-          <div className="panel register-form-panel">
-            <div className="panel-heading register-header">
-              <h2 className="text-center"><Translate id="com.tempedge.msg.label.confirm"></Translate></h2>
-            </div>
-          </div>
-          <div className="register-form-panel-inputs">
-            <div className="form-group register-form wizard-register-agency-form row">
-              <div className="col-md-12">
-                <h3 className="confirmation-page-subtitle"><Translate id="com.tempedge.msg.label.confirminformation"></Translate></h3>
-              </div>
-              <div className="col-md-6">
-                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.address"></Translate></h3>
-                <p className="confirmation-page-paragraph">{this.props.address}</p>
-                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.city"></Translate></h3>
-                <p className="confirmation-page-paragraph">{this.props.city}</p>
-                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.addrecruitingoffice"></Translate>:</h3>
-                <p className="confirmation-page-paragraph">{this.props.recruitmentoffice}</p>
-              </div>
-              <div className="col-md-6">
-                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.phonesadded"></Translate></h3>
-                <p className="confirmation-page-paragraph">{this.props.phonenumbers}</p>
-                <h3 className="confirmation-page-categories"><Translate id="com.tempedge.msg.label.salesmenadded"></Translate></h3>
-                <p className="confirmation-page-paragraph">{this.props.salesmen}</p>
-              </div>
-              <div className="col-md-12">
-                <div className="new-agency-captcha">
-                  <Field name='captcha' size="normal" height="130px" theme="light" component={this.generateCaptcha} />
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency row">
-              <div className="col-md-4 offset-md-2">
-                <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+            <div className="form-group row">
+              <div className="col-12">
+                <p className="text-left label-p">
+                  <Translate id="com.tempedge.msg.label.uploadEmployeeList" />
+                </p>
+                <div className="input-group">
+                  <label htmlFor="employeeListFile" className="input-group-btn">
+                    <span className="btn department-list-button">
+                      <Translate id="com.tempedge.msg.label.choosefile" />
+                      <input id="employeeListFile" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".jpg, .jpeg, .png" />
+                    </span>
+                  </label>
+                  <br />
+                  <div className="w-100">
+                    <p className="text-left" ref={this.fileNameTextBox} />
+                  </div>
+                </div>
               </div>
-              <div className="col-md-4">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine || this.state.btnDisabled}><Translate id="com.tempedge.msg.label.save">Save</Translate></button>
-              </div>
+            </div>
+            <ProgressBar animated now={now} label={`${now}%`} />
+            <div className="form-group">
+              <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
+                <Translate id="com.tempedge.msg.label.uploadfile" />
+              </button>
             </div>
           </div>
         </form>
@@ -118,11 +145,11 @@ class WizardCreateNewAgencySeventhPage extends Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    address: state.form.CreateNewAgency.values.agencyaddress,
-    city: state.form.CreateNewAgency.values.agencycity,
-    recruitmentoffice: state.form.CreateNewAgency.values.recruitmentofficephonenumbers.length,
-    phonenumbers: state.form.CreateNewAgency.values.recruitmentofficephonenumbers.length,
-    salesmen: state.form.CreateNewAgency.values.recruitmentofficesalespersons.length
+    // address: state.form.CreateNewAgency.values.agencyaddress,
+    // city: state.form.CreateNewAgency.values.agencycity,
+    // recruitmentoffice: state.form.CreateNewAgency.values.recruitmentofficephonenumbers.length,
+    // phonenumbers: state.form.CreateNewAgency.values.recruitmentofficephonenumbers.length,
+    // salesmen: state.form.CreateNewAgency.values.recruitmentofficesalespersons.length
   }
 };
 
