@@ -4,7 +4,7 @@ import history from '../../history.js';
 import Axios from 'axios';
 import httpService from '../../utils/services/httpService/httpService';
 
-let baseUrlTempEdge = `http://100.1.147.42:9191`;
+let baseUrlTempEdge = process.env.REACT_APP_BASE_URL_TEMPEDGE;
 
 export let doLogin = (url, data) => {
   return (dispatch) => {
