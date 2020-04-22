@@ -102,7 +102,7 @@ class CreateNewAgency extends Component {
         "officeEntityList": recruitmentOffices
       },
       "phoneList": phoneList,
-      "logo": formValues.logo
+      "logo": formValues.logo || null
     }
 
     console.log("resp: ", response);
@@ -141,8 +141,8 @@ class CreateNewAgency extends Component {
       <div className="wizard-create-agency">
         <Stepper steps={steps} activeStep={page - 1} activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
         <div className="wizard-wrapper">
-          {page === 1 && <WizardCreateNewAgencyrFirstPage onSubmit={this.nextPage} {...this.props} />}
-          {/* {page === 1 && <WizardCreateNewAgencySeventhPage onSubmit={this.nextPage} {...this.props} />} */}
+          {/* {page === 1 && <WizardCreateNewAgencyrFirstPage onSubmit={this.nextPage} {...this.props} />} */}
+          {page === 1 && <WizardCreateNewAgencySeventhPage onSubmit={this.nextPage} {...this.props} />}
           {page === 2 && <WizardCreateNewAgencySecondPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
           {page === 3 && <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
           {page === 4 && <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}

@@ -47,6 +47,7 @@ class WizardCreateNewAgencySeventhPage extends Component {
             btnDisabled: false
           }));
         };
+        console.log('binaryString', this.state.binaryString);
         // Read Blob as binary
         reader.readAsBinaryString(file);
       } else {
