@@ -150,6 +150,8 @@ class WizardCreateNewAgencySeventhPage extends Component {
                     </div>
                   </div>
                 </form>
+                <div className="end-container">
+                </div>
               </div>
             </div>
           </div>

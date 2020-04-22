@@ -7,6 +7,14 @@ import usaFlag from "./icons/usa.png"; // Tell Webpack this JS file uses this im
 import spaFlag from "./icons/spanish.png";
 
 class NavBar extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      logo: null
+    }
+  }
+
   changeActiveLang = (language) => {
     this.props.setActiveLanguage(language);
   }
@@ -33,6 +41,11 @@ class NavBar extends React.Component {
     }
   }
 
+  async componentWillUpdate() {
+    const profile = await JSON.parse(sessionStorage.getItem('agency'));
+    if (profile && !this.state.logo && this.state.logo !== profile.organizationEntity.logo) this.setState({ logo: profile.organizationEntity.logo });
+  }
+
   render() {
     let { languages, activeLanguage } = this.props;
     let path = window.location.pathname;
@@ -44,7 +57,7 @@ class NavBar extends React.Component {
     let logo = "";
 
     if (!path.includes("organization-select")) {
-      logo = <Link to={`/auth/${activeLanguage.code}`}><img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" /></Link>;
+      logo = <Link to={`/auth/${activeLanguage.code}`}><img className="company-logo" src={this.state.logo || "/img/Temp_Edge_250-80-1.png"} alt="Company Logo" /></Link>;
     } else {
       logo = <img className="company-logo" src="/img/Temp_Edge_250-80-1.png" alt="Company Logo" />;
     }
