@@ -10,6 +10,7 @@ import Validate from '../../Validations/Validations';
 import { notify } from 'reapop';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import OutcomeBar from '../../../components/common/OutcomeBar/index.js';
+import { uploadLogo, setCleanLogo } from '../../../Redux/actions/tempEdgeActions';
 
 class WizardCreateNewAgencySeventhPage extends Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class WizardCreateNewAgencySeventhPage extends Component {
     this.state = {
       btnDisabled: true,
       submitted: 0,
-      now: 0
+      now: 0,
+      binaryString: null
     }
 
     this.fileNameTextBox = React.createRef();
@@ -32,24 +34,21 @@ class WizardCreateNewAgencySeventhPage extends Component {
     const [file] = e.target.files;
     const fileNameTextBox = this.fileNameTextBox.current;
 
-    console.log('file img', file);
-
     if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png')) {
       if (file.size <= 1048576) {
         const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
         const reader = new FileReader();
         fileNameTextBox.textContent = fileName;
         // Event Listener for when a file is selected to be uploaded
+        reader.readAsDataURL(file);
         reader.onload = (event) => {
           const binaryString = event.target.result;
           this.setState(() => ({
             binaryString,
             btnDisabled: false
           }));
+          this.props.uploadLogo('SAVE_LOGO', this.state.binaryString);
         };
-        console.log('binaryString', this.state.binaryString);
-        // Read Blob as binary
-        reader.readAsBinaryString(file);
       } else {
         this.setState(() => ({
           btnDisabled: true
@@ -98,42 +97,64 @@ class WizardCreateNewAgencySeventhPage extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.props.setCleanLogo();
+  }
+
   render() {
     const { btnDisabled, now, resultBar } = this.state;
     return (
-      <React.Fragment>
-        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.uploadlogo"></Translate></h2>
-        <form className="panel-body" onSubmit={this.props.handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
-          <div className="container p-4">
-            <div className="row">
-              <div className="col-12">{resultBar}</div>
-            </div>
-
-            <div className="form-group row">
-              <div className="col-12">
-                <div className="input-group">
-                  <label htmlFor="logo" className="input-group-btn">
-                    <span className="btn department-list-button">
-                      <Translate id="com.tempedge.msg.label.choosefile" />
-                      <input id="logo" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".jpg, .jpeg, .png" />
-                    </span>
-                  </label>
-                  <br />
-                  <div className="w-100">
-                    <p className="text-left" ref={this.fileNameTextBox} />
-                  </div>
+      <div className="container-fluid login-container" style={{ width: '80vw' }}>
+        <div className="row">
+          <div className="col-md-12">
+            <div className="login-form">
+              <div className="panel panel-default login-form-panel">
+                <div className="panel-heading login-header">
+                  <h2 className="text-center">
+                    <Translate id="com.tempedge.msg.label.uploadlogo"></Translate>
+                  </h2>
                 </div>
+                <form className="panel-body" onSubmit={this.props.handleSubmit}>
+                  <div className="container p-4">
+                    <div className="row">
+                      <div className="col-12">{resultBar}</div>
+                    </div>
+
+                    <div className="form-group row">
+                      <div className="col-12">
+                        <div className="input-group">
+                          <div className="row">
+                            <div className="col-6">
+                              <label htmlFor="logo" className="input-group-btn">
+                                <span className="btn department-list-button">
+                                  <Translate id="com.tempedge.msg.label.choosefile" />
+                                  <input id="logo" type="file" onChange={(e) => this.onChange(e)} className="d-none" accept=".jpg, .jpeg, .png" />
+                                </span>
+                              </label>
+                              <br />
+                              <div className="w-100">
+                                <p className="text-left" ref={this.fileNameTextBox} />
+                              </div>
+                            </div>
+                            <div className="col-6">
+                              <img src={this.props.logo || '/img/Temp_Edge_250-80-1.png'} className="company-logo" alt="Company Logo" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <button type="submit" className="btn btn-primary btn-block">
+                        <Translate id="com.tempedge.msg.label.uploadfile" />
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
-            <ProgressBar animated now={now} label={`${now}%`} />
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary btn-block" disabled={btnDisabled}>
-                <Translate id="com.tempedge.msg.label.uploadfile" />
-              </button>
-            </div>
           </div>
-        </form>
-      </React.Fragment>
+        </div>
+      </div>
     );
   }
 }
@@ -144,4 +165,10 @@ WizardCreateNewAgencySeventhPage = reduxForm({
   validate: Validate
 })(WizardCreateNewAgencySeventhPage);
 
-export default withLocalize(connect(null, { push, notify })(WizardCreateNewAgencySeventhPage));
+const mapStateToProps = (state) => {
+  return {
+    logo: state.tempEdge.logo,
+  };
+}
+
+export default withLocalize(connect(mapStateToProps, { push, notify, uploadLogo, setCleanLogo })(WizardCreateNewAgencySeventhPage));

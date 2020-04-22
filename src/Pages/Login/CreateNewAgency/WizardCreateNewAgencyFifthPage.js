@@ -134,45 +134,47 @@ class WizardCreateNewAgencyFifthPage extends Component {
 
     return (
       <React.Fragment>
-        <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
-        <form className="panel-body" onSubmit={handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
-          <div className="form-group row row-agency-name">
-            <div className="col-md-6">
-              <div className="row">
-                <div className="col-md-2">
-                  <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
-                </div>
-                <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
-                  <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
+        <div className="wizard-wrapper">
+          <h2 className="text-center page-title-agency"><Translate id="com.tempedge.msg.label.newagencyregistration"></Translate></h2>
+          <form className="panel-body" onSubmit={handleSubmit} className="form-horizontal center-block register-form-agency" style={{ paddingBottom: "0px" }}>
+            <div className="form-group row row-agency-name">
+              <div className="col-md-6">
+                <div className="row">
+                  <div className="col-md-2">
+                    <label className="control-label pull-right agency-label"><Translate id="com.tempedge.msg.label.agencyname"></Translate></label>
+                  </div>
+                  <div className="col-md-8" style={{ paddingLeft: 0, paddingRight: 71 }}>
+                    <Field name="agencyname" type="text" placeholder="Agency Name" component={InputBox} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="panel register-form-panel">
-            <div className="panel-heading register-header">
-              <h2 className="text-center"><Translate id="com.tempedge.msg.label.salesperson"></Translate></h2>
-            </div>
-          </div>
-          <div className="register-form-panel-inputs">
-            <div className="form-group register-form wizard-register-agency-form row">
-              <div className="col-md-12">
-                <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficesalespersongenre">FirstName LastName Gender Male Female Phone</Translate></span>
-                <FieldArray name="recruitmentofficesalespersons" type="text" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
+            <div className="panel register-form-panel">
+              <div className="panel-heading register-header">
+                <h2 className="text-center"><Translate id="com.tempedge.msg.label.salesperson"></Translate></h2>
               </div>
             </div>
-          </div>
+            <div className="register-form-panel-inputs">
+              <div className="form-group register-form wizard-register-agency-form row">
+                <div className="col-md-12">
+                  <span className="translation-placeholder" ref="phonelabel"><Translate id="com.tempedge.msg.label.recruitmentofficesalespersongenre">FirstName LastName Gender Male Female Phone</Translate></span>
+                  <FieldArray name="recruitmentofficesalespersons" type="text" label={this.state.salespersonlabels} component={this.renderSalesPersonInputs} />
+                </div>
+              </div>
+            </div>
 
-          <div className="panel-footer register-footer panel-footer-agency-height-override">
-            <div className="prev-next-btns-agency row">
-              <div className="col-md-4 offset-md-2">
-                <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
-              </div>
-              <div className="col-md-4">
-                <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next"></Translate></button>
+            <div className="panel-footer register-footer panel-footer-agency-height-override">
+              <div className="prev-next-btns-agency row">
+                <div className="col-md-4 offset-md-2">
+                  <button type="button" className="btn btn-default btn-block register-save-btn previous" onClick={this.props.previousPage}>Back</button>
+                </div>
+                <div className="col-md-4">
+                  <button type="submit" className="btn btn-primary btn-block register-save-btn next" disabled={this.props.invalid || this.props.submiting || this.props.pristine}><Translate id="com.tempedge.msg.label.next"></Translate></button>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </React.Fragment>
     );
   }

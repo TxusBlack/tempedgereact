@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { notify } from 'reapop';
 import { reset } from 'redux-form';
 import httpService from '../../../utils/services/httpService/httpService.js';
-import { getList } from '../../../Redux/actions/tempEdgeActions';
+import { getList, setCleanLogo } from '../../../Redux/actions/tempEdgeActions';
 import types from '../../../Redux/actions/types.js';
 import WizardCreateNewAgencyrFirstPage from './WizardCreateNewAgencyFirstPage.js';
 import WizardCreateNewAgencySecondPage from './WizardCreateNewAgencySecondPage.js';
@@ -102,7 +102,7 @@ class CreateNewAgency extends Component {
         "officeEntityList": recruitmentOffices
       },
       "phoneList": phoneList,
-      "logo": formValues.logo || null
+      "logo": this.props.logo || null
     }
 
     console.log("resp: ", response);
@@ -110,6 +110,7 @@ class CreateNewAgency extends Component {
     httpService.post('/api/agency/save', response)
       .then((res) => {
         console.log('response: ', res);
+        this.props.setCleanLogo();
       }).catch((err) => {
         console.log('error: ', err);
       });
@@ -140,17 +141,15 @@ class CreateNewAgency extends Component {
     return (
       <div className="wizard-create-agency">
         <Stepper steps={steps} activeStep={page - 1} activeColor="#eb8d34" completeColor="#8cb544" defaultBarColor="#eb8d34" completeBarColor="#8cb544" barStyle="solid" circleFontSize={16} />
-        <div className="wizard-wrapper">
-          {/* {page === 1 && <WizardCreateNewAgencyrFirstPage onSubmit={this.nextPage} {...this.props} />} */}
-          {page === 1 && <WizardCreateNewAgencySeventhPage onSubmit={this.nextPage} {...this.props} />}
-          {page === 2 && <WizardCreateNewAgencySecondPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
-          {page === 3 && <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
-          {page === 4 && <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
-          {page === 5 && <WizardCreateNewAgencyFifthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
-          {page === 6 && <WizardCreateNewAgencySixthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
-          {page === 7 && <WizardCreateNewAgencySeventhPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
-          {page === 8 && <WizardCreateNewAgencyEighthPage previousPage={this.previousPage} onSubmit={this.onSubmit} {...this.props} />}
-        </div>
+        {/* {page === 1 && <WizardCreateNewAgencyrFirstPage onSubmit={this.nextPage} {...this.props} />} */}
+        {page === 1 && <WizardCreateNewAgencySeventhPage onSubmit={this.nextPage} {...this.props} />}
+        {page === 2 && <WizardCreateNewAgencySecondPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
+        {page === 3 && <WizardCreateNewAgencyThirdPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
+        {page === 4 && <WizardCreateNewAgencyFourthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
+        {page === 5 && <WizardCreateNewAgencyFifthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
+        {page === 6 && <WizardCreateNewAgencySixthPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
+        {page === 7 && <WizardCreateNewAgencySeventhPage previousPage={this.previousPage} onSubmit={this.nextPage} {...this.props} />}
+        {page === 8 && <WizardCreateNewAgencyEighthPage previousPage={this.previousPage} onSubmit={this.onSubmit} {...this.props} />}
       </div>
     );
   }
@@ -161,4 +160,10 @@ CreateNewAgency.propTypes = {
   reset: PropTypes.func.isRequired
 }
 
-export default connect(null, { notify, getList, reset })(CreateNewAgency);
+const mapStateToProps = (state) => {
+  return {
+    logo: state.tempEdge.logo,
+  };
+}
+
+export default connect(mapStateToProps, { notify, getList, reset, setCleanLogo })(CreateNewAgency);

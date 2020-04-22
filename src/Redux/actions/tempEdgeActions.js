@@ -289,6 +289,23 @@ export let removeErrorField = (fieldName) => {
   };
 };
 
+export let uploadLogo = (type, payload) => {
+  return (dispatch) => {
+    dispatch({
+      type,
+      payload
+    });
+  }
+}
+
+export let setCleanLogo = () => {
+  return (dispatch) => {
+    dispatch({
+      type: types.CLEAN_LOGO
+    });
+  }
+}
+
 export let saveBillRates = (rate, type) => {
   return (dispatch) => {
     dispatch({

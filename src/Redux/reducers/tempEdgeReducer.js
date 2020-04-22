@@ -4,7 +4,8 @@ let initialState = {
   login: '',
   errorFields: [],
   lastRemoved: '',
-  lang: null
+  lang: null,
+  logo: null
 };
 
 export default function (state = initialState, action) {
@@ -206,6 +207,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         lang: action.payload
+      };
+    case types.SAVE_LOGO:
+      return {
+        ...state,
+        logo: action.payload
+      };
+    case types.CLEAN_LOGO:
+      return {
+        ...state,
+        logo: null
       };
     default:
       return state;
