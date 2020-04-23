@@ -70,7 +70,7 @@ class ForgotPassword extends React.Component{
   render(){
     console.log("ForgotPassword!");
     return(
-      <div className="container-fluid login-container">
+      <div className="container login-container">
         <div className="row">
           <div className="col-md-6 col-md-offset-3">
             <div className="login-form">

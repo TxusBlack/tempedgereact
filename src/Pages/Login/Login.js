@@ -128,7 +128,7 @@ class Login extends Component {
     const registerRoute = `/register/${activeLanguage.code}`;
 
     return (
-      <div className="container-fluid login-container">
+      <div className="container login-container">
         <div className="row">
           <div className="col-md-12">
             <div className="login-form">

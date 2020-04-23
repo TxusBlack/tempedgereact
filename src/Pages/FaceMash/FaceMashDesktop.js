@@ -155,7 +155,7 @@ class FaceMashDesktop extends React.Component {
     );
 
     return (
-      <div className="container-fluid">
+      <div className="container">
         <div className="row">
           <div className="col-md-5">
             <div style={{ height: 40 }}></div>

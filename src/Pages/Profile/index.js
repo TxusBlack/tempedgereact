@@ -43,7 +43,7 @@ class ProfilePage extends Component {
     const { profile } = this.state;
     const { handleSubmit, portalUserList } = this.props;
     return (
-      <div className="container-fluid login-container" style={{ width: '80vw' }}>
+      <div className="container login-container" style={{ width: '80vw' }}>
         <div className="row">
           <div className="col-md-12">
             <div className="login-form">

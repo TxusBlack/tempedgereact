@@ -111,7 +111,7 @@ class ChangePassword extends React.Component {
     const { resultBar, btnDisabled } = this.state;
     const { handleSubmit, invalid, submiting, pristine } = this.props;
     return (
-      <div className="container-fluid login-container">
+      <div className="container login-container">
         <div className="row">
           <div className="col-md-12">
             <div className="login-form">
