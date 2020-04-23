@@ -28,7 +28,6 @@ import { notify } from 'reapop';
 import OutcomeBar from '../../../components/common/OutcomeBar';
 
 const { $ } = window;
-const api_url = '/api/orgdepartment/findAll';
 const defaultCountry = { name: 'United States', countryId: 234 };
 const defaultRegion = { name: 'New Jersey', regionId: 4134 };
 const maxSizeAllowedForFiles = 1e7; // Equals to 10MB -> 10 000 000 bytes
@@ -89,13 +88,13 @@ class CreateEmployee extends Component {
     let backgroundTest = [];
     let maritalStatus = [];
 
-    await this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    await this.props.getListSafe('/api/orgdepartment/findAll', { orgId, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
-    await this.props.getListSafe('/api/office/findAll', { orgId }, types.GET_OFFICE_LIST);
+    await this.props.getList(process.env.REACT_APP_URL_COUNTRY_LIST_ALL, types.GET_COUNTRY_REGION_LIST);
+    await this.props.getListSafe(process.env.REACT_APP_URL_ORG_DEPARTMENT_FIND_ALL, { orgId, filterBy: {} }, types.GET_ORG_DEPARTMENT_LIST);
+    await this.props.getListSafe(process.env.REACT_APP_URL_OFFICE_FIND_ALL, { orgId }, types.GET_OFFICE_LIST);
     let parent = $(ReactDOM.findDOMNode(this.refs.createNewEmployee1));
     parent.closest('.tabs-stepper-wrapper').css('max-width', '1600px');
 
-    await this.props.getListSafe('/api/person/skillList', { orgId }, types.SKILLS_LIST);
+    await this.props.getListSafe(process.env.REACT_APP_URL_PERSON_SKILL_LIST, { orgId }, types.SKILLS_LIST);
 
     let todaysDate = new Date();
     let backDate = todaysDate.setFullYear(todaysDate.getFullYear() - 18);
@@ -305,7 +304,7 @@ class CreateEmployee extends Component {
           //Validation Found multiple records with similar fields
           if (nextProps.validatePerson.data.result !== null) {
             let save = () => {
-              this.props.tempedgeMultiPartApi('/api/person/save', this.state.formData, this.state.fileArray, types.PERSON_SAVE);
+              this.props.tempedgeMultiPartApi(process.env.REACT_APP_URL_PERSON_SAVE, this.state.formData, this.state.fileArray, types.PERSON_SAVE);
               this.props.clearTempedgeStoreProp('validatePerson');
 
               this.setState(
@@ -573,7 +572,7 @@ class CreateEmployee extends Component {
           fileArray
         }),
         () => {
-          this.props.tempedgeAPI('/api/person/validate', data, types.VALIDATE_PERSON);
+          this.props.tempedgeAPI(process.env.REACT_APP_URL_PERSON_VALIDATE, data, types.VALIDATE_PERSON);
         }
       );
       debugger;
@@ -603,7 +602,7 @@ class CreateEmployee extends Component {
   };
 
   onSave = () => {
-    this.props.tempedgeMultiPartApi('/api/person/save', this.state.formData, this.state.fileArray, types.PERSON_SAVE);
+    this.props.tempedgeMultiPartApi(process.env.REACT_APP_URL_PERSON_SAVE, this.state.formData, this.state.fileArray, types.PERSON_SAVE);
     this.props.clearTempedgeStoreProp('validatePerson');
   };
 

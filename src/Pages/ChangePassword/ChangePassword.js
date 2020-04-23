@@ -13,7 +13,7 @@ import types from '../../Redux/actions/types';
 import OutcomeBar from '../../components/common/OutcomeBar';
 import { notify } from 'reapop';
 
-const requestUrl = '/api/user/changePassword';
+const requestUrl = process.env.REACT_APP_URL_CHANGE_PASSWORD;
 
 class ChangePassword extends React.Component {
   constructor(props, context) {

@@ -8,7 +8,7 @@ import { tempedgeAPI } from '../../../Redux/actions/tempEdgeActions';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable.js';
 import { notify } from 'reapop';
 
-const api_url = '/api/client/list';
+const api_url = process.env.REACT_APP_URL_CLIENT_LIST;
 
 class ClientList extends Component {
   constructor(props) {

@@ -9,7 +9,7 @@ let baseUrlTempEdge = process.env.REACT_APP_BASE_URL_TEMPEDGE;
 export let doLogin = (url, data) => {
   return (dispatch) => {
     httpService
-      .getAuthToken('/oauth/token', data)
+      .getAuthToken(process.env.REACT_APP_URL_GET_AUTH_TOKEN, data)
       .then((res) => {
         let token = res.data.access_token;
         data.IPAddress = window.location.hostname;

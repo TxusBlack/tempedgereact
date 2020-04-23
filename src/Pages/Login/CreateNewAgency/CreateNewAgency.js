@@ -36,8 +36,8 @@ class CreateNewAgency extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', types.GET_FUNDING_LIST);
+    this.props.getList(process.env.REACT_APP_URL_COUNTRY_LIST_ALL, types.GET_COUNTRY_REGION_LIST);
+    this.props.getList(process.env.REACT_APP_URL_FUNDING_LIST_ALL, types.GET_FUNDING_LIST);
   }
 
   nextPage(){
@@ -104,7 +104,7 @@ class CreateNewAgency extends Component {
 
     console.log("resp: ", response);
 
-    httpService.post('/api/agency/save', response)
+    httpService.post(process.env.REACT_APP_URL_AGENCY_SAVE, response)
       .then((res) => {
         console.log('response: ', res);
       }).catch((err) => {

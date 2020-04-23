@@ -13,8 +13,8 @@ import SubmitBtn from '../../../components/common/Buttons/SubmitBtn';
 import CancelBtn from '../../../components/common/Buttons/CancelBtn';
 import { notify } from 'reapop';
 
-let activityListURL = '/api/intpayroll/activityList';
-let saveIntPayrollURL = '/api/intpayroll/save';
+let activityListURL = process.env.REACT_APP_URL_INT_PAYROLL_ACTIVITY_LIST;
+let saveIntPayrollURL = process.env.REACT_APP_URL_INT_PAYROLL_SAVE;
 let orgId = 0;
 const initialState = {};
 

@@ -27,7 +27,7 @@ class CreateNewUser extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getList('/api/role/listAll', types.GET_ROLE_LIST);
+    this.props.getList(process.env.REACT_APP_URL_ROLE_LIST_ALL, types.GET_ROLE_LIST);
   };
 
   nextPage() {
@@ -60,7 +60,7 @@ class CreateNewUser extends Component {
     };
 
     httpService
-      .post('/api/user/save', response)
+      .post(process.env.REACT_APP_URL_USER_SAVE, response)
       .then(res => {
         this.setState(
           () => ({

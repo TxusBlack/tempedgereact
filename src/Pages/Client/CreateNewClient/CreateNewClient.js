@@ -96,10 +96,10 @@ class CreateNewClient extends Component {
   }
 
   componentDidMount = async () => {
-    this.props.getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
-    this.props.getList('/api/funding/listAll', types.GET_FUNDING_LIST);
+    this.props.getList(process.env.REACT_APP_URL_COUNTRY_LIST_ALL, types.GET_COUNTRY_REGION_LIST);
+    this.props.getList(process.env.REACT_APP_URL_FUNDING_LIST_ALL, types.GET_FUNDING_LIST);
     this.props.tempedgeAPI(
-      '/api/person/salesmanList',
+      process.env.REACT_APP_URL_PERSON_SALESMAN_LIST,
       {
         orgId: this.state.orgId,
         page: 0,
@@ -231,7 +231,7 @@ class CreateNewClient extends Component {
         submitted: 1
       }),
       () => {
-        this.props.tempedgeAPI('/api/client/save', response, types.CREATE_CLIENT);
+        this.props.tempedgeAPI(process.env.REACT_APP_URL_CLIENT_SAVE, response, types.CREATE_CLIENT);
       }
     );
   };

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import ActiveLanguageAddTranslation from '../../../components/common/ActiveLanguageAddTranslation/ActiveLanguageAddTranslation';
 import PaginatedTable from '../../../components/common/Table/PaginatedTable';
 
-const apiUrl = '/api/orgdepartment/findAll';
+const apiUrl = process.env.REACT_APP_URL_ORG_DEPARTMENT_FIND_ALL;
 
 class DepartmentList extends Component {
   constructor(props) {

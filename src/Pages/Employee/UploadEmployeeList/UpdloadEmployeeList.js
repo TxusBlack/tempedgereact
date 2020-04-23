@@ -15,7 +15,7 @@ import OutcomeBar from '../../../components/common/OutcomeBar';
 import CountryRegionParser from '../../../components/common/CountryRegionParser/CountryRegionParser';
 import ContainerBlue from '../../../components/common/Container/ContainerBlue';
 
-const requestUrl = '/api/person/saveList';
+const requestUrl = process.env.REACT_APP_URL_PERSON_SAVE_LIST;
 const defaultCountry = 'United States';
 
 class UploadEmployeeList extends React.Component {
@@ -31,7 +31,7 @@ class UploadEmployeeList extends React.Component {
 
   async componentDidMount() {
     const { getList, countryRegionList } = this.props;
-    await getList('/api/country/listAll', types.GET_COUNTRY_REGION_LIST);
+    await getList(process.env.REACT_APP_URL_COUNTRY_LIST_ALL, types.GET_COUNTRY_REGION_LIST);
   }
 
   componentDidUpdate(prevProps) {

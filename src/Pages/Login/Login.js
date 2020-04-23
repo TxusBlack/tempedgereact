@@ -98,7 +98,7 @@ class Login extends Component {
     let values = formValues;
     values.grant_type = "password";
 
-    await this.props.doLogin('/api/login', values);
+    await this.props.doLogin(process.env.REACT_APP_URL_LOGIN, values);
 
     this.fireNotification('Login Submitted', 'you clicked on the Submit button', 'success');
   }

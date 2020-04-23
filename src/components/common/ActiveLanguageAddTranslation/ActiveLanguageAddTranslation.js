@@ -22,7 +22,7 @@ let addTranslationsForActiveLanguage = async (activeLanguage, addTranslationForL
       addTranslationForLanguage(translations, activeLanguage.code);
 
       let state = store.getState();
-      if (!state.tempEdge.lang) await store.dispatch(getList('/api/dictionary/listAll', types.GET_LANGUAGE));
+      if (!state.tempEdge.lang) await store.dispatch(getList(process.env.REACT_APP_URL_DICTIONARY_LIST_ALL, types.GET_LANGUAGE));
       state = store.getState();
       translations = state.tempEdge.lang.english;      //Default to English
 
