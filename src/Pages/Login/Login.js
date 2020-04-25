@@ -14,6 +14,7 @@ import { notify } from 'reapop';
 import { doLogin } from '../../Redux/actions/tempEdgeActions';
 import httpService from '../../utils/services/httpService/httpService.js';
 import OutcomeBar from '../../components/common/OutcomeBar/index.js';
+import TimePicker from '../../components/common/TimePicker/TimePicker.js';
 
 class Login extends Component {
   constructor(props, context) {
@@ -149,6 +150,7 @@ class Login extends Component {
                     <p className="text-left label-p"><Translate id="com.tempedge.msg.label.password"></Translate></p>
                     <Field name="password" type="password" placeholder="Enter password" category="person" component={InputBox} />
                   </div>
+                  <TimePicker></TimePicker>
                   <div className="clearfix">
                     <label className="pull-left checkbox-inline label-p">
                       <Field name="rememberme" id="rememberme" component="input" type="checkbox" />
