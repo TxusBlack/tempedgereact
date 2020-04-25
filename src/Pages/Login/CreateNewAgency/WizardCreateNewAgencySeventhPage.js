@@ -44,18 +44,21 @@ class WizardCreateNewAgencySeventhPage extends Component {
     if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png')) {
       if (file.size <= 1048576) {
         const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
-        const reader = new FileReader();
+        // const reader = new FileReader();
         fileNameTextBox.textContent = fileName;
         // Event Listener for when a file is selected to be uploaded
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-          const binaryString = event.target.result;
-          this.setState(() => ({
-            binaryString,
-            btnDisabled: false
-          }));
-          this.props.uploadLogo('SAVE_LOGO', this.state.binaryString);
-        };
+        // reader.readAsDataURL(file);
+        // reader.onload = (event) => {
+        //   const binaryString = event.target.result;
+        //   this.setState(() => ({
+        //     binaryString,
+        //     btnDisabled: false
+        //   }));
+        //   this.props.uploadLogo('SAVE_LOGO', this.state.binaryString);
+        // };
+
+        // TODO: test the next line
+        this.props.uploadLogo('SAVE_LOGO', fileName);
       } else {
         this.setState(() => ({
           btnDisabled: true
