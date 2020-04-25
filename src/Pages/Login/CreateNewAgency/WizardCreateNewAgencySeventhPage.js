@@ -34,6 +34,13 @@ class WizardCreateNewAgencySeventhPage extends Component {
     const [file] = e.target.files;
     const fileNameTextBox = this.fileNameTextBox.current;
 
+    // New method
+    /** 
+    const [file] = e.target.files;
+    const fileName = file ? file.name.replace(/\\|\//g, '') : '';
+    console.log('fileName', fileName);
+    */
+
     if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png')) {
       if (file.size <= 1048576) {
         const fileName = file.name.replace(/\\/g, '/').replace(/.*\//, '');
